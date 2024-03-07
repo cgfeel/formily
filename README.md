@@ -2,9 +2,11 @@
 
 按照 `formily` 官方文档，最小化复现每个示例。本项目不提供线上预览，请直接在本地运行`npm install && npm run start`
 
-## 架构
+## 工程文件
 
-主要项目：`Create React App` + `formily` + `antd` + `customize-cra` + `antd-style`
+主要包：`Create React App` + `formily` + `antd` + `customize-cra` + `antd-style`
+
+NodeJS：`v18.13.0`
 
 和官方文档（以下简称“文档”）不同点：
 
