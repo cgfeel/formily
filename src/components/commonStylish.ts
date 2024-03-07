@@ -1,6 +1,12 @@
 import { createStylish } from "antd-style";
 
 const useStylish = createStylish(({ token }) => ({
+    context: {
+        backgroundColor: "#eee",
+        display: "flex",
+        justifyContent: "center",
+        padding: "40px 0",
+    },
     wraper: {
         marginBottom: 100,
         code: {
