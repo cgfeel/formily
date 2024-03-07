@@ -1,46 +1,52 @@
-# Getting Started with Create React App
+# Formily Demo
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+按照 `formily` 官方文档，最小化复现每个示例。本项目不提供线上预览，请直接在本地运行`npm install && npm run start`
 
-## Available Scripts
+## 架构
 
-In the project directory, you can run:
+主要项目：`Create React App` + `formily` + `antd` + `customize-cra` + `antd-style`
 
-### `npm start`
+和官方文档（以下简称“文档”）不同点：
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+-   采用`antd v5`作为默认演示，文档默认是v4
+-   采用`antd-style`作为`css-in-js`框架，可以在这里查看详细演示 [[查看](https://github.com/cgfeel/ant-design-style)]
+-   由于官网没有对`formily v2`的Api做任何说明，所以我会通过源码注释的方式进行补充
+-   根据演示文件，根据自己的理解，重新调整了文件和目录结构
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 阅读说明
 
-### `npm test`
+-   如上所述，`formily v2`的Api会将个人解读，通过源码注释写在源码
+-   而`README.md`将会每个演示包含的注解，作为索引简要的罗列出来，方便查找
+-   每个知识点只在一个地方注释，如果更新的演示没有新的Api，将不再重复注释
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 示例
 
-### `npm run build`
+### 快速上手
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+-   URL：`/start`
+-   目录：https://github.com/cgfeel/formily/blob/main/src/page/Start.tsx
+-   包含章节：
+    -   快速开始 [[查看](https://formilyjs.org/zh-CN/guide/quick-start)]
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 场景案例
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+#### 登录注册
 
-### `npm run eject`
+-   URL：`/login`
+-   目录：https://github.com/cgfeel/formily/blob/main/src/page/LoginRegister.tsx
+-   包含章节：
+    -   登录注册 [[查看](https://formilyjs.org/zh-CN/guide/scenes/login-register)]
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+**包含：**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+通过`Markup Schema`创建登录：
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+-   包含，验证模式：`createForm.validateFirst`、字段说明：`SchemaField.String`、关联反应：`SchemaField.reactions`（这里演示为被动关联）
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+通过`Json Schema`创建登录
 
-## Learn More
+-   包含：`SchemaField.schema`，使用JSON配置表单验证及其优点
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+通过`JSX`创建登录：
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+-   包括：`jsx`和`schema`的不同，以及优缺点
