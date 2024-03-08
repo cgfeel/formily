@@ -20,10 +20,10 @@ const MarkupSchema: FC = () => (
     <TabsPannel
         footer={
             <p>
-                包含，验证模式：<code>createForm</code>.<code>validateFirst</code>、字段说明：
+                包含，验证模式：<code>createForm.validateFirst</code>、字段说明：
                 <code>SchemaField.String</code>
                 、关联反应：
-                <code>SchemaField</code>.<code>reactions</code>
+                <code>SchemaField.reactions</code>、创建自定义表单组件
             </p>
         }
         header={

@@ -13,6 +13,7 @@ const form = createForm({
  *  - `type`为`string`对照组件`NormalMarkup`备注
  *  - `type`为`Object`作为`ObjectField`，有一个属性`properties`用于存放子节点
  *  - 优点：可由后端直接提供UI规则、交互规则、校验规则
+ *  - 缺点：丢失组件相关提示
  */
 const normalSchema: ISchema = {
     type: "object",
@@ -34,6 +35,7 @@ const normalSchema: ISchema = {
             "x-component": "Password",
             "x-decorator": "FormItem",
             "x-component-props": {
+                autoComplete: "off",
                 prefix: "{{icon('pwd')}}",
             },
         },

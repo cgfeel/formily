@@ -1,7 +1,7 @@
 import { createStylish } from "antd-style";
 
 const useStylish = createStylish(({ token }) => ({
-    context: {
+    pannel: {
         backgroundColor: "#eee",
         display: "flex",
         justifyContent: "center",

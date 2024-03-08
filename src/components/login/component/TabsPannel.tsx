@@ -23,7 +23,7 @@ const TabsPannel: FC<TabsPannelProps> = ({ footer, header, items }) => {
     return (
         <div className={stylish.wraper}>
             {header}
-            <div className={stylish.context}>
+            <div className={stylish.pannel}>
                 <Card className={styles.card}>
                     <Tabs className={styles.tabs} items={items} />
                     <div className={styles.footer}>

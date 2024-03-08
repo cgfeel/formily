@@ -19,7 +19,7 @@ NodeJS：`v18.13.0`
 
 -   如上所述，`formily v2`的Api会将个人解读，通过源码注释写在源码
 -   而`README.md`将会每个演示包含的注解，作为索引简要的罗列出来，方便查找
--   每个知识点只在一个地方注释，如果更新的演示没有新的Api，将不再重复注释
+-   查找方法，每一个内容简介关联着对应示例，运行演示查找对应文件可以找到源码注释
 
 ## 示例
 
@@ -41,9 +41,12 @@ NodeJS：`v18.13.0`
 
 **包含：**
 
-通过`Markup Schema`创建登录：
+通过`Markup Schema`创建登录，包含：
 
--   包含，验证模式：`createForm.validateFirst`、字段说明：`SchemaField.String`、关联反应：`SchemaField.reactions`（这里演示为被动关联）
+-   验证模式：`createForm.validateFirst`
+-   字段说明：`SchemaField.String`，及相关属性
+    -   关联反应：`SchemaField.reactions`，主动受控和被动受控、受控依赖更新依赖组件状态
+-   创建自定义表单组件
 
 通过`Json Schema`创建登录
 
@@ -52,3 +55,9 @@ NodeJS：`v18.13.0`
 通过`JSX`创建登录：
 
 -   包括：`jsx`和`schema`的不同，以及优缺点
+
+通过`Markup Schema`创建注册，包含：
+
+-   组件：`ArrayItems`、`Cascader`、`DatePicker`、`Editable`、`FormGrid`、`FormItem`、`FormLayout`、`Password`、`Select`、自定义组件`IDUpload`
+-   关联受控：作用域变量`$deps`、`$self`，受控行为、路径查找
+-   虚拟节点：充当`<Form.Item>`，充当交互组件

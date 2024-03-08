@@ -1,13 +1,15 @@
 import { FC } from "react";
-import FieldJsx from "../components/login/FieldJsx";
-import MarkupSchema from "../components/login/MarkupSchema";
-import JsonSchema from "../components/login/JsonSchema";
+import LoginFieldJsx from "../components/login/FieldJsx";
+import LoginMarkupSchema from "../components/login/MarkupSchema";
+import LoginJsonSchema from "../components/login/JsonSchema";
+import RegMarkupSchema from "../components/register/MarkupSchema";
 
 const LoginRegister: FC = () => (
     <>
-        <MarkupSchema />
-        <JsonSchema />
-        <FieldJsx />
+        <LoginMarkupSchema />
+        <LoginJsonSchema />
+        <LoginFieldJsx />
+        <RegMarkupSchema />
     </>
 );
 

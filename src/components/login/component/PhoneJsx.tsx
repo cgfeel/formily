@@ -1,9 +1,9 @@
+import { LockOutlined, PhoneOutlined } from "@ant-design/icons";
 import { FormItem, Input } from "@formily/antd-v5";
 import { createForm } from "@formily/core";
 import { Field } from "@formily/react";
 import { FC } from "react";
 import FormCom from "./FormCom";
-import { LockOutlined, PhoneOutlined } from "@ant-design/icons";
 import VerifyCode from "../VerifyCode";
 
 const form = createForm({

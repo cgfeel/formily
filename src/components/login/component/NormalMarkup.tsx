@@ -48,8 +48,8 @@ const NormalMarkup: FC = () => (
                 title="密码"
                 x-component="Password"
                 x-component-props={{
-                    prefix: "{{icon('pwd')}}",
                     autoComplete: "off",
+                    prefix: "{{icon('pwd')}}",
                 }}
                 x-decorator="FormItem"
                 required
