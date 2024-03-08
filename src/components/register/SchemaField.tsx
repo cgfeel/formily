@@ -13,6 +13,7 @@ import {
 } from "@formily/antd-v5";
 import { createSchemaField } from "@formily/react";
 import { action } from "@formily/reactive";
+import styled from "@emotion/styled";
 import IDUpload from "./components/IDUpload";
 
 const objectEntries = <T extends object, K = keyof T>(obj: T) => Object.entries(obj) as Array<[K, T[keyof T]]>;
@@ -38,6 +39,10 @@ const transform = (data: Record<string, LocationItem | string> | undefined = {})
         ];
     }, [] as Option[]);
 
+const PopInput = styled(Input)`
+    width: 300px;
+`;
+
 const SchemaField = createSchemaField({
     components: {
         ArrayItems,
@@ -50,6 +55,7 @@ const SchemaField = createSchemaField({
         IDUpload,
         Input,
         Password,
+        PopInput,
         Select,
     },
     scope: {

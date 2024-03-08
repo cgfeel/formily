@@ -41,7 +41,7 @@ NodeJS：`v18.13.0`
 
 **包含：**
 
-通过`Markup Schema`创建登录，包含：
+通过`Markup Schema`创建登录：
 
 -   验证模式：`createForm.validateFirst`
 -   字段说明：`SchemaField.String`，及相关属性
@@ -56,8 +56,12 @@ NodeJS：`v18.13.0`
 
 -   包括：`jsx`和`schema`的不同，以及优缺点
 
-通过`Markup Schema`创建注册，包含：
+通过`Markup Schema`创建注册：
 
 -   组件：`ArrayItems`、`Cascader`、`DatePicker`、`Editable`、`FormGrid`、`FormItem`、`FormLayout`、`Password`、`Select`、自定义组件`IDUpload`
 -   关联受控：作用域变量`$deps`、`$self`，受控行为、路径查找
--   虚拟节点：充当`<Form.Item>`，充当交互组件
+-   虚拟节点：充当`<Form.Item>`，充当交互组件，虚拟节点和对象节点不同处
+
+通过`Json Schema`创建注册：
+
+-   通过`@emotion/styled`来设置组件样式，从而解决`Json Schema`配置中无法使用`antd-style`的Hooks
