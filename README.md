@@ -64,4 +64,15 @@ NodeJS：`v18.13.0`
 
 通过`Json Schema`创建注册：
 
--   通过`@emotion/styled`来设置组件样式，从而解决`Json Schema`配置中无法使用`antd-style`的Hooks
+-   通过`@emotion/styled`来设置组件样式，从而解决`Json Schema`配置中无法使用`antd-style`的Hooks来配置组件样式
+
+通过`JSX`创建注册：
+
+-   `Jsx` 自增控件路径查找
+-   由于 `ArrayItems` 组件限定 `Schema` 场景，这里由 `ArrayField` + `ArrayBase`代替，包括代替方案存在的问题
+
+通过`Markup Schema`修改密码
+
+通过`Json Schema`修改密码：
+
+-   `Json Schema`中的 `key` 和表单 `name` 的关系

@@ -14,6 +14,7 @@ const Pannel: FC<PropsWithChildren<PannelProps>> = ({
     children,
     footer,
     header,
+    submit = "注册",
     onAutoSubmit = console.log,
     onAutoSubmitFailed = console.log,
     ...props
@@ -34,7 +35,7 @@ const Pannel: FC<PropsWithChildren<PannelProps>> = ({
                         {children}
                         <FormButtonGroup.FormItem>
                             <Submit size="large" block>
-                                注册
+                                {submit}
                             </Submit>
                         </FormButtonGroup.FormItem>
                     </Form>
@@ -48,6 +49,7 @@ const Pannel: FC<PropsWithChildren<PannelProps>> = ({
 export interface PannelProps extends FormProps {
     footer?: ReactNode;
     header?: ReactNode;
+    submit?: ReactNode;
 }
 
 export default Pannel;

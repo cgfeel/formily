@@ -34,7 +34,7 @@ const schema: ISchema = {
                     fulfill: {
                         state: {
                             selfErrors:
-                                "{{$deps[0] && $self.value && $self.value !== $deps[0] ? '确认密码不匹配' : ''}}",
+                                "{{$deps[0] && $self.value && $self.value !== $deps[0] ? ['确认密码不匹配'] : []}}",
                         },
                     },
                 },
@@ -56,7 +56,7 @@ const schema: ISchema = {
                     fulfill: {
                         state: {
                             selfErrors:
-                                "{{$deps[0] && $self.value && $self.value !== $deps[0] ? '确认密码不匹配' : ''}}",
+                                "{{$deps[0] && $self.value && $self.value !== $deps[0] ? ['确认密码不匹配'] : []}}",
                         },
                     },
                 },
@@ -151,6 +151,7 @@ const schema: ISchema = {
             items: {
                 type: "object",
                 "x-component": "ArrayItems.Item",
+                "x-value": "test", // 非必要，如果不设置，ObjectField节点会有一个value="[object Object]"
                 properties: {
                     sort: {
                         type: "void",
