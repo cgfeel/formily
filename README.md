@@ -76,3 +76,5 @@ NodeJS：`v18.13.0`
 通过`Json Schema`修改密码：
 
 -   `Json Schema`中的 `key` 和表单 `name` 的关系
+
+通过`JSX`修改密码
