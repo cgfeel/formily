@@ -32,6 +32,9 @@ const schema: ISchema = {
             type: "string",
             "x-component": "Password",
             "x-decorator": "FormItem",
+            "x-component-props": {
+                autoComplete: "off",
+            },
         },
         password: {
             required: true,

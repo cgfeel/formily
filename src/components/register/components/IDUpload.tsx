@@ -35,7 +35,7 @@ const transform = (data: Record<string, LocationItem | string> | undefined = {})
 const IDUpload: FC<IDUploadProps> = props => (
     <Upload
         {...props}
-        action="https://run.mocky.io/v3/23f15833-e64e-4a7f-a54f-62cb1ee4c6db"
+        action={`${process.env.REACT_APP_API_URL}/form/upload`}
         headers={{
             authorization: "authorization-text",
         }}>

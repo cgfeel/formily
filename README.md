@@ -4,9 +4,12 @@
 
 ## 工程文件
 
-主要包：`Create React App` + `formily` + `antd` + `customize-cra` + `antd-style`
+主要的使用的包：
 
-NodeJS：`v18.13.0`
+-   NodeJS：`v18.13.0`
+-   脚手架：`Create React App` + `react-app-rewired` + `customize-cra`
+-   表单和UI库：`formily ` + `antd` + `antd-style`
+-   数据模拟：`mocker-api` + `mockjs`
 
 和官方文档（以下简称“文档”）不同点：
 
