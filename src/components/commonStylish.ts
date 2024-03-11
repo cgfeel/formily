@@ -2,9 +2,12 @@ import { createStylish } from "antd-style";
 
 const useStylish = createStylish(({ token }) => ({
     pannel: {
+        alignItems: 'center',
         backgroundColor: "#eee",
         display: "flex",
+        flexDirection: 'column',
         justifyContent: "center",
+        overflowX: 'auto',
         padding: "40px 0",
     },
     wraper: {

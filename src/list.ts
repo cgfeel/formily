@@ -17,6 +17,10 @@ export const router = {
         name: "登录注册",
         path: lazy(() => import("./page/LoginRegister")),
     },
+    "/table": {
+        name: "自增表格",
+        path: lazy(() => import("./page/Table")),
+    },
 } as const;
 
 export type RouterKey = keyof typeof router;
