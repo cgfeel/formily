@@ -49,7 +49,6 @@ const MarkupSchema: FC = () => (
                 x-component-props={{
                     pagination: { pageSize: 10 },
                     scroll: { x: 1000 },
-                    onChange: () => console.log("change1"),
                 }}>
                 <SchemaField.Object>
                     <SchemaField.Void

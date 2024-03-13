@@ -1,6 +1,6 @@
 import { FormButtonGroup, Submit } from "@formily/antd-v5";
 import { FormConsumer, FormProvider, IProviderProps } from "@formily/react";
-import { Alert } from "antd";
+import { Alert, Button } from "antd";
 import { createStyles, css } from "antd-style";
 import { FC, PropsWithChildren, ReactNode } from "react";
 import useStylish from "../commonStylish";
@@ -25,6 +25,14 @@ const Pannel: FC<PropsWithChildren<PannelProps>> = ({ children, footer, form, he
                         <Submit onSubmit={console.log} onSubmitFailed={console.log}>
                             提交
                         </Submit>
+                        <Button
+                            onClick={() => {
+                                form.setValues({
+                                    table_list: [],
+                                });
+                            }}>
+                            清空
+                        </Button>
                         <FormConsumer>
                             {() => (
                                 <FormBtn
