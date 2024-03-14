@@ -1,9 +1,10 @@
-import { createForm } from "@formily/core";
+import { createForm, onFieldChange } from "@formily/core";
 import { RangePickerProps } from "antd/es/date-picker";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { FC, PropsWithChildren, ReactNode, createContext } from "react";
 import useStylish from "../commonStylish";
+import { visableField } from "./table/Tool";
 
 dayjs.extend(customParseFormat);
 
@@ -17,7 +18,19 @@ const disabledDate: RangePickerProps["disabledDate"] = current => {
 };
 
 const queryForm = createForm();
-const tableForm = createForm();
+const tableForm = createForm({
+    effects: () => {
+        onFieldChange("visible", ["value"], field => {
+            visableField.forEach(({ value }) => {
+                field.query(`table_list.column_${value}`).take(target => {
+                    if ("value" in field) {
+                        target.visible = field.value.indexOf(value) >= 0;
+                    }
+                });
+            });
+        });
+    },
+});
 
 const formData = { query: queryForm, table: tableForm, dateFormat, dayjs, disabledDate };
 const FormContext = createContext(formData);

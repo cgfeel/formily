@@ -19,7 +19,7 @@ const SchemaField = createSchemaField({
 const QueryTable: FC<QueryTableProps> = ({ tool }) => {
     const { dateFormat, dayjs, table, disabledDate } = useContext(FormContext);
     return (
-        <Form form={table}>
+        <Form form={table} button={{ onSubmit: val => console.log(val.table_list), onSubmitFailed: console.log }}>
             <SchemaField>
                 {tool}
                 <SchemaField.Array
@@ -28,7 +28,8 @@ const QueryTable: FC<QueryTableProps> = ({ tool }) => {
                     x-decorator="FormItem"
                     x-component-props={{
                         pagination: { pageSize: 10 },
-                        scroll: { x: 1200 },
+                        scroll: { x: 1000 },
+                        style: { tableLayout: "fixed" },
                     }}>
                     <SchemaField.Object>
                         <SchemaField.Void
@@ -40,7 +41,7 @@ const QueryTable: FC<QueryTableProps> = ({ tool }) => {
                         <SchemaField.Void
                             name="column_id"
                             x-component="ArrayTable.Column"
-                            x-component-props={{ align: "center", dataIndex: "id", title: "编号", width: 80 }}>
+                            x-component-props={{ align: "center", title: "编号", width: 80 }}>
                             <SchemaField.Number
                                 name="id"
                                 x-component="Input"
@@ -60,7 +61,7 @@ const QueryTable: FC<QueryTableProps> = ({ tool }) => {
                         <SchemaField.Void
                             name="column_type"
                             x-component="ArrayTable.Column"
-                            x-component-props={{ align: "center", dataIndex: "type", title: "分组", width: 100 }}>
+                            x-component-props={{ align: "center", title: "分组", width: 100 }}>
                             <SchemaField.String
                                 name="type"
                                 x-component="Input"
@@ -79,13 +80,13 @@ const QueryTable: FC<QueryTableProps> = ({ tool }) => {
                         <SchemaField.Void
                             name="column_name"
                             x-component="ArrayTable.Column"
-                            x-component-props={{ dataIndex: "name", title: "姓名", width: 150 }}>
+                            x-component-props={{ title: "姓名", width: 150 }}>
                             <SchemaField.String name="name" x-component="Input" x-decorator="Editable" required />
                         </SchemaField.Void>
                         <SchemaField.Void
                             name="column_sex"
                             x-component="ArrayTable.Column"
-                            x-component-props={{ dataIndex: "sex", title: "性别", width: 100 }}>
+                            x-component-props={{ title: "性别", width: 100 }}>
                             <SchemaField.String
                                 name="sex"
                                 x-component="Select"
@@ -100,7 +101,7 @@ const QueryTable: FC<QueryTableProps> = ({ tool }) => {
                         <SchemaField.Void
                             name="column_grade"
                             x-component="ArrayTable.Column"
-                            x-component-props={{ dataIndex: "grade", title: "年级", width: 120 }}>
+                            x-component-props={{ title: "年级", width: 120 }}>
                             <SchemaField.String
                                 name="grade"
                                 x-component="Select"
@@ -116,7 +117,7 @@ const QueryTable: FC<QueryTableProps> = ({ tool }) => {
                         <SchemaField.Void
                             name="column_date"
                             x-component="ArrayTable.Column"
-                            x-component-props={{ dataIndex: "date", title: "出生", width: 150 }}>
+                            x-component-props={{ title: "出生", width: 150 }}>
                             <SchemaField.String
                                 name="date"
                                 x-component="DatePicker"
@@ -131,7 +132,7 @@ const QueryTable: FC<QueryTableProps> = ({ tool }) => {
                         <SchemaField.Void
                             name="column_year"
                             x-component="ArrayTable.Column"
-                            x-component-props={{ dataIndex: "year", title: "入学时间", width: 300 }}>
+                            x-component-props={{ title: "入学时间", width: 300 }}>
                             <SchemaField.String
                                 name="year"
                                 x-component="DatePicker.RangePicker"
@@ -147,7 +148,7 @@ const QueryTable: FC<QueryTableProps> = ({ tool }) => {
                         <SchemaField.Void
                             name="column_region"
                             x-component="ArrayTable.Column"
-                            x-component-props={{ dataIndex: "region", title: "地区", width: 120 }}>
+                            x-component-props={{ title: "地区", width: 120 }}>
                             <SchemaField.String
                                 name="region"
                                 x-component="Select"
@@ -163,7 +164,7 @@ const QueryTable: FC<QueryTableProps> = ({ tool }) => {
                         <SchemaField.Void
                             name="column_assets"
                             x-component="ArrayTable.Column"
-                            x-component-props={{ align: "center", dataIndex: "assets", title: "地区", width: 120 }}>
+                            x-component-props={{ align: "center", title: "地区", width: 120 }}>
                             <SchemaField.String
                                 name="assets"
                                 x-component="Select"
@@ -181,7 +182,6 @@ const QueryTable: FC<QueryTableProps> = ({ tool }) => {
                             name="column_operations"
                             x-component="ArrayTable.Column"
                             x-component-props={{
-                                dataIndex: "operations",
                                 fixed: "right",
                                 title: "设置",
                                 width: 200,
