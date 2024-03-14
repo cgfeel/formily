@@ -187,6 +187,10 @@ const JsonSchema: FC = () => (
                     可以包含一个拥有行操作的平级虚拟节点集合；组件<code>ArrayTable.Column</code>
                     是可以没有包装器的，因为它本身就是表格中的列元素，充当了包装器
                 </p>
+                <p>
+                    在示例受控中使用到了<code>when</code>，可以理解为<code>if</code>，当满足条件时执行
+                    <code>fulfill</code>否则就执行<code>otherwise</code>
+                </p>
             </div>
         }
         form={form}

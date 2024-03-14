@@ -81,3 +81,35 @@
 -   `Json Schema`中的 `key` 和表单 `name` 的关系
 
 通过`JSX`修改密码
+
+---- 分割线 ----
+
+#### 查询列表
+
+-   URL：`/table`
+-   目录：https://github.com/cgfeel/formily/blob/main/src/page/Table.tsx
+-   包含章节：
+    -   查询列表 [[查看](https://formilyjs.org/zh-CN/guide/scenes/query-list)]
+    -   `ArrayTable` [[查看](https://antd5.formilyjs.org/zh-CN/components/array-table)]
+    -   `FormGrid` [[查看](https://antd5.formilyjs.org/zh-CN/components/form-grid)]
+
+**包含：**
+
+由于查询列表文档只提供了一个概念以及一个参考性的代码，这里按照要求实践：
+
+-   `QueryList`：主要负责在顶层发请求
+-   `QueryTable`：一个`ArrayTable`，主要就是解析 `Schema` 子树，自己拼装出 `Table` 需要的 `Columns` 数
+-   `QueryForm`：负责查询筛选列表
+
+为了实现这个需求，同时参考了两篇文档：
+
+-   `ArrayTable`、`FormGrid`
+
+概括：
+
+-   `FormConsumer`消费数据更新改变提交状态
+-   `ArrayTable`的使用方法及总结、`ArrayTable.Column`的使用方法及总结
+-   `SchemaField`内的组件使用与`React`组件的不同
+-   通过`createForm`实现主动受控和被动受控
+-   受控中使用`when`
+-   自定义组件`PriceInterval`，和之前的不同的是这里还自定义了组件的 `onChange`事件
