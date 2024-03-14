@@ -87,7 +87,9 @@
 #### 查询列表
 
 -   URL：`/table`
--   目录：https://github.com/cgfeel/formily/blob/main/src/page/Table.tsx
+-   目录：
+    -   https://github.com/cgfeel/formily/blob/main/src/page/Table.tsx
+    -   https://github.com/cgfeel/formily/blob/main/src/page/Grid.tsx
 -   包含章节：
     -   查询列表 [[查看](https://formilyjs.org/zh-CN/guide/scenes/query-list)]
     -   `ArrayTable` [[查看](https://antd5.formilyjs.org/zh-CN/components/array-table)]
