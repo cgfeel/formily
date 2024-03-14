@@ -88,8 +88,8 @@
 
 -   URL：`/table`
 -   目录：
-    -   https://github.com/cgfeel/formily/blob/main/src/page/Table.tsx
     -   https://github.com/cgfeel/formily/blob/main/src/page/Grid.tsx
+    -   https://github.com/cgfeel/formily/blob/main/src/page/Table.tsx
 -   包含章节：
     -   查询列表 [[查看](https://formilyjs.org/zh-CN/guide/scenes/query-list)]
     -   `ArrayTable` [[查看](https://antd5.formilyjs.org/zh-CN/components/array-table)]
@@ -115,3 +115,5 @@
 -   通过`createForm`实现主动受控和被动受控
 -   受控中使用`when`
 -   自定义组件`PriceInterval`，和之前的不同的是这里还自定义了组件的 `onChange`事件
+
+---- 分割线 ----
