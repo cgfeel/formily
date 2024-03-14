@@ -1,4 +1,4 @@
-import { createStyles } from "antd-style";
+import { createStyles, css } from "antd-style";
 import { FC, useRef } from "react";
 import Pannel from "./Pannel";
 import QueryWrapper, { QueryWrapperInstance } from "./component/QueryWrapper";
@@ -7,15 +7,12 @@ import QueryForm from "./form";
 import QueryTable from "./table";
 import Tool from "./table/Tool";
 
-const useStyles = createStyles(
-    ({ prefixCls, css }) => css`
-        width: 1000px;
-        content: "${prefixCls}";
-        & > div:not(:last-child) {
-            margin-bottom: 12px;
-        }
-    `,
-);
+const useStyles = createStyles(css`
+    width: 1000px;
+    & > div:not(:last-child) {
+        margin-bottom: 12px;
+    }
+`);
 
 const QueryList: FC = () => {
     const wrappRef = useRef<QueryWrapperInstance | null>(null);
