@@ -10,6 +10,7 @@ const form = createForm({
 const MarkupSchema: FC = () => (
     <Pannel
         submit="确认变更"
+        title="变更密码"
         form={form}
         header={
             <h2>

@@ -86,6 +86,7 @@ const schema: ISchema = {
 const JsonSchema: FC = () => (
     <Pannel
         submit="确认变更"
+        title="变更密码"
         footer={
             <p>
                 在 <code>Json Schema</code> 中，表单项的 <code>name</code> 跟随Json的 <code>key</code>，如果{" "}

@@ -17,6 +17,10 @@ export const router = {
         name: "登录注册",
         path: lazy(() => import("./page/LoginRegister")),
     },
+    "/edit-detail": {
+        name: "编辑用户",
+        path: lazy(() => import("./page/EditDetail")),
+    },
     "/grid": {
         name: "表单网格（为查询列表准备）",
         path: lazy(() => import("./page/Grid")),

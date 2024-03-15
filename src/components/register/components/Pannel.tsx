@@ -15,6 +15,7 @@ const Pannel: FC<PropsWithChildren<PannelProps>> = ({
     footer,
     header,
     submit = "注册",
+    title = "新用户注册",
     onAutoSubmit = console.log,
     onAutoSubmitFailed = console.log,
     ...props
@@ -25,7 +26,7 @@ const Pannel: FC<PropsWithChildren<PannelProps>> = ({
         <div className={stylish.wraper}>
             {header}
             <div className={stylish.pannel}>
-                <Card title="新用户注册" className={styles.card}>
+                <Card title={title} className={styles.card}>
                     <Form
                         {...props}
                         labelCol={5}
@@ -50,6 +51,7 @@ export interface PannelProps extends FormProps {
     footer?: ReactNode;
     header?: ReactNode;
     submit?: ReactNode;
+    title?: ReactNode;
 }
 
 export default Pannel;
