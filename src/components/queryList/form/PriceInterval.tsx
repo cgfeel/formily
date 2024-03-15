@@ -22,7 +22,7 @@ const PriceInterval: FC<PriceIntervalProps> = ({
     };
 
     const triggerChange: (changeValue: { [key in keyof priceValueType]?: string | number }) => void = changeValue => {
-        if (onChange !== undefined) {
+        if (onChange !== void 0) {
             const data = Object.entries(changeValue).reduce<priceValueType>(
                 (current, [key, value]) => {
                     const name = key === "min" ? key : "max";

@@ -3,7 +3,14 @@ import SchemaField from "../SchemaField";
 
 const SchemaFieldMarkup: FC<SchemaFieldMarkupProps> = ({ pwd }) => (
     <SchemaField>
-        <SchemaField.String name="username" title="用户名" x-component="Input" x-decorator="FormItem" required />
+        <SchemaField.Markup
+            type="string"
+            name="username"
+            title="用户名"
+            x-component="Input"
+            x-decorator="FormItem"
+            required
+        />
         {/**
          * - `@formily/antd-v5`中`Password`组件中的属性`checkStrength`，用于是否展示密码强度的UI
          * - 在关联受控中`$deps`值受控依赖的对象，而`$self`指当前表单控件本身
@@ -71,8 +78,21 @@ const SchemaFieldMarkup: FC<SchemaFieldMarkupProps> = ({ pwd }) => (
             x-component="FormGrid"
             x-decorator="FormItem"
             x-decorator-props={{
-                asterisk: true,
                 feedbackLayout: "none",
+            }}
+            x-reactions={{
+                dependencies: [".firstName#editable", ".lastName#editable"],
+                when: "{{$deps[0] || $deps[1]}}",
+                fulfill: {
+                    schema: {
+                        "x-decorator-props": { asterisk: true },
+                    },
+                },
+                otherwise: {
+                    schema: {
+                        "x-decorator-props": { asterisk: false },
+                    },
+                },
             }}>
             <SchemaField.String
                 name="firstName"

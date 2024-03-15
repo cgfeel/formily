@@ -25,7 +25,7 @@ export default function Router() {
     const { pathname } = window.location;
     const name = (pathname in router ? pathname : undefined) as RouterKey | undefined;
 
-    return name === undefined ? <>This page is 404.</> : <RouterApp name={name} />;
+    return name === void 0 ? <>This page is 404.</> : <RouterApp name={name} />;
 }
 
 interface RouterAppProps {

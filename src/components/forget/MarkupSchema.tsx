@@ -1,3 +1,4 @@
+import { Submit } from "@formily/antd-v5";
 import { createForm } from "@formily/core";
 import { FC } from "react";
 import Pannel from "../register/components/Pannel";
@@ -9,13 +10,17 @@ const form = createForm({
 
 const MarkupSchema: FC = () => (
     <Pannel
-        submit="确认变更"
         title="变更密码"
         form={form}
         header={
             <h2>
                 通过<code>Markup Schema</code>修改密码
             </h2>
+        }
+        submit={
+            <Submit size="large" block>
+                确认变更
+            </Submit>
         }>
         <SchemaField>
             <SchemaField.String name="username" title="用户名" x-component="Input" x-decorator="FormItem" required />

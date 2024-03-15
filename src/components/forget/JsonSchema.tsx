@@ -1,3 +1,4 @@
+import { Submit } from "@formily/antd-v5";
 import { createForm } from "@formily/core";
 import { ISchema } from "@formily/json-schema";
 import { FC } from "react";
@@ -85,7 +86,6 @@ const schema: ISchema = {
 
 const JsonSchema: FC = () => (
     <Pannel
-        submit="确认变更"
         title="变更密码"
         footer={
             <p>
@@ -98,6 +98,11 @@ const JsonSchema: FC = () => (
             <h2>
                 通过<code>Json Schema</code>修改密码
             </h2>
+        }
+        submit={
+            <Submit size="large" block>
+                确认变更
+            </Submit>
         }>
         <SchemaField schema={schema} />
     </Pannel>

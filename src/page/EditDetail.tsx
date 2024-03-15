@@ -1,11 +1,13 @@
 import { FC } from "react";
-import MarkupSchema from "../components/editDetail/MarkupSchema";
+import FieldJsx from "../components/editDetail/FieldJsx";
 import JsonSchema from "../components/editDetail/JsonSchema";
+import MarkupSchema from "../components/editDetail/MarkupSchema";
 
 const EditDetail: FC = () => (
     <>
         <MarkupSchema />
         <JsonSchema />
+        <FieldJsx />
     </>
 );
 

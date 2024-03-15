@@ -1,12 +1,10 @@
-import { createForm } from "@formily/core";
+import { PreviewText, Submit } from "@formily/antd-v5";
+import { FormConsumer } from "@formily/react";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
+import { Button, Space, Spin } from "antd";
 import Pannel, { PannelProps } from "../register/components/Pannel";
-import { Spin } from "antd";
 
-const form = createForm({
-    validateFirst: true,
-});
-
+const prevText = (editable?: boolean) => (editable ? "预 览" : "编 辑");
 const initData = {
     username: "Levi",
     firstName: "Vi",
@@ -29,23 +27,51 @@ const initData = {
     ],
 };
 
-const Wrapper: FC<PropsWithChildren<WrapperProps>> = ({ children, header }) => {
+const Wrapper: FC<PropsWithChildren<WrapperProps>> = ({ children, form, ...props }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         setTimeout(() => {
-            form.setInitialValues(initData);
+            form && form.setInitialValues(initData);
             setLoading(false);
         }, 1000);
-    }, [setLoading]);
+    }, [form, setLoading]);
 
     return (
-        <Pannel submit="提交" title="编辑用户" form={form} header={header}>
-            <Spin spinning={loading}>{children}</Spin>
-        </Pannel>
+        <PreviewText.Placeholder value="-">
+            <Pannel
+                {...props}
+                title="编辑用户"
+                form={form}
+                submit={
+                    <Space>
+                        <FormConsumer>
+                            {form => (
+                                <Submit size="large" disabled={!form.editable}>
+                                    提交
+                                </Submit>
+                            )}
+                        </FormConsumer>
+                        <Button
+                            size="large"
+                            onClick={event =>
+                                form?.setState(state => {
+                                    state.editable = !state.editable;
+                                    if ("innerText" in event.target) {
+                                        event.target.innerText = prevText(state.editable);
+                                    }
+                                })
+                            }>
+                            {prevText(form?.editable)}
+                        </Button>
+                    </Space>
+                }>
+                <Spin spinning={loading}>{children}</Spin>
+            </Pannel>
+        </PreviewText.Placeholder>
     );
 };
 
-export interface WrapperProps extends Pick<PannelProps, "footer" | "header"> {}
+export interface WrapperProps extends Omit<PannelProps, "submit" | "title"> {}
 
 export default Wrapper;

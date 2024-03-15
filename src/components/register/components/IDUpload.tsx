@@ -3,6 +3,7 @@ import { Upload, IUploadProps, Input } from "@formily/antd-v5";
 import styled from "@emotion/styled";
 import { Button } from "antd";
 import { FC } from "react";
+import { useField } from "@formily/react";
 
 // 放这里是因为单独一个文件太鸡肋，而这个又是每个模式都需要用的，就放在一起
 const PopInput = styled(Input)`
@@ -32,16 +33,19 @@ const transform = (data: Record<string, LocationItem | string> | undefined = {})
         ];
     }, [] as Option[]);
 
-const IDUpload: FC<IDUploadProps> = props => (
-    <Upload
-        {...props}
-        action={`${process.env.REACT_APP_API_URL}/form/upload`}
-        headers={{
-            authorization: "authorization-text",
-        }}>
-        <Button icon={<UploadOutlined />}>上传复印件</Button>
-    </Upload>
-);
+const IDUpload: FC<IDUploadProps> = props => {
+    const field = useField();
+    return (
+        <Upload
+            {...props}
+            action={`${process.env.REACT_APP_API_URL}/form/upload`}
+            headers={{
+                authorization: "authorization-text",
+            }}>
+            {field.editable && <Button icon={<UploadOutlined />}>上传复印件</Button>}
+        </Upload>
+    );
+};
 
 interface Option {
     value: string | number;

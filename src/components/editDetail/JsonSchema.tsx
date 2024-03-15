@@ -1,8 +1,13 @@
+import { createForm } from "@formily/core";
 import { ISchema } from "@formily/react";
 import { FC } from "react";
 import Wrapper from "./Wrapper";
 import SchemaField from "../register/SchemaField";
 import { schema } from "../register/components/service";
+
+const form = createForm({
+    validateFirst: true,
+});
 
 const deleteSchema = (schema: ISchema, fields: string[]) => {
     fields.forEach(key => {
@@ -17,6 +22,7 @@ const JsonSchema: FC = () => {
     const fileds = deleteSchema(schema, ["password", "confirm_password"]);
     return (
         <Wrapper
+            form={form}
             header={
                 <h2>
                     通过<code>Json Schema</code>编辑详情

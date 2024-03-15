@@ -80,9 +80,22 @@ export const schema: ISchema = {
                 },
             },
             "x-decorator-props": {
-                asterisk: true,
                 feedbackLayout: "none",
             },
+            'x-reactions': {
+                dependencies: [".firstName#editable", ".lastName#editable"],
+                when: "{{$deps[0] || $deps[1]}}",
+                fulfill: {
+                    schema: {
+                        "x-decorator-props": { asterisk: true }
+                    }
+                },
+                otherwise: {
+                    schema: {
+                        "x-decorator-props": { asterisk: false }
+                    }
+                }
+            }
         },
         email: {
             required: true,
@@ -93,6 +106,7 @@ export const schema: ISchema = {
             "x-validator": "email",
         },
         gender: {
+            required: true,
             title: "性别",
             type: "string",
             "x-component": "Select",

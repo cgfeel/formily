@@ -14,7 +14,11 @@ const Pannel: FC<PropsWithChildren<PannelProps>> = ({
     children,
     footer,
     header,
-    submit = "注册",
+    submit = (
+        <Submit size="large" block>
+            注册
+        </Submit>
+    ),
     title = "新用户注册",
     onAutoSubmit = console.log,
     onAutoSubmitFailed = console.log,
@@ -34,11 +38,7 @@ const Pannel: FC<PropsWithChildren<PannelProps>> = ({
                         onAutoSubmit={onAutoSubmit}
                         onAutoSubmitFailed={onAutoSubmitFailed}>
                         {children}
-                        <FormButtonGroup.FormItem>
-                            <Submit size="large" block>
-                                {submit}
-                            </Submit>
-                        </FormButtonGroup.FormItem>
+                        <FormButtonGroup.FormItem>{submit}</FormButtonGroup.FormItem>
                     </Form>
                 </Card>
             </div>
