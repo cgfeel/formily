@@ -110,7 +110,7 @@
 -   无论组件怎么拆分，每个表单声明`createForm`一定要单独一个文件
 -   无法使用`useField`以及无法通过受控获取可编辑状态时，可消费`FormConsumer`获取实时状态
 
-> 无法在`Filed`系列组件中通过`props`（`children`除外）包裹的组件均无法受控、也不能使用`useField`，这也包过除此之外的所有 `React` 组件
+> 无法在`Filed`系列组件中通过`component`或`decorator`包裹的组件均无法受控、也不能使用`useField`，这也包过除此之外的所有 `React` 组件
 
 ---- 分割线 ----
 
