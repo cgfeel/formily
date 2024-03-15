@@ -18,7 +18,8 @@ const FieldJsx: FC = () => (
                     </li>
                     <li>
                         在组件中可以通过<code>useField</code>这个 Hooks 获取当前表单编辑状态，但仅限于在
-                        <code>Field</code>系列组件中， 能够接收<code>component</code> 这个 props 作为子组件的内部子组件
+                        <code>Field</code>系列组件中， 能够<code>props</code>（<code>children</code>除外）
+                        作为子组件的内部子组件
                     </li>
                     <li>
                         对于<code>ArrayBase</code>这种无法被<code>ArrayField</code>作为<code>component</code> props

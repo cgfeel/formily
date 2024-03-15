@@ -84,6 +84,36 @@
 
 ---- 分割线 ----
 
+#### 编辑详情
+
+-   URL：`/edit-detail`
+-   目录：
+    -   https://github.com/cgfeel/formily/blob/main/src/page/EditDetail.tsx
+-   包含章节：
+    -   编辑详情 [[查看](https://formilyjs.org/zh-CN/guide/scenes/edit-detail)]
+    -   `PreviewText` [[查看](https://antd.formilyjs.org/zh-CN/components/preview-text)]
+
+**包含：**
+
+通过组件`PreviewText.Placeholder`实现预览，文档没有提到3点：
+
+-   默认开启预览
+-   切换预览和编辑状态
+-   表单组件根据可编辑状态受控响应
+
+文档提到的：
+
+-   使用`useField`获取可编辑状态
+
+巩固：
+
+-   无论组件怎么拆分，每个表单声明`createForm`一定要单独一个文件
+-   无法使用`useField`以及无法通过受控获取可编辑状态时，可消费`FormConsumer`获取实时状态
+
+> 无法在`Filed`系列组件中通过`props`（`children`除外）包裹的组件均无法受控、也不能使用`useField`，这也包过除此之外的所有 `React` 组件
+
+---- 分割线 ----
+
 #### 查询列表
 
 -   URL：`/table`
