@@ -7,6 +7,7 @@ import { schema } from "../register/components/service";
 
 const form = createForm({
     validateFirst: true,
+    readPretty: true,
 });
 
 const deleteSchema = (schema: ISchema, fields: string[]) => {

@@ -13,19 +13,24 @@ const MarkupSchema: FC = () => (
         footer={
             <div>
                 <p>
-                    通过组件<code>PreviewText.Placeholder</code>实现预览，有 3 点文档没有提到：
+                    通过组件<code>PreviewText.Placeholder</code>实现预览：
                 </p>
-                <ol>
+                <ul>
                     <li>
-                        默认开启预览需要通过<code>createForm</code>，将<code>editable</code>设置为 <code>false</code>
+                        默认全局预览通过<code>createForm</code>，将<code>editable</code>设置为 <code>false</code>，或
+                        <code>readPretty</code>为<code>true</code>
                     </li>
                     <li>
-                        否则通过 <code>createForm</code> 拿到的<code>form</code>对象设置可编辑状态<code>setState</code>
+                        局部预览见后面的示例<code>ArrayTable</code>自增表格，或直接使用<code>PreviewText.Input</code>
+                        等一系列组件
+                    </li>
+                    <li>
+                        可通过 <code>createForm</code> 拿到的<code>form</code>对象切换可编辑状态<code>setState</code>
                     </li>
                     <li>
                         表单控件可以通过受控的方式获取当前编辑状态并调整状态，见当前表单<code>姓名</code>节点
                     </li>
-                </ol>
+                </ul>
             </div>
         }
         form={form}
