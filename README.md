@@ -87,8 +87,7 @@
 #### 编辑详情
 
 -   URL：`/edit-detail`
--   目录：
-    -   https://github.com/cgfeel/formily/blob/main/src/page/EditDetail.tsx
+-   目录：https://github.com/cgfeel/formily/blob/main/src/page/EditDetail.tsx
 -   包含章节：
     -   编辑详情 [[查看](https://formilyjs.org/zh-CN/guide/scenes/edit-detail)]
     -   `PreviewText` [[查看](https://antd.formilyjs.org/zh-CN/components/preview-text)]
