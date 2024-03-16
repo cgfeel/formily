@@ -33,6 +33,10 @@ export const router = {
         name: "弹窗与抽屉",
         path: lazy(() => import("./page/DialogDrawer")),
     },
+    "/step-form": {
+        name: "分步表单",
+        path: lazy(() => import("./page/StepForm")),
+    },
 } as const;
 
 export type RouterKey = keyof typeof router;
