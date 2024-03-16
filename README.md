@@ -104,7 +104,7 @@
 
 巩固（个人补充）：
 
--   无论组件怎么拆分，每个表单声明`createForm`一定要单独一个文件
+-   无论组件怎么拆分，每个表单声明`createForm`只能匹配一个`Form`
 -   无法使用`useField`以及无法通过受控获取可编辑状态时，可消费`FormConsumer`获取实时状态
 
 > 无法在`Filed`系列组件中通过`component`或`decorator`包裹的组件均无法受控、也不能使用`useField`，这也包过除此之外的所有 `React` 组件
@@ -142,5 +142,30 @@
 -   通过`createForm`实现主动受控和被动受控
 -   受控中使用`when`
 -   自定义组件`PriceInterval`，和之前的不同的是这里还自定义了组件的 `onChange`事件
+
+---- 分割线 ----
+
+#### 弹窗与抽屉
+
+-   URL：`/dialog-drawer`
+-   目录：https://github.com/cgfeel/formily/blob/main/src/page/DialogDrawer.tsx
+-   包含章节：
+    -   弹窗与抽屉 [[查看](https://formilyjs.org/zh-CN/guide/scenes/dialog-drawer)]
+    -   `FormDialog` [[查看](https://antd5.formilyjs.org/zh-CN/components/form-dialog)]
+    -   `FormDrawer` [[查看](https://antd5.formilyjs.org/zh-CN/components/form-drawer)]
+
+**包含：**
+
+演示了几个能力：
+
+-   快速打开，关闭能力：通过`IFormDialog`对象触发`open`和`close`
+-   中间件能力：`forCancel`、`forConfirm`、`forOpen`（`Drawer`仅支持`forOpen`）
+-   渲染函数内可以响应式能力：`schema`和`Field`
+-   上下文共享能力：仅限`Dialog`
+
+个人补充：
+
+-   性能调优，通过拆分`schema`和`Field`，具体见示例
+-   `Dialog`和`Drawer`行为差异
 
 ---- 分割线 ----

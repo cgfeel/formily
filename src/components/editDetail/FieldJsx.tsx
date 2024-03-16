@@ -14,7 +14,7 @@ const FieldJsx: FC = () => (
                 <p>巩固：</p>
                 <ul>
                     <li>
-                        无论组件怎么拆分，每个表单声明<code>createForm</code>一定要单独一个文件
+                        无论组件怎么拆分，每个表单声明<code>createForm</code>只能匹配一个<code>form</code>
                     </li>
                     <li>
                         在组件中可以通过<code>useField</code>这个 Hooks 获取当前表单编辑状态，但仅限于在
