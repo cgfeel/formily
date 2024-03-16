@@ -169,3 +169,18 @@
 -   `Dialog`和`Drawer`行为差异
 
 ---- 分割线 ----
+
+#### 分步表单
+
+-   URL：`/step-form`
+-   目录：https://github.com/cgfeel/formily/blob/main/src/page/StepForm.tsx
+-   包含章节：
+    -   分步表单 [[查看](https://formilyjs.org/zh-CN/guide/scenes/step-form)]
+    -   `FormStep` [[查看](https://antd5.formilyjs.org/zh-CN/components/form-step)]
+
+**包含：**
+
+-   `FormStep.createFormStep`和`createForm`一样，每次声明只能匹配一个`form`
+-   在前面登录示例中演示了`createSchemaField`设置`scope`，分步表单演示了后置动态设置`scope`
+
+---- 分割线 ----
