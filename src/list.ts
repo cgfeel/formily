@@ -29,6 +29,10 @@ export const router = {
         name: "自增表格（查询列表）",
         path: lazy(() => import("./page/Table")),
     },
+    "/dialog-drawer": {
+        name: "弹窗与抽屉",
+        path: lazy(() => import("./page/DialogDrawer")),
+    },
 } as const;
 
 export type RouterKey = keyof typeof router;
