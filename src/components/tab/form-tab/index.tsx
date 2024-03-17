@@ -101,10 +101,6 @@ type ComposedFormTab = typeof FormTabInner & {
     TabPane: FC<PropsWithChildren<IFormTabPaneProps>>;
     createFormTab: (defaultActiveKey?: string) => IFormTab;
 };
-/*type ComposedFormTab = FC<PropsWithChildren<IFormTabProps>> & {
-    TabPane: FC<PropsWithChildren<IFormTabPaneProps>>;
-    createFormTab: (defaultActiveKey?: string) => IFormTab;
-};*/
 
 export interface IFormTab {
     activeKey?: string;
