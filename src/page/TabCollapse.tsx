@@ -1,9 +1,11 @@
 import { FC } from "react";
-import MarkupSchema from "../components/tab/MarkupSchema";
+import TabsJsonSchema from "../components/tab/JsonSchema";
+import TabsMarkupSchema from "../components/tab/MarkupSchema";
 
 const TabCollapse: FC = () => (
     <>
-        <MarkupSchema />
+        <TabsMarkupSchema />
+        <TabsJsonSchema />
     </>
 );
 

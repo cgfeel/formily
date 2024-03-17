@@ -8,7 +8,14 @@ const form = createForm();
 const formTab = FormTab.createFormTab();
 
 const MarkupSchema: FC = () => (
-    <Pannel form={form} formTab={formTab}>
+    <Pannel
+        form={form}
+        formTab={formTab}
+        header={
+            <h2>
+                通过<code>Markup Schema</code>创建选项卡表单
+            </h2>
+        }>
         <SchemaField>
             <SchemaField.Void x-component="FormTab" x-component-props={{ formTab }}>
                 {tabList.map(({ input, name, tab }) => (

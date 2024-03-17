@@ -167,6 +167,9 @@
 
 -   性能调优，通过拆分`schema`和`Field`，具体见示例
 -   `Dialog`和`Drawer`行为差异
+-   修复`Drawer`适配问题
+
+> **修复：** 截止于 24.03.18 `FormDrawer` 中使用 `antd v5` 的 `Dom` 结构和 `Api` 已发生更改，影响包括：`FormDrawer.Extra` 和 `FormDrawer.Footer` 无效，如果在使用过程中仍旧没有修复，可以拷贝这个组件并替换组件路径：https://github.com/cgfeel/formily/blob/main/src/components/drawer/form-drawer/index.tsx
 
 ---- 分割线 ----
 
@@ -184,3 +187,24 @@
 -   在前面登录示例中演示了`createSchemaField`设置`scope`，分步表单演示了后置动态设置`scope`
 
 ---- 分割线 ----
+
+#### 选项卡、手风琴表单
+
+-   URL：`/tab-collapse`
+-   目录：https://github.com/cgfeel/formily/blob/main/src/page/TabCollapse.tsx
+-   包含章节：
+    -   选项卡/手风琴表单 [[查看](https://formilyjs.org/zh-CN/guide/scenes/tab-form)]
+    -   `FormTab` [[查看](https://antd5.formilyjs.org/zh-CN/components/form-tab)]
+
+**包含：**
+
+-   `antd v5`对于选项卡 API 的调整
+-   选项卡交互操作
+
+巩固：
+
+-   `Json Schema` 中，对于需要为 `props` 传递上下文的情况，可以通过 `scope` 动态添加上下文对象
+
+---- 分割线 ----
+
+> **修复：** 截止于 24.03.18 `FormTabs` 中使用 `antd v5` 的 `Api` 已发生更改，不再支持 `TabPane` 改为 `items`，我将内部 API 调用的方式修改了，保留了外部 API 调用的名称，这样就使用时不需要做任何调整。如果在使用过程中仍旧没有修复，可以拷贝这个组件并替换组件路径：https://github.com/cgfeel/formily/blob/main/src/components/tab/form-tab/index.tsx

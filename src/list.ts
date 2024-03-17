@@ -38,7 +38,7 @@ export const router = {
         path: lazy(() => import("./page/StepForm")),
     },
     "/tab-collapse": {
-        name: "选项卡/折叠表单",
+        name: "选项卡、折叠表单",
         path: lazy(() => import("./page/TabCollapse")),
     },
 } as const;
