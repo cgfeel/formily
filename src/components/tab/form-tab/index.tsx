@@ -115,4 +115,6 @@ export interface IFormTabPaneProps extends TabPaneProps {
     key: string | number;
 }
 
+export { FormTab };
+
 export default FormTab;

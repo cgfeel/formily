@@ -1,8 +1,9 @@
-import { FormButtonGroup, FormDrawer, FormLayout, Reset, Submit } from "@formily/antd-v5";
+import { FormButtonGroup, FormLayout, Reset, Submit } from "@formily/antd-v5";
 import { Form } from "@formily/core";
 import { Button } from "antd";
 import { FC, ReactNode } from "react";
 import useStylish from "../commonStylish";
+import FormDrawer from "./form-drawer";
 
 const fieldKeys = ["a", "b", "c", "d"].map(key => key.repeat(3));
 const PortalId = "可以传，也可以不传的ID，默认是form-drawer";
@@ -14,7 +15,7 @@ const buttonClick = (field: ReactNode, initialValues?: Form["initialValues"]) =>
             <FormLayout labelCol={6} wrapperCol={10}>
                 {field}
                 {key !== "" && <p onClick={() => drawer.close()}>扩展文案：{form.values[key]}(点击关闭弹窗)</p>}
-                <>
+                <FormDrawer.Extra>
                     <FormButtonGroup align="right">
                         <Submit
                             onSubmit={() => {
@@ -27,7 +28,7 @@ const buttonClick = (field: ReactNode, initialValues?: Form["initialValues"]) =>
                         </Submit>
                         <Reset>重置</Reset>
                     </FormButtonGroup>
-                </>
+                </FormDrawer.Extra>
             </FormLayout>
         );
     });
