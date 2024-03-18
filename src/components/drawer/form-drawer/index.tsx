@@ -3,12 +3,22 @@ import { createForm, IFormProps, Form, onFormSubmitSuccess } from "@formily/core
 import { FormProvider, observer, ReactFC } from "@formily/react";
 import { toJS } from "@formily/reactive";
 import { isNum, isStr, isBool, isFn, applyMiddleware, IMiddleware } from "@formily/shared";
-import React, { Fragment, useLayoutEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import { Drawer, DrawerProps } from "antd";
+import {
+    Fragment,
+    KeyboardEvent,
+    MouseEvent,
+    ReactElement,
+    ReactNode,
+    isValidElement,
+    useLayoutEffect,
+    useRef,
+    useState,
+} from "react";
+import { createPortal } from "react-dom";
 
 const isDrawerTitle = (props: any): props is DrawerTitle => {
-    return isNum(props) || isStr(props) || isBool(props) || React.isValidElement(props);
+    return isNum(props) || isStr(props) || isBool(props) || isValidElement(props);
 };
 
 const getDrawerProps = (props: any): IDrawerProps => {
@@ -26,7 +36,7 @@ export function FormDrawer(title: IDrawerProps, id: FormDrawerRenderer): IFormDr
 export function FormDrawer(title: DrawerTitle, id: string, renderer: FormDrawerRenderer): IFormDrawer;
 export function FormDrawer(title: DrawerTitle, id: FormDrawerRenderer): IFormDrawer;
 export function FormDrawer(title: any, id: any, renderer?: any): IFormDrawer {
-    if (isFn(id) || React.isValidElement(id)) {
+    if (isFn(id) || isValidElement(id)) {
         renderer = id;
         id = "form-drawer";
     }
@@ -174,7 +184,7 @@ FormDrawer.Footer = DrawerFooter;
 
 FormDrawer.Portal = createPortalProvider("form-drawer");
 
-type DrawerTitle = string | number | React.ReactElement;
+type DrawerTitle = string | number | ReactElement;
 
 type EnvType = {
     form: Form | null;
@@ -183,9 +193,9 @@ type EnvType = {
     promise: Promise<any> | null;
 };
 
-type EventType = React.KeyboardEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement | HTMLButtonElement>;
+type EventType = KeyboardEvent<HTMLDivElement> | MouseEvent<HTMLDivElement | HTMLButtonElement>;
 
-type FormDrawerRenderer = React.ReactElement | ((form: Form) => React.ReactElement);
+type FormDrawerRenderer = ReactElement | ((form: Form) => ReactElement);
 
 export interface IFormDrawer {
     forOpen(middleware: IMiddleware<IFormProps>): IFormDrawer;
@@ -195,8 +205,8 @@ export interface IFormDrawer {
 
 export interface IDrawerProps extends DrawerProps {
     // onClose?: (e: EventType) => void | boolean;
-    onClose?: (e: React.MouseEvent | React.KeyboardEvent | EventType) => void | boolean;
-    loadingText?: React.ReactNode;
+    onClose?: (e: MouseEvent | KeyboardEvent | EventType) => void | boolean;
+    loadingText?: ReactNode;
 }
 
 export default FormDrawer;
