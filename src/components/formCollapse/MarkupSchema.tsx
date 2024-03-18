@@ -8,7 +8,14 @@ const form = createForm();
 const formCollapse = FormCollapse.createFormCollapse();
 
 const MarkupSchema: FC = () => (
-    <Pannel form={form} formCollapse={formCollapse}>
+    <Pannel
+        form={form}
+        formCollapse={formCollapse}
+        header={
+            <h2>
+                通过<code>Markup Schema</code>创建折叠表单
+            </h2>
+        }>
         <SchemaField>
             <SchemaField.Void
                 title="折叠面板"
