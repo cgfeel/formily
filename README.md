@@ -205,10 +205,14 @@
 -   巩固：`Json Schema` 中，对于需要为 `props` 传递上下文的情况，可以通过 `scope` 动态添加上下文对象
 -   拆分 `Markup Schema`组件 及 `Json Schema`
 
-> **修复：** 截止于 24.03.18 `FormTab` 中使用 `antd v5` 的 `Api` 已发生更改，不再支持 `TabPane` 改为 `items`，我将内部 API 调用的方式修改了，保留了外部 API 调用的名称，这样就使用时不需要做任何调整。如果在使用过程中仍旧没有修复，可以拷贝这个组件并替换组件路径：https://github.com/cgfeel/formily/blob/main/src/components/tab/form-tab/index.tsx
+**修复：**
 
-> **修复：** 截止于 24.03.18 `FormCollapse` 中使用 `antd v5` 的 `Api` 已发生更改，不再支持 `CollapsePane` 改为 `items`，我将内部 API 调用的方式修改了，可以拷贝这个组件并替换组件路径：https://github.com/cgfeel/formily/blob/main/src/components/drawer/form-drawer/index.tsx
+截止于 24.03.20，`@formily/antd-v5`部分组件 API 已废弃，我将其修复包括有：
 
-> **修复：** 截止于 24.03.20 `ArrayCollapse` 中使用 `antd v5` 的 `Api` 已发生更改，不再支持 `CollapsePane` 改为 `items`，我将内部 API 调用的方式修改了，可以拷贝这个组件并替换组件路径：https://github.com/cgfeel/formily/tree/main/src/components/arrayCollapse/array-collapse
+-   `FormTab`：不再支持 `TabPane` 改为 `items` [[查看](https://github.com/cgfeel/formily/blob/main/src/components/tab/form-tab/index.tsx)]
+-   `FormCollapse`：`Api` 已发生更改，不再支持 `CollapsePane` 改为 `items` [[查看](https://github.com/cgfeel/formily/blob/main/src/components/formCollapse/form-collapse/index.tsx)]
+-   `ArrayCollapse`：不再支持 `CollapsePane` 改为 `items` [[查看](https://github.com/cgfeel/formily/blob/main/src/components/arrayCollapse/array-collapse/index.tsx)]
+
+如果使用过程中官方仍旧没有修复，请查看对应的文件，拷贝修复
 
 ---- 分割线 ----
