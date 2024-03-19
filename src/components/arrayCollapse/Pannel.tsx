@@ -5,6 +5,10 @@ import { FC, PropsWithChildren, ReactNode } from "react";
 import useStylish from "../commonStylish";
 import { createStyles, css } from "antd-style";
 
+const defaultValue = "default value";
+const setDefaultValue = <T extends string | Record<string, string>>(value: T, num?: number) =>
+    Array.from({ length: num || 10 }).map(() => value);
+
 const useStyles = createStyles(css`
     width: 600px;
 `);
@@ -20,7 +24,21 @@ const Pannel: FC<PropsWithChildren<PannelProps>> = ({ children, footer, form, he
                     <FormProvider form={form}>
                         {children}
                         <FormButtonGroup>
-                            <Button onClick={() => form.setInitialValues({})}>加载默认数据</Button>
+                            <Button
+                                onClick={() =>
+                                    form.setInitialValues({
+                                        array: setDefaultValue({
+                                            aa: defaultValue,
+                                            bb: defaultValue,
+                                            cc: defaultValue,
+                                            dd: defaultValue,
+                                        }),
+                                        array_unshift: setDefaultValue({ aa: defaultValue }),
+                                        string_array: setDefaultValue(defaultValue),
+                                    })
+                                }>
+                                加载默认数据
+                            </Button>
                             <Submit onSubmit={console.log} onSubmitFailed={console.log}>
                                 提交
                             </Submit>
