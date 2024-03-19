@@ -208,6 +208,6 @@
 
 > **修复：** 截止于 24.03.18 `FormTab` 中使用 `antd v5` 的 `Api` 已发生更改，不再支持 `TabPane` 改为 `items`，我将内部 API 调用的方式修改了，保留了外部 API 调用的名称，这样就使用时不需要做任何调整。如果在使用过程中仍旧没有修复，可以拷贝这个组件并替换组件路径：https://github.com/cgfeel/formily/blob/main/src/components/tab/form-tab/index.tsx
 
-> **修复：** 截止于 24.03.18 `FormCollapse` 中使用 `antd v5` 的 `Api` 已发生更改，不再支持 `CollapsePane` 改为 `items`，我将内部 API 调用的方式修改了，可以拷贝这个组件并替换组件路径：https://github.com/cgfeel/formily/blob/main/src/components/tab/form-tab/index.tsx
+> **修复：** 截止于 24.03.18 `FormCollapse` 中使用 `antd v5` 的 `Api` 已发生更改，不再支持 `CollapsePane` 改为 `items`，我将内部 API 调用的方式修改了，可以拷贝这个组件并替换组件路径：https://github.com/cgfeel/formily/blob/main/src/components/drawer/form-drawer/index.tsx
 
 ---- 分割线 ----
