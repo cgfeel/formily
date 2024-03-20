@@ -41,6 +41,10 @@ export const router = {
         name: "选项卡、折叠表单",
         path: lazy(() => import("./page/TabCollapse")),
     },
+    "/validate": {
+        name: "表单校验",
+        path: lazy(() => import("./page/Validate")),
+    },
 } as const;
 
 export type RouterKey = keyof typeof router;
