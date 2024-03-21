@@ -45,6 +45,10 @@ export const router = {
         name: "表单校验",
         path: lazy(() => import("./page/Validate")),
     },
+    "/layout": {
+        name: "实现表单布局",
+        path: lazy(() => import("./page/Layout")),
+    },
 } as const;
 
 export type RouterKey = keyof typeof router;
