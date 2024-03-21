@@ -9,6 +9,12 @@ import CustomRuleMarkupSchema from "../components/validate/customRules/MarkupSch
 import FormatFieldJsx from "../components/validate/format/FieldJsx";
 import FormatJsonSchema from "../components/validate/format/JsonSchema";
 import FormatMarkupSchema from "../components/validate/format/MarkupSchema";
+import PromiseFieldJsx from "../components/validate/promise/FieldJsx";
+import PromiseJsonSchema from "../components/validate/promise/JsonSchema";
+import PromiseMarkupSchema from "../components/validate/promise/MarkupSchema";
+import ReactionFieldJsx from "../components/validate/reactions/FieldJsx";
+import ReactionJsonSchema from "../components/validate/reactions/JsonSchema";
+import ReactionMarkupSchema from "../components/validate/reactions/MarkupSchema";
 import RuleFieldJsx from "../components/validate/rule/FieldJsx";
 import RuleJsonSchema from "../components/validate/rule/JsonSchema";
 import RuleMarkupSchema from "../components/validate/rule/MarkupSchema";
@@ -63,7 +69,12 @@ const items: TabsProps["items"] = [
         label: "异步、联动、定制文案",
         children: (
             <>
-                <p>others</p>
+                <PromiseMarkupSchema />
+                <PromiseJsonSchema />
+                <PromiseFieldJsx />
+                <ReactionMarkupSchema />
+                <ReactionJsonSchema />
+                <ReactionFieldJsx />
             </>
         ),
     },
