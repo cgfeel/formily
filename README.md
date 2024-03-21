@@ -216,3 +216,29 @@
 如果使用过程中官方仍旧没有修复，请查看对应的文件，拷贝修复
 
 ---- 分割线 ----
+
+### 进阶指南
+
+#### 实现表单验证
+
+-   URL：`/validate`
+-   目录：https://github.com/cgfeel/formily/blob/main/src/page/Validate.tsx
+-   包含章节：
+    -   表单校验 [[查看](https://formilyjs.org/zh-CN/guide/advanced/validate)]
+
+**包含：**
+
+-   内置规则校验：`props`，`x-validator`对象、`x-validator`数组对象
+-   内置格式校验：`props`，`x-validator`对象（字符、对象、字符数组、对象数组）
+-   自定义规则校验：`registerValidateRules`
+-   自定义格式校验：`registerValidateFormats`
+-   异步校验：自定义规则校验 + `Promise`
+-   联动校验：`reactions`
+-   定义文案：`setValidateLanguage`
+
+**和文档不同：**
+
+-   自定义规则校验，`Json Schema`是通过`scope`这个 `props` 动态添加局部定义规则；这样更符合实际应用场景
+-   联动校验通过 3 种不同的方式进行：`createForm`中的`effects`、`schema`中的`x-reactions`，`Field`中的`reactions` 函数
+
+---- 分割线 ----
