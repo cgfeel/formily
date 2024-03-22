@@ -15,6 +15,9 @@ const MarkupSchema: FC = () => (
             </h2>
         }>
         <SchemaField>
+            <SchemaField.Void x-component="CustomCom">
+                <SchemaField.Void x-component="CustomSub" />
+            </SchemaField.Void>
             <SchemaField.Void
                 x-component="FormLayout"
                 x-component-props={{

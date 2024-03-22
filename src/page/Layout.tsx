@@ -1,5 +1,10 @@
 import { Tabs, TabsProps } from "antd";
 import { FC } from "react";
+import ItemFieldJsx from "../components/formItem/FieldJsx";
+import ItemJsonSchema from "../components/formItem/JsonSchema";
+import ItemMarkupSchema from "../components/formItem/MarkupSchema";
+import MaskMarkupSchema from "../components/formItem/mark/MarkupSchema";
+import PropsMarkupSchema from "../components/formItem/propretiesCase/MarkupSchema";
 import LayoutFieldJsx from "../components/formLayout/FieldJsx";
 import LayoutJsonSchema from "../components/formLayout/JsonSchema";
 import LayoutMarkupSchema from "../components/formLayout/MarkupSchema";
@@ -22,7 +27,11 @@ const items: TabsProps["items"] = [
         label: "FormItem",
         children: (
             <>
-                <p>FormItem</p>
+                <ItemMarkupSchema />
+                <ItemJsonSchema />
+                <ItemFieldJsx />
+                <PropsMarkupSchema />
+                <MaskMarkupSchema />
             </>
         ),
     },
