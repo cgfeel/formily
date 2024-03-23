@@ -27,7 +27,7 @@ const MarkupSchema: FC = () => (
                         x-component="FormCollapse.CollapsePanel"
                         key={name}
                         name={name}
-                        x-component-props={{ label: tab }}>
+                        x-component-props={{ key: tab, header: tab }}>
                         <SchemaField.String
                             name={input}
                             title={input.toUpperCase()}

@@ -25,7 +25,7 @@ const shcema: ISchema = {
                     [name]: {
                         type: "void",
                         "x-component": "FormCollapse.CollapsePanel",
-                        "x-component-props": { label: tab },
+                        "x-component-props": { key: tab, header: tab },
                         properties: {
                             [input]: {
                                 required: true,

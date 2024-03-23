@@ -1,26 +1,28 @@
 import { usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
+import { GeneralField } from "@formily/core";
 import { Schema, SchemaKey } from "@formily/json-schema";
-import { ReactFC, RecursionField, observer, useField, useFieldSchema } from "@formily/react";
-import { model, markRaw } from "@formily/reactive";
+import { observer, ReactFC, RecursionField, useField, useFieldSchema } from "@formily/react";
+import { markRaw, model } from "@formily/reactive";
 import { toArr } from "@formily/shared";
-import { FC, Fragment, PropsWithChildren, ReactNode, useMemo } from "react";
-import { Collapse, Badge, CollapseProps, CollapsePanelProps } from "antd";
+import { Badge, Collapse, CollapsePanelProps, CollapseProps } from "antd";
 import { cx as cls } from "antd-style";
+import { FC, Fragment, PropsWithChildren, useMemo } from "react";
 
 const usePanels = () => {
     const collapseField = useField();
     const schema = useFieldSchema();
-    const panels: { name: SchemaKey; props: Exclude<CollapseProps["items"], undefined>[number]; schema: Schema }[] = [];
+    const panels: { name: SchemaKey; props: CollapsePanelProps; schema: Schema }[] = [];
     schema.mapProperties((schema, name) => {
         const field = collapseField.query(collapseField.address.concat(name)).take();
         if (field?.display === "none" || field?.display === "hidden") return;
         if (schema["x-component"]?.indexOf("CollapsePanel") > -1) {
-            const componentProps = field?.componentProps || {};
+            const key = field?.componentProps?.key || schema?.["x-component-props"]?.key || name;
             panels.push({
                 name,
                 props: {
-                    ...componentProps,
-                    key: componentProps?.key || name,
+                    ...schema?.["x-component-props"],
+                    ...field?.componentProps,
+                    key,
                 },
                 schema,
             });
@@ -67,8 +69,7 @@ const createFormCollapse = (defaultActiveKeys?: ActiveKeys) => {
     return markRaw(formCollapse);
 };
 
-const FeedbackBadge: ReactFC<IFeedbackBadgeProps> = observer(({ children, name }) => {
-    const field = useField();
+const FeedbackBadge: ReactFC<IFeedbackBadgeProps> = observer(({ children, field, name }) => {
     const errors = field.form.queryFeedbacks({
         type: "error",
         address: `${field.address.concat(name)}.*`,
@@ -83,9 +84,12 @@ const FeedbackBadge: ReactFC<IFeedbackBadgeProps> = observer(({ children, name }
     return <>{children}</>;
 });
 
-const FormCollapseInner = observer(({ children, defaultActiveKey, formCollapse, ...props }: IFormCollapseProps) => {
+const InternalFormCollapse: ReactFC<IFormCollapseProps> = observer(({ children, formCollapse, ...props }) => {
+    const field = useField();
     const panels = usePanels();
     const prefixCls = usePrefixCls("formily-collapse", props);
+    const { defaultActiveKey } = props;
+
     const _formCollapse = useMemo(() => {
         return formCollapse ? formCollapse : createFormCollapse(defaultActiveKey);
     }, [defaultActiveKey, formCollapse]);
@@ -102,7 +106,11 @@ const FormCollapseInner = observer(({ children, defaultActiveKey, formCollapse, 
         children: <RecursionField schema={schema} name={name} />,
         forceRender: true,
         key: name,
-        label: <FeedbackBadge name={name}>{props.label}</FeedbackBadge>,
+        label: (
+            <FeedbackBadge field={field} name={name}>
+                {props.header}
+            </FeedbackBadge>
+        ),
     }));
 
     return (
@@ -119,24 +127,15 @@ const FormCollapseInner = observer(({ children, defaultActiveKey, formCollapse, 
     );
 });
 
-export const FormCollapse = FormCollapseInner as ComposedFormCollapse;
-
-const CollapsePanel: FC<PropsWithChildren<IFormCollapsePanelProps>> = ({ children }) => {
+const CollapsePanel: FC<PropsWithChildren<CollapsePanelProps>> = ({ children }) => {
     return <Fragment>{children}</Fragment>;
 };
-
-FormCollapse.CollapsePanel = CollapsePanel;
-FormCollapse.createFormCollapse = createFormCollapse;
 
 type ActiveKey = string | number;
 type ActiveKeys = ActiveKey | Array<ActiveKey>;
 
-type ComposedFormCollapse = typeof FormCollapseInner & {
-    CollapsePanel?: FC<PropsWithChildren<CollapsePanelProps>>;
-    createFormCollapse: (defaultActiveKeys?: ActiveKeys) => IFormCollapse;
-};
-
 interface IFeedbackBadgeProps {
+    field: GeneralField;
     name: SchemaKey;
 }
 
@@ -149,12 +148,13 @@ export interface IFormCollapse {
     toggleActiveKey(key: ActiveKey): void;
 }
 
-export interface IFormCollapsePanelProps extends CollapsePanelProps {
-    label?: ReactNode;
-}
-
 export interface IFormCollapseProps extends CollapseProps {
     formCollapse?: IFormCollapse;
 }
+
+export const FormCollapse = Object.assign(InternalFormCollapse, {
+    CollapsePanel,
+    createFormCollapse,
+});
 
 export default FormCollapse;
