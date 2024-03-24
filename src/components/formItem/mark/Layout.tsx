@@ -1,4 +1,3 @@
-// import { FormLayout } from "@formily/antd-v5";
 import { createForm } from "@formily/core";
 import { ConfigProvider, Radio } from "antd";
 import zhCN from "antd/es/locale/zh_CN";
@@ -26,33 +25,25 @@ const Layout: FC<PropsWithChildren<{}>> = ({ children }) => {
                 footer={
                     <div>
                         <p>
-                            这里有一个问题：<code>requiredMark</code> 无效，查看了 <code>git</code>{" "}
-                            仓库代码是正确的，那么这个问题很有可能是发布的版本和仓库版本不一致；
+                            在 <code>antd v5</code>
+                            文档中中已剔除这项功能，在此将其修复；因为涉及到的文件很多所以不建议通过替换文件的方式修改，准备提交{" "}
+                            <code>pr</code> 中，这里仅作为参考练习
                         </p>
                         <p>
-                            查看了官方文档，这部分为 <code>antd v4</code>提供的功能，在 <code>antd v5</code>{" "}
-                            中已剔除，目前 <code>antd v5</code> 不支持布局必填样式
+                            由于这次修复涉及到样式，所以特此将 <code>FormItem</code>{" "}
+                            作为默认项优先展示，否则会被同名的样式覆盖
                         </p>
                     </div>
                 }
                 form={form}
                 header={<h2>必填样式</h2>}>
-                <FormLayout shallow={true} requiredMark={false}>
+                <FormLayout shallow={true} requiredMark={requiredMark}>
                     {children}
                 </FormLayout>
             </Panel>
         </ConfigProvider>
     );
 };
-
-declare module "@formily/antd-v5" {
-    export interface IFormLayoutProps extends PickMaskInstance {}
-    export interface IFormItemProps extends PickMaskInstance {}
-}
-
-interface PickMaskInstance {
-    requiredMark?: RequireType;
-}
 
 type RequireType = boolean | "optional";
 

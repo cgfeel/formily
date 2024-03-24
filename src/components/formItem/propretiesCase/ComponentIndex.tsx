@@ -9,9 +9,7 @@ import {
     Switch,
     TreeSelect,
 } from "@formily/antd-v5";
-import { FC } from "react";
-
-const Title: FC<{ text: string }> = ({ text }) => <h3>{text}</h3>;
+import Title from "./Title";
 
 const ComponentIndex = {
     Cascader,

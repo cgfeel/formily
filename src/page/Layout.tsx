@@ -3,6 +3,7 @@ import { FC } from "react";
 import ItemFieldJsx from "../components/formItem/FieldJsx";
 import ItemJsonSchema from "../components/formItem/JsonSchema";
 import ItemMarkupSchema from "../components/formItem/MarkupSchema";
+import FeedbackMarkupSchema from "../components/formItem/feedback/MarkupSchema";
 import MaskMarkupSchema from "../components/formItem/mark/MarkupSchema";
 import PropsMarkupSchema from "../components/formItem/propretiesCase/MarkupSchema";
 import LayoutFieldJsx from "../components/formLayout/FieldJsx";
@@ -32,6 +33,7 @@ const items: TabsProps["items"] = [
                 <ItemFieldJsx />
                 <PropsMarkupSchema />
                 <MaskMarkupSchema />
+                <FeedbackMarkupSchema />
             </>
         ),
     },
@@ -51,6 +53,6 @@ const items: TabsProps["items"] = [
     },
 ];
 
-const Layout: FC = () => <Tabs defaultActiveKey="formLayout" items={items} />;
+const Layout: FC = () => <Tabs defaultActiveKey="formItem" items={items} />;
 
 export default Layout;

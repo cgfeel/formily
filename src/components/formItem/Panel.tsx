@@ -1,4 +1,4 @@
-import { Submit } from "@formily/antd-v5";
+import { ISubmitProps, Submit } from "@formily/antd-v5";
 import { FormProvider, IProviderProps } from "@formily/react";
 import { Card } from "antd";
 import { createStyles } from "antd-style";
@@ -13,20 +13,31 @@ const useStyles = createStyles(
     `,
 );
 
-const Panel: FC<PropsWithChildren<PanelProps>> = ({ children, extra, footer, form, header, width = 600 }) => {
-    const { styles } = useStyles(width);
+const Panel: FC<PropsWithChildren<PanelProps>> = ({
+    children,
+    className,
+    extra,
+    footer,
+    form,
+    header,
+    submit = {},
+    width = 600,
+}) => {
+    const { onSubmit = console.log, onSubmitFailed = console.log } = submit;
+    const { styles, cx } = useStyles(width);
     const stylish = useStylish();
+
     return (
         <div className={stylish.wraper}>
             {header}
             <div className={stylish.pannel}>
-                <Card className={styles}>
+                <Card className={cx(styles, className)}>
                     {extra}
                     <FormProvider form={form}>
                         <Form form={form} labelCol={6}>
                             {children}
                             <FormButtonGroup.FormItem>
-                                <Submit onSubmit={console.log} onSubmitFailed={console.log}>
+                                <Submit onSubmit={onSubmit} onSubmitFailed={onSubmitFailed}>
                                     提交
                                 </Submit>
                             </FormButtonGroup.FormItem>
@@ -40,9 +51,11 @@ const Panel: FC<PropsWithChildren<PanelProps>> = ({ children, extra, footer, for
 };
 
 export interface PanelProps extends IProviderProps {
+    className?: string;
     extra?: ReactNode;
     footer?: ReactNode;
     header?: ReactNode;
+    submit?: ISubmitProps;
     width?: number;
 }
 

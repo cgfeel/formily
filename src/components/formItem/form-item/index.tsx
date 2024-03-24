@@ -1,13 +1,13 @@
 import { CheckCircleOutlined, CloseCircleOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { pickDataProps, usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
 import { useOverflow } from "@formily/antd-v5/lib/form-item/hooks";
-import useStyle from "@formily/antd-v5/lib/form-item/style";
 import { isVoidField } from "@formily/core";
 import { connect, mapProps, ReactFC } from "@formily/react";
 import { ConfigProvider, Popover, Tooltip } from "antd";
 import cls from "classnames";
 import { CSSProperties, FC, PropsWithChildren, useContext, useState } from "react";
 import { FormLayoutShallowContext } from "../../formLayout/form-layout";
+import useStyle from "./style";
 import { IFormItemProps } from "./types";
 import { useFormItemLayout } from "./useFormItemLayout";
 
