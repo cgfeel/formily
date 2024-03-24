@@ -1,9 +1,10 @@
-import { FormItem, Input } from "@formily/antd-v5";
+import { Input } from "@formily/antd-v5";
 import { createForm } from "@formily/core";
 import { Field } from "@formily/react";
+import { createStyles, css } from "antd-style";
 import { FC } from "react";
 import Panel from "./Panel";
-import { createStyles, css } from "antd-style";
+import FormItem from "./form-item";
 
 const form = createForm();
 const useStyles = createStyles(css`

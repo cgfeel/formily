@@ -1,7 +1,37 @@
 import { usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
 import { useResponsiveFormLayout } from "@formily/antd-v5/lib/form-layout/useResponsiveFormLayout";
-import { CSSProperties, FC, PropsWithChildren, ReactNode, createContext, useContext } from "react";
-import cls from "classnames";
+import { cx as cls } from "antd-style";
+import React, { createContext, useContext } from "react";
+
+export interface IFormLayoutProps {
+    prefixCls?: string;
+    className?: string;
+    style?: React.CSSProperties;
+    colon?: boolean;
+    requiredMark?: boolean | "optional";
+    labelAlign?: "right" | "left" | ("right" | "left")[];
+    wrapperAlign?: "right" | "left" | ("right" | "left")[];
+    labelWrap?: boolean;
+    labelWidth?: number;
+    wrapperWidth?: number;
+    wrapperWrap?: boolean;
+    labelCol?: number | number[];
+    wrapperCol?: number | number[];
+    fullness?: boolean;
+    size?: "small" | "default" | "large";
+    layout?: "vertical" | "horizontal" | "inline" | ("vertical" | "horizontal" | "inline")[];
+    direction?: "rtl" | "ltr";
+    inset?: boolean;
+    shallow?: boolean;
+    tooltipLayout?: "icon" | "text";
+    tooltipIcon?: React.ReactNode;
+    feedbackLayout?: "loose" | "terse" | "popover" | "none";
+    bordered?: boolean;
+    breakpoints?: number[];
+    spaceGap?: number;
+    gridColumnGap?: number;
+    gridRowGap?: number;
+}
 
 export interface IFormLayoutContext
     extends Omit<IFormLayoutProps, "labelAlign" | "wrapperAlign" | "layout" | "labelCol" | "wrapperCol"> {
@@ -12,9 +42,9 @@ export interface IFormLayoutContext
     wrapperCol?: number;
 }
 
-export const FormLayoutDeepContext = createContext<IFormLayoutContext>({});
+export const FormLayoutDeepContext = createContext<IFormLayoutContext>({} as IFormLayoutContext);
 
-export const FormLayoutShallowContext = createContext<IFormLayoutContext>({});
+export const FormLayoutShallowContext = createContext<IFormLayoutContext>({} as IFormLayoutContext);
 
 export const useFormDeepLayout = () => useContext(FormLayoutDeepContext);
 
@@ -25,7 +55,7 @@ export const useFormLayout = () => ({
     ...useFormShallowLayout(),
 });
 
-export const FormLayout: FC<PropsWithChildren<IFormLayoutProps>> & {
+export const FormLayout: React.FC<React.PropsWithChildren<IFormLayoutProps>> & {
     useFormLayout: () => IFormLayoutContext;
     useFormDeepLayout: () => IFormLayoutContext;
     useFormShallowLayout: () => IFormLayoutContext;
@@ -79,35 +109,5 @@ FormLayout.defaultProps = {
 FormLayout.useFormDeepLayout = useFormDeepLayout;
 FormLayout.useFormShallowLayout = useFormShallowLayout;
 FormLayout.useFormLayout = useFormLayout;
-
-export interface IFormLayoutProps {
-    bordered?: boolean;
-    breakpoints?: number[];
-    className?: string;
-    colon?: boolean;
-    direction?: "rtl" | "ltr";
-    feedbackLayout?: "loose" | "terse" | "popover" | "none";
-    fullness?: boolean;
-    gridColumnGap?: number;
-    gridRowGap?: number;
-    inset?: boolean;
-    labelAlign?: "right" | "left" | ("right" | "left")[];
-    labelCol?: number | number[];
-    labelWidth?: number;
-    labelWrap?: boolean;
-    layout?: "vertical" | "horizontal" | "inline" | ("vertical" | "horizontal" | "inline")[];
-    prefixCls?: string;
-    requiredMark?: boolean | "optional";
-    shallow?: boolean;
-    size?: "small" | "default" | "large";
-    spaceGap?: number;
-    style?: CSSProperties;
-    tooltipIcon?: ReactNode;
-    tooltipLayout?: "icon" | "text";
-    wrapperAlign?: "right" | "left" | ("right" | "left")[];
-    wrapperCol?: number | number[];
-    wrapperWidth?: number;
-    wrapperWrap?: boolean;
-}
 
 export default FormLayout;

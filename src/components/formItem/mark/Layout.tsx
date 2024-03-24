@@ -1,10 +1,10 @@
-import { FormLayout } from "@formily/antd-v5";
+// import { FormLayout } from "@formily/antd-v5";
 import { createForm } from "@formily/core";
 import { ConfigProvider, Radio } from "antd";
 import zhCN from "antd/es/locale/zh_CN";
 import { FC, PropsWithChildren, useState } from "react";
 import Panel from "../Panel";
-// import FormLayout from "../../formLayout/form-layout";
+import FormLayout from "../../formLayout/form-layout";
 
 const form = createForm();
 

@@ -1,125 +1,25 @@
-import {
-    CheckCircleOutlined,
-    CloseCircleOutlined,
-    ExclamationCircleOutlined,
-    QuestionCircleOutlined,
-} from "@ant-design/icons";
-import { usePrefixCls, pickDataProps } from "@formily/antd-v5/lib/__builtins__";
+import { CheckCircleOutlined, CloseCircleOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
+import { pickDataProps, usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
+import { useOverflow } from "@formily/antd-v5/lib/form-item/hooks";
+import useStyle from "@formily/antd-v5/lib/form-item/style";
 import { isVoidField } from "@formily/core";
-import { connect, mapProps } from "@formily/react";
-import { Tooltip, Popover, ConfigProvider } from "antd";
+import { connect, mapProps, ReactFC } from "@formily/react";
+import { ConfigProvider, Popover, Tooltip } from "antd";
 import cls from "classnames";
-import React, { useEffect, useRef, useContext, useState, FC } from "react";
-import { useFormLayout, FormLayoutShallowContext } from "../../formLayout/form-layout";
-
-export interface IFormItemProps {
-    className?: string;
-    style?: React.CSSProperties;
-    prefixCls?: string;
-    label?: React.ReactNode;
-    colon?: boolean;
-    tooltip?: React.ReactNode;
-    tooltipIcon?: React.ReactNode;
-    layout?: "vertical" | "horizontal" | "inline";
-    tooltipLayout?: "icon" | "text";
-    labelStyle?: React.CSSProperties;
-    labelAlign?: "left" | "right";
-    labelFor?: string;
-    labelWrap?: boolean;
-    labelWidth?: number | string;
-    wrapperWidth?: number | string;
-    labelCol?: number;
-    wrapperCol?: number;
-    wrapperAlign?: "left" | "right";
-    wrapperWrap?: boolean;
-    wrapperStyle?: React.CSSProperties;
-    fullness?: boolean;
-    addonBefore?: React.ReactNode;
-    addonAfter?: React.ReactNode;
-    size?: "small" | "default" | "large";
-    inset?: boolean;
-    extra?: React.ReactNode;
-    feedbackText?: React.ReactNode;
-    feedbackLayout?: "loose" | "terse" | "popover" | "none" | (string & {});
-    feedbackStatus?: "error" | "warning" | "success" | "pending" | (string & {});
-    feedbackIcon?: React.ReactNode;
-    enableOutlineFeedback?: boolean;
-    getPopupContainer?: (node: HTMLElement) => HTMLElement;
-    asterisk?: boolean;
-    optionalMarkHidden?: boolean;
-    gridSpan?: number;
-    bordered?: boolean;
-}
-
-type ComposeFormItem = React.FC<React.PropsWithChildren<IFormItemProps>> & {
-    BaseItem?: React.FC<React.PropsWithChildren<IFormItemProps>>;
-};
-
-const useFormItemLayout = (props: IFormItemProps) => {
-    const layout = useFormLayout();
-    const layoutType = props.layout ?? layout.layout ?? "horizontal";
-    return {
-        ...props,
-        layout: layoutType,
-        colon: props.colon ?? layout.colon,
-        labelAlign:
-            layoutType === "vertical" ? props.labelAlign ?? "left" : props.labelAlign ?? layout.labelAlign ?? "right",
-        labelWrap: props.labelWrap ?? layout.labelWrap,
-        labelWidth: props.labelWidth ?? layout.labelWidth,
-        wrapperWidth: props.wrapperWidth ?? layout.wrapperWidth,
-        labelCol: props.labelCol ?? layout.labelCol,
-        wrapperCol: props.wrapperCol ?? layout.wrapperCol,
-        wrapperAlign: props.wrapperAlign ?? layout.wrapperAlign,
-        wrapperWrap: props.wrapperWrap ?? layout.wrapperWrap,
-        fullness: props.fullness ?? layout.fullness,
-        size: props.size ?? layout.size,
-        inset: props.inset ?? layout.inset,
-        asterisk: props.asterisk,
-        requiredMark: layout.requiredMark,
-        optionalMarkHidden: props.optionalMarkHidden,
-        bordered: props.bordered ?? layout.bordered,
-        feedbackIcon: props.feedbackIcon,
-        feedbackLayout: props.feedbackLayout ?? layout.feedbackLayout ?? "loose",
-        tooltipLayout: props.tooltipLayout ?? layout.tooltipLayout ?? "icon",
-        tooltipIcon: props.tooltipIcon ?? layout.tooltipIcon ?? <QuestionCircleOutlined />,
-    };
-};
-
-function useOverflow<Container extends HTMLElement, Content extends HTMLElement>() {
-    const [overflow, setOverflow] = useState(false);
-    const containerRef = useRef<Container>(null);
-    const contentRef = useRef<Content>(null);
-    const layout = useFormLayout();
-    const labelCol = JSON.stringify(layout.labelCol);
-
-    useEffect(() => {
-        requestAnimationFrame(() => {
-            if (containerRef.current && contentRef.current) {
-                const contentWidth = contentRef.current.getBoundingClientRect().width;
-                const containerWidth = containerRef.current.getBoundingClientRect().width;
-                if (contentWidth && containerWidth && containerWidth < contentWidth) {
-                    if (!overflow) setOverflow(true);
-                } else {
-                    if (overflow) setOverflow(false);
-                }
-            }
-        });
-    }, [containerRef, contentRef, labelCol, overflow, setOverflow]);
-
-    return {
-        overflow,
-        containerRef,
-        contentRef,
-    };
-}
+import { CSSProperties, FC, PropsWithChildren, useContext, useState } from "react";
+import { FormLayoutShallowContext } from "../../formLayout/form-layout";
+import { IFormItemProps } from "./types";
+import { useFormItemLayout } from "./useFormItemLayout";
 
 const ICON_MAP = {
     error: <CloseCircleOutlined />,
     success: <CheckCircleOutlined />,
     warning: <ExclamationCircleOutlined />,
-};
+} as const;
 
-const StatusIcon: FC<Pick<IFormItemProps, "feedbackStatus">> = ({ feedbackStatus }) => {
+const IconMap: FC<{ feedbackStatus: ReturnType<typeof useFormItemLayout>["feedbackStatus"] }> = ({
+    feedbackStatus,
+}) => {
     switch (feedbackStatus) {
         case "error":
             return ICON_MAP.error;
@@ -132,46 +32,47 @@ const StatusIcon: FC<Pick<IFormItemProps, "feedbackStatus">> = ({ feedbackStatus
     }
 };
 
-export const BaseItem: React.FC<React.PropsWithChildren<IFormItemProps>> = ({ children, ...props }) => {
+export const BaseItem: FC<PropsWithChildren<IFormItemProps>> = ({ children, ...props }) => {
     const [active, setActive] = useState(false);
     const formLayout = useFormItemLayout(props);
     const { locale } = useContext(ConfigProvider.ConfigContext);
     const { containerRef, contentRef, overflow } = useOverflow<HTMLDivElement, HTMLSpanElement>();
     const {
-        label,
-        style,
-        layout,
-        colon = true,
-        addonBefore,
         addonAfter,
+        addonBefore,
         asterisk,
-        requiredMark = true,
-        optionalMarkHidden = false,
-        feedbackStatus,
         extra,
-        feedbackText,
+        feedbackIcon,
         fullness,
         feedbackLayout,
-        feedbackIcon,
-        enableOutlineFeedback = true,
-        getPopupContainer,
+        feedbackStatus,
+        feedbackText,
         inset,
-        bordered = true,
-        labelWidth,
-        wrapperWidth,
-        labelCol,
-        wrapperCol,
+        label,
         labelAlign,
-        wrapperAlign = "left",
-        size,
+        labelCol,
+        labelWidth,
         labelWrap,
-        wrapperWrap,
-        tooltipLayout,
+        layout,
+        size,
+        style,
         tooltip,
         tooltipIcon,
+        tooltipLayout,
+        wrapperCol,
+        wrapperWidth,
+        wrapperWrap,
+        getPopupContainer,
+        bordered = true,
+        colon = true,
+        optionalMarkHidden = false,
+        requiredMark = true,
+        wrapperAlign = "left",
     } = formLayout;
     const labelStyle = { ...formLayout.labelStyle };
     const wrapperStyle = { ...formLayout.wrapperStyle };
+    const prefixCls = usePrefixCls("formily-item", props);
+    const [wrapSSR, hashId] = useStyle(prefixCls);
     // 固定宽度
     let enableCol = false;
     if (labelWidth || wrapperWidth) {
@@ -191,11 +92,11 @@ export const BaseItem: React.FC<React.PropsWithChildren<IFormItemProps>> = ({ ch
         }
     }
 
-    const prefixCls = usePrefixCls("formily-item", props);
     const formatChildren =
         feedbackLayout === "popover" ? (
             <Popover
                 autoAdjustOverflow
+                overlayClassName={`${prefixCls}-popover`}
                 placement="top"
                 content={
                     <div
@@ -203,18 +104,18 @@ export const BaseItem: React.FC<React.PropsWithChildren<IFormItemProps>> = ({ ch
                             [`${prefixCls}-${feedbackStatus}-help`]: !!feedbackStatus,
                             [`${prefixCls}-help`]: true,
                         })}>
-                        <StatusIcon feedbackStatus={feedbackStatus} /> {feedbackText}
+                        <IconMap feedbackStatus={feedbackStatus} /> {feedbackText}
                     </div>
                 }
-                visible={!!feedbackText}
+                open={!!feedbackText}
                 getPopupContainer={getPopupContainer}>
-                {children}
+                <>{children}</>
             </Popover>
         ) : (
             children
         );
 
-    const gridStyles: React.CSSProperties = {};
+    const gridStyles: CSSProperties = {};
 
     const getOverflowTooltip = () => {
         if (overflow) {
@@ -233,7 +134,7 @@ export const BaseItem: React.FC<React.PropsWithChildren<IFormItemProps>> = ({ ch
             <div className={`${prefixCls}-label-content`} ref={containerRef}>
                 <span ref={contentRef}>
                     {asterisk && requiredMark === true && <span className={`${prefixCls}-asterisk`}>{"*"}</span>}
-                    <label htmlFor={props.labelFor}>{label}</label>
+                    <label>{label}</label>
                     {!asterisk && requiredMark === "optional" && !optionalMarkHidden && (
                         <span className={`${prefixCls}-optional`}>{locale?.Form?.optional}</span>
                     )}
@@ -243,7 +144,7 @@ export const BaseItem: React.FC<React.PropsWithChildren<IFormItemProps>> = ({ ch
 
         if ((tooltipLayout === "text" && tooltip) || overflow) {
             return (
-                <Tooltip placement="top" align={{ offset: [0, 10] }} title={getOverflowTooltip()}>
+                <Tooltip placement="top" title={getOverflowTooltip()}>
                     {labelChildren}
                 </Tooltip>
             );
@@ -255,7 +156,7 @@ export const BaseItem: React.FC<React.PropsWithChildren<IFormItemProps>> = ({ ch
         if (tooltip && tooltipLayout === "icon" && !overflow) {
             return (
                 <span className={`${prefixCls}-label-tooltip-icon`}>
-                    <Tooltip placement="top" align={{ offset: [0, 2] }} title={tooltip}>
+                    <Tooltip placement="top" title={tooltip}>
                         {tooltipIcon}
                     </Tooltip>
                 </span>
@@ -280,7 +181,7 @@ export const BaseItem: React.FC<React.PropsWithChildren<IFormItemProps>> = ({ ch
         );
     };
 
-    return (
+    return wrapSSR(
         <div
             {...pickDataProps(props)}
             style={{
@@ -288,24 +189,27 @@ export const BaseItem: React.FC<React.PropsWithChildren<IFormItemProps>> = ({ ch
                 ...gridStyles,
             }}
             data-grid-span={props.gridSpan}
-            className={cls({
-                [`${prefixCls}`]: true,
-                [`${prefixCls}-layout-${layout}`]: true,
-                [`${prefixCls}-${feedbackStatus}`]: enableOutlineFeedback && !!feedbackStatus,
-                [`${prefixCls}-feedback-has-text`]: !!feedbackText,
-                [`${prefixCls}-size-${size}`]: !!size,
-                [`${prefixCls}-feedback-layout-${feedbackLayout}`]: !!feedbackLayout,
-                [`${prefixCls}-fullness`]: !!fullness || !!inset || !!feedbackIcon,
-                [`${prefixCls}-inset`]: !!inset,
-                [`${prefixCls}-active`]: active,
-                [`${prefixCls}-inset-active`]: !!inset && active,
-                [`${prefixCls}-label-align-${labelAlign}`]: true,
-                [`${prefixCls}-control-align-${wrapperAlign}`]: true,
-                [`${prefixCls}-label-wrap`]: !!labelWrap,
-                [`${prefixCls}-control-wrap`]: !!wrapperWrap,
-                [`${prefixCls}-bordered-none`]: bordered === false || !!inset || !!feedbackIcon,
-                [props.className?.toString() || ""]: !!props.className,
-            })}
+            className={cls(
+                props.className,
+                {
+                    [`${prefixCls}`]: true,
+                    [`${prefixCls}-layout-${layout}`]: true,
+                    [`${prefixCls}-${feedbackStatus}`]: !!feedbackStatus,
+                    [`${prefixCls}-feedback-has-text`]: !!feedbackText,
+                    [`${prefixCls}-size-${size}`]: !!size,
+                    [`${prefixCls}-feedback-layout-${feedbackLayout}`]: !!feedbackLayout,
+                    [`${prefixCls}-fullness`]: !!fullness || !!inset || !!feedbackIcon,
+                    [`${prefixCls}-inset`]: !!inset,
+                    [`${prefixCls}-active`]: active,
+                    [`${prefixCls}-inset-active`]: !!inset && active,
+                    [`${prefixCls}-label-align-${labelAlign}`]: true,
+                    [`${prefixCls}-control-align-${wrapperAlign}`]: true,
+                    [`${prefixCls}-label-wrap`]: !!labelWrap,
+                    [`${prefixCls}-control-wrap`]: !!wrapperWrap,
+                    [`${prefixCls}-bordered-none`]: bordered === false || !!inset || !!feedbackIcon,
+                },
+                hashId,
+            )}
             onFocus={() => {
                 if (feedbackIcon || inset) {
                     setActive(true);
@@ -350,58 +254,68 @@ export const BaseItem: React.FC<React.PropsWithChildren<IFormItemProps>> = ({ ch
                 )}
                 {extra && <div className={cls(`${prefixCls}-extra`)}>{extra}</div>}
             </div>
-        </div>
+        </div>,
     );
 };
 
 // 适配
-export const FormItem: ComposeFormItem = connect(
-    BaseItem,
-    mapProps((props, field) => {
-        if (isVoidField(field))
+export const FormItem: ComposeFormItem = Object.assign(
+    connect(
+        BaseItem,
+        mapProps((props, field) => {
+            if (isVoidField(field))
+                return {
+                    label: field.title || props.label,
+                    asterisk: props.asterisk,
+                    extra: props.extra || field.description,
+                };
+            if (!field) return props;
+            const takeFeedbackStatus = () => {
+                if (field.validating) return "pending";
+                return field.decoratorProps.feedbackStatus || field.validateStatus;
+            };
+            const takeMessage = () => {
+                const split = (messages: any[]) => {
+                    return messages.reduce((buf, text, index) => {
+                        if (!text) return buf;
+                        return index < messages.length - 1 ? buf.concat([text, ", "]) : buf.concat([text]);
+                    }, []);
+                };
+                if (field.validating) return;
+                if (props.feedbackText) return props.feedbackText;
+                if (field.selfErrors.length) return split(field.selfErrors);
+                if (field.selfWarnings.length) return split(field.selfWarnings);
+                if (field.selfSuccesses.length) return split(field.selfSuccesses);
+            };
+            const takeAsterisk = () => {
+                if ("asterisk" in props) {
+                    return props.asterisk;
+                }
+                if (field.required && field.pattern !== "readPretty") {
+                    return true;
+                }
+                return false;
+            };
             return {
-                label: field.title || props.label,
-                asterisk: props.asterisk,
+                asterisk: takeAsterisk(),
                 extra: props.extra || field.description,
+                feedbackStatus: takeFeedbackStatus(),
+                feedbackText: takeMessage(),
+                label: props.label || field.title,
+                optionalMarkHidden: field.pattern === "readPretty" && !("asterisk" in props),
             };
-        if (!field) return props;
-        const takeFeedbackStatus = () => {
-            if (field.validating) return "pending";
-            return field.decoratorProps.feedbackStatus || field.validateStatus;
-        };
-        const takeMessage = () => {
-            const split = (messages: any[]) => {
-                return messages.reduce((buf, text, index) => {
-                    if (!text) return buf;
-                    return index < messages.length - 1 ? buf.concat([text, ", "]) : buf.concat([text]);
-                }, []);
-            };
-            if (field.validating) return;
-            if (props.feedbackText) return props.feedbackText;
-            if (field.selfErrors.length) return split(field.selfErrors);
-            if (field.selfWarnings.length) return split(field.selfWarnings);
-            if (field.selfSuccesses.length) return split(field.selfSuccesses);
-        };
-        const takeAsterisk = () => {
-            if (field.required && field.pattern !== "readPretty") {
-                return true;
-            }
-            if ("asterisk" in props) {
-                return props.asterisk;
-            }
-            return false;
-        };
-        return {
-            label: props.label || field.title,
-            feedbackStatus: takeFeedbackStatus(),
-            feedbackText: takeMessage(),
-            asterisk: takeAsterisk(),
-            optionalMarkHidden: field.pattern === "readPretty" && !("asterisk" in props),
-            extra: props.extra || field.description,
-        };
-    }),
+        }),
+    ),
+    {
+        BaseItem,
+    },
 );
 
-FormItem.BaseItem = BaseItem;
+type ComposeFormItem = ReactFC<IFormItemProps> & {
+    BaseItem: ReactFC<IFormItemProps>;
+};
+
+export * from "@formily/antd-v5/lib/form-item/hooks";
+export * from "./types";
 
 export default FormItem;

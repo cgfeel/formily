@@ -1,10 +1,11 @@
-import { Form, FormButtonGroup, Submit } from "@formily/antd-v5";
+import { Submit } from "@formily/antd-v5";
 import { FormProvider, IProviderProps } from "@formily/react";
 import { Card } from "antd";
 import { createStyles } from "antd-style";
 import { FC, PropsWithChildren, ReactNode } from "react";
 import useStylish from "../commonStylish";
-// import Form from "../form/form";
+import Form from "../form/form";
+import FormButtonGroup from "../formButtonGroup/form-button-group";
 
 const useStyles = createStyles(
     ({ css }, width: number) => css`
@@ -22,7 +23,7 @@ const Panel: FC<PropsWithChildren<PanelProps>> = ({ children, extra, footer, for
                 <Card className={styles}>
                     {extra}
                     <FormProvider form={form}>
-                        <Form form={form} labelCol={6} requiredMark={false}>
+                        <Form form={form} labelCol={6}>
                             {children}
                             <FormButtonGroup.FormItem>
                                 <Submit onSubmit={console.log} onSubmitFailed={console.log}>
