@@ -5,6 +5,7 @@ import ItemJsonSchema from "../components/formItem/JsonSchema";
 import ItemMarkupSchema from "../components/formItem/MarkupSchema";
 import FeedbackMarkupSchema from "../components/formItem/feedback/MarkupSchema";
 import MaskMarkupSchema from "../components/formItem/mark/MarkupSchema";
+import OtherIteMarkupSchema from "../components/formItem/other/MarkupSchema";
 import PropsMarkupSchema from "../components/formItem/propretiesCase/MarkupSchema";
 import LayoutFieldJsx from "../components/formLayout/FieldJsx";
 import LayoutJsonSchema from "../components/formLayout/JsonSchema";
@@ -34,6 +35,7 @@ const items: TabsProps["items"] = [
                 <PropsMarkupSchema />
                 <MaskMarkupSchema />
                 <FeedbackMarkupSchema />
+                <OtherIteMarkupSchema />
             </>
         ),
     },
@@ -53,6 +55,6 @@ const items: TabsProps["items"] = [
     },
 ];
 
-const Layout: FC = () => <Tabs defaultActiveKey="formItem" items={items} />;
+const Layout: FC = () => <Tabs defaultActiveKey="formLayout" items={items} destroyInactiveTabPane />;
 
 export default Layout;

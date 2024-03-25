@@ -2,6 +2,7 @@ import { usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
 import { useResponsiveFormLayout } from "@formily/antd-v5/lib/form-layout/useResponsiveFormLayout";
 import { CSSProperties, FC, PropsWithChildren, ReactNode, createContext, useContext } from "react";
 import cls from "classnames";
+import useStyle from "./style";
 
 export interface IFormLayoutContext
     extends Omit<IFormLayoutProps, "labelAlign" | "wrapperAlign" | "layout" | "labelCol" | "wrapperCol"> {
@@ -34,6 +35,7 @@ export const FormLayout: FC<PropsWithChildren<IFormLayoutProps>> & {
     const deepLayout = useFormDeepLayout();
     const formPrefixCls = usePrefixCls("form", { prefixCls });
     const layoutPrefixCls = usePrefixCls("formily-layout", { prefixCls });
+    const [wrapSSR, hashId] = useStyle(layoutPrefixCls);
     const layoutClassName = cls(
         layoutPrefixCls,
         {
@@ -65,10 +67,10 @@ export const FormLayout: FC<PropsWithChildren<IFormLayoutProps>> & {
             </FormLayoutDeepContext.Provider>
         );
     };
-    return (
-        <div ref={ref} className={layoutClassName} style={style}>
+    return wrapSSR(
+        <div ref={ref} className={cls(layoutClassName, hashId)} style={style}>
             {renderChildren()}
-        </div>
+        </div>,
     );
 };
 

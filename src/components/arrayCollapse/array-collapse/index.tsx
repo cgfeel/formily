@@ -56,18 +56,16 @@ const insertActiveKeys = (activeKeys: number[], index: number) => {
 const InternalArrayCollapse: ReactFC<IArrayCollapseProps> = observer(props => {
     const field = useField<ArrayField>();
     const dataSource = Array.isArray(field.value) ? field.value : [];
+    const dataLength = dataSource.length;
 
     const { className, defaultOpenPanelCount = 0 } = props;
     const { modified } = field;
 
-    const [activeKeys, setActiveKeys] = useState<number[]>(
-        takeDefaultActiveKeys(dataSource.length, defaultOpenPanelCount),
-    );
+    const [activeKeys, setActiveKeys] = useState(takeDefaultActiveKeys(dataLength, defaultOpenPanelCount));
     const schema = useFieldSchema();
     const prefixCls = usePrefixCls("formily-array-collapse", props);
 
     const [wrapSSR, hashId] = useStyle(prefixCls);
-    const dataLength = dataSource.length;
 
     useEffect(() => {
         if (!modified && dataLength) {

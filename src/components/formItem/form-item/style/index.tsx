@@ -55,7 +55,8 @@ const genSmallStyle: GenerateStyle = token => {
             },
         },
 
-        [`${antCls}-select-single:not(${antCls}-select-customize-input) ${antCls}-select-selector`]: {
+        [`${antCls}-select-single:not(${antCls}-select-customize-input) ${antCls}-select-selector, 
+        ${antCls}-select-multiple:not(${antCls}-select-customize-input) ${antCls}-select-selector`]: {
             padding: `0px 11px`,
             height: controlHeightSM - 4,
             fontSize: fontSizeSM,
@@ -135,6 +136,23 @@ const genSmallStyle: GenerateStyle = token => {
                 },
             },
         },
+
+        [`${antCls}-switch`]: {
+            height: 16,
+            lineHeight: 16,
+            minWidth: 28,
+            [`${antCls}-switch-handle`]: {
+                height: 12,
+                width: 12,
+            },
+            [`${antCls}-switch-inner`]: {
+                paddingInlineStart: 18,
+                paddingInlineEnd: 6,
+            },
+            [`&${antCls}-switch-checked ${antCls}-switch-handle`]: {
+                insetInlineStart: "calc(100% - 14px)",
+            },
+        },
     };
 };
 
@@ -211,7 +229,8 @@ const genLargeStyle: GenerateStyle = token => {
             },
         },
 
-        [`${antCls}-select-single:not(${antCls}-select-customize-input) ${antCls}-select-selector`]: {
+        [`${antCls}-select-single:not(${antCls}-select-customize-input) ${antCls}-select-selector, 
+        ${antCls}-select-multiple:not(${antCls}-select-customize-input) ${antCls}-select-selector`]: {
             padding: `0px 11px`,
             height: controlHeightLG,
             fontSize: fontSizeLG,

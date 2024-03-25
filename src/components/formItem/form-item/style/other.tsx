@@ -14,6 +14,7 @@ export const genOtherStyle: GenerateStyle = token => {
         colorPrimary,
         antCls,
         fontSize,
+        margin,
         marginSM,
         marginLG,
         controlHeight,
@@ -43,6 +44,11 @@ export const genOtherStyle: GenerateStyle = token => {
 
     return {
         [componentCls]: {
+            "&-layout-inline": {
+                flex: "none",
+                marginInlineEnd: `${margin}px`,
+                marginBottom: 0,
+            },
             "&-layout-vertical": {
                 display: "block",
 

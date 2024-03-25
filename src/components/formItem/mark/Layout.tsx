@@ -25,9 +25,7 @@ const Layout: FC<PropsWithChildren<{}>> = ({ children }) => {
                 footer={
                     <div>
                         <p>
-                            在 <code>antd v5</code>
-                            文档中中已剔除这项功能，在此将其修复；因为涉及到的文件很多所以不建议通过替换文件的方式修改，准备提交{" "}
-                            <code>pr</code> 中，这里仅作为参考练习
+                            在 <code>antd v5</code> 文档中中已剔除这项功能，在此将其修复
                         </p>
                         <p>
                             由于这次修复涉及到样式，所以特此将 <code>FormItem</code>{" "}

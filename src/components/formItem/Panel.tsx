@@ -8,8 +8,26 @@ import Form from "../form/form";
 import FormButtonGroup from "../formButtonGroup/form-button-group";
 
 const useStyles = createStyles(
-    ({ css }, width: number) => css`
+    ({ prefixCls, css }, width: number) => css`
         width: ${width}px;
+        .size-wrap {
+            .${prefixCls}-formily-item-bordered-none {
+                .${prefixCls}-input-outlined,
+                    .${prefixCls}-input-number-input-wrap,
+                    .${prefixCls}-picker,
+                    .${prefixCls}-select-selector {
+                    background: #ddd;
+                }
+            }
+            .${prefixCls}-formily-item-inset.${prefixCls}-formily-item-bordered-none {
+                .${prefixCls}-input-outlined,
+                    .${prefixCls}-input-number-input-wrap,
+                    .${prefixCls}-picker,
+                    .${prefixCls}-select-selector {
+                    background: transparent;
+                }
+            }
+        }
     `,
 );
 
