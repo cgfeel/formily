@@ -10,6 +10,9 @@ import PropsMarkupSchema from "../components/formItem/propretiesCase/MarkupSchem
 import LayoutFieldJsx from "../components/formLayout/FieldJsx";
 import LayoutJsonSchema from "../components/formLayout/JsonSchema";
 import LayoutMarkupSchema from "../components/formLayout/MarkupSchema";
+import SpaceFieldJsx from "../components/space/FieldJsx";
+import SpaceJsonSchema from "../components/space/JsonSchema";
+import SpaceMarkupSchema from "../components/space/MarkupSchema";
 import Grid from "./Grid";
 
 const items: TabsProps["items"] = [
@@ -49,7 +52,9 @@ const items: TabsProps["items"] = [
         label: "Space",
         children: (
             <>
-                <p>Space</p>
+                <SpaceMarkupSchema />
+                <SpaceJsonSchema />
+                <SpaceFieldJsx />
             </>
         ),
     },
