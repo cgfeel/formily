@@ -27,10 +27,6 @@ const Layout: FC<PropsWithChildren<{}>> = ({ children }) => {
                         <p>
                             在 <code>antd v5</code> 文档中中已剔除这项功能，在此将其修复
                         </p>
-                        <p>
-                            由于这次修复涉及到样式，所以特此将 <code>FormItem</code>{" "}
-                            作为默认项优先展示，否则会被同名的样式覆盖
-                        </p>
                     </div>
                 }
                 form={form}

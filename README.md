@@ -15,7 +15,7 @@
 
 -   采用`antd v5`作为默认演示，文档默认是v4
 -   采用`antd-style`作为`css-in-js`框架，可以在这里查看详细演示 [[查看](https://github.com/cgfeel/ant-design-style)]
--   由于官网没有对`formily v2`的Api做任何说明，所以我会通过源码注释的方式进行补充
+-   由于官方提供的`@formily/antd-v5`采用的版本是 `5.6`，很多 API 已发生变更，因此在演示组件中对部分组件重新修改
 -   根据演示文件，根据自己的理解，重新调整了文件和目录结构
 
 ## 阅读说明
@@ -240,5 +240,40 @@
 
 -   自定义规则校验，`Json Schema`是通过`scope`这个 `props` 动态添加局部定义规则；这样更符合实际应用场景
 -   联动校验通过 3 种不同的方式进行：`createForm`中的`effects`、`schema`中的`x-reactions`，`Field`中的`reactions` 函数
+
+---- 分割线 ----
+
+#### 实现表单布局
+
+-   URL：`/layout`
+-   目录：https://github.com/cgfeel/formily/blob/main/src/page/Layout.tsx
+-   包含章节：
+    -   实现表单布局 [[查看](https://formilyjs.org/zh-CN/guide/advanced/layout)]
+    -   `FormLayout` [[查看](https://antd5.formilyjs.org/zh-CN/components/form-layout)]
+    -   `FormItem` [[查看](https://antd5.formilyjs.org/zh-CN/components/form-item)]
+    -   `FormGrid` [[查看](https://antd5.formilyjs.org/zh-CN/components/form-grid)]
+    -   `Space` [[查看](https://antd5.formilyjs.org/zh-CN/components/space)]
+
+**包含：**
+
+-   `Schema`中使用自定义非表单组件
+-   根据`antd v5.15.*`的 API 对组件进行修复
+-   使用`antd v5`自带的`css-in-js`添加组件样式
+-   通过联动修改`FormItem`的布局
+-   为`Schema`动态添加`Component`
+
+**组件修复：**
+
+-   `Canscader`：将接口对应至 `antd v5` 最新的 API
+-   `Form`：为 `FormLayout` 提供上下文支持
+-   `FormButtonGroup`：适配 `FormLayout`
+-   `FormItem`：
+    -   适配 `FormLayout`，补充必选样式
+    -   修复 `Select.multiple`、 `Switch` 在布局尺寸变更时的适配
+-   `FormLayout`：
+    -   补充 `layout: inline`布局支持，修复必选等接口
+    -   添加布局样式支持
+
+> 原本是想为 `@formily/antd-v5` 提交 PR，由于当前 `@formily/antd-v5` 依赖的是 `antd v5.6` 导致 API 不兼容，又不能修改工程依赖，所以采用这种方式进行修改
 
 ---- 分割线 ----
