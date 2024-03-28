@@ -22,7 +22,13 @@ const schema: ISchema = {
 };
 
 const TreeSelectSync: FC = () => (
-    <Panel form={form}>
+    <Panel
+        form={form}
+        header={
+            <h2>
+                <code>Json Schema</code> 同步数据源案例
+            </h2>
+        }>
         <SchemaField schema={schema} />
     </Panel>
 );

@@ -8,6 +8,7 @@ const form = createForm({ effects: asyncLinker });
 
 const TreeSelectLinker: FC = () => (
     <Panel
+        footer={<p>个人附加案例</p>}
         form={form}
         header={
             <h2>
@@ -24,6 +25,7 @@ const TreeSelectLinker: FC = () => (
                     { label: "发请求1", value: 1 },
                     { label: "发请求2", value: 2 },
                 ]}
+                required
             />
             <SchemaField.String
                 name="select"

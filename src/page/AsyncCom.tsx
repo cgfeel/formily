@@ -9,6 +9,12 @@ import JsonSelectSync from "../components/select/jsonSchema/SelectSync";
 import MarkupSelectAsync from "../components/select/markupSchema/SelectAsync";
 import MarkupSelectLink from "../components/select/markupSchema/SelectLinker";
 import MarkupSelectSync from "../components/select/markupSchema/SelectSync";
+import FieldTreeSelectAsync from "../components/treeSelect/fieldJsx/TreeSelectAsync";
+import FieldTreeSelectLinker from "../components/treeSelect/fieldJsx/TreeSelectLinker";
+import FieldTreeSelectSync from "../components/treeSelect/fieldJsx/TreeSelectSync";
+import JsonTreeSelectAsync from "../components/treeSelect/jsonSchema/TreeSelectAsync";
+import JsonTreeSelectLinker from "../components/treeSelect/jsonSchema/TreeSelectLinker";
+import JsonTreeSelectSync from "../components/treeSelect/jsonSchema/TreeSelectSync";
 import MarkupTreeSelectAsync from "../components/treeSelect/markupSchema/TreeSelectAsync";
 import MarkupTreeSelectLinker from "../components/treeSelect/markupSchema/TreeSelectLinker";
 import MarkupTreeSelectSync from "../components/treeSelect/markupSchema/TreeSelectSync";
@@ -39,6 +45,12 @@ const items: TabsProps["items"] = [
                 <MarkupTreeSelectSync />
                 <MarkupTreeSelectAsync />
                 <MarkupTreeSelectLinker />
+                <JsonTreeSelectSync />
+                <JsonTreeSelectAsync />
+                <JsonTreeSelectLinker />
+                <FieldTreeSelectSync />
+                <FieldTreeSelectAsync />
+                <FieldTreeSelectLinker />
             </>
         ),
     },
