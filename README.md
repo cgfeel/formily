@@ -300,6 +300,7 @@
 
 -   `TreeSelect` 异步加载数据三种模式
 -   `Cascader` 修复静态数据加载 [[查看](https://github.com/cgfeel/formily/blob/main/src/components/cascader/cascader/index.tsx)]
+    -   适配 `antd v5` 最新版本中已废弃，而 `formily` 中又必须传入的属性
 -   `Cascader` 异步加载数据三种模式
 -   对比异步数据不同的加载方式
 
