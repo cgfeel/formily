@@ -277,3 +277,38 @@
 > 原本是想为 `@formily/antd-v5` 提交 PR，由于当前 `@formily/antd-v5` 依赖的是 `antd v5.6` 导致 API 不兼容，又不能修改工程依赖，所以采用这种方式进行修改
 
 ---- 分割线 ----
+
+#### 实现异步数据源
+
+-   URL：`/async`
+-   目录：https://github.com/cgfeel/formily/blob/main/src/page/AsyncCom.tsx
+-   包含章节：
+    -   实现异步数据源 [[查看](https://formilyjs.org/zh-CN/guide/advanced/async)]
+    -   `Select` [[查看](https://antd5.formilyjs.org/zh-CN/components/select)]
+    -   `TreeSelect` [[查看](https://antd5.formilyjs.org/zh-CN/components/tree-select)]
+    -   `Cascader` [[查看](https://antd5.formilyjs.org/zh-CN/components/cascader)]
+
+**包含：**
+
+-   `Select` 同步获取数据、异步搜索、异步联动的三种模式（下方注1）
+-   `TreeSelect` 同步获取数据、异步联动的三种模式
+-   `Cascader` 异步数据三种模式
+
+> 注1：总结中，所有提到的三种模式分别为：`Markup Schema`、`Json Schema`、`Field Jsx`，如果没有单独说明，二种模式为：`Markup Schema`、`Json Schema`
+
+**个人补充案例：**
+
+-   `TreeSelect` 异步加载数据三种模式
+-   `Cascader` 修复静态数据加载 [[查看](https://github.com/cgfeel/formily/blob/main/src/components/cascader/cascader/index.tsx)]
+-   `Cascader` 异步加载数据三种模式
+-   对比异步数据不同的加载方式
+
+**异步数据加载方式：**
+
+-   初始只加载一次
+-   依赖输入内容每次加载：`field.query({path}).value()`
+-   通过 `observable.ref` 创建引用劫持响应式对象
+-   通过 `scope` 初始只加载一次
+-   通过 `scope` 依赖输入内容每次加载
+
+---- 分割线 ----

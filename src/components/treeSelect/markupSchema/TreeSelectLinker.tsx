@@ -8,7 +8,6 @@ const form = createForm({ effects: asyncLinker });
 
 const TreeSelectLinker: FC = () => (
     <Panel
-        footer={<p>个人附加案例</p>}
         form={form}
         header={
             <h2>

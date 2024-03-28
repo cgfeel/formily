@@ -15,6 +15,7 @@ const TreeSelectAsync: FC = () => {
     const { styles } = useStyles();
     return (
         <Panel
+            footer={<p>个人附加案例</p>}
             form={form}
             header={
                 <h2>
