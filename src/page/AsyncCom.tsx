@@ -1,5 +1,14 @@
 import { Tabs, TabsProps } from "antd";
 import { FC } from "react";
+import FieldCascaderAsync from "../components/cascader/fieldJsx/CascaderAsync";
+import FieldCascaderLinker from "../components/cascader/fieldJsx/CascaderLinker";
+import FieldCascaderSync from "../components/cascader/fieldJsx/CascaderSync";
+import JsonCascaderAsync from "../components/cascader/jsonSchema/CascaderAsync";
+import JsonCascaderLinker from "../components/cascader/jsonSchema/CascaderLinker";
+import JsonCascaderSync from "../components/cascader/jsonSchema/CascaderSync";
+import MarkupCascaderAsync from "../components/cascader/markupSchema/CascaderAsync";
+import MarkupCascaderLinker from "../components/cascader/markupSchema/CascaderLinker";
+import MarkupCascaderSync from "../components/cascader/markupSchema/CascaderSync";
 import FieldSelectAsync from "../components/select/fieldJsx/SelectAsync";
 import FieldSelectLinker from "../components/select/fieldJsx/SelectLinker";
 import FieldSelectSync from "../components/select/fieldJsx/SelectSync";
@@ -51,6 +60,23 @@ const items: TabsProps["items"] = [
                 <FieldTreeSelectSync />
                 <FieldTreeSelectAsync />
                 <FieldTreeSelectLinker />
+            </>
+        ),
+    },
+    {
+        key: "cascader",
+        label: "Cascader",
+        children: (
+            <>
+                <MarkupCascaderSync />
+                <MarkupCascaderAsync />
+                <MarkupCascaderLinker />
+                <JsonCascaderSync />
+                <JsonCascaderAsync />
+                <JsonCascaderLinker />
+                <FieldCascaderSync />
+                <FieldCascaderAsync />
+                <FieldCascaderLinker />
             </>
         ),
     },

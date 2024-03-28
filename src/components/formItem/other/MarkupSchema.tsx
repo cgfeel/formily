@@ -95,7 +95,7 @@ const MarkupSchema: FC = () => (
                     title="Cascader"
                     x-component="Cascader"
                     x-decorator="FormItem"
-                    x-component-props={{ options }}
+                    enum={options}
                     required
                 />
                 <SchemaField.String
