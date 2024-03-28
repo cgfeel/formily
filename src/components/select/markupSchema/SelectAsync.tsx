@@ -1,23 +1,27 @@
 import { createForm } from "@formily/core";
 import { FC } from "react";
-import Panel from "../Panel";
+import Panel, { PanelProps } from "../Panel";
 import SchemaField from "../SchemaField";
 import asyncSearch from "../action/asyncSearch";
 
 const form = createForm({ effects: asyncSearch });
 
-const SelectAsync: FC = () => (
+const SelectAsync: FC<SelectAsyncProps> = ({ footer, header }) => (
     <Panel
         footer={
-            <p>
-                数据是通过 <code>MockJS</code> 模拟的数据，所以每次输入都能拿到不同的结果
-            </p>
+            footer || (
+                <p>
+                    数据是通过 <code>MockJS</code> 模拟的数据，所以每次输入都能拿到不同的结果
+                </p>
+            )
         }
         form={form}
         header={
-            <h2>
-                <code>Markup Schema</code> 异步搜索案例
-            </h2>
+            header || (
+                <h2>
+                    <code>Markup Schema</code> 异步搜索案例
+                </h2>
+            )
         }>
         <SchemaField>
             <SchemaField.String
@@ -31,5 +35,7 @@ const SelectAsync: FC = () => (
         </SchemaField>
     </Panel>
 );
+
+export interface SelectAsyncProps extends Pick<PanelProps, "footer" | "header"> {}
 
 export default SelectAsync;
