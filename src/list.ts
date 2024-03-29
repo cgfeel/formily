@@ -53,6 +53,10 @@ export const router = {
         name: "实现异步数据源（含同步组件示例）",
         path: lazy(() => import("./page/AsyncCom")),
     },
+    "/controlled": {
+        name: "实现表单受控",
+        path: lazy(() => import("./page/Controlled")),
+    },
 } as const;
 
 export type RouterKey = keyof typeof router;
