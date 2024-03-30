@@ -9,7 +9,7 @@ const ControlledCard1: FC = () => {
         <Wraper
             footer={<div>响应次数根据当前组件状态更新情况决定</div>}
             title="只存在控制者"
-            value={values.input}
+            values={values}
             update={input => setValues({ input })}
         />
     );
@@ -21,7 +21,7 @@ const ControlledCard2: FC = () => {
         <Wraper
             footer={<div>响应次数根据当前组件以及子组件共同来决定</div>}
             title="通过 `props` 受控"
-            value={values.input}
+            values={values}
             update={input => setValues({ input })}>
             <MyForm value={values} onChange={values => setValues({ ...values })} />
         </Wraper>
@@ -35,7 +35,7 @@ const ControlledCard3: FC = () => {
         <Wraper
             footer={<div>和“只存在控制者情”况一样</div>}
             title="通过 `ref` 受控"
-            value={values.input}
+            values={values}
             update={input => {
                 formRef.current?.update({ input });
                 setValues({ input });

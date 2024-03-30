@@ -53,10 +53,6 @@ interface ForwardMyForm extends FC<MyFormProps<FormType>> {
     <T extends FormType, P = MyFormProps<T>>(props: P & { ref?: ForwardedRef<MyFormInstance<T>> }): ReturnType<FC<P>>;
 }
 
-type FormType = {
-    input: string;
-};
-
 export interface MyFormInstance<T extends FormType = FormType> {
     update: (value: T) => void;
 }
