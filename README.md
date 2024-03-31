@@ -314,3 +314,41 @@
 -   通过 `scope` 依赖输入内容每次加载
 
 ---- 分割线 ----
+
+#### 实现表单受控
+
+-   URL：`/controlled`
+-   目录：https://github.com/cgfeel/formily/blob/main/src/page/Controlled.tsx
+-   包含章节：
+    -   实现表单受控 [[查看](https://formilyjs.org/zh-CN/guide/advanced/controlled)]
+
+**几个受控模式：**
+
+-   普通受控模式，随 React 的组件生命周期演示：只存在控制者、通过 `props` 受控、通过 `ref` 受控
+-   响应式值受控：使用 `observable` 提供数据用于响应受控
+-   `Schema` 整体受控：通过替换整个 `form` 和 `schema` 实现表单整体切换
+-   `Schema` 片段联动：
+    -   通过 `form.clearFormGraph` 回收字段模型，从而实现部分表单更新
+    -   通过 `observer` 包裹函数组件响应字段更新，常用于自定义组件
+
+**包含：**
+
+-   修复文档普通受控哦是
+-   最佳响应实践
+-   反模式：和文档不同，这里分别从 3 个案例来演示受控逐步去掉响应的过程
+-   补充 `form.setValues` 包含的 4 个类型的值的却别（文档并没有说明）
+
+**巩固：**
+
+-   在 `React` 组件中要响应表单数据，要么刷新整个表单；要么在受控组件上分别包裹 `observer` 响应对应的表单数据变化
+-   而在受控表单中（`SchemaField`），则建议通过“响应式值受控”，这样不会多余消费 `React` 组件性能
+-   关于响应函数
+    -   `observable`：创建响应值，提供给控制者或 `Form.values`，它包含一个 `observable.ref`，在组件受控事件响应有提到
+    -   `observer`：响应组件响应，用于在组件内容响应依赖数据的更新，暂且可以把它当作 `memo` 来理解
+    -   `Observer`：用于在组件中提供一个响应区域，暂且可以把它当作 `useMemo` 来理解
+
+**附加：**
+
+在这个演示中，包含 4 个 `@formily/react` 内容：`RecursionField`、`useForm`、`useField`、`observer`，分别在演示备注中说明，稍后在具体章节再演示
+
+---- 分割线 ----

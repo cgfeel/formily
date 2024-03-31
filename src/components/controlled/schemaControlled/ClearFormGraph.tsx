@@ -51,7 +51,7 @@ const ClearFormGraph: FC = () => (
                 <p>实现原理：</p>
                 <ul>
                     <li>
-                        通过 <code>form.clearFormGraph</code> 清除字段模式 <code>schema</code>，然后重新提供模型
+                        通过 <code>form.clearFormGraph</code> 回收字段模式 <code>schema</code>，然后重新提供模型
                     </li>
                     <li>
                         提醒：当前受控下不会刷新整个表单 <code>form</code> 对象，所以需要借助 <code>observer</code>{" "}

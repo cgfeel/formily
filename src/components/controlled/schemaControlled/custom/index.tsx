@@ -47,9 +47,9 @@ const CustomIndex: FC = () => (
                     </li>
                 </ul>
                 <p>
-                    巩固：在 <code>React</code> 中要响应表单数据，就要用到 <code>observer</code>
-                    ，要么刷新整个表单；要么就和当前案例一样在受控组件上分别包裹 <code>observer</code>{" "}
-                    响应对应的表单数据变化
+                    巩固：在 <code>React</code>{" "}
+                    组件中要响应表单数据，要么刷新整个表单；要么就和当前案例一样在受控组件上分别包裹{" "}
+                    <code>observer</code> 响应对应的表单数据变化
                 </p>
             </div>
         }

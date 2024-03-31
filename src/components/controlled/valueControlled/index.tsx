@@ -89,7 +89,7 @@ const ValueControlled: FC = () => {
                         </li>
                     </ul>
                     <p>
-                        关于 <code>form.current.setValues</code> 的第二个参数，官方分别给出了 4 个值分别如下：
+                        关于 <code>form.setValues</code> 的第二个参数，官方分别给出了 4 个值分别如下：
                     </p>
                     <ol>
                         <li>
