@@ -2,6 +2,7 @@ const Mock = require('mockjs');
 const delay = require('mocker-api/delay');
 const random = require('../random');
 
+const selectField = 'GET /api/form/select-field/:visible';
 const selectLinker = 'POST /api/form/select-linker';
 const selectSearch = 'GET /api/form/select-search';
 
@@ -25,6 +26,10 @@ function searchList() {
 }
 
 module.exports = delay({
+    [selectField](req, res) {
+        const { visible } = req.params;
+        res.status(200).json({ visible });
+    },
     [selectSearch](req, res) {
         const data = Mock.mock(searchList());
         res.status(200).json(data);

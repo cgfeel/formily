@@ -20,7 +20,7 @@ const LinkSchema: FC = () => (
         form={form}
         header={
             <h2>
-                主动模式：依赖联动 - <code>SchemaReactions</code> 用例
+                依赖联动：<code>SchemaReactions</code> 用例
             </h2>
         }>
         <SchemaField>

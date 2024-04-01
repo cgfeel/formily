@@ -32,7 +32,7 @@ const ChainEffect: FC = () => (
         form={form}
         header={
             <h2>
-                主动模式：链式联动 - <code>Effects</code> 用例
+                链式联动：<code>Effects</code> 用例
             </h2>
         }>
         <SchemaField>

@@ -25,7 +25,7 @@ const OneEffect: FC = () => (
         form={form}
         header={
             <h2>
-                主动模式：一对一联动 - <code>Effects</code> 用例
+                一对一联动：<code>Effects</code> 用例
             </h2>
         }>
         <SchemaField>

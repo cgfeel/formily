@@ -1,4 +1,4 @@
-import { createForm, isField, onFieldValueChange } from "@formily/core";
+import { createForm } from "@formily/core";
 import { FC } from "react";
 import Panel from "../Panel";
 import SchemaField from "../SchemaField";
@@ -16,7 +16,7 @@ const ChainSchema: FC = () => (
         form={form}
         header={
             <h2>
-                主动模式：链式联动 - <code>SchemaReactions</code> 用例
+                链式联动：<code>SchemaReactions</code> 用例
             </h2>
         }>
         <SchemaField>

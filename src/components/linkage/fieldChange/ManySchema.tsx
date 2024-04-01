@@ -15,7 +15,7 @@ const ManySchema: FC = () => (
         form={form}
         header={
             <h2>
-                主动模式：一对多联动 - <code>SchemaReactions</code> 用例
+                一对多联动：<code>SchemaReactions</code> 用例
             </h2>
         }>
         <SchemaField>
