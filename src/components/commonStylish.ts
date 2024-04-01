@@ -12,7 +12,7 @@ const useStylish = createStylish(({ token }) => ({
     },
     wraper: {
         marginBottom: 100,
-        code: {
+        "code:not(.consumer)": {
             backgroundColor: token.colorBgLayout,
             border: "1px solid " + token.colorBorder,
             padding: 4,

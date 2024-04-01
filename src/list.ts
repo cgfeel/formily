@@ -57,6 +57,10 @@ export const router = {
         name: "实现表单受控",
         path: lazy(() => import("./page/Controlled")),
     },
+    "/linkage": {
+        name: "实现联动逻辑",
+        path: lazy(() => import("./page/LinkAges")),
+    },
 } as const;
 
 export type RouterKey = keyof typeof router;
