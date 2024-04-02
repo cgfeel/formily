@@ -19,7 +19,8 @@ const OneEffect: FC = () => (
     <Panel
         footer={
             <p>
-                <code>onFieldValueChange</code>：监听指定字段数据变化，如果仅需要监听字段值的变化建议使用这个钩子
+                <code>onFieldValueChange</code>：监听指定字段数据变化，也可以使用 <code>onFieldChange</code>
+                ，如果仅需要监听字段值的变化建议使用<code>onFieldValueChange</code>
             </p>
         }
         form={form}

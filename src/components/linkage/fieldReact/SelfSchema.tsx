@@ -9,10 +9,16 @@ const form = createForm();
 const SelfSchema: FC = () => (
     <Panel
         footer={
-            <p>
-                通过监听自身地址进行联动，和文档不同的是这里通过 <code>x-component-props</code> 和 <code>scope</code>{" "}
-                来进行主动联动，这说明当自身发生改变的时候自身的 <code>props</code> 也会发生响应
-            </p>
+            <div>
+                <p>
+                    被动联动中监听自身字段不需要添加任何依赖，直接传递 <code>$self</code>
+                </p>
+                <p>
+                    这里通过 <code>x-component-props</code> 去设置组件属性，除此之外还可以在 <code>reactions</code>{" "}
+                    中通过 <code>{"component[1].style.backgroundColor"}</code> 或{" "}
+                    <code>x-component-props.style.backgroundColor</code>
+                </p>
+            </div>
         }
         form={form}
         header={
@@ -35,17 +41,13 @@ const SelfSchema: FC = () => (
                         color: "{{colorReverse($self.value)}}",
                     },
                 }}
-                x-reactions={[
-                    {
-                        target: "color",
-                        effects: ["onFieldInputValueChange"],
-                        fulfill: {
-                            state: {
-                                value: "{{getColor($self)}}",
-                            },
+                x-reactions={{
+                    fulfill: {
+                        state: {
+                            value: "{{getColor($self)}}",
                         },
                     },
-                ]}
+                }}
             />
         </SchemaField>
     </Panel>

@@ -14,6 +14,20 @@ import ChangeOnInputEffect from "../components/linkage/fieldChange/OnInputEffect
 import ChangeOnInputSchema from "../components/linkage/fieldChange/OnInputSchema";
 import ChangeSelfEffect from "../components/linkage/fieldChange/SelfEffect";
 import ChangeSelfSchema from "../components/linkage/fieldChange/SelfSchema";
+import ReactAsyncEffect from "../components/linkage/fieldReact/AsyncEffect";
+import ReactAsyncSchema from "../components/linkage/fieldReact/AsyncSchema";
+import ReactChainEffect from "../components/linkage/fieldReact/ChainEffect";
+import ReactChainSchema from "../components/linkage/fieldReact/ChainSchema";
+import ReactLinkEffect from "../components/linkage/fieldReact/LinkEffect";
+import ReactLinkSchema from "../components/linkage/fieldReact/LinkSchema";
+import ReactManyEffect from "../components/linkage/fieldReact/ManyEffect";
+import ReactManySchema from "../components/linkage/fieldReact/ManySchema";
+import ReactOneEffect from "../components/linkage/fieldReact/OneEffect";
+import ReactOneSchema from "../components/linkage/fieldReact/OneSchema";
+import ReactOnInputEffect from "../components/linkage/fieldReact/OnInputEffect";
+import ReactOnInputSchema from "../components/linkage/fieldReact/OnInputSchema";
+import ReactSelfEffect from "../components/linkage/fieldReact/SelfEffect";
+import ReactSelfSchema from "../components/linkage/fieldReact/SelfSchema";
 
 const items: TabsProps["items"] = [
     {
@@ -35,6 +49,28 @@ const items: TabsProps["items"] = [
                 <ChangeSelfSchema />
                 <ChangeAsyncEffect />
                 <ChangeAsyncSchema />
+            </>
+        ),
+    },
+    {
+        key: "field-react",
+        label: "被动模式",
+        children: (
+            <>
+                <ReactOneEffect />
+                <ReactOneSchema />
+                <ReactManyEffect />
+                <ReactManySchema />
+                <ReactLinkEffect />
+                <ReactLinkSchema />
+                <ReactChainEffect />
+                <ReactChainSchema />
+                <ReactOnInputEffect />
+                <ReactOnInputSchema />
+                <ReactSelfEffect />
+                <ReactSelfSchema />
+                <ReactAsyncEffect />
+                <ReactAsyncSchema />
             </>
         ),
     },

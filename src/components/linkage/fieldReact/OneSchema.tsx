@@ -2,30 +2,31 @@ import { createForm } from "@formily/core";
 import { FC } from "react";
 import Panel from "../Panel";
 import SchemaField from "../SchemaField";
-import { asyncVisible } from "../server";
 
 const form = createForm();
 
-const AsyncSchema: FC = () => (
+const OneSchema: FC = () => (
     <Panel
         footer={
             <div>
                 <p>
-                    通过 <code>fulfill</code> 属性 <code>run</code> 将当前字段 <code>$self</code> 和监控字段{" "}
-                    <code>$target</code> 发送给 <code>scope</code> 中的异步函数进行处理
+                    通过 <code>schema</code> 中使用 <code>reactions</code> 实现被动响应
                 </p>
                 <p>
-                    在 <code>schema</code> 中对字段首次匹配，需要监听生命周期的钩子 <code>onFieldInit</code>
+                    响应对象即可以是一个数组 <code>[]</code>，也可以是单个对象 <code>[]</code>
+                </p>
+                <p>
+                    巩固：只要 <code>schema</code> 响应对象中没有 <code>target</code> 就是被动依赖
                 </p>
             </div>
         }
         form={form}
         header={
             <h2>
-                异步联动：<code>SchemaReactions</code> 用例
+                一对一联动：<code>SchemaReactions</code> 用例
             </h2>
         }>
-        <SchemaField scope={{ asyncVisible }}>
+        <SchemaField>
             <SchemaField.String
                 default="visible"
                 name="select"
@@ -35,16 +36,7 @@ const AsyncSchema: FC = () => (
                 enum={[
                     { label: "显示", value: "visible" },
                     { label: "隐藏", value: "none" },
-                    { label: "隐藏-保留值", value: "hide" },
-                ]}
-                x-reactions={[
-                    {
-                        target: "input",
-                        effects: ["onFieldInit", "onFieldValueChange"],
-                        fulfill: {
-                            run: "{{asyncVisible($self, $target)}}",
-                        },
-                    },
+                    { label: "隐藏-保留值", value: "hidden" },
                 ]}
             />
             <SchemaField.String
@@ -52,10 +44,17 @@ const AsyncSchema: FC = () => (
                 title="受控者"
                 x-component="Input"
                 x-decorator="FormItem"
-                x-visible={false}
+                x-reactions={{
+                    dependencies: ["select"],
+                    fulfill: {
+                        state: {
+                            display: "{{$deps[0]}}",
+                        },
+                    },
+                }}
             />
         </SchemaField>
     </Panel>
 );
 
-export default AsyncSchema;
+export default OneSchema;

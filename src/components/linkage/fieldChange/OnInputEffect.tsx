@@ -44,9 +44,27 @@ const form = createForm({
 const OnInputEffect: FC = () => (
     <Panel
         footer={
-            <p>
-                通过 <code>onFieldInputValueChange</code> 主动监听指定表单输入值
-            </p>
+            <div>
+                <p>
+                    通过 <code>onFieldInputValueChange</code> 主动监听指定表单输入值
+                </p>
+                <p>“循环依赖”和“依赖联动”是一样的，都是通过监控指定字段去操作第三方字段，区别在于：</p>
+                <ul>
+                    <li>
+                        循环依赖是相互之间去操作对方的值，依赖联动是根据相互的值去推算第三方值，前者在操作上可能会有个逻辑问题
+                    </li>
+                    <li>
+                        循环依赖是通过 <code>form.values</code> 获取第三方值，依赖联动是通过 <code>field.query</code>{" "}
+                        获取第三方值，最终结果是一样
+                    </li>
+                </ul>
+                <p>
+                    备注：<code>onFieldInputValueChange</code> 和 <code>onFieldValueChange</code>{" "}
+                    目前看没有明显的差别，无论是 <code>onChange</code> 还是 <code>onInput</code>
+                    ，更新字段都会实时回调，甚至在受控状态下 <code>onFieldReact</code>，不区分<code>onChange</code> 和{" "}
+                    <code>onInput</code>
+                </p>
+            </div>
         }
         form={form}
         header={

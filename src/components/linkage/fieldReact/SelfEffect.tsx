@@ -1,4 +1,4 @@
-import { createForm, onFieldValueChange } from "@formily/core";
+import { createForm, isField, onFieldReact } from "@formily/core";
 import { FC } from "react";
 import Panel from "../Panel";
 import SchemaField from "../SchemaField";
@@ -6,7 +6,8 @@ import { getColorValues } from "../server";
 
 const form = createForm({
     effects: () => {
-        onFieldValueChange("color", field => {
+        onFieldReact("color", field => {
+            if (!isField(field)) return;
             const [value, backgroundColor, color] = getColorValues(field);
             field.value = value;
             field.setComponentProps({
@@ -35,10 +36,7 @@ const SelfEffect: FC = () => (
                 title="颜色"
                 x-component="Input"
                 x-decorator="FormItem"
-                x-component-props={{
-                    maxLength: 6,
-                    prefix: "#",
-                }}
+                x-component-props={{ maxLength: 6, prefix: "#" }}
             />
         </SchemaField>
     </Panel>

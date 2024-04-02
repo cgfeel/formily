@@ -1,12 +1,12 @@
-import { createForm, onFieldValueChange } from "@formily/core";
+import { createForm, onFieldReact } from "@formily/core";
 import { FC } from "react";
 import Panel from "../Panel";
 import SchemaField from "../SchemaField";
-import { asyncVisible } from "../server";
+import { asyncReact } from "../server";
 
 const form = createForm({
     effects: () => {
-        onFieldValueChange("select", field => asyncVisible(field));
+        onFieldReact("input", field => asyncReact(field));
     },
 });
 
@@ -37,7 +37,7 @@ const AsyncEffect: FC = () => (
                 enum={[
                     { label: "显示", value: "visible" },
                     { label: "隐藏", value: "none" },
-                    { label: "隐藏-保留值", value: "hide" },
+                    { label: "隐藏-保留值", value: "hidden" },
                 ]}
             />
             <SchemaField.String
