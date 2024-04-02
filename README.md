@@ -386,4 +386,8 @@
 2. 主动联动适合监听某一个固定字段，所以路径从监控的指定字段开始匹配
 3. 被动联动适合某一个字段受控于其他多个字段对齐的影响，所以路径从被监控的字段开始
 
+**附加：**
+
+`FormEffectHooks` 内容：`FieldEffectHooks`、`setFormState`、`setFieldState`、`SchemaReactions`、`FieldReaction`，稍后在具体章节再演示，也可以启动演示项目查看相关备注
+
 ---- 分割线 ----
