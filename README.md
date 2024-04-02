@@ -344,11 +344,46 @@
 -   而在受控表单中 (`SchemaField`)，则建议通过“响应式值受控”，这样不会多余消费 `React` 组件性能
 -   关于响应函数
     -   `observable`：创建响应值，提供给控制者或 `Form.values`，它包含一个 `observable.ref`，在“实现异步数据源”有提到
-    -   `observer`：响应组件响应，用于在组件内容响应依赖数据的更新，暂且可以把它当作 `memo` 来理解
+    -   `observer`：响应组件的响应，用于在组件内容响应依赖数据的更新，暂且可以把它当作 `memo` 来理解
     -   `Observer`：用于在组件中提供一个响应区域，暂且可以把它当作 `useMemo` 来理解
 
 **附加：**
 
 在这个演示中，包含 4 个 `@formily/react` 内容：`RecursionField`、`useForm`、`useField`、`observer`，分别在演示备注中说明，稍后在具体章节再演示
+
+---- 分割线 ----
+
+#### 实现联动逻辑
+
+-   URL：`/controlled`
+-   目录：https://github.com/cgfeel/formily/blob/main/src/page/LinkAges.tsx
+-   包含章节：
+    -   实现联动逻辑 [[查看](https://formilyjs.org/zh-CN/guide/advanced/linkages)]
+
+**总结：**
+
+1.  一对一通过：路径匹配 [[查看](https://core.formilyjs.org/zh-CN/api/entry/form-path#formpathpattern)]
+2.  一对多通过：通配符 `*()`，如：`*(.input1,input2)`
+3.  依赖联动通过 `field.query` 或 `form.values` 或 `schema` 中使用 `dependencies`
+4.  链式联动：依赖的字段可以层层匹配，例如：A 控制 B，B 控制 C，当 A 操作 B 的时候，C 也有可能受到响应变化，反之同理
+5.  循环联动：和依赖联动是一样的，区别在于依赖字段之间可以相互操作，谨慎使用，可能会导致逻辑问题
+6.  自身联动：将匹配的路径设为自身，或在被动联动中去掉路径
+7.  异步联动：在联动 `hook` 回调中，可以接受异步函数作为方法，作为异步联动，例如通过 `fetch` 回调
+
+**包含：**
+
+-   以上7 个模式的 `Effect` 和 `Schema` 方式，以及被动逻辑和联动逻辑分别演示
+
+**主动和被动联动：**
+
+-   `onFieldValueChange` 主动联动，`onFieldReact` 被动联动
+-   也可以在 `schema` 响应中使用 `reactions`，区别在于：主动联动有 `target` 属性
+-   在联动的钩子中：[[Field Effect Hooks](https://core.formilyjs.org/zh-CN/api/entry/field-effect-hook)]，只有 `onFieldReact` 是被动联动，其他全部是主动联动
+
+**因此：**
+
+1. 在 `schema` 中，只有主动联动才有生命周期 `effect`
+2. 主动联动适合监听某一个固定字段，所以响应从监控的指定字段开始匹配
+3. 被动联动适合某一个字段受控于其他多个字段对齐的影响，所以响应从被监控的字段开始
 
 ---- 分割线 ----
