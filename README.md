@@ -391,3 +391,16 @@
 `FormEffectHooks` 内容：`FieldEffectHooks`、`setFormState`、`setFieldState`、`SchemaReactions`、`FieldReaction`，稍后在具体章节再演示，也可以启动演示项目查看相关备注
 
 ---- 分割线 ----
+
+#### 实现联动计算器
+
+-   URL：`/calculator`
+-   目录：https://github.com/cgfeel/formily/blob/main/src/page/Calculator.tsx
+-   包含章节：
+    -   实现联动计算器 [[查看](https://formilyjs.org/zh-CN/guide/advanced/calculator)]
+
+**包含：**
+
+联动逻辑运算 + 自增表单的一个练习，提供 `Markup Schema` 和 `Json Schema`
+
+---- 分割线 ----
