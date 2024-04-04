@@ -69,6 +69,10 @@ export const router = {
         name: "实现自定义组件",
         path: lazy(() => import("./page/Custom")),
     },
+    "/destructor": {
+        name: "前后端数据差异兼容方案",
+        path: lazy(() => import("./page/Destructor")),
+    },
 } as const;
 
 export type RouterKey = keyof typeof router;
