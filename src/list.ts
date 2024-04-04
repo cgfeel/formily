@@ -65,6 +65,10 @@ export const router = {
         name: "实现联动计算器",
         path: lazy(() => import("./page/Calculator")),
     },
+    "/custom": {
+        name: "实现自定义组件",
+        path: lazy(() => import("./page/Custom")),
+    },
 } as const;
 
 export type RouterKey = keyof typeof router;
