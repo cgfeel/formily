@@ -1,21 +1,23 @@
-// import { FormTab } from "@formily/antd-v5";
 import { createForm } from "@formily/core";
 import { FC } from "react";
-import Pannel, { tabList } from "./Pannel";
+import Pannel, { PannelProps, tabList } from "./Pannel";
 import SchemaField from "./SchemaField";
 import FormTab from "./form-tab";
 
 const form = createForm();
 const formTab = FormTab.createFormTab();
 
-const MarkupSchema: FC = () => (
+const MarkupSchema: FC<MarkupSchemaProps> = ({ footer, header }) => (
     <Pannel
+        footer={footer}
         form={form}
         formTab={formTab}
         header={
-            <h2>
-                通过<code>Markup Schema</code>创建选项卡表单
-            </h2>
+            header || (
+                <h2>
+                    通过<code>Markup Schema</code>创建选项卡表单
+                </h2>
+            )
         }>
         <SchemaField>
             <SchemaField.Void x-component="FormTab" x-component-props={{ formTab }}>
@@ -39,5 +41,7 @@ const MarkupSchema: FC = () => (
         </SchemaField>
     </Pannel>
 );
+
+export interface MarkupSchemaProps extends Pick<PannelProps, "footer" | "header"> {}
 
 export default MarkupSchema;

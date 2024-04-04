@@ -8,10 +8,15 @@ const form = createForm();
 const IDcard: FC = () => (
     <Panel
         footer={
-            <p>
-                由于 <code>antd</code> 组件的 <code>props</code> 和 <code>formily</code> 组件是一致的，可以直接传递{" "}
-                <code>props</code> 给组件实现联动，这种方式只能在 <code>Schema</code> 或 <code>Field</code> 中使用
-            </p>
+            <div>
+                <p>
+                    说明：由于 <code>antd</code> 组件的 <code>props</code> 和 <code>formily</code>{" "}
+                    组件是一致的，可以直接传递 <code>props</code> 给组件实现联动
+                </p>
+                <p>
+                    受限：这种方式只能在 <code>Schema</code> 或 <code>Field</code> 中使用
+                </p>
+            </div>
         }
         form={form}
         header={

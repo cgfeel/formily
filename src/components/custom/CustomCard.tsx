@@ -8,11 +8,17 @@ const form = createForm();
 const CustomCard: FC = () => (
     <Panel
         footer={
-            <p>
-                在 <code>schema</code> 中不再展示 <code>SchemaField</code> 以外的组件，包裹 <code>React</code>{" "}
-                组件，如果需要在表单中展示一些交互非表单组件，可以使用 <code>SchemaField.Void</code>{" "}
-                这样的虚拟字段包裹自定义组件
-            </p>
+            <div>
+                <p>
+                    在 <code>schema</code> 中不再展示 <code>SchemaField</code> 以外的组件，包裹 <code>React</code>{" "}
+                    组件，如果需要在表单中展示一些交互非表单组件，可以使用 <code>SchemaField.Void</code>{" "}
+                    这样的虚拟字段包裹自定义组件
+                </p>
+                <p>
+                    受限：可包裹在 <code>schema</code> 中或 <code>Field</code> 中实现联动，如果要在外部实现联动可以通过{" "}
+                    <code>observable</code>
+                </p>
+            </div>
         }
         form={form}
         header={<h2>自定义非表单组件</h2>}
