@@ -404,3 +404,27 @@
 联动逻辑运算 + 自增表单的一个练习，提供 `Markup Schema` 和 `Json Schema`
 
 ---- 分割线 ----
+
+#### 实现自定义组件
+
+-   URL：`/custom`
+-   目录：https://github.com/cgfeel/formily/blob/main/src/page/Calculator.tsx
+-   包含章节：
+    -   实现自定义组件 [[查看](https://formilyjs.org/zh-CN/guide/advanced/custom)]
+    -   `connect` [[查看](https://react.formilyjs.org/zh-CN/api/shared/connect)]
+    -   `mapProps` [[查看](https://react.formilyjs.org/zh-CN/api/shared/map-props)]
+    -   `mapReadPretty` [[查看](https://react.formilyjs.org/zh-CN/api/shared/map-read-pretty)]
+
+**包含：**
+
+文档并没有提到具体内容，这里对前面所有内容归纳总结如下：
+
+-   通过 `props` 转发给组件
+-   定制 `antd` 组件
+-   自定义非表单组件
+-   修复 `@formily/antd-v5` 组件
+-   通过 `observer` 包裹组件
+-   在 `observer` 组件中使用 `hooks`
+-   通过 `connect` 接入组件库
+
+---- 分割线 ----

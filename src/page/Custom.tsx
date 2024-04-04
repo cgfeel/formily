@@ -1,6 +1,7 @@
 import { FC } from "react";
 import FieldControlled from "../components/controlled/observerControlled/FieldControlled";
 import CustomIndex from "../components/controlled/schemaControlled/custom";
+import ConnectDemo from "../components/custom/ConnectDemo";
 import CustomCard from "../components/custom/CustomCard";
 import IDcard from "../components/custom/IDcard";
 import PriceInterval from "../components/custom/PriceInterval";
@@ -45,7 +46,9 @@ const Custom: FC = () => (
         <CustomIndex
             footer={
                 <p>
-                    通过 <code>hooks</code> 实现模型之前的联动
+                    通过 <code>hooks</code> 实现模型内部的联动，例如：<code>useField</code> 获取当前字段，
+                    <code>useForm</code> 获取当前表单；通过 <code>form.clearFormGraph</code> 回收字段，通过{" "}
+                    <code>RecursionField</code> 读取模型
                 </p>
             }
             header={
@@ -54,6 +57,7 @@ const Custom: FC = () => (
                 </h2>
             }
         />
+        <ConnectDemo />
     </>
 );
 
