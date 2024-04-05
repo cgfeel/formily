@@ -73,6 +73,10 @@ export const router = {
         name: "前后端数据差异兼容方案",
         path: lazy(() => import("./page/Destructor")),
     },
+    "/reactive": {
+        name: "Reactive Library",
+        path: lazy(() => import("./page/Reactive")),
+    },
 } as const;
 
 export type RouterKey = keyof typeof router;
