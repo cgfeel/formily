@@ -408,7 +408,7 @@
 #### 实现自定义组件
 
 -   URL：`/custom`
--   目录：https://github.com/cgfeel/formily/blob/main/src/page/Calculator.tsx
+-   目录：https://github.com/cgfeel/formily/blob/main/src/page/Custom.tsx
 -   包含章节：
     -   实现自定义组件 [[查看](https://formilyjs.org/zh-CN/guide/advanced/custom)]
     -   `connect` [[查看](https://react.formilyjs.org/zh-CN/api/shared/connect)]
