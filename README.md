@@ -428,3 +428,49 @@
 -   通过 `connect` 接入组件库
 
 ---- 分割线 ----
+
+#### 数据解构、业务逻辑、打包
+
+-   包含章节：
+    -   前后端数据差异兼容方案 [[查看](https://formilyjs.org/zh-CN/guide/advanced/destructor)]
+    -   管理业务逻辑 [[查看](https://formilyjs.org/zh-CN/guide/advanced/business-logic)]
+    -   按需打包 [[查看](https://formilyjs.org/zh-CN/guide/advanced/build)]
+
+**数据解构 (前后端数据差异兼容方案)：**
+
+-   URL：`/destructor`
+-   目录：https://github.com/cgfeel/formily/blob/main/src/page/Destructor.tsx
+
+将 `name` 由普通的字符修改为 `[{name},{name}]` 这样的方式解构字段
+
+**管理业务逻辑：** 无案例，总结如下
+
+两种方式：
+
+-   全局设定：`form` 中的 `effects`
+-   局部设定：`JSX` 中使用 `reactions` 或 `schema` 中使用 `x-reactions`
+
+局部设定有缺点：
+
+-   优点：简单、直接写在字段上
+-   存疑：文档提到多场景，多字段维护，但 `reactions` 是可以和 `scope` 结合使用的
+-   缺点：不能逻辑复用，即便是 `scope` 结合使用的
+
+全局设定有缺点：
+
+-   优点：多字段处理，量化处理、逻辑复用、逻辑分离为单独文件
+-   缺点：不能作为服务端配置
+
+文档建议：
+
+-   纯源码模式
+    -   字段数量庞大，逻辑复杂，优先选择 `effects` 中定义逻辑
+    -   字段数量少，逻辑简单，优先选择 `reactions` 中定义逻辑
+-   `Schema` 模式
+    -   不存在异步逻辑，优先选择结构化 `reactions` 定义逻辑
+    -   存在异步逻辑，或者大量计算，优先选择函数态 `reactions` 定义逻辑
+
+**按需打包：** 无案例，总结如下
+
+-   `antd v5` 采用 `tree shaking` 方式，无需使用文档中提到的 `babel-plugin-import`
+-   本项目是基于 `create-react-app`，如果需要配置 `Webpack` 还是建议添加这两个包：`react-app-rewired` `customize-cra`
