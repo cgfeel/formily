@@ -178,7 +178,7 @@ const items: TabsProps["items"] = [
 const Reactive: FC = () => (
     <>
         <Alert message="调试面板查看看输出信息" type="warning" style={{ marginBottom: 16, marginTop: 16 }} />
-        <Tabs tabPosition="left" items={items} />
+        <Tabs tabPosition="left" items={items} onChange={() => console.clear()} destroyInactiveTabPane />
     </>
 );
 

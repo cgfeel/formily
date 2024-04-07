@@ -21,11 +21,18 @@ const Action: FC = () => (
                         没有 <code>endpoint</code>
                     </li>
                 </ul>
-                <p>
-                    收集依赖：例如在 <code>effects</code> 中通过 <code>{"field.query({path}).value()"}</code> 或者{" "}
-                    <code>{"form.{path}.value"}</code> 收集依赖，或通过模型中的 <code>x-reactions</code> 添加{" "}
-                    <code>depencies</code> 添加依赖
-                </p>
+                <p>收集依赖：</p>
+                <ul>
+                    <li>
+                        <code>form</code> 表单中：例如在 <code>effects</code> 中通过{" "}
+                        <code>{"field.query({path}).value()"}</code> 或者 <code>{"form.{path}.value"}</code>{" "}
+                        收集依赖，或通过模型中的 <code>x-reactions</code> 添加 <code>depencies</code> 添加依赖
+                    </li>
+                    <li>
+                        <code>reactive</code> 中：<code>observable</code>{" "}
+                        数据发生变更触发的响应，这里需要区分深拷贝、浅拷贝以及 <code>ref</code> 引用响应对象
+                    </li>
+                </ul>
                 <p>
                     因此在 <code>action</code> 外部使用方法：
                 </p>

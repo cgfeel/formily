@@ -14,11 +14,16 @@ const Observe: FC = () => (
         footer={
             <div>
                 <p>
-                    <code>observe</code> 默认监听 <code>observable</code> 深拷贝
+                    <code>observe</code> 默认监听 <code>observable</code> 深拷贝，和 <code>autorun</code> 不同：
                 </p>
-                <p>
-                    和 <code>autorun</code> 不同，初始化不监听，只有值发生改变的时候才发生响应
-                </p>
+                <ul>
+                    <li>
+                        监听 <code>observable</code> 对象的所有操作，<code>autorun</code> 只响应值的变化
+                    </li>
+                    <li>
+                        不响应 <code>observable</code> 初始值
+                    </li>
+                </ul>
             </div>
         }
         header={<h2>observe</h2>}>

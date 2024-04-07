@@ -60,10 +60,17 @@ const Observable: FC = () => {
     return (
         <Panel
             footer={
-                <p>
-                    主要用于创建不同响应式行为的 <code>observable</code> 对象，同时可以作为 <code>annotation</code> 给{" "}
-                    <code>define</code> 用于标记响应式属性
-                </p>
+                <div>
+                    <p>
+                        主要用于创建不同响应式行为的 <code>observable</code> 对象，同时可以作为 <code>annotation</code>{" "}
+                        给 <code>define</code> 用于标记响应式属性
+                    </p>
+                    <p>
+                        <code>observable.ref</code> 常用于表单初始化后作为组件挂起的事件响应处理，例如响应{" "}
+                        <code>TreeSelect</code> 组件下拉菜单点击触发的异步加载 [
+                        <a href="http://localhost:3000/async">查看</a>]
+                    </p>
+                </div>
             }
             header={<h2>observable</h2>}>
             <ButtonRun

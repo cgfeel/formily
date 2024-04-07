@@ -474,3 +474,145 @@
 
 -   `antd v5` 采用 `tree shaking` 方式，无需使用文档中提到的 `babel-plugin-import`
 -   本项目是基于 `create-react-app`，如果需要配置 `Webpack` 还是建议添加这两个包：`react-app-rewired` `customize-cra`
+
+---- 分割线 ----
+
+### Reactive Library
+
+-   URL：`/reactive`
+-   目录：https://github.com/cgfeel/formily/blob/main/src/page/Reactive.tsx
+-   包含章节：
+    -   整个 API 文档 [[查看](https://reactive.formilyjs.org/zh-CN/api/observable)]
+
+**总结：**
+
+-   暂且可以将其作为表单中的 `mbox` 来看，不同之处在于 `reactive` 更注重于对响应对象的操作，其提供的 API 都围绕这方面
+-   建议本地运行查看，这里只罗列索引，本地注释了详细备注
+
+#### observable
+
+创建响应对象
+
+-   `observable/observable.deep`：深拷贝
+-   `observable.shallow`：浅拷贝，响应对比
+-   `observable.computed`：响应计算，直接计算，`get\set` 模式
+-   `observable.ref`：引用响应劫持对象，只能用于修改对象的`value`才能发生响应
+-   `observable.box`：`observable.ref` 的 `get\set` 模式
+
+#### autorun
+
+在演示中演示了执行过程的顺序
+
+-   `autorun`：接收一个函数函数作为 `tracker`，并返回一个 `dispose` 函数用于停止响应
+-   `autorun.memo`：在 `autorun` 内部创建一个响应对象
+-   `autorun.effect`：在 `autorun` 内部的副作用处理
+
+> `autorun` 的执行过程通过微任务来实现
+
+#### reaction
+
+在演示中演示了执行过程的顺序
+
+-   在响应过程中个执行一个脏检查，并返回一个 `dispose` 函数用于停止响应
+-   方法中 `tracker` 会随着响应数据更新调用，而 `subscriber` 只对更新数据有变化时才响应
+
+#### batch
+
+定义批量操作：在同一个任务事件中拆分成不同的微任务，通过堆栈分别执行
+
+-   `batch.scope`：局部batch
+-   `batch.abound`：异步 batch
+-   `batch.endpoit`：结束回调
+
+在演示中演示了：
+
+-   `batch` 内部执行顺序
+-   `batch` 外部执行响应
+
+> `batch` 的执行过程通过微任务来实现
+
+#### action
+
+和 `batch` 一样，不同在于：
+
+-   不收集依赖，关于依赖详细见演示
+-   没有 `endpoint`
+
+#### defined
+
+手动定义领域模型，在文档中有个问题：
+
+-   在定义的模型类中 `box` 初始值是数值，之后通过 `define` 修正为 `observable.box`
+-   然而 `number` 类型是没有 `get\set` 操作的，这点对于 `vsc`、`eslint` 来说是不能理解的
+
+修正：
+
+-   直接将 `box` 类型通过 `observable.box` 声明，取消 `define` 类型覆盖
+
+### model
+
+快速定义模型，详细见演示
+
+### observe
+
+和 `autorun` 的不同：
+
+-   监听 `observable` 对象的所有操作，`autorun` 只响应值的变化
+-   不响应 `observable` 初始值
+
+### markRaw
+
+两个特征
+
+-   包裹对象，使其 `observable` 不响应
+-   包裹类，使其类声明的对象都不受 `observable` 响应
+
+### markObservable
+
+`observable` 不响应有 3 类：`React Node` 与带有 `toJSON`、`toJS` 方法的对象
+
+两个特征：
+
+-   包裹对象，使其 `observable` 响应
+-   包裹类，使其类声明的对象受 `observable` 响应
+
+### raw
+
+从 `observable` 对象中获取源数据
+
+### toJS
+
+将 `observable` 转化为普通的 JS 对象，转换后的值不能用于依赖收集
+
+### untracked
+
+函数内包裹的 `observable` 永远不会被收集依赖
+
+### hasCollected
+
+用于检测某段执行逻辑是否存在依赖收集，演示中分别鉴定：
+
+-   `toJS` 属性对象、`markObservable` 对象、正常的 `observable` 对象、`markRaw` 对象、`toJS`对象
+-   只有 `markObservable` 对象、正常的 `observable` 对象能够正常依赖
+
+### Tracker
+
+手动跟踪依赖，特征如下：
+
+-   `tracker.track` 调用后不会重复执行
+-   `Tracker` 构造中的 `scheduler` 声明后会随依赖值的变化而调用
+
+借此每次跟踪结束后，需要通过 `scheduler` 来决定后续跟踪
+
+### Type Checker
+
+-   `isObservable`：判断是否为 `observable` 对象，演示了 `observable` 和 `observable toJS`
+-   `isAnnotation`：判断是否为 `Annotation` 对象，演示了 `action.bound` 和普通函数
+-   `isSupportObservable`：是否可以被 `observable` 对象，演示了普通对象和带有 `toJS` 的对象
+
+### observer
+
+在 `React` 中，将 `Function Component` 变成 `Reaction`
+
+-   可以把 `observer` 和 `Observer` 的关系看作是 `memo` 和 `useMemo`
+-   演示中将文档示例做了拆分，建议对照比较

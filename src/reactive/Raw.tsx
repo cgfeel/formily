@@ -7,7 +7,7 @@ const obs = observable({ aa: {} });
 obs.aa = { bb: 123 };
 
 const Raw: FC = () => (
-    <Panel header={<h2>obs</h2>}>
+    <Panel header={<h2>raw</h2>}>
         <ButtonRun tips="获取源数据" onClick={() => console.log("raw", raw(obs))}>
             click it
         </ButtonRun>
