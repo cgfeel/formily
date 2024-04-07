@@ -549,25 +549,25 @@
 
 -   直接将 `box` 类型通过 `observable.box` 声明，取消 `define` 类型覆盖
 
-### model
+#### model
 
 快速定义模型，详细见演示
 
-### observe
+#### observe
 
 和 `autorun` 的不同：
 
 -   监听 `observable` 对象的所有操作，`autorun` 只响应值的变化
 -   不响应 `observable` 初始值
 
-### markRaw
+#### markRaw
 
 两个特征
 
 -   包裹对象，使其 `observable` 不响应
 -   包裹类，使其类声明的对象都不受 `observable` 响应
 
-### markObservable
+#### markObservable
 
 `observable` 不响应有 3 类：`React Node` 与带有 `toJSON`、`toJS` 方法的对象
 
@@ -576,26 +576,26 @@
 -   包裹对象，使其 `observable` 响应
 -   包裹类，使其类声明的对象受 `observable` 响应
 
-### raw
+#### raw
 
 从 `observable` 对象中获取源数据
 
-### toJS
+#### toJS
 
 将 `observable` 转化为普通的 JS 对象，转换后的值不能用于依赖收集
 
-### untracked
+#### untracked
 
 函数内包裹的 `observable` 永远不会被收集依赖
 
-### hasCollected
+#### hasCollected
 
 用于检测某段执行逻辑是否存在依赖收集，演示中分别鉴定：
 
 -   `toJS` 属性对象、`markObservable` 对象、正常的 `observable` 对象、`markRaw` 对象、`toJS`对象
 -   只有 `markObservable` 对象、正常的 `observable` 对象能够正常依赖
 
-### Tracker
+#### Tracker
 
 手动跟踪依赖，特征如下：
 
@@ -604,13 +604,13 @@
 
 借此每次跟踪结束后，需要通过 `scheduler` 来决定后续跟踪
 
-### Type Checker
+#### Type Checker
 
 -   `isObservable`：判断是否为 `observable` 对象，演示了 `observable` 和 `observable toJS`
 -   `isAnnotation`：判断是否为 `Annotation` 对象，演示了 `action.bound` 和普通函数
 -   `isSupportObservable`：是否可以被 `observable` 对象，演示了普通对象和带有 `toJS` 的对象
 
-### observer
+#### observer
 
 在 `React` 中，将 `Function Component` 变成 `Reaction`
 
