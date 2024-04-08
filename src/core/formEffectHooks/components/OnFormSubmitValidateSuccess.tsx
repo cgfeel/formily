@@ -1,6 +1,6 @@
 import { createForm, onFormSubmitValidateSuccess } from "@formily/core";
 import { FC, useMemo, useState } from "react";
-import ActionResponse from "../ActionResponse";
+import ActionResponse from "../../ActionResponse";
 import Panel from "../Panel";
 import { onSubmitEffects, onSubmitPromise } from "../action";
 
