@@ -1,6 +1,7 @@
 import { Tabs, TabsProps } from "antd";
 import { FC } from "react";
 import CreateForm from "../core/createForm";
+import FieldEffectHooks from "../core/fieldEffectHooks";
 import FormEffectHooks from "../core/formEffectHooks";
 
 const items: TabsProps["items"] = [
@@ -16,8 +17,13 @@ const items: TabsProps["items"] = [
     },
     {
         key: "formEffectHooks",
-        label: "formEffectHooks",
+        label: "Form Effect Hooks",
         children: <FormEffectHooks />,
+    },
+    {
+        key: "fieldEffectHooks",
+        label: "Field Effect Hooks",
+        children: <FieldEffectHooks />,
     },
 ];
 
