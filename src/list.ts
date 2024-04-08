@@ -77,6 +77,10 @@ export const router = {
         name: "Reactive Library",
         path: lazy(() => import("./page/Reactive")),
     },
+    "/core": {
+        name: "Core Library",
+        path: lazy(() => import("./page/Core")),
+    },
 } as const;
 
 export type RouterKey = keyof typeof router;
