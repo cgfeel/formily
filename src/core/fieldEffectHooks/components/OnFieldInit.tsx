@@ -17,9 +17,16 @@ const OnFieldInit: FC = () => {
     return (
         <Panel
             footer={
-                <p>
-                    用于监听某个字段初始化的副作用钩子，我们在调用 <code>createField</code> 的时候就会触发字段初始化事件
-                </p>
+                <div>
+                    <p>
+                        用于监听某个字段初始化的副作用钩子，我们在调用 <code>createField</code>{" "}
+                        的时候就会触发字段初始化事件
+                    </p>
+                    <p>
+                        可以重复创建字段 <code>createField</code>，<code>formily</code> 会自动处理，
+                        <code>onFieldInit</code> 不会重复触发
+                    </p>
+                </div>
             }
             header={<h2>onFieldInit - 字段初始化</h2>}>
             <ActionResponse response={response}>
