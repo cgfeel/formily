@@ -1,7 +1,7 @@
 import { createForm, onFieldMount } from "@formily/core";
 import { FC, useMemo, useState } from "react";
-import Panel from "../Panel";
 import ActionResponse from "../../ActionResponse";
+import Panel from "../Panel";
 
 const OnFieldMount: FC = () => {
     const [response, setResponse] = useState("");

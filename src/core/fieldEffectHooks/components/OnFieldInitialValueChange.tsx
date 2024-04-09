@@ -1,7 +1,7 @@
 import { createForm, isField, onFieldInitialValueChange } from "@formily/core";
 import { FC, useMemo, useState } from "react";
-import Panel from "../Panel";
 import ActionResponse from "../../ActionResponse";
+import Panel from "../Panel";
 
 const OnFieldInitialValueChange: FC = () => {
     const [response, setResponse] = useState("");
