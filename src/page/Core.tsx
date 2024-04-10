@@ -1,11 +1,12 @@
 import { Tabs, TabsProps } from "antd";
 import { FC, Suspense, lazy } from "react";
 
-const CreateForm = lazy(() => import("../core/createForm"));
-const FieldEffectHooks = lazy(() => import("../core/fieldEffectHooks"));
-const FormEffectHooks = lazy(() => import("../core/formEffectHooks"));
 const CreateEffectContext = lazy(() => import("../core/formHooksAPI/CreateEffectContext"));
 const CreateEffectHook = lazy(() => import("../core/formHooksAPI/CreateEffectHook"));
+const CreateForm = lazy(() => import("../core/createForm"));
+const FieldEffectHooks = lazy(() => import("../core/fieldEffectHooks"));
+const FormChecker = lazy(() => import("../core/formCheckers"));
+const FormEffectHooks = lazy(() => import("../core/formEffectHooks"));
 
 const items: TabsProps["items"] = [
     {
@@ -47,6 +48,15 @@ const items: TabsProps["items"] = [
             <Suspense fallback={<>loading...</>}>
                 <CreateEffectHook />
                 <CreateEffectContext />
+            </Suspense>
+        ),
+    },
+    {
+        key: "formCheckers",
+        label: "Form Checkers",
+        children: (
+            <Suspense fallback={<>loading...</>}>
+                <FormChecker />
             </Suspense>
         ),
     },
