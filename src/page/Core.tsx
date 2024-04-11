@@ -7,6 +7,7 @@ const CreateForm = lazy(() => import("../core/createForm"));
 const FieldEffectHooks = lazy(() => import("../core/fieldEffectHooks"));
 const FormChecker = lazy(() => import("../core/formCheckers"));
 const FormEffectHooks = lazy(() => import("../core/formEffectHooks"));
+const FormPath = lazy(() => import("../core/formPath"));
 
 const items: TabsProps["items"] = [
     {
@@ -57,6 +58,15 @@ const items: TabsProps["items"] = [
         children: (
             <Suspense fallback={<>loading...</>}>
                 <FormChecker />
+            </Suspense>
+        ),
+    },
+    {
+        key: "formPath",
+        label: "Form Path",
+        children: (
+            <Suspense fallback={<>loading...</>}>
+                <FormPath />
             </Suspense>
         ),
     },
