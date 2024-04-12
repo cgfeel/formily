@@ -9,15 +9,6 @@ const useStyles = createStyles(css`
     width: 600px;
 `);
 
-const Consumer: FC<PropsWithChildren> = ({ children }) => (
-    <>
-        <p>
-            <strong>target:</strong>
-        </p>
-        <code className="consumer">{children}</code>
-    </>
-);
-
 const Panel: FC<PropsWithChildren<PanelProps>> = ({ children, footer, form, header }) => {
     const { styles } = useStyles();
     const stylish = useStylish();
@@ -38,7 +29,5 @@ export interface PanelProps extends IProviderProps {
     footer?: ReactNode;
     header?: ReactNode;
 }
-
-export { Consumer };
 
 export default Panel;

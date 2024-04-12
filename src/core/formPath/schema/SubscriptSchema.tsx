@@ -2,6 +2,7 @@ import { ISchema, ISchemaFieldProps } from "@formily/react";
 import { FC, PropsWithChildren } from "react";
 import SchemaField from "./SchemaField";
 import { InputProps } from "antd";
+import { FormPath } from "@formily/core";
 
 const SubscriptSchema: FC<PropsWithChildren<SubscriptSchemaProps>> = ({
     children,
@@ -24,6 +25,14 @@ const SubscriptSchema: FC<PropsWithChildren<SubscriptSchemaProps>> = ({
                             x-decorator="FormItem"
                             x-component-props={pathProps}
                             x-reactions={path}
+                            x-validator={value => {
+                                try {
+                                    FormPath.parse(value);
+                                    return "";
+                                } catch {
+                                    return "路径不正确";
+                                }
+                            }}
                         />
                         <SchemaField.String
                             name="text"

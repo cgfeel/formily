@@ -1,22 +1,11 @@
-import { Field, GeneralField, isField, onFieldChange, onFieldReact, onFieldUnmount, onFormInit } from "@formily/core";
+import { Field, FormPath, isField, onFieldChange, onFieldReact } from "@formily/core";
 
 export const actionDisabled = (field: Field, name: string) => {
     const read = field.query(".read").value()||false;
     if (read) field.setComponent(name);
 };
 
-export const localEffect = (init: AnyFunc, hooks: AnyFunc, setTarget: TargetFn) => () => {
-    hooks();
-    onFormInit(init);
-    onFieldUnmount("group.*.print", field => {
-        init();
-        field.form.query("group.*.print").forEach(field => setTarget(field));
-    });
-
-    onFieldReact("group.*.print", setTarget);
-};
-
-export const readEffect = () => {
+export const printEffect = (reactFilter?: FilterFn) => {
     onFieldChange('group.*.read', field => {
         const read = isField(field) ? field.value||false : false;
         if (!read) return;
@@ -24,17 +13,25 @@ export const readEffect = () => {
         field.query('.path').take(target => target.setState({ pattern: "disabled" }));
         field.query('.text').take(target => target.setState({ pattern: "disabled" }));
     });
+    onFieldReact("group.*.print", field => {
+        if (!isField(field)) return;
+        const pathFiled = field.query(".path");
+        const path = String(pathFiled.value()||'');
+        const text = String(field.query(".text").value()||'');
+
+        try {
+            const [address = '', value = '', additional = ''] = reactFilter ? reactFilter([path, text]) : [path, text];
+            const target = {};
+
+            if (address && value) {
+                FormPath.setIn(target, address, value);
+                field.value = FormPath.getIn(target, address) + additional;
+            } else {
+                field.value = "";
+            }
+        } catch {
+        }
+    });
 };
 
-export type FormDataType = {
-    group: GroupItem[];
-}
-
-type AnyFunc = () => void;
-type TargetFn = (field: GeneralField) => void;
-
-type GroupItem = {
-    path: string;
-    read?: boolean;
-    text?: string;
-};
+export type FilterFn = (value: [string, string]) => string[];
