@@ -12,18 +12,37 @@ import { action, observable } from "@formily/reactive";
 import { createStyles } from "antd-style";
 import { FC, PropsWithChildren, useMemo } from "react";
 import Wraper from "../Wraper";
-import SchemaField, { EmptyNone } from "../schema/SchemaPropertyField";
+import { extraCode, fieldData } from "../action/methodAction";
+import SchemaField from "../schema/SchemaPropertyField";
+import ConcatSchema from "../schema/method/ConcatSchema";
+import EmptySchema from "../schema/method/EmptySchema";
+import SingleSchema from "../schema/method/SingleSchema";
 
-const defaultSelect = [{ tips: "点路径", value: "aa.bb.cc" }];
+const defaultSelect = [
+    { tips: "点路径", value: "aa.bb.cc" },
+    { tips: "局部匹配", value: "aa.bb.*" },
+    { tips: "分组匹配", value: "*(aa,bb,cc)" },
+];
 
-const useStyles = createStyles({
-    headerSelect: {
-        width: "100%",
+const useStyles = createStyles(({ prefixCls }) => ({
+    box: {
+        [`.${prefixCls}-desc-item`]: {
+            code: {
+                backgroundColor: "transparent",
+                border: "none",
+                margin: 0,
+                padding: 0,
+            },
+            pre: {
+                overflowX: "auto",
+                width: 500,
+            },
+        },
     },
     selectTips: {
         color: "#999",
     },
-});
+}));
 
 const asyncDataSource = (pattern: FormPathPattern, service: SelectService) => {
     const keyword = observable.ref("");
@@ -80,6 +99,7 @@ const SelectItem: FC<PropsWithChildren<SelectItemProps>> = ({ children, tips }) 
 };
 
 const MethodCom: FC = () => {
+    const { styles } = useStyles();
     const form = useMemo(
         () =>
             createForm({
@@ -99,8 +119,8 @@ const MethodCom: FC = () => {
         [],
     );
     return (
-        <Wraper form={form}>
-            <SchemaField scope={{ validator }}>
+        <Wraper className={styles.box} form={form}>
+            <SchemaField scope={{ extraCode, fieldData, validator }}>
                 <SchemaField.Void x-component="Header">
                     <SchemaField.String
                         name="path"
@@ -117,26 +137,13 @@ const MethodCom: FC = () => {
                     />
                 </SchemaField.Void>
                 <SchemaField.Void x-component="Card">
-                    <EmptyNone />
-                    <SchemaField.Void
-                        name="toString"
-                        x-component="DescItem"
-                        x-component-props={{
-                            title: "test",
-                            print: (
-                                <SchemaField.String
-                                    name="toString.print"
-                                    title="输出"
-                                    x-component="Input"
-                                    x-decorator="FormItem"
-                                    x-pattern="readPretty"
-                                />
-                            ),
-                        }}
+                    <EmptySchema />
+                    <SingleSchema feedbackText="输出路径的完整字符串，支持匹配型路径与数据操作型路径" name="toString" />
+                    <SingleSchema
+                        feedbackText="输出路径的数组片段，仅支持数据操作型路径。文档没有及时更新，此方法名已修改"
+                        name="toArr"
                     />
-                    <SchemaField.Void x-component="DescItem" x-component-props={{ title: "test2" }}>
-                        <SchemaField.String x-component="Input" />
-                    </SchemaField.Void>
+                    <ConcatSchema />
                 </SchemaField.Void>
             </SchemaField>
         </Wraper>

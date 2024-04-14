@@ -2,7 +2,7 @@ import { Field, FormPath, createForm, isField } from "@formily/core";
 import { FC, useMemo } from "react";
 import Consumer, { FormData } from "../Consumer";
 import Panel from "../Panel";
-import { actionDisabled, printEffect } from "../action";
+import { actionDisabled, printEffect } from "../action/pathAction";
 import SubscriptSchema from "../schema/SubscriptSchema";
 
 const target = { values: { array: [] } };

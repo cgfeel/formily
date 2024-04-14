@@ -1,7 +1,7 @@
 import { FormPath, createForm } from "@formily/core";
 import { FC, useMemo } from "react";
 import Panel from "../Panel";
-import { FilterFn, actionDisabled, matchEffect } from "../action";
+import { FilterFn, actionDisabled, matchEffect } from "../action/pathAction";
 import SubscriptSchema from "../schema/SubscriptSchema";
 
 const values = {

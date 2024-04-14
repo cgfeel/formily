@@ -1,9 +1,10 @@
-import { FormPath, GeneralField, createForm, isField, onFieldInit } from "@formily/core";
+import { Field, FormPath, GeneralField, createForm, isField, onFieldInit } from "@formily/core";
 import { FC, useMemo } from "react";
 import Panel from "../Panel";
-import { FilterFn, actionDisabled, printEffect } from "../action";
+import { FilterFn, actionDisabled, printEffect } from "../action/pathAction";
 import SubscriptSchema from "../schema/SubscriptSchema";
 
+const defaultPath = "aa.1.cc";
 const values = {
     group: [
         { path: "aa.bb.cc", text: ".dd", read: true },
@@ -16,6 +17,12 @@ const values = {
 const itemFilter: FilterFn = ([path, text]) => {
     const textValitor = !!text && text.indexOf(".") === 0;
     return !path || !textValitor ? [] : [path, FormPath.parse(text, path).toString()];
+};
+
+const pathReaction = (field: Field) => {
+    if (!field.value) {
+        field.value = defaultPath;
+    }
 };
 
 const validator = (field: GeneralField) => {
@@ -75,6 +82,7 @@ const Relative: FC = () => {
             <SubscriptSchema
                 reactions={{
                     copy: "{{actionDisabled($self, 'CopyDisabledBtn')}}",
+                    path: "{{pathReaction($self)}}",
                     remove: "{{actionDisabled($self, 'RemoveDisabledBtn')}}",
                     text: {
                         fulfill: {
@@ -84,7 +92,7 @@ const Relative: FC = () => {
                         },
                     },
                 }}
-                scope={{ actionDisabled }}
+                scope={{ actionDisabled, pathReaction }}
             />
         </Panel>
     );

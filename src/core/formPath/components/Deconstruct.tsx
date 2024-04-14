@@ -2,7 +2,7 @@ import { FormPath, GeneralField, createForm, isField, onFieldInit } from "@formi
 import { FC, useMemo } from "react";
 import Consumer, { FormData } from "../Consumer";
 import Panel from "../Panel";
-import { FilterFn, actionDisabled, printEffect } from "../action";
+import { FilterFn, actionDisabled, printEffect } from "../action/pathAction";
 import SubscriptSchema from "../schema/SubscriptSchema";
 
 const target = { values: {} };
