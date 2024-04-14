@@ -9,6 +9,7 @@ const SubscriptSchema: FC<PropsWithChildren<SubscriptSchemaProps>> = ({
     componentProps,
     reactions,
     scope,
+    pathValidator,
 }) => {
     const { pathProps, textProps } = componentProps || {};
     const { copy, path, print, remove, text } = reactions || {};
@@ -28,7 +29,7 @@ const SubscriptSchema: FC<PropsWithChildren<SubscriptSchemaProps>> = ({
                             x-validator={value => {
                                 try {
                                     FormPath.parse(value);
-                                    return "";
+                                    return pathValidator ? pathValidator(value) : "";
                                 } catch {
                                     return "路径不正确";
                                 }
@@ -74,6 +75,7 @@ type reactionsType = Partial<Record<"copy" | "path" | "print" | "remove" | "text
 export interface SubscriptSchemaProps extends Pick<ISchemaFieldProps, "scope"> {
     componentProps?: componentProps;
     reactions?: reactionsType;
+    pathValidator?: (value: string) => string;
 }
 
 export { SchemaField };

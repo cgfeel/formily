@@ -10,8 +10,10 @@ const values = {
     group: [{ path: "parent.[aa,bb]", text: "[11, 22]", read: true }],
 };
 
+const pathValidator = (value: string) => (/\[.+\]/.test(value) ? "" : "路径不对或解构未分配值");
+
 const itemFilter: FilterFnType = ([path, text], unparse) => {
-    if (!path || !/\[.*\]/.test(path) || !text) {
+    if (!path || "" !== pathValidator(path) || !text) {
         return [];
     }
 
@@ -61,7 +63,8 @@ const Deconstruct: FC = () => {
             footer={
                 <div>
                     <p>
-                        会自动将匹配值转化为 <code>JSON</code> 作为路径值去匹配
+                        会自动将匹配值转化为 <code>JSON</code> 作为路径值去匹配，演示中禁止匹配空对象 <code>.[]</code>
+                        ，因为得到的是非字符的空对象，作为演示无意义，如果要核对匹配路径可以在“匹配路径语法”选项中查看“解构匹配”
                     </p>
                     <p>
                         解构表达式类似于 <code>ES6</code> 的解构语法，只是它不支持 <code>...</code>{" "}
@@ -88,6 +91,7 @@ const Deconstruct: FC = () => {
                     remove: "{{actionDisabled($self, 'RemoveDisabledBtn')}}",
                 }}
                 scope={{ actionDisabled }}
+                pathValidator={pathValidator}
             />
             <Consumer values={form.values} filter={filter} />
         </Panel>

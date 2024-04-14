@@ -1,21 +1,14 @@
 import { Flex, Segmented } from "antd";
-import { FC, useState } from "react";
-import Deconstruct from "./components/Deconstruct";
-import Dot from "./components/Dot";
-import Relative from "./components/Relative";
-import Subscript from "./components/Subscript";
+import { FC, lazy, useState } from "react";
+
+const DataPath = lazy(() => import("./items/DataPath"));
+const MatchPath = lazy(() => import("./items/MatchPath"));
+const MehodCom = lazy(() => import("./items/MethodCom"));
 
 const items = {
-    dataPath: (
-        <>
-            <Dot />
-            <Subscript />
-            <Deconstruct />
-            <Relative />
-        </>
-    ),
-    matchPath: <>matchPath</>,
-    method: <>method</>,
+    dataPath: <DataPath />,
+    matchPath: <MatchPath />,
+    method: <MehodCom />,
 };
 
 const FormPath: FC = () => {
