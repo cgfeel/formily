@@ -22,6 +22,7 @@ const genDescItemStyle: GenerateStyle = token => {
                 },
                 pre: {
                     backgroundColor: colorBgLayout,
+                    overflowX: "auto",
                     padding: paddingMD,
                 },
             },

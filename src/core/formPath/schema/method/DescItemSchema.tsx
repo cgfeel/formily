@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren } from "react";
+import { FC, PropsWithChildren, ReactNode } from "react";
 import SchemaField from "../SchemaPropertyField";
 
 const DescItemSchema: FC<PropsWithChildren<DescItemSchemaProps>> = ({ children, feedbackText, name, title }) => (
@@ -15,7 +15,7 @@ const DescItemSchema: FC<PropsWithChildren<DescItemSchemaProps>> = ({ children, 
 export interface DescItemSchemaProps {
     name: string;
     title?: string;
-    feedbackText?: string;
+    feedbackText?: ReactNode;
 }
 
 export default DescItemSchema;

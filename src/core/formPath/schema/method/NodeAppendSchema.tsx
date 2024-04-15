@@ -1,10 +1,10 @@
 import { FC } from "react";
 import SchemaField from "../SchemaPropertyField";
-import DescItemSchema from "./DescItemSchema";
+import SingleSchema, { SingleSchemaProps } from "./SingleSchema";
 
-const ConcatSchema: FC = () => (
-    <DescItemSchema feedbackText="连接数据操作型路径" name="concat">
-        <SchemaField.Object name="concat-array" title="数组节点" x-component="Space" x-decorator="FormItem">
+const NodeAppendSchema: FC<NodeAppendSchemaProps> = ({ name, ...props }) => (
+    <SingleSchema {...props} name={name}>
+        <SchemaField.Object name={`${name}-array`} title="数组节点" x-component="Space" x-decorator="FormItem">
             <SchemaField.String
                 name="input1"
                 x-component="FieldInput"
@@ -12,7 +12,6 @@ const ConcatSchema: FC = () => (
                 x-component-props={{
                     allowClear: true,
                     placeholder: "选填，字母或数字",
-                    style: { width: 150 },
                 }}
                 x-reactions={{
                     dependencies: ["path"],
@@ -31,7 +30,6 @@ const ConcatSchema: FC = () => (
                 x-component-props={{
                     allowClear: true,
                     placeholder: "选填，字母或数字",
-                    style: { width: 150 },
                 }}
                 x-reactions={{
                     dependencies: ["path"],
@@ -50,7 +48,6 @@ const ConcatSchema: FC = () => (
                 x-component-props={{
                     allowClear: true,
                     placeholder: "选填，字母或数字",
-                    style: { width: 150 },
                 }}
                 x-reactions={{
                     dependencies: ["path"],
@@ -64,7 +61,7 @@ const ConcatSchema: FC = () => (
             />
         </SchemaField.Object>
         <SchemaField.String
-            name="concat-input"
+            name={`${name}-input`}
             title="字符节点"
             x-component="FieldInput"
             x-decorator="FormItem"
@@ -83,15 +80,9 @@ const ConcatSchema: FC = () => (
                 },
             }}
         />
-        <SchemaField.String
-            name="concat-print"
-            title="输出"
-            x-component="CodePretty"
-            x-decorator="FormItem"
-            x-pattern="readPretty"
-            x-reactions="{{fieldData($self)}}"
-        />
-    </DescItemSchema>
+    </SingleSchema>
 );
 
-export default ConcatSchema;
+interface NodeAppendSchemaProps extends SingleSchemaProps {}
+
+export default NodeAppendSchema;

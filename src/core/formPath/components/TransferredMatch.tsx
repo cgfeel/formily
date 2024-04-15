@@ -1,7 +1,7 @@
-import { FormPath, createForm } from "@formily/core";
+import { FormPath, createForm, onFieldInit } from "@formily/core";
 import { FC, useMemo } from "react";
 import Panel from "../Panel";
-import { FilterFn, actionDisabled, matchEffect } from "../action/pathAction";
+import { FilterFn, actionDisabled, checkMatchPath, matchEffect } from "../action/pathAction";
 import SubscriptSchema from "../schema/SubscriptSchema";
 
 const values = {
@@ -26,6 +26,7 @@ const TransferredMatch: FC = () => {
                 values,
                 effects: () => {
                     matchEffect(itemFilter);
+                    onFieldInit("group.*.text", checkMatchPath);
                 },
             }),
         [],
@@ -36,10 +37,10 @@ const TransferredMatch: FC = () => {
                 <div>
                     <p>
                         对于路径节点中包含关键字的，我们可以使用转义语法匹配，语法 <code>\\</code> 或者{" "}
-                        <code>[[]]</code>
+                        <code>[[]]</code>。第一个例子中由于渲染过程中自动转码所以看到只有单个斜杆 <code>\</code>
                     </p>
                     <p>
-                        例子中由于渲染过程中自动转码所以看到只有单个斜杆 <code>\</code>
+                        除了使用转义符号去匹配带有通配符 <code>*</code> 的路径之外，匹配路径只能使用数据路径语法
                     </p>
                 </div>
             }

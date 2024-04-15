@@ -1,7 +1,7 @@
-import { Field, FormPath, createForm } from "@formily/core";
+import { Field, FormPath, createForm, onFieldInit } from "@formily/core";
 import { FC, useMemo } from "react";
 import Panel from "../Panel";
-import { FilterFn, actionDisabled, matchEffect } from "../action/pathAction";
+import { FilterFn, actionDisabled, checkMatchPath, matchEffect } from "../action/pathAction";
 import SubscriptSchema from "../schema/SubscriptSchema";
 
 const defaultPath = "test~";
@@ -33,6 +33,7 @@ const ExtendMatch: FC = () => {
                 values,
                 effects: () => {
                     matchEffect(itemFilter);
+                    onFieldInit("group.*.text", checkMatchPath);
                 },
             }),
         [],

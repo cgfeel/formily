@@ -1,11 +1,12 @@
-import { FC } from "react";
+import { FC, PropsWithChildren } from "react";
 import SchemaField from "../SchemaPropertyField";
 import DescItemSchema, { DescItemSchemaProps } from "./DescItemSchema";
 
-const SingleSchema: FC<SingleSchemaProps> = props => (
+const SingleSchema: FC<PropsWithChildren<SingleSchemaProps>> = ({ children, ...props }) => (
     <DescItemSchema {...props}>
+        {children}
         <SchemaField.String
-            name={`${props.name}-input`}
+            name={`${props.name}-print`}
             title="输出"
             x-component="Input"
             x-decorator="FormItem"

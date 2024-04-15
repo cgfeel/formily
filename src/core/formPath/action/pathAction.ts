@@ -1,4 +1,4 @@
-import { Field, FormPath, isField, onFieldChange, onFieldReact } from "@formily/core";
+import { Field, FormPath, GeneralField, isField, onFieldChange, onFieldReact } from "@formily/core";
 
 const onlyRead = () => {
     onFieldChange('group.*.read', field => {
@@ -13,6 +13,18 @@ const onlyRead = () => {
 export const actionDisabled = (field: Field, name: string) => {
     const read = field.query(".read").value()||false;
     if (read) field.setComponent(name);
+};
+
+export const checkMatchPath = (field: GeneralField) => {
+    isField(field) && 
+    field.setValidator(value => {
+        try {
+            const group = [String(field.query('.path').value()||''), String(value||'')].filter(value => value ? FormPath.parse(value).isMatchPattern : false);
+            return group.length === 2 ? "不能全是匹配路径" : "";
+        } catch {
+            return '路径或匹配有错误';
+        }
+    });
 };
 
 export const matchEffect = (reactFilter?: FilterFn) => {
