@@ -1,7 +1,7 @@
 import { Field, FormPath, GeneralField, createForm, isField, onFieldInit } from "@formily/core";
 import { FC, useMemo } from "react";
 import Panel from "../Panel";
-import { FilterFn, actionDisabled, printEffect } from "../action/pathAction";
+import { FilterFn, actionDisabled, checkDataPath, printEffect } from "../action/pathAction";
 import SubscriptSchema from "../schema/SubscriptSchema";
 
 const defaultPath = "aa.1.cc";
@@ -93,6 +93,7 @@ const Relative: FC = () => {
                     },
                 }}
                 scope={{ actionDisabled, pathReaction }}
+                pathValidator={checkDataPath}
             />
         </Panel>
     );

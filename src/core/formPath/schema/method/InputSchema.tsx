@@ -1,8 +1,8 @@
-import { FC } from "react";
+import { FC, PropsWithChildren } from "react";
 import SchemaField from "../SchemaPropertyField";
 import SingleSchema, { SingleSchemaProps } from "./SingleSchema";
 
-const InputSchema: FC<InputSchemaProps> = ({ defaultValue, inputTitle, ...props }) => (
+const InputSchema: FC<PropsWithChildren<InputSchemaProps>> = ({ children, defaultValue, inputTitle, ...props }) => (
     <SingleSchema {...props}>
         <SchemaField.String
             default={defaultValue}
@@ -14,6 +14,7 @@ const InputSchema: FC<InputSchemaProps> = ({ defaultValue, inputTitle, ...props 
                 allowClear: true,
             }}
         />
+        {children}
     </SingleSchema>
 );
 

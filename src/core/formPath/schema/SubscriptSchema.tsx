@@ -1,5 +1,5 @@
 import { ISchema, ISchemaFieldProps } from "@formily/react";
-import { FC, PropsWithChildren } from "react";
+import { FC, PropsWithChildren, ReactNode } from "react";
 import SchemaField from "./SchemaField";
 import { InputProps } from "antd";
 import { FormPath } from "@formily/core";
@@ -7,6 +7,7 @@ import { FormPath } from "@formily/core";
 const SubscriptSchema: FC<PropsWithChildren<SubscriptSchemaProps>> = ({
     children,
     componentProps,
+    items,
     reactions,
     scope,
     pathValidator,
@@ -53,6 +54,7 @@ const SubscriptSchema: FC<PropsWithChildren<SubscriptSchemaProps>> = ({
                         <SchemaField.Void x-component="ArrayItems.Remove" x-decorator="FormItem" x-reactions={remove} />
                         <SchemaField.Void x-component="ArrayItems.Copy" x-decorator="FormItem" x-reactions={copy} />
                     </SchemaField.Void>
+                    {items}
                     <SchemaField.String
                         name="print"
                         title="输出"
@@ -74,6 +76,7 @@ type reactionsType = Partial<Record<"copy" | "path" | "print" | "remove" | "text
 
 export interface SubscriptSchemaProps extends Pick<ISchemaFieldProps, "scope"> {
     componentProps?: componentProps;
+    items?: ReactNode;
     reactions?: reactionsType;
     pathValidator?: (value: string) => string;
 }

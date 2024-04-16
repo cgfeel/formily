@@ -75,12 +75,35 @@ const extraMethod: Record<string, ActionMethod> = {
             feedbackError: FormPath.parse(path).isMatchPattern,
         });
     },
+    action_deleteIn: (field, path) => {
+        const input = String(field.query(".deleteIn.deleteIn-input").value()||"");
+        const [data, feedback] = jsonLimit(input);
+
+        field.setDecoratorProps({ 
+            extra: `const target = ${feedback ? input : JSON.stringify(data, null, 2)};
+FormPath.parse('${path}').deleteIn(target)`,
+            feedbackError: feedback !== ''
+        });
+    },
+    action_ensureIn: (field, path) => {
+        const input = String(field.query(".ensureIn.ensureIn-input").get('value')||'');
+        const value = String(field.query(".ensureIn.ensureIn-value").get('value')||'');
+
+        const [data, feedback] = jsonLimit(input);
+        field.setDecoratorProps({ 
+            extra: `const target = ${feedback ? input : JSON.stringify(data, null, 2)};
+FormPath.parse('${path}').ensureIn(target, '${value}')`,
+            feedbackError: feedback !== ''
+        });
+    },
     action_existIn: (field, path) => {
-        field.query(".existIn.existIn-input").take(target => {
-            isField(target) && field.setDecoratorProps({ 
-                extra: `const target = ${target.value};
+        const input = String(field.query(".existIn.existIn-input").value()||"");
+        const [data, feedback] = jsonLimit(input);
+
+        field.setDecoratorProps({ 
+            extra: `const target = ${feedback ? input : JSON.stringify(data, null, 2)};
 FormPath.parse('${path}').existIn(target)`,
-            });
+            feedbackError: feedback !== ''
         });
     },
     action_forEach: (field, path) => {
@@ -91,12 +114,13 @@ FormPath.parse('${path}').forEach(key => keys.push(key));`,
         });
     },
     action_getIn: (field, path) => {
-        field.query(".getIn.getIn-input").take(target => {
-            console.log('test');
-            isField(target) && field.setDecoratorProps({ 
-                extra: `const target = ${target.value};
+        const input = String(field.query(".getIn.getIn-input").value()||"");
+        const [data, feedback] = jsonLimit(input);
+
+        field.setDecoratorProps({ 
+            extra: `const target = ${feedback ? input : JSON.stringify(data, null, 2)};
 FormPath.parse('${path}').getIn(target)`,
-            });
+            feedbackError: feedback !== ''
         });
     },
     action_includes: (field, path) => {
@@ -155,6 +179,17 @@ FormPath.parse('${path}').getIn(target)`,
             feedbackError: FormPath.parse(path).isMatchPattern
         });
     },
+    action_setIn: (field, path) => {
+        const input = String(field.query(".setIn.setIn-input").get('value')||'');
+        const value = String(field.query(".setIn.setIn-value").get('value')||'');
+
+        const [data, feedback] = jsonLimit(input);
+        field.setDecoratorProps({ 
+            extra: `const target = ${feedback ? input : JSON.stringify(data, null, 2)};
+FormPath.parse('${path}').setIn(target, '${value}')`,
+            feedbackError: feedback !== ''
+        });
+    },
     action_splice: (field, path) => {
         const [[start, del], array] = spliceValue(field, '.splice');
         field.setDecoratorProps({ 
@@ -177,7 +212,7 @@ FormPath.parse('${path}').getIn(target)`,
     },
     action_transform: (field, path) => {
         field.setDecoratorProps({ 
-            extra: `FormPath.parse('${path}').transform(path => \`yy.\${path}.zz\`);`, 
+            extra: `FormPath.parse('${path}').transform(/\\w+/, path => \`yy.\${path}.zz\`);`, 
             feedbackError: FormPath.parse(path).isMatchPattern,
         });
     }
@@ -189,6 +224,26 @@ const fieldMethod: Record<string, ActionMethod> = {
         if (target !== undefined) {
             const [array, value] = nodeValue(field, 'concat');
             target.value = FormPath.parse(path).concat(array, value).toString();
+        }
+    },
+    action_deleteIn: (field, path) => {
+        isField(field) && field.query(".deleteIn-input").take(target => {
+            if (isField(target)) {
+                const [data, feedback] = jsonLimit(target.value);
+                feedback === '' && FormPath.parse(path).deleteIn(data);
+                field.value = feedback||JSON.stringify(FormPath.parse(path).getIn(data));
+            }
+        });
+    },
+    action_ensureIn: (field, path) => {
+        if (isField(field)) {
+            const input = String(field.query(".ensureIn-input").get('value')||'');
+            const value = String(field.query(".ensureIn-value").get('value')||'');
+
+            const [data, feedback] = jsonLimit(input);
+            feedback === '' &&  FormPath.parse(path).setIn(data, value);
+
+            field.value = feedback||JSON.stringify(FormPath.parse(path).getIn(data));
         }
     },
     action_existIn: (field, path) => {
@@ -212,7 +267,7 @@ const fieldMethod: Record<string, ActionMethod> = {
         isField(field) && field.query(".getIn-input").take(target => {
             if (isField(target)) {
                 const [data, feedback] = jsonLimit(target.value);
-                field.value = feedback||String(FormPath.parse(path).getIn(data));
+                field.value = feedback||JSON.stringify(FormPath.parse(path).getIn(data));
             }
         });
     },
@@ -270,12 +325,15 @@ const fieldMethod: Record<string, ActionMethod> = {
         }
     },
     action_setIn: (field, path) => {
-        isField(field) && field.query(".setIn-input").take(target => {
-            if (isField(target)) {
-                const [data, feedback] = jsonLimit(target.value);
-                field.value = feedback||String(FormPath.parse(path).setIn(data, 'value'));
-            }
-        });
+        if (isField(field)) {
+            const input = String(field.query(".setIn-input").get('value')||'');
+            const value = String(field.query(".setIn-value").get('value')||'');
+
+            const [data, feedback] = jsonLimit(input);
+            feedback === '' &&  FormPath.parse(path).setIn(data, value);
+
+            field.value = feedback||JSON.stringify(FormPath.parse(path).getIn(data));
+        }
     },
     action_splice: (field, path) => {
         const target = dataPathLimit(field, path);

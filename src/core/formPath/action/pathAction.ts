@@ -15,6 +15,14 @@ export const actionDisabled = (field: Field, name: string) => {
     if (read) field.setComponent(name);
 };
 
+export const checkDataPath = (value: string) => {
+    try {
+        return value && FormPath.parse(value).isMatchPattern ? "只能使用数据路径" : "";
+    } catch {
+        return '路径语法错误';
+    }
+};
+
 export const checkMatchPath = (field: GeneralField) => {
     isField(field) && 
     field.setValidator(value => {
@@ -36,7 +44,7 @@ export const matchEffect = (reactFilter?: FilterFn) => {
         const text = String(field.query(".text").value()||'');
 
         try {
-            const [address = '', value = '', additional = ''] = reactFilter ? reactFilter([path, text]) : [path, text];
+            const [address = '', value = '', additional = ''] = reactFilter ? reactFilter([path, text, field]) : [path, text];
             if (address && value) {
                 field.value = value + additional;
             } else {
@@ -53,9 +61,14 @@ export const printEffect = (reactFilter?: FilterFn) => {
         if (!isField(field)) return;
         const pathFiled = field.query(".path");
         const path = String(pathFiled.value()||'');
-        const text = String(field.query(".text").value()||'');
+
+        if (checkDataPath(path) !== '') {
+            field.value = '';
+            return;
+        }
 
         try {
+            const text = String(field.query(".text").value()||'');
             const [address = '', value = '', additional = ''] = reactFilter ? reactFilter([path, text]) : [path, text];
             const target = {};
 
@@ -70,4 +83,4 @@ export const printEffect = (reactFilter?: FilterFn) => {
     });
 };
 
-export type FilterFn = (value: [string, string]) => string[];
+export type FilterFn = (value: [string, string, Field?]) => string[];

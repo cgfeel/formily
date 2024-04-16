@@ -1,4 +1,4 @@
-import { Editable, Input, NumberPicker, Select, Space } from "@formily/antd-v5";
+import { Input, NumberPicker, Select, Space } from "@formily/antd-v5";
 import { createSchemaField, observer } from "@formily/react";
 import styled from "@emotion/styled";
 import { Card as CardRaw, EmptyProps, Empty as EmptyRaw } from "antd";
@@ -25,7 +25,6 @@ const SchemaField = createSchemaField({
         Card,
         CodePretty,
         DescItem,
-        Editable,
         Empty,
         FieldInput,
         FormItem,

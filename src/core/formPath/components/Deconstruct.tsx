@@ -2,7 +2,7 @@ import { FormPath, GeneralField, createForm, isField, onFieldInit } from "@formi
 import { FC, useMemo } from "react";
 import Consumer, { FormData } from "../Consumer";
 import Panel from "../Panel";
-import { FilterFn, actionDisabled, printEffect } from "../action/pathAction";
+import { FilterFn, actionDisabled, checkDataPath, printEffect } from "../action/pathAction";
 import SubscriptSchema from "../schema/SubscriptSchema";
 
 const target = { values: {} };
@@ -10,7 +10,12 @@ const values = {
     group: [{ path: "parent.[aa,bb]", text: "[11, 22]", read: true }],
 };
 
-const pathValidator = (value: string) => (/\[.+\]/.test(value) ? "" : "路径不对或解构未分配值");
+const pathValidator = (value: string) => {
+    const feedback = checkDataPath(value);
+    if (feedback) return feedback;
+
+    return /\[.+\]/.test(value) ? "" : "路径不对或解构未分配值";
+};
 
 const itemFilter: FilterFnType = ([path, text], unparse) => {
     if (!path || "" !== pathValidator(path) || !text) {

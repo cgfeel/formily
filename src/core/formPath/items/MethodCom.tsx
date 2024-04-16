@@ -170,7 +170,7 @@ const MethodCom: FC = () => {
                     />
                     <MatchAliasGroupSchema />
                     <InputSchema
-                        defaultValue='{ "aa": { "bb": { "cc": {} } } }'
+                        defaultValue='{ "aa": { "bb": { "cc": "value" } } }'
                         feedbackText="基于当前路径判断指定数据是否存在"
                         inputTitle="手写 JSON"
                         name="existIn"
@@ -183,10 +183,42 @@ const MethodCom: FC = () => {
                     />
                     <InputSchema
                         defaultValue="{}"
-                        feedbackText="基于当前路径更新指定数据"
+                        feedbackText="基于当前路径更新指定数据，还有一个静态方法 FormPath.setIn，区别在于 setIn 用于给路径赋值，静态方法用于给一个对象赋予 address 和 data，使 target 成为一个 FormPath 对象。"
                         inputTitle="手写 JSON"
-                        name="setIn"
+                        name="setIn">
+                        <SchemaField.String
+                            default="value"
+                            name="setIn-value"
+                            title="赋值"
+                            x-component="Input"
+                            x-decorator="FormItem"
+                        />
+                    </InputSchema>
+                    <InputSchema
+                        defaultValue='{ "aa": { "bb": { "cc": "value" } } }'
+                        feedbackText="基于当前路径删除指定数据"
+                        inputTitle="手写 JSON"
+                        name="deleteIn"
                     />
+                    <InputSchema
+                        defaultValue='{ "aa": { "bb": { "cc": "value" } } }'
+                        feedbackText="确保某个路径下必须有数据，如果没有则创建数据"
+                        inputTitle="手写 JSON"
+                        name="ensureIn"
+                    />
+                    <InputSchema
+                        defaultValue="{}"
+                        feedbackText="确保某个路径下必须有数据，如果没有则创建数据，目前来看和 setIn 无差"
+                        inputTitle="手写 JSON"
+                        name="ensureIn">
+                        <SchemaField.String
+                            default="value"
+                            name="ensureIn-value"
+                            title="赋值"
+                            x-component="Input"
+                            x-decorator="FormItem"
+                        />
+                    </InputSchema>
                 </SchemaField.Void>
             </SchemaField>
         </Wraper>
