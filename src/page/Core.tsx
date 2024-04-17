@@ -5,6 +5,7 @@ const CreateEffectContext = lazy(() => import("../core/formHooksAPI/CreateEffect
 const CreateEffectHook = lazy(() => import("../core/formHooksAPI/CreateEffectHook"));
 const CreateForm = lazy(() => import("../core/createForm"));
 const FieldEffectHooks = lazy(() => import("../core/fieldEffectHooks"));
+const Form = lazy(() => import("../core/form"));
 const FormChecker = lazy(() => import("../core/formCheckers"));
 const FormEffectHooks = lazy(() => import("../core/formEffectHooks"));
 const FormPath = lazy(() => import("../core/formPath"));
@@ -77,6 +78,20 @@ const items: TabsProps["items"] = [
         children: (
             <Suspense fallback={<>loading...</>}>
                 <FormValidatorRegistry />
+            </Suspense>
+        ),
+    },
+    {
+        disabled: true,
+        key: "models",
+        label: "Models",
+    },
+    {
+        key: "form",
+        label: "Form",
+        children: (
+            <Suspense fallback={<>loading...</>}>
+                <Form />
             </Suspense>
         ),
     },
