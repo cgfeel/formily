@@ -1,17 +1,17 @@
 import {
     Field,
     FieldDataSource,
+    Form,
     FormPath,
     FormPathPattern,
     GeneralField,
-    createForm,
     isField,
     onFieldInit,
     onFieldReact,
 } from "@formily/core";
 import { action, observable } from "@formily/reactive";
 import { createStyles } from "antd-style";
-import { FC, PropsWithChildren, useMemo } from "react";
+import { FC, PropsWithChildren } from "react";
 import Wraper from "../Wraper";
 import SchemaField from "../schema/SchemaPropertyField";
 import EmptySchema from "../schema/method/EmptySchema";
@@ -65,6 +65,16 @@ const fetchSelect = ({ keyword, defaultData }: fetchParams) =>
         setTimeout(() => resolve([...data, ...defaultData]), 300);
     });
 
+const searchEffects = (defaultSelect: ItemType[]) => {
+    asyncDataSource("path", async ({ keyword }) => {
+        const defaultData = defaultSelect.map(({ tips, value }) => ({
+            label: <SelectItem tips={tips}>{value}</SelectItem>,
+            value,
+        }));
+        return keyword ? fetchSelect({ keyword, defaultData }) : defaultData;
+    });
+};
+
 const validator = (path: string) => {
     try {
         if (!path) return false;
@@ -86,26 +96,8 @@ const SelectItem: FC<PropsWithChildren<SelectItemProps>> = ({ children, tips }) 
     );
 };
 
-const SelectList: FC<PropsWithChildren<SelectListProps>> = ({ children, defaultSelect, extraCode, fieldData }) => {
+const SelectList: FC<PropsWithChildren<SelectListProps>> = ({ children, form, extraCode, fieldData }) => {
     const { styles } = useStyles();
-    const form = useMemo(
-        () =>
-            createForm({
-                values: {
-                    path: "aa.bb.cc",
-                },
-                effects: () => {
-                    asyncDataSource("path", async ({ keyword }) => {
-                        const defaultData = defaultSelect.map(({ tips, value }) => ({
-                            label: <SelectItem tips={tips}>{value}</SelectItem>,
-                            value,
-                        }));
-                        return keyword ? fetchSelect({ keyword, defaultData }) : defaultData;
-                    });
-                },
-            }),
-        [defaultSelect],
-    );
     return (
         <Wraper className={styles.box} form={form}>
             <SchemaField scope={{ extraCode, fieldData, validator }}>
@@ -154,9 +146,11 @@ type SelectParams = {
 type SelectService = (params: SelectParams) => Promise<FieldDataSource>;
 
 export interface SelectListProps {
-    defaultSelect: ItemType[];
+    form: Form;
     extraCode: ActionFn;
     fieldData: ActionFn;
 }
+
+export { searchEffects };
 
 export default SelectList;
