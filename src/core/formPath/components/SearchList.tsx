@@ -3,6 +3,7 @@ import {
     FieldDataSource,
     FormPath,
     FormPathPattern,
+    GeneralField,
     createForm,
     isField,
     onFieldInit,
@@ -12,7 +13,6 @@ import { action, observable } from "@formily/reactive";
 import { createStyles } from "antd-style";
 import { FC, PropsWithChildren, useMemo } from "react";
 import Wraper from "../Wraper";
-import { extraCode, fieldData } from "../action/methodAction";
 import SchemaField from "../schema/SchemaPropertyField";
 import EmptySchema from "../schema/method/EmptySchema";
 
@@ -86,7 +86,7 @@ const SelectItem: FC<PropsWithChildren<SelectItemProps>> = ({ children, tips }) 
     );
 };
 
-const SelectList: FC<PropsWithChildren<SelectListProps>> = ({ children, defaultSelect = [] }) => {
+const SelectList: FC<PropsWithChildren<SelectListProps>> = ({ children, defaultSelect, extraCode, fieldData }) => {
     const { styles } = useStyles();
     const form = useMemo(
         () =>
@@ -137,6 +137,8 @@ interface SelectItemProps {
     tips: string;
 }
 
+type ActionFn = (field: GeneralField, self?: boolean) => void;
+
 type fetchParams = {
     keyword: string;
     defaultData: FieldDataSource;
@@ -152,7 +154,9 @@ type SelectParams = {
 type SelectService = (params: SelectParams) => Promise<FieldDataSource>;
 
 export interface SelectListProps {
-    defaultSelect?: ItemType[];
+    defaultSelect: ItemType[];
+    extraCode: ActionFn;
+    fieldData: ActionFn;
 }
 
 export default SelectList;
