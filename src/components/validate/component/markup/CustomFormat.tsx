@@ -1,7 +1,7 @@
-import { FC } from "react";
+import { FC, PropsWithChildren } from "react";
 import SchemaField from "../../SchemaField";
 
-const CustomFormat: FC = () => (
+const CustomFormat: FC<PropsWithChildren> = ({ children }) => (
     <SchemaField>
         <SchemaField.String
             name="global_style_1"
@@ -91,6 +91,7 @@ const CustomFormat: FC = () => (
             ]}
             required
         />
+        {children}
     </SchemaField>
 );
 

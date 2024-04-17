@@ -8,6 +8,7 @@ const FieldEffectHooks = lazy(() => import("../core/fieldEffectHooks"));
 const FormChecker = lazy(() => import("../core/formCheckers"));
 const FormEffectHooks = lazy(() => import("../core/formEffectHooks"));
 const FormPath = lazy(() => import("../core/formPath"));
+const FormValidatorRegistry = lazy(() => import("../core/formValidatorRegistry"));
 
 const items: TabsProps["items"] = [
     {
@@ -67,6 +68,15 @@ const items: TabsProps["items"] = [
         children: (
             <Suspense fallback={<>loading...</>}>
                 <FormPath />
+            </Suspense>
+        ),
+    },
+    {
+        key: "formValidatorRegistry",
+        label: "Form Validator Registry",
+        children: (
+            <Suspense fallback={<>loading...</>}>
+                <FormValidatorRegistry />
             </Suspense>
         ),
     },

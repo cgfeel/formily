@@ -1,6 +1,6 @@
 import { createForm, registerValidateRules } from "@formily/core";
 import { FC } from "react";
-import Panel from "../Panel";
+import Panel, { PanelProps } from "../Panel";
 import SchemaField from "../SchemaField";
 import { validateRules } from "../data/validateRules";
 
@@ -8,8 +8,9 @@ registerValidateRules(validateRules);
 
 const form = createForm();
 
-const MarkupSchema: FC = () => (
+const MarkupSchema: FC<MarkupSchemaProps> = ({ footer }) => (
     <Panel
+        footer={footer}
         form={form}
         header={
             <h2>
@@ -100,5 +101,7 @@ const MarkupSchema: FC = () => (
         </SchemaField>
     </Panel>
 );
+
+export interface MarkupSchemaProps extends Pick<PanelProps, "footer"> {}
 
 export default MarkupSchema;

@@ -1,6 +1,9 @@
 import { lazy } from "react";
+import registerList from "./core/formValidatorRegistry/list";
 
+export const disabled = ['/'].concat(Object.keys(registerList));
 export const router = {
+    ...registerList,
     "/": {
         name: "索引页",
         path: lazy(() => import("./page/List")),

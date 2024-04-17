@@ -34,7 +34,8 @@ const SetIn: FC = () => {
         <Panel
             footer={
                 <p>
-                    基于路径更新数据，虽然 <code>setIn</code> 接受匹配路径，但得到的值永远是 <code>{"{}"}</code>
+                    基于路径更新数据，<code>setIn</code> 设置的对象可以是一个具体的对象，也可以是数据路径，但使用{" "}
+                    <code>setIn</code> 设置匹配路径，但得到的值永远是 <code>{"{}"}</code>
                     ，没有任何意义
                 </p>
             }

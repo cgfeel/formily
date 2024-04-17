@@ -1,5 +1,5 @@
 import { Flex, Segmented } from "antd";
-import { FC, lazy, useState } from "react";
+import { FC, Suspense, lazy, useState } from "react";
 
 const DataPath = lazy(() => import("./items/DataPath"));
 const MatchPath = lazy(() => import("./items/MatchPath"));
@@ -8,11 +8,31 @@ const Property = lazy(() => import("./items/Property"));
 const StaticMethod = lazy(() => import("./items/StaticMethod"));
 
 const items = {
-    property: <Property />,
-    dataPath: <DataPath />,
-    matchPath: <MatchPath />,
-    method: <MehodCom />,
-    staticMethod: <StaticMethod />,
+    property: (
+        <Suspense fallback={<>loading</>}>
+            <Property />
+        </Suspense>
+    ),
+    dataPath: (
+        <Suspense fallback={<>loading</>}>
+            <DataPath />
+        </Suspense>
+    ),
+    matchPath: (
+        <Suspense fallback={<>loading</>}>
+            <MatchPath />
+        </Suspense>
+    ),
+    method: (
+        <Suspense fallback={<>loading</>}>
+            <MehodCom />
+        </Suspense>
+    ),
+    staticMethod: (
+        <Suspense fallback={<>loading</>}>
+            <StaticMethod />
+        </Suspense>
+    ),
 };
 
 const FormPath: FC = () => {

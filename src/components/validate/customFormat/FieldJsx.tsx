@@ -18,7 +18,7 @@ const FieldJsx: FC = () => (
         form={form}
         header={
             <h2>
-                自定义格式校验 - <code>Json Field</code>
+                自定义格式校验 - <code>Field Jsx</code>
             </h2>
         }>
         <CustomFormat />

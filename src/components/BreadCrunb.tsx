@@ -9,7 +9,7 @@ const BreadCrumb: FC<PropsWithChildren<BreadCrumbProps>> = ({ children, pathname
                 <Breadcrumb
                     items={[
                         {
-                            title: <a onClick={() => window.history.back()}>{router["/"].name}</a>,
+                            title: <a href="/">{router["/"].name}</a>,
                         },
                         {
                             title: router[pathname].name,

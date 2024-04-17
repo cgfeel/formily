@@ -235,7 +235,7 @@
 -   自定义格式校验：`registerValidateFormats`
 -   异步校验：自定义规则校验 + `Promise`
 -   联动校验：`reactions`
--   定义文案：`setValidateLanguage`
+-   定义文案：`registerValidateLocale`
 
 **和文档不同：**
 

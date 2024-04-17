@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { RouterKey, router } from "../list";
+import { RouterKey, disabled, router } from "../list";
 
 const list = Object.keys(router) as RouterKey[];
 
@@ -8,7 +8,7 @@ const List: FC = () => {
         <ul>
             {list.map(
                 key =>
-                    key !== "/" && (
+                    disabled.indexOf(key) < 0 && (
                         <li key={key}>
                             <a href={key}>{router[key].name}</a>
                         </li>
