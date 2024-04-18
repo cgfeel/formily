@@ -84,6 +84,10 @@ export const router = {
         name: "Core Library",
         path: lazy(() => import("./page/Core")),
     },
+    "/react": {
+        name: "React Library",
+        path: lazy(() => import("./page/ReactLibrary")),
+    },
 } as const;
 
 export type RouterKey = keyof typeof router;

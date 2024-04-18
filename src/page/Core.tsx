@@ -97,8 +97,6 @@ const items: TabsProps["items"] = [
     },
 ];
 
-const Core: FC = () => {
-    return <Tabs defaultActiveKey="createForm" tabPosition="left" items={items} destroyInactiveTabPane />;
-};
+const Core: FC = () => <Tabs defaultActiveKey="createForm" tabPosition="left" items={items} destroyInactiveTabPane />;
 
 export default Core;
