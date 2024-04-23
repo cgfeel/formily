@@ -32,7 +32,7 @@ const RegisterValidateMessageTemplateEngine: FC = () => (
         <Panel
             footer={
                 <div>
-                    <p>全局注册校验消息模板引擎，我们在校验器中返回校验消息的时候，可以基于模板引擎语法做转换</p>
+                    <p>全局注册校验消息模板引擎，我们在校验器中返回校验消息的时候，可以基于模板引擎语法做转换。</p>
                     <p>
                         <code>registerValidateMessageTemplateEngine</code> 接受 2 个参数：
                     </p>
