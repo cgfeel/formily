@@ -12,6 +12,10 @@ const MarkupSchema: FC = () => (
                 <p>
                     和 <code>RecodeScope</code> 一样，不同的是接受数组对象，不提供 <code>$lookup</code> 一层一层往上查找
                 </p>
+                <p>
+                    <code>RecodesScope</code> 和 <code>RecodeScope</code> 不是父子关系，也不能相互通过{" "}
+                    <code>$lookup</code> 跨组件通信，只能通过 <code>useExpressionScope</code> 获取相应数据
+                </p>
             </div>
         }
         form={form}

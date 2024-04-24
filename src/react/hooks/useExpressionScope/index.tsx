@@ -44,8 +44,16 @@ const UseExpressionScope: FC = () => (
                         index: 2,
                         record: { code: "Record Code", name: "Record Name" },
                     }}>
-                    <SchemaField.Void name="my-express" x-component="MyExpress">
-                        <SchemaField.String name="custom" x-component="Custom" />
+                    <SchemaField.Void
+                        name="my-record-1"
+                        x-component="MyRecord"
+                        x-component-props={{
+                            index: 1,
+                            record: { code: "Record Code-1", name: "Record Name-1" },
+                        }}>
+                        <SchemaField.Void name="my-express" x-component="MyExpress">
+                            <SchemaField.String name="custom" x-component="Custom" />
+                        </SchemaField.Void>
                     </SchemaField.Void>
                 </SchemaField.Void>
             </SchemaField.Void>
