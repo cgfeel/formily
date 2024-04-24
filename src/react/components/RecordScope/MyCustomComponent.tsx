@@ -13,8 +13,13 @@ type RecordType = {
 };
 
 export interface MyCustomComponentProps {
-    index: 0;
+    index: number;
     record: RecordType;
 }
+
+export type RecordDataType = RecordType & {
+    $index: number;
+    $lookup?: RecordDataType;
+};
 
 export default MyCustomComponent;

@@ -2,49 +2,39 @@ import { createForm } from "@formily/core";
 import { ISchema } from "@formily/react";
 import { FC } from "react";
 import Panel from "../../Panel";
-import SchemaField from "./SchemaField";
+import SchemaField, { renderTmp } from "./SchemaField";
 
 const form = createForm();
 const schema: ISchema = {
     type: "object",
     properties: {
-        lookup: {
+        lookup_field: {
             type: "void",
             "x-component": "MyCustomComponent",
             "x-component-props": {
+                index: 1,
                 record: {
                     code: "Lookup Code",
                     name: "Lookup Name",
                 },
-                index: 1,
             },
             properties: {
-                record: {
+                record_field: {
                     type: "void",
                     "x-component": "MyCustomComponent",
                     "x-component-props": {
+                        index: 0,
                         record: {
                             code: "Code",
                             name: "Name",
                         },
-                        index: 0,
                     },
                     properties: {
                         input: {
                             type: "string",
-                            "x-component": "Input",
+                            "x-component": "Input.TextArea",
                             "x-decorator": "FormItem",
-                            "x-value":
-                                "{{" +
-                                "${record.name} " +
-                                "${record.code} " +
-                                "${record.index} " +
-                                "${record.lookup.name} " +
-                                "${record.lookup.code} " +
-                                "${record.lookup.index} " +
-                                "${lookup.name} " +
-                                "${lookup.code} " +
-                                "}}",
+                            "x-value": "{{renderTmp($record, $lookup, $index)}}",
                         },
                     },
                 },
@@ -58,10 +48,10 @@ const JsonSchema: FC = () => (
         form={form}
         header={
             <h2>
-                <code>RecordScope</code>
+                <code>RecordScope</code> - JsonSchema
             </h2>
         }>
-        <SchemaField schema={schema} />
+        <SchemaField schema={schema} scope={{ renderTmp }} />
     </Panel>
 );
 
