@@ -1,13 +1,10 @@
 import { ExpressionScope, RecordScope, RecordsScope, createSchemaField, useExpressionScope } from "@formily/react";
 import { FC, PropsWithChildren } from "react";
+import CodePreview from "../../CodePreview";
 
 const Custom: FC = () => {
     const scope = useExpressionScope();
-    return (
-        <code className="consumer">
-            <pre>{JSON.stringify(scope, null, 2)}</pre>
-        </code>
-    );
+    return <CodePreview>{JSON.stringify(scope, null, 2)}</CodePreview>;
 };
 
 const MyExpress: FC<PropsWithChildren> = ({ children }) => (

@@ -8,7 +8,7 @@ import FormDrawer from "./form-drawer";
 const fieldKeys = ["a", "b", "c", "d"].map(key => key.repeat(3));
 const PortalId = "可以传，也可以不传的ID，默认是form-drawer";
 
-const buttonClick = (field: ReactNode, initialValues?: Form["initialValues"]) => {
+const buttonClick = (field: ReactNode, initialValues?: Form["initialValues"], result?: (val: string[]) => void) => {
     const drawer = FormDrawer("抽屉表单", form => {
         const [key] = (initialValues === void 0 ? [] : Object.keys(initialValues)).concat("");
         return (
@@ -40,7 +40,7 @@ const buttonClick = (field: ReactNode, initialValues?: Form["initialValues"]) =>
             }, 1000);
         })
         .open(initialValues === void 0 ? initialValues : { initialValues })
-        .then(console.log);
+        .then(result || console.log);
 };
 
 const Pannel: FC<PannelProps> = ({ footer, header, onClick }) => {
