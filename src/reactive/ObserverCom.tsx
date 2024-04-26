@@ -3,7 +3,7 @@ import { observable } from "@formily/reactive";
 import { Observer, observer } from "@formily/reactive-react";
 import { FC, PropsWithChildren, ReactNode } from "react";
 import Line from "./components/Line";
-import Panel from "./components/Panel";
+import Panel, { PanelProps } from "./components/Panel";
 
 const obs1 = observable({ value: "hello world" });
 const obs2 = observable({ value: "hello world" });
@@ -15,15 +15,8 @@ const Input = styled.input`
     padding: 0 8px;
 `;
 
-const ObserverCom: FC = () => (
-    <Panel
-        footer={
-            <p>
-                可以把 <code>observer</code> 和 <code>Observer</code> 的关系看作是 <code>memo</code> 和{" "}
-                <code>useMemo</code>
-            </p>
-        }
-        header={<h2>observer、Observer</h2>}>
+const ObserverCom: FC<ObserverComProps> = props => (
+    <Panel {...props}>
         <Line tips="observer">
             <ObservableWraper />
         </Line>
@@ -69,5 +62,7 @@ const Wraper: FC<PropsWithChildren<WraperProps>> = ({ children, footer }) => (
 interface WraperProps {
     footer?: ReactNode;
 }
+
+export interface ObserverComProps extends Pick<PanelProps, "footer" | "header"> {}
 
 export default ObserverCom;

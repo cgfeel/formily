@@ -169,7 +169,15 @@ const items: TabsProps["items"] = [
         label: "observer",
         children: (
             <Suspense fallback={<>Loading...</>}>
-                <Observer />
+                <Observer
+                    footer={
+                        <p>
+                            可以把 <code>observer</code> 和 <code>Observer</code> 的关系看作是 <code>memo</code> 和{" "}
+                            <code>useMemo</code>
+                        </p>
+                    }
+                    header={<h2>observer、Observer</h2>}
+                />
             </Suspense>
         ),
     },
