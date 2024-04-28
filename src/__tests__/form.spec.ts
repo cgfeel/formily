@@ -1,4 +1,4 @@
-import { LifeCycleTypes, createForm, onFieldValueChange } from "@formily/core";
+import { IGeneralFieldState, LifeCycleTypes, createForm, onFieldValueChange } from "@formily/core";
 import { batch, observable } from "@formily/reactive";
 import { attach, sleep } from "./shared";
 
@@ -463,5 +463,73 @@ test("setState/getState/setFormState/getFormState/setFieldState/getFieldState", 
         state.title = "AA";
         state.value = "123";
     });
-    
+    expect(form.getFieldState("aa", state => state.description)).toEqual("This is AA");
+    expect(form.getFieldState("aa", state => state.title)).toEqual("AA");
+    expect(form.getFieldState("aa", state => state.value)).toEqual("123");
+
+    // 充值字段状态
+    form.setFieldState("aa", fieldState);
+    expect(form.getFieldState("aa", state => state.description)).toBeUndefined();
+    expect(form.getFieldState("aa", state => state.title)).toBeUndefined();
+    expect(form.getFieldState("aa", state => state.value)).toBeUndefined();
+
+    // 隐藏字段
+    form.setFieldState("aa", state => {
+        state.display = "none";
+    });
+    expect(form.getFieldState("aa", state => state.visible)).toBeFalsy();
+
+    const update = (value: number) => (state: IGeneralFieldState) => {
+        state.value = value;
+    };
+
+    const update2 = (state: IGeneralFieldState) => {
+        state.value = 123;
+    }
+
+    // 设置不存在的字段，得到的将是 undefined
+    form.setFieldState("kk", update(321));
+    form.setFieldState("oo", update2);
+
+    expect(form.query("kk").take()).toBeUndefined();
+    expect(form.query("oo").take()).toBeUndefined();
+
+    // 添加字段后可以顺利拿到值
+    const kk = attach(form.createField({ name: "kk" }));
+    const oo = attach(form.createField({ name: "oo" }));
+
+    expect(kk.value).toEqual(321);
+    expect(oo.value).toEqual(123);
+
+    // 将整个表单隐藏，字段下将拿不到值
+    form.setState(state => {
+        state.display = "none";
+    });
+    expect(kk.value).toBeUndefined();
+    expect(oo.value).toBeUndefined();
+});
+
+// 字段验证
+test('validate/valid/invalid/errors/warnings/successes/clearErrors/clearWarnings/clearSuccess/queryFeedbacks', async () => {
+    const form = attach(createForm());
+    const aa = attach(form.createField({
+        name: "aa",
+        required: true,
+        validator(value) {
+            switch (value) {
+                case "123": return {
+                    message: "success",
+                    type: "success",
+                };
+                case "321": return {
+                    message: "warning",
+                    type: "warning",
+                };
+                default: return {
+                    message: "warning",
+                    type: "warning",
+                };
+            }
+        }
+    }));
 });
