@@ -96,13 +96,13 @@ const ValueControlled: FC = () => {
                             <code>overwrite</code>：将提供的数据对象覆盖表单值，使用的数据引用于提供的对象
                         </li>
                         <li>
-                            <code>merge</code>：将提供的数据对象合并表单值，使用的数据引用于提供的对象
+                            <code>merge</code>：将提供的数据对象合并表单值，默认值，等同 <code>deepMerge</code>
                         </li>
                         <li>
                             <code>deepMerge</code>：将提供的数据对象合并表单值，使用的数据深拷贝于提供的对象
                         </li>
                         <li>
-                            <code>merge</code>：将提供的数据对象合并表单值，使用的数据浅拷贝于提供的对象
+                            <code>shallowMerge</code>：将提供的数据对象合并表单值，使用的数据浅拷贝于提供的对象
                         </li>
                     </ol>
                 </div>
