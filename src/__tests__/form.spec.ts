@@ -1,4 +1,4 @@
-import { IGeneralFieldState, LifeCycleTypes, createForm, onFieldValueChange } from "@formily/core";
+import { IFormFeedback, IGeneralFieldState, LifeCycleTypes, createForm, onFieldValueChange, onFormInitialValuesChange, onFormValuesChange } from "@formily/core";
 import { batch, observable } from "@formily/reactive";
 import { attach, sleep } from "./shared";
 
@@ -400,7 +400,7 @@ test("notify/subscribe/unsubscribe", () => {
     expect(form.values).toEqual({ aa: 123 });
 
     // 发布广播，这里广播 `ON_FORM_SUBMIT`，而不是调用 `form.submit` 是因为：
-    //  - 表单在提交的时候会触发一系列的操作，比如：验证、提交等，这样订阅回调的次数可能就不仅仅累加 1 次了
+    //  - 表单在提交通过的时候会触发一系列的操作，比如：验证、提交等，这样订阅回调的次数可能就不仅仅累加 1 次了
     //  - 而广播 `ON_FORM_SUBMIT` 只会触发一次订阅
     form.notify(LifeCycleTypes.ON_FORM_SUBMIT);
     expect(subscribe).toHaveBeenCalledTimes(3);
@@ -509,7 +509,7 @@ test("setState/getState/setFormState/getFormState/setFieldState/getFieldState", 
     expect(oo.value).toBeUndefined();
 });
 
-// 字段验证
+// 表单验证
 test('validate/valid/invalid/errors/warnings/successes/clearErrors/clearWarnings/clearSuccess/queryFeedbacks', async () => {
     const form = attach(createForm());
     const aa = attach(form.createField({
@@ -525,11 +525,683 @@ test('validate/valid/invalid/errors/warnings/successes/clearErrors/clearWarnings
                     message: "warning",
                     type: "warning",
                 };
-                default: return {
-                    message: "warning",
-                    type: "warning",
+                case "111": return {
+                    message: "error",
+                    type: "error",
                 };
             }
         }
     }));
+
+    const bb = attach(form.createField({ name: "bb", required: true }));
+    attach(form.createField({ name: "cc" }));
+
+    try {
+        await form.validate();
+    } catch {}
+
+    // 表单是否非法
+    expect(form.invalid).toBeTruthy();
+
+    // 表单是否合法
+    expect(form.valid).toBeFalsy();
+
+    // 获取错误对象
+    const defaultError = [
+        {
+            address: "aa",
+            code: "ValidateError",
+            messages: ["The field value is required"],
+            path: "aa",
+            triggerType: "onInput",
+            type: "error",
+        },
+        {
+            address: "bb",
+            code: "ValidateError",
+            messages: ["The field value is required"],
+            path: "bb",
+            triggerType: "onInput",
+            type: "error",
+        },
+    ];
+    expect(form.errors).toEqual(defaultError);
+
+    // 触发字段输入是一个微任务
+    await aa.onInput("123");
+    expect(form.errors).toEqual(defaultError.filter(item => item.address === 'bb'));
+
+    // 表单校验成功消息
+    const defaultSuccess = [
+        {
+            address: "aa",
+            code: "ValidateSuccess",
+            messages: ["success"],
+            path: "aa",
+            triggerType: "onInput",
+            type: "success"
+        }
+    ];
+    expect(form.successes).toEqual(defaultSuccess);
+
+    // 输入 321 会得到一个警告
+    await aa.onInput("321");
+    expect(form.errors).toEqual(defaultError.filter(item => item.address === 'bb'));
+
+    const defaultWarning = [
+        {
+            address: "aa",
+            code: "ValidateWarning",
+            messages: ["warning"],
+            path: "aa",
+            triggerType: "onInput",
+            type: "warning",
+        },
+    ];
+    expect(form.warnings).toEqual(defaultWarning);
+
+    // 输入 111 会得到一个错误
+    await aa.onInput("111");
+    expect(form.errors).toEqual([
+        {
+            address: "aa",
+            code: "ValidateError",
+            messages: ["error"],
+            path: "aa",
+            triggerType: "onInput",
+            type: "error",
+        },
+        {
+            address: "bb",
+            code: "ValidateError",
+            messages: ["The field value is required"],
+            path: "bb",
+            triggerType: "onInput",
+            type: "error",
+        },
+    ]);
+
+    // 输入后重新验证通过，但验证结果是空值，因为没有返回任何验证结果
+    await aa.onInput('yes');
+    await bb.onInput('yes');
+
+    expect(form.invalid).toBeFalsy();
+    expect(form.valid).toBeTruthy();
+    expect(form.errors).toEqual([]);
+    expect(form.successes).toEqual([]);
+    expect(form.warnings).toEqual([]);
+
+    // 重新输入空值再次验证
+    await aa.onInput('');
+    await  bb.onInput('');
+
+    try {
+        // 这时候触发验证非必要了，输入后会立即验证
+        await form.validate();
+    } catch {}
+
+    expect(form.errors).toEqual(defaultError);
+
+    // 清除字段 aa 的错误
+    form.clearErrors("aa");
+    expect(form.errors).toEqual(defaultError.filter(item => item.address === 'bb'));
+
+    // 清除所有的错误
+    form.clearErrors("*");
+    expect(form.errors).toEqual([]);
+
+    // 输入一个正确验证的值
+    await aa.onInput("123");
+    expect(form.errors).toEqual([]);
+    expect(form.successes).toEqual(defaultSuccess);
+
+    // 清除字段正确验证
+    form.clearSuccesses("aa");
+    expect(form.successes).toEqual([]);
+
+    // 再输入一个警告的值
+    await aa.onInput("321");
+    expect(form.errors).toEqual([]);
+    expect(form.successes).toEqual([]);
+    expect(form.warnings).toEqual(defaultWarning);
+
+    // 清除所有的警告
+    form.clearWarnings("*");
+    expect(form.errors).toEqual([]);
+    expect(form.successes).toEqual([]);
+    expect(form.warnings).toEqual([]);
+
+    // 输入一个错误的值和一个正确的值，注意：字段 bb 要求必填，必填的值可以是空值
+    await aa.onInput('123');
+    await bb.onInput('');
+
+    // 查询消息反馈
+    expect(form.queryFeedbacks({ type: "error" }).length).toEqual(1);
+    expect(form.queryFeedbacks({ type: "success" }).length).toEqual(1);
+    expect(form.queryFeedbacks({ code: "ValidateError" }).length).toEqual(1);
+    expect(form.queryFeedbacks({ code: "ValidateSuccess" }).length).toEqual(1);
+    expect(form.queryFeedbacks({ code: "EffectError" }).length).toEqual(0);
+    expect(form.queryFeedbacks({ code: "EffectSuccess" }).length).toEqual(0);
+    expect(form.queryFeedbacks({ path: "aa" }).length).toEqual(1);
+    expect(form.queryFeedbacks({ path: "bb" }).length).toEqual(1);
+    expect(form.queryFeedbacks({ address: "aa" }).length).toEqual(1);
+    expect(form.queryFeedbacks({ address: "bb" }).length).toEqual(1);
+
+    // 重新设置字段值为空，并清除错误，正确，警告，不提供参数默认为 *
+    aa.setValue('');
+    bb.setValue('');
+    form.clearErrors();
+    form.clearSuccesses();
+    form.clearWarnings();
+
+    try {
+        // 重新验证字段 aa，会拿到 1 个错误
+        await form.validate("aa");
+    } catch {}
+
+    expect(form.queryFeedbacks({ type: "error" }).length).toEqual(1);
+
+    try {
+        // 重新验证所有字段，会拿到 2 个错误
+        await form.validate("*");
+    } catch {}
+    
+    expect(form.queryFeedbacks({ type: "error" }).length).toEqual(2);
+});
+
+// 表单模式
+test("setPattern/pattern/editable/readOnly/disabled/readPretty", () => {
+    // 创建一个禁止修改的表单并挂载，表单下创建的字段同样禁止修改
+    const form = attach(createForm({ pattern: "disabled" }));
+    const field = attach(form.createField({ name: "aa" }));
+
+    expect(form.pattern).toEqual("disabled");
+    expect(form.disabled).toBeTruthy();
+    expect(field.pattern).toEqual("disabled");
+    expect(field.disabled).toBeTruthy();
+
+    // 修改表单模式为编辑只读，表单下的字段也同样编辑只读
+    form.setPattern("readOnly");
+    expect(form.pattern).toEqual("readOnly");
+    expect(form.readOnly).toBeTruthy();
+    expect(field.pattern).toEqual("readOnly");
+    expect(field.readOnly).toBeTruthy();
+
+    // 修改表单模式为展示只读，表单小的字段也同样展示只读
+    form.setPattern("readPretty");
+    expect(form.pattern).toEqual("readPretty");
+    expect(form.readPretty).toBeTruthy();
+    expect(field.pattern).toEqual("readPretty");
+    expect(field.readPretty).toBeTruthy();
+
+    // 创建一个不可编辑的表单并挂载，模式为：readPretty
+    const form2 = attach(createForm({ editable: false }));
+    expect(form2.pattern).toEqual("readPretty");
+    expect(form2.readPretty).toBeTruthy();
+
+    // 创建一个禁止修改的表单并挂载
+    const form3 = attach(createForm({ disabled: true }));
+    expect(form3.pattern).toEqual("disabled");
+    expect(form3.disabled).toBeTruthy();
+
+    // 创建一个编辑只读的表单并挂载
+    const form4 = attach(createForm({ readOnly: true }));
+    expect(form4.pattern).toEqual("readOnly");
+    expect(form4.readOnly).toBeTruthy();
+
+    // 创建一个展示只读的表单并挂载
+    const form5 = attach(createForm({ readPretty: true }));
+    expect(form5.pattern).toEqual("readPretty");
+    expect(form5.readPretty).toBeTruthy();
+});
+
+// 表单展示状态
+test('setDisplay/display/visible/hidden', () => {
+    // 创建一个 UI 隐藏值存在的表单并挂载，表单展示状态也决定创建的字段展示状态
+    const form = attach(createForm({ display: "hidden" }));
+    const field = attach(form.createField({ name: "aa" }));
+
+    expect(form.display).toEqual("hidden");
+    expect(form.hidden).toBeTruthy();
+    expect(field.display).toEqual("hidden");
+    expect(field.hidden).toBeTruthy();
+
+    // 展示表单可见
+    form.setDisplay("visible");
+    expect(form.display).toEqual("visible");
+    expect(form.visible).toBeTruthy();
+    expect(field.display).toEqual("visible");
+    expect(field.visible).toBeTruthy();
+
+    // 设置表单完全隐藏，这个时候无论是 visible 还是 hidden，都是 false
+    form.setDisplay("none");
+    expect(form.display).toEqual("none");
+    expect(form.visible).toBeFalsy();
+    expect(form.hidden).toBeFalsy();
+    expect(field.display).toEqual("none");
+    expect(field.visible).toBeFalsy();
+    expect(field.hidden).toBeFalsy();
+
+    // 创意一个仅 UI 隐藏的表单并挂载
+    const form2 = attach(createForm({ hidden: true }));
+    expect(form2.display).toEqual("hidden");
+    expect(form2.hidden).toBeTruthy();
+    expect(form2.visible).toBeFalsy();
+
+    // 创建一个 visible 为 false 的表单，相当于 display: none
+    const form3 = attach(createForm({ visible: false }));
+    expect(form.display).toEqual("none");
+    expect(form.visible).toBeFalsy();
+});
+
+// 表单提交
+test("submit", async () => {
+    const form = attach(createForm());
+    const onSubmit = jest.fn();
+
+    const field = attach(form.createField({ name: "aa", required: true }));
+    const errors: IFormFeedback[] = [];
+
+    try {
+        await form.submit(onSubmit);
+    } catch(e) {
+        if (Array.isArray(e)) {
+            e.forEach(item => errors.push(item));
+        }
+    }
+
+    // 由于表单只监听了发起提交动作，由于当前表单没有通过验证，所以触发是 0 次
+    expect(errors.length).toEqual(1);
+    expect(onSubmit).toHaveBeenCalledTimes(0);
+
+    // 输入值后重新提交
+    field.onInput("123");
+    await form.submit(onSubmit);
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+
+    // 在提交的时候抛出一个错误，默认服务端抛出错误，但本地是正常验证和提交
+    const error2: Partial<Record<string, Error>> = {};
+    try {
+        await form.submit(() => {
+            throw new Error('xxx');
+        });
+    } catch (e) {
+        if (e instanceof Error) {
+            error2.form = e;
+        }
+    }
+
+    expect(error2.form).not.toBeUndefined();
+    expect(form.valid).toBeTruthy();
+});
+
+// 表单重置
+test("reset", async () => {
+    const form = attach(createForm<Partial<Record<"aa"|"bb", number|string>>>({
+        initialValues: { aa: 123 },
+        values: { bb: 123 }
+    }));
+
+    const field = attach(form.createField({ name: "aa", required: true }));
+    const field2 = attach(form.createField({ name: "bb", required: true }));
+    attach(form.createVoidField({ name: "cc" }));
+
+    expect(field.value).toEqual(123);
+    expect(field2.value).toEqual(123);
+    expect(form.values.aa).toEqual(123);
+    expect(form.values.bb).toEqual(123);
+
+    // 字段重新赋值
+    field.onInput('xxxxx');
+    expect(form.values.aa).toEqual('xxxxx');
+
+    try {
+        // 重置表单
+        await form.reset();
+    } catch {}
+
+    // 重置后表单也合法了，但实际上字段 bb 是 undefined
+    expect(form.valid).toBeTruthy();
+    expect(field.value).toEqual(123);
+    expect(form.values.aa).toEqual(123);
+    expect(field2.value).toBeUndefined();
+    expect(form.values.bb).toBeUndefined();
+
+    // 重新输入值
+    field.onInput("aaa");
+    field2.onInput("bbb");
+
+    expect(form.valid).toBeTruthy();
+    expect(field.value).toEqual("aaa");
+    expect(field2.value).toEqual("bbb");
+    expect(form.values.aa).toEqual("aaa");
+    expect(form.values.bb).toEqual("bbb");
+
+    try {
+        // 重置表单所有字段并发起验证
+        await form.reset("*", { validate: true });
+    } catch {}
+
+    // 因为字段 bb 重置后是 undefined
+    expect(form.valid).toBeFalsy();
+    expect(field.value).toEqual(123);
+    expect(form.values.aa).toEqual(123);
+    expect(field2.value).toBeUndefined();
+    expect(form.values.bb).toBeUndefined();
+
+    // 重新输入值，并在重置表单时，清空所有数据
+    field.onInput("aaa");
+    field2.onInput("bbb");
+
+    try {
+        await form.reset("*", { forceClear: true });
+    } catch {}
+
+    // 虽然所有字段都是 undefinned，但是重置后验证仍旧合法
+    expect(form.valid).toBeTruthy();
+    expect(field.value).toBeUndefined();
+    expect(form.values.aa).toBeUndefined();
+    expect(field2.value).toBeUndefined();
+    expect(form.values.bb).toBeUndefined();
+
+    // 重新输入值，并只强制重置字段 aa，因为 initialValuse 下的字段必须强制重置
+    field.onInput("aaa");
+    field2.onInput("bbb");
+
+    try {
+        await form.reset("aa", { forceClear: true });
+    } catch {}
+
+    expect(form.valid).toBeTruthy();
+    expect(field.value).toBeUndefined();
+    expect(form.values.aa).toBeUndefined();
+    expect(field2.value).toEqual("bbb");
+    expect(form.values.bb).toEqual("bbb");
+});
+
+// 测试表单在调试工具下的表现
+test("devtools", () => {
+    // @ts-ignore
+    window['__FORMILY_DEV_TOOLS_HOOK__'] = {
+        inject() {},
+        unmount() {},
+    };
+
+    const form = attach(createForm());
+    form.onUnmount();
+});
+
+// 重置数组字段
+test('reset array field', async () => {
+    const values = {
+        array: [{ value: 123 }]
+    };
+
+    const form = attach(createForm({ values }));
+    attach(form.createArrayField({ name: "array", required: true }));
+
+    expect(form.values).toEqual(values);
+
+    // 官方文档中用了强制清除，对于 values 来说，默认清除就够了
+    await form.reset();
+    expect(form.values).toEqual({ array: [] });
+});
+
+// 充值对象字段
+test('reset object field', async () => {
+    const values = {
+        object: { value: 123 }
+    };
+
+    const form = attach(createForm({ values }));
+    attach(form.createObjectField({ name: "object", required: true }));
+    expect(form.values).toEqual(values);
+
+    await form.reset();
+    expect(form.values).toEqual({ object: {} });
+});
+
+// 创建字段前初始值合并表单值
+test("initialValues merge values before create field", () => {
+    // 挂载表单下创建并挂载一个数组字段
+    const form = attach(createForm());
+    const array_field = attach(form.createArrayField({ name: "array" }));
+
+    // 设置数组字段值，然后再数组字段下添加一个普通字段
+    const defaultField = [{ aa: "321" }];
+    form.values.array = defaultField;
+
+    // 创建的普通字段后添加的 initialValue 会被之前设置的 value 覆盖
+    const arr_0_aa = attach(form.createField({
+        basePath: "array.0",
+        initialValue: "123",
+        name: "aa",
+    }));
+
+    expect(array_field.value).toEqual(defaultField);
+    expect(arr_0_aa.value).toEqual("321");
+
+    // 即便后添加的值是通过 value 设置，仍旧不能覆盖最初设定的值
+    defaultField.push({ aa: "456" });
+    form.values.array = defaultField;
+
+    const arr_1_aa = attach(form.createField({
+        basePath: "array.1",
+        name: "aa",
+        value: "123",
+    }));
+
+    expect(array_field.value).toEqual(defaultField);
+    expect(arr_0_aa.value).toEqual("321");
+    expect(arr_1_aa.value).toEqual("456");
+});
+
+// 不能匹配空值
+test("no patch with empty initialValues", () => {
+    const form = attach(createForm({
+        values: {
+            array: [1, 2, 3],
+        }
+    }));
+
+    const array = attach(form.createArrayField({ name: "array" }));
+    expect(form.values).toEqual({ array: [1, 2, 3] });
+    expect(array.value).toEqual([1, 2, 3]);
+
+    // 没有匹配的字段没有值
+    const field = attach(form.createObjectField({ name: "array.0.1" }));
+    const field2 = attach(form.createField({ basePath: "array.0", name: "aa" }));
+    expect(field.value).toBeUndefined();
+    expect(field2.value).toBeUndefined();
+});
+
+// 创建字段后合并初始值
+test("initialValues merge values after create field", () => {
+    const form = attach(createForm());
+
+    const aa = attach(form.createArrayField({ initialValue: "111", name: "aa" }));
+    const array = attach(form.createArrayField({ name: "array" }));
+    const arr_0_aa = attach(form.createField({ basePath: "array.0", initialValue: "123", name: "aa" }));
+
+    const array_value = [{ aa: "321" }];
+    form.values.aa = "222";
+    form.values.array = array_value;
+
+    // 创建表单前合并，前面设定的值将覆盖后面的值，创建表单后合并，后面设定的值覆盖前面的值
+    expect(array.value).toEqual(array_value);
+    expect(arr_0_aa.value).toEqual("321");
+    expect(aa.value).toEqual("222");
+});
+
+// 删除表单中没有定义的值
+test("remove property of form values with undefined value", () => {
+    const form = attach(createForm<{ aa?: number }>());
+    const field = attach(form.createField({ initialValue: 123, name: "aaa" }));
+
+    expect(form.values).toEqual({ aaa: 123 });
+
+    // 设置字段 display 表单会自动处理字段是否存在
+    field.display = "none";
+    expect(form.values.hasOwnProperty("aaa")).toBeFalsy();
+
+    field.display = "visible";
+    expect(form.values.hasOwnProperty("aaa")).toBeTruthy();
+
+    // 设置字段值为 undefined 并不会将字段从表单中移出
+    field.setValue(undefined);
+    expect(form.values.hasOwnProperty("aaa")).toBeTruthy();
+});
+
+// 初始值为空数组
+test("empty array initialValues", () => {
+    const form = attach(createForm({
+        initialValues: {
+            aa: [0],
+            bb: [''],
+            cc: [],
+            dd: [null],
+            ee: [undefined]
+        }
+    }));
+
+    attach(form.createArrayField({ name: "aa" }));
+    attach(form.createArrayField({ name: "bb" }));
+    attach(form.createArrayField({ name: "cc" }));
+    attach(form.createArrayField({ name: "dd" }));
+    attach(form.createArrayField({ name: "ee" }));
+
+    expect(form.values.aa).toEqual([0]);
+    expect(form.values.bb).toEqual(['']);
+    expect(form.values.cc).toEqual([]);
+    expect(form.values.dd).toEqual([null]);
+    expect(form.values.ee).toEqual([undefined]);
+});
+
+// 表单生命周期触发回调
+test("form lifecycle can be triggered after call form.setXXX", () => {
+    const form = attach(createForm<Partial<Record<"aa"|"bb", number>>>({
+        initialValues: { aa: 1 },
+        values: { bb: 1 }
+    }));
+
+    const initialValuesTriggerNum = jest.fn();
+    const valuesTriggerNum = jest.fn();
+
+    form.setEffects(() => {
+        // 监听初始值的变化
+        onFormInitialValuesChange(initialValuesTriggerNum);
+
+        // 监听表单值的变化
+        onFormValuesChange(valuesTriggerNum);
+    });
+
+    expect(initialValuesTriggerNum).toHaveBeenCalledTimes(0);
+    expect(valuesTriggerNum).toHaveBeenCalledTimes(0);
+
+    // initialValues 会通过 applyValuesPatch 改变 values，导致 onFormValuesChange 多触发一次
+    form.initialValues.aa = 2;
+    form.values.bb = 2;
+
+    expect(initialValuesTriggerNum).toHaveBeenCalledTimes(1);
+    expect(valuesTriggerNum).toHaveBeenCalledTimes(2);
+
+    form.setInitialValues({ aa: 3 });
+    form.setValues({ bb: 3 });
+
+    expect(initialValuesTriggerNum).toHaveBeenCalledTimes(2);
+    expect(valuesTriggerNum).toHaveBeenCalledTimes(4);
+
+    // 测试 form.setXXX 之后还能正常触发：https://github.com/alibaba/formily/issues/1675
+    form.initialValues.aa = 4;
+    form.values.bb = 4;
+
+    expect(initialValuesTriggerNum).toHaveBeenCalledTimes(3);
+    expect(valuesTriggerNum).toHaveBeenCalledTimes(6);
+});
+
+// 修改表单中的数组字段默认值
+test("form values change with array field (default value)", async () => {
+    const handler = jest.fn();
+    const form = attach(createForm({
+        effects() {
+            onFormValuesChange(handler);
+        },
+    }));
+
+    const array = attach(form.createArrayField({
+        name: "array",
+        initialValue: [{ hellow: "world" }]
+    }));
+
+    // 初始化回调 1 次，push 时回调 1 次
+    await array.push({});
+    expect(handler).toHaveBeenCalledTimes(2);
+});
+
+// 深度合并值
+test("setValues deep merge", () => {
+    const initialValues = {
+        aa: {
+            bb: 123,
+            cc: 321,
+            dd: [11, 22, 33],
+        }
+    };
+
+    const form = attach(createForm({ initialValues }));
+    expect(form.values).toEqual(initialValues);
+
+    const update = {
+        aa: {
+            bb: "",
+            cc: "",
+            dd: [44, 55, 66]
+        }
+    };
+
+    form.setValues(update);
+    expect(form.values).toEqual(update);
+});
+
+// 异常验证
+test("exception validate", async () => {
+    const form = attach(createForm());
+    attach(form.createField({
+        name: "aa",
+        validator() {
+            throw new Error("runtime error");
+        }
+    }));
+
+    try {
+        await form.validate()
+    } catch {}
+
+    expect(form.invalid).toBeTruthy();
+    expect(form.validating).toBeFalsy();
+});
+
+// 可重复声明表单字段并覆盖字段值
+test("designable form", () => {
+    // 默认情况，表单字段重复声明，以初次设置的值为准
+    const form = attach(createForm());
+
+    attach(form.createField({ value: 123, name: "aa" }));
+    attach(form.createField({ value: 321, name: "aa" }));
+    attach(form.createField({ initialValue: 123, name: "bb" }));
+    attach(form.createField({ initialValue: 321, name: "bb" }));
+
+    expect(form.values.aa).toEqual(123);
+    expect(form.initialValues.bb).toEqual(123);
+
+    // 可以覆盖声明表单字段
+    const form2 = attach(createForm({ designable: true }));
+
+    attach(form2.createField({ value: 123, name: "aa" }));
+    attach(form2.createField({ value: 321, name: "aa" }));
+    attach(form2.createField({ initialValue: 123, name: "bb" }));
+    attach(form2.createField({ initialValue: 321, name: "bb" }));
+
+    expect(form2.values.aa).toEqual(321);
+    expect(form2.initialValues.bb).toEqual(321);
 });
