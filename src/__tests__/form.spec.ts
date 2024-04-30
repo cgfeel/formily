@@ -1,4 +1,4 @@
-import { IFormFeedback, IGeneralFieldState, LifeCycleTypes, createForm, onFieldValueChange, onFormInitialValuesChange, onFormValuesChange } from "@formily/core";
+import { IFormFeedback, IGeneralFieldState, LifeCycleTypes, createForm, onFieldValidateStart, onFieldValueChange, onFormInitialValuesChange, onFormValuesChange } from "@formily/core";
 import { batch, observable } from "@formily/reactive";
 import { attach, sleep } from "./shared";
 
@@ -1204,4 +1204,437 @@ test("designable form", () => {
 
     expect(form2.values.aa).toEqual(321);
     expect(form2.initialValues.bb).toEqual(321);
+});
+
+// 跳过验证 display: none 的字段
+test("validate will skip display none", async () => {
+    const validateA = jest.fn();
+    const validateB = jest.fn();
+
+    const form = attach(createForm({
+        effects: () => {
+            onFieldValidateStart("aa", validateA);
+            onFieldValidateStart("bb", validateB);
+        }
+    }));
+
+    const validator = jest.fn();
+    const aa = attach(form.createField({
+        name: "aa",
+        validator() {
+            validator();
+            return "error";
+        }
+    }));
+
+    const bb = attach(form.createField({
+        name: "bb",
+        validator() {
+            validator();
+            return "error";
+        }
+    }));
+
+    const defaultError = [
+        {
+            address: "aa",
+            code: "ValidateError",
+            messages: ["error"],
+            path: "aa",
+            triggerType: "onInput",
+            type: "error",
+        },
+        {
+            address: "bb",
+            code: "ValidateError",
+            messages: ["error"],
+            path: "bb",
+            triggerType: "onInput",
+            type: "error",
+        },
+    ];
+
+    try {
+        await form.validate();
+    } catch (e) {
+        expect(e).toEqual(defaultError);
+    }
+
+    expect(validateA).toHaveBeenCalledTimes(1);
+    expect(validateB).toHaveBeenCalledTimes(1);
+    expect(aa.invalid).toBeTruthy();
+    expect(bb.invalid).toBeTruthy();
+    expect(validator).toHaveBeenCalledTimes(2);
+
+    // 隐藏字段 aa 后重新验证
+    aa.display = "none";
+    try {
+        await form.validate()
+    } catch(e) {
+        expect(e).toEqual(defaultError.filter(item => item.address === "bb"));
+    }
+
+    expect(validateA).toHaveBeenCalledTimes(1);
+    expect(validateB).toHaveBeenCalledTimes(2);
+    expect(aa.invalid).toBeFalsy();
+    expect(bb.invalid).toBeTruthy();
+    expect(validator).toHaveBeenCalledTimes(3);
+
+    // 隐藏字段 bb 后重新验证
+    bb.display = "none";
+    await form.validate();
+
+    expect(validateA).toHaveBeenCalledTimes(1);
+    expect(validateB).toHaveBeenCalledTimes(2);
+    expect(aa.invalid).toBeFalsy();
+    expect(bb.invalid).toBeFalsy();
+    expect(validator).toHaveBeenCalledTimes(3);
+});
+
+// 跳过验证已卸载，事实证明卸载字段不会被跳过，一定要回收字段
+test("validate will skip unmounted", async () => {
+    const validateA = jest.fn();
+    const validateB = jest.fn();
+    const form = attach(createForm({
+        effects: () => {
+            onFieldValidateStart("aa", validateA);
+            onFieldValidateStart("bb", validateB);
+        }
+    }));
+
+    const validator = jest.fn();
+    const aa = attach(form.createField({
+        name: "aa",
+        validator() {
+            validator();
+            return "error";
+        }
+    }));
+
+    const bb = attach(form.createField({
+        name: "bb",
+        validator() {
+            validator();
+            return "error";
+        }
+    }));
+
+    const defaultError = [
+        {
+            address: "aa",
+            code: "ValidateError",
+            messages: ["error"],
+            path: "aa",
+            triggerType: "onInput",
+            type: "error"
+        },
+        {
+            address: "bb",
+            code: "ValidateError",
+            messages: ["error"],
+            path: "bb",
+            triggerType: "onInput",
+            type: "error"
+        },
+    ];
+
+    try {
+        await form.validate();
+    } catch(e) {
+        expect(e).toEqual(defaultError);
+    }
+
+    expect(validateA).toHaveBeenCalledTimes(1);
+    expect(validateB).toHaveBeenCalledTimes(1);
+    expect(aa.invalid).toBeTruthy();
+    expect(bb.invalid).toBeTruthy();
+    expect(validator).toHaveBeenCalledTimes(2);
+
+    // 卸载字段 aa 并不能跳过验证
+    aa.onUnmount();
+    try {
+        await form.validate();
+    } catch (e) {
+        expect(e).toEqual(defaultError);
+    }
+
+    expect(validateA).toHaveBeenCalledTimes(2);
+    expect(validateB).toHaveBeenCalledTimes(2);
+    expect(aa.invalid).toBeTruthy();
+    expect(bb.invalid).toBeTruthy();
+    expect(validator).toHaveBeenCalledTimes(4);
+
+    // 回收字段可以跳过
+    form.clearFormGraph("*(aa,bb)");
+    await form.validate();
+
+    expect(validateA).toHaveBeenCalledTimes(2);
+    expect(validateB).toHaveBeenCalledTimes(2);
+    expect(aa.invalid).toBeFalsy();
+    expect(bb.invalid).toBeFalsy();
+    expect(validator).toHaveBeenCalledTimes(4);
+});
+
+// 跳过验证不可编辑
+test("validate will skip uneditable", async () => {
+    const validateA = jest.fn();
+    const validateB = jest.fn();
+    const form = attach(createForm({
+        effects: () => {
+            onFieldValidateStart("aa", validateA);
+            onFieldValidateStart("bb", validateB);
+        }
+    }));
+
+    const validator = jest.fn();
+    const aa = attach(form.createField({
+        name: "aa",
+        validator() {
+            validator();
+            return "error";
+        }
+    }));
+
+    const bb = attach(form.createField({
+        name: "bb",
+        validator() {
+            validator();
+            return "error";
+        }
+    }));
+
+    const defaultError = [
+        {
+            address: "aa",
+            code: "ValidateError",
+            messages: ["error"],
+            path: "aa",
+            triggerType: "onInput",
+            type: "error"
+        },
+        {
+            address: "bb",
+            code: "ValidateError",
+            messages: ["error"],
+            path: "bb",
+            triggerType: "onInput",
+            type: "error"
+        },
+    ];
+
+    try {
+        await form.validate();
+    } catch(e) {
+        expect(e).toEqual(defaultError);
+    }
+
+    expect(validateA).toHaveBeenCalledTimes(1);
+    expect(validateB).toHaveBeenCalledTimes(1);
+    expect(aa.invalid).toBeTruthy();
+    expect(bb.invalid).toBeTruthy();
+    expect(validator).toHaveBeenCalledTimes(2);
+
+    aa.editable = false;
+    try {
+        await form.validate();
+    } catch (e) {
+        expect(e).toEqual(defaultError.filter(item => item.address === 'bb'));
+    }
+
+    expect(validateA).toHaveBeenCalledTimes(1);
+    expect(validateB).toHaveBeenCalledTimes(2);
+    expect(aa.invalid).toBeFalsy();
+    expect(bb.invalid).toBeTruthy();
+    expect(validator).toHaveBeenCalledTimes(3);
+
+    bb.editable = false;
+    await form.validate();
+
+    expect(validateA).toHaveBeenCalledTimes(1);
+    expect(validateB).toHaveBeenCalledTimes(2);
+    expect(aa.invalid).toBeFalsy();
+    expect(bb.invalid).toBeFalsy();
+    expect(validator).toHaveBeenCalledTimes(3);
+});
+
+// 带有格式的验证命令
+test("validator order with format", async () => {
+    const form = attach(createForm());
+    attach(form.createField({
+        name: "aa",
+        required: true,
+        validator: {
+            format: "url",
+            message: "custom",
+        }
+    }));
+
+    attach(form.createField({
+        name: "bb",
+        required: true,
+        validator: (value) => {
+            return (value === '111' || !value) ? '' : 'custom'
+        }
+    }));
+
+    const results: IFormFeedback[] = [];
+    await form.submit().catch(e => {
+        Array.isArray(e) && e.forEach(item => results.push(item))
+    });
+
+    expect(results.map(({ messages }) => messages)).toEqual([
+        ['The field value is required'],
+        ['The field value is required'],
+    ]);
+});
+
+// 卸载表单不会影响字段值
+test("form unmount can not effect field values", () => {
+    const form = attach(createForm({
+        values: { aa: "123" }
+    }));
+
+    attach(form.createField({ name: "aa" }));
+    expect(form.values.aa).toEqual("123");
+
+    form.onMount();
+    expect(form.values.aa).toEqual("123");
+});
+
+// 回收字段会清除字段值
+test("form clearFormGrah need clear field values", () => {
+    const form = attach(createForm({
+        values: { aa: "123" }
+    }));
+
+    attach(form.createField({ name: "aa" }));
+    expect(form.values.aa).toEqual("123");
+
+    form.clearFormGraph("*");
+    expect(form.values.aa).toBeUndefined();
+});
+
+// 回收字段不清除字段值
+test("form clearFormGrah not clear field values", () => {
+    const form = attach(createForm({
+        values: { aa: "123" }
+    }));
+
+    attach(form.createField({ name: "aa" }));
+    expect(form.values.aa).toEqual("123");
+
+    form.clearFormGraph("*", false);
+    expect(form.values.aa).toEqual("123");
+});
+
+// 表单自动回收不可见的字段值
+test("form values auto clean with visible false", () => {
+    const form = attach(createForm({
+        initialValues: {
+            aa: "123", bb: "321", cc: "cc"
+        }
+    }));
+
+    attach(form.createField({ name: "aa" }));
+    attach(form.createField({ name: "cc" }));
+    attach(form.createField({ 
+        name: "bb",
+        reactions: field => {
+            field.visible = form.values.aa === "1223";
+        } 
+    }));
+
+    expect(form.values).toEqual({
+        aa: "123",
+        cc: "cc"
+    });
+});
+
+// 通过异步设置初始值，自动隐藏表单不可见的字段值
+test("form values auto clear with visible false in async setInitialValues", () => {
+    const form = attach(createForm());
+    
+    attach(form.createField({ name: "aa" }));
+    attach(form.createField({ name: "cc" }));
+    attach(form.createField({ 
+        name: "bb",
+        reactions: field => {
+            field.visible = form.values.aa === "1223";
+        }
+    }));
+
+    form.setInitialValues({
+        aa: "123", bb: "321", cc: "cc"
+    });
+    expect(form.values).toEqual({ aa: "123", cc: "cc" });
+});
+
+// 表单值不会因为 setValues 改变
+test("form values ref should not change with setValues", () => {
+    const form = attach(createForm({
+        values: { aa: "123" }
+    }));
+
+    // ① setValue 是无效的
+    const values = form.values;
+    form.setValues({ bb: "321" });
+
+    expect(form.values === values).toBeTruthy();
+
+    // ② 但是赋值是有效的
+    const update = { aa: "321", bb: "456" };
+    form.values = update;
+
+    expect(form.values).toEqual(update);
+
+    // ③ 再次 setValue，结果还是一样，无效
+    form.setValues({ cc: "555" });
+    expect(form.values).toEqual(update);
+
+    // ④ 除非先创建一个字段
+    attach(form.createField({ name: "cc" }));
+    form.setValues({ cc: "555" });
+
+    expect(form.values).toEqual({ aa: "321", bb: "456", cc: "555" });
+});
+
+// 表单初始值不会因为 setInitialValues 改变
+test("form initial values ref should not changed with setInitialValues", () => {
+    const form = attach(createForm({ 
+        initialValues: { aa: "123" } 
+    }));
+
+    // ① setInitialValues 是无效的
+    const values = form.initialValues;
+    form.setInitialValues({ bb: "321" });
+
+    expect(form.initialValues === values).toBeTruthy();
+
+    // ② 但是赋值是有效的
+    const update = { aa: "321", bb: "456" };
+    form.initialValues = update;
+
+    expect(form.initialValues).toEqual(update);
+
+    // ③ 再次 setInitialValues，结果还是一样，无效
+    form.setInitialValues({ cc: "555" });
+    expect(form.initialValues).toEqual(update);
+
+    // ④ 除非先创建一个字段
+    attach(form.createField({ name: "cc" }));
+    form.setInitialValues({ cc: "555" });
+
+    expect(form.initialValues).toEqual({ aa: "321", bb: "456", cc: "555" });
+});
+
+// 赋值一个未定义的表单不会报错，并且会被表单忽略（这种情况是不被类型允许的）
+test("form query undefined query should not throw error", () => {
+    const form = attach(createForm());
+
+    // @ts-ignore
+    form.fields['a'] = undefined;
+
+    expect(() => form.query("*").take()).not.toThrow();
+    expect(Object.keys(form.fields)).toEqual([]);
+
 });
