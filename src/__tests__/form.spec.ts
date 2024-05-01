@@ -567,7 +567,7 @@ test('validate/valid/invalid/errors/warnings/successes/clearErrors/clearWarnings
     ];
     expect(form.errors).toEqual(defaultError);
 
-    // 触发字段可以不用 await，但是需要同步到 feedback 是一个微任务
+    // 触发字段输入可以不用 await，但是需要同步到 feedback 是一个微任务
     aa.onInput("123");
     expect(aa.value).toEqual("123");
     expect(form.errors).toEqual(defaultError);

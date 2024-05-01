@@ -662,4 +662,7 @@ test("reset", async () => {
 
     aa.onInput("xxxx");
     expect(aa.value).toEqual("xxxx");
+
+    dd.onInput(null);
+    expect(dd.value).toEqual(null);
 });
