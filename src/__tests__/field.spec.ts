@@ -695,3 +695,522 @@ test("reset", async () => {
     expect(aa.valid).toBeFalsy();
     expect(cc.valid).toBeFalsy();
 });
+
+// 匹配
+test("match", () => {
+    const form = attach(createForm<Partial<Record<string, number>>>({
+        initialValues: { aa: 123 },
+        values: { bb: 123 }
+    }));
+
+    const aa = attach(form.createField({ name: "aa", required: true }));
+    expect(aa.match("aa")).toBeTruthy();
+    expect(aa.match("*")).toBeTruthy();
+    expect(aa.match("a~")).toBeTruthy();
+    expect(aa.match("*(aa,bb)")).toBeTruthy();
+});
+
+// 获取、设置字段状态
+test("setState/getState", () => {
+    const form = attach(createForm());
+    const aa = attach(form.createField({ name: "aa", required: true }));
+    const state = aa.getState();
+
+    aa.setState(state => {
+        state.title = "AAA";
+        state.value = "123";
+    });
+    expect(aa.value).toEqual("123");
+    expect(aa.title).toEqual("AAA");
+
+    // 覆盖 state，但对于 setState 并不生效
+    aa.setState(Object.assign(state, { setState: () => {} }));
+    expect(aa.value).toBeUndefined();
+    expect(aa.title).toBeUndefined();
+
+    // setState 并没有因为状态还原被覆盖，而其他的属性会覆盖
+    aa.setState(state => {
+        state.hidden = false;
+    });
+    expect(aa.display).toEqual("visible");
+
+    aa.setState(state => {
+        state.visible = true;
+    });
+    expect(aa.display).toEqual("visible");
+
+    aa.setState(state => {
+        state.readOnly = false;
+    });
+    expect(aa.pattern).toEqual("editable");
+
+    aa.setState(state => {
+        state.disabled = false;
+    });
+    expect(aa.pattern).toEqual("editable");
+
+    aa.setState(state => {
+        state.editable = true;
+    });
+    expect(aa.pattern).toEqual("editable");
+
+    aa.setState(state => {
+        state.editable = false;
+    });
+    expect(aa.pattern).toEqual("readPretty");
+
+    aa.setState(state => {
+        state.readPretty = true;
+    });
+    expect(aa.pattern).toEqual("readPretty");
+
+    aa.setState(state => {
+        state.readPretty = false;
+    });
+    expect(aa.pattern).toEqual("editable");
+
+    // 提前设置一个不存在的字段状态
+    form.setFieldState("bb", state => {
+        state.value = "bbb";
+        state.visible = false;
+    });
+
+    // 创建字段后，发现之前设定的值丢失了，是因为 visible: false
+    // 结合之前的 form.spec.ts，要在创建字段设置值可以通过赋值，也可以通过 form.setFieldState
+    // 而 setInitialValue 和 setValue 不可以
+    const bb = attach(form.createField({ name: "bb" }));
+    expect(bb.value).toBeUndefined();
+    expect(bb.visible).toBeFalsy();
+
+    // 设置所有字段的值为 123
+    form.setFieldState("*", state => {
+        state.value = "123";
+    });
+    
+    // 再创建一个字段，包括后来创建的字段在内，所有的值都是 123
+    const cc = attach(form.createField({ name: "cc" }));
+
+    // 除了字段 bb，因为此时它的 visible: false
+    expect(aa.value).toEqual("123");
+    expect(bb.value).toBeUndefined();
+    expect(cc.value).toEqual("123");
+
+    // form.setFieldState 第一个参数除了接受路径外，还可以直接提供 Query 对象
+    form.setFieldState(form.query("cc"), state => {
+        state.value = "ccc";
+    });
+    expect(cc.value).toEqual("ccc");
+
+    // form.setFieldState 第一个参数也接受 Field 对象
+    form.setFieldState(cc, state => {
+        state.value = "123";
+    });
+    expect(cc.value).toEqual("123");
+
+    // form.getFieldState 第一个参数和 form.setFieldState 第一个参数类型是一样的
+    expect(form.getFieldState(aa)).not.toBeUndefined();
+    expect(form.getFieldState(form.query("aa"))).not.toBeUndefined();
+});
+
+// 设置字段数据源
+test("setDataSource", () => {
+    const form = attach(createForm());
+    const aa = attach(form.createField({ name: "aa", required: true }));
+    const data = [
+        { label: "s1", value: "s1" },
+        { label: "s2", value: "s2" },
+    ];
+
+    aa.setDataSource(data);
+    expect(aa.dataSource).toEqual(data);
+});
+
+// 设置字段标题和介绍
+test("setTitle/setDescription", () => {
+    const form = attach(createForm());
+    const aa = attach(form.createField({ name: "aa", required: true }));
+
+    aa.setTitle("AAA");
+    aa.setDescription("This is AAA");
+
+    expect(aa.title).toEqual("AAA");
+    expect(aa.description).toEqual("This is AAA");
+});
+
+// 必填字段，设置必填
+test("required/setRequired", () => {
+    const form = attach(createForm());
+    const aa = attach(form.createField({ name: "aa" }));
+
+    aa.setRequired(true);
+    expect(aa.required).toBeTruthy();
+
+    aa.setRequired(false);
+    expect(aa.required).toBeFalsy();
+
+    // 通过 validator 设置 required
+    const bb = attach(form.createField({ 
+        name: "bb",
+        validator: { max: 3, required: true } 
+    }));
+    expect(bb.required).toBeTruthy();
+
+    bb.setRequired(false);
+    expect(bb.required).toBeFalsy();
+
+    // 创建一个包含有 required 的验证器集合
+    const cc = attach(form.createField({
+        name: "cc",
+        validator: [
+            "date", { max: 3 }, { required: true }
+        ]
+    }));
+    expect(cc.required).toBeTruthy();
+
+    cc.setRequired(false);
+    expect(cc.required).toBeFalsy();
+
+    // 创建一个没有要求必填的字段
+    const dd = attach(form.createField({ name: "dd", validator: { max: 3 } }));
+    expect(dd.required).toBeFalsy();
+
+    dd.setRequired(true);
+    expect(dd.required).toBeTruthy();
+});
+
+// 设置字段值的 data 和 content
+test("setData/setContent", () => {
+    const form = attach(createForm());
+    const aa = attach(form.createField({ name: "aa", required: true }));
+
+    aa.setData("This is data");
+    aa.setContent("This is Content");
+
+    expect(aa.data).toEqual("This is data");
+    expect(aa.content).toEqual("This is Content");
+});
+
+// 设置虚拟字段的 data 和 content
+test("setData/setContent in void field", () => {
+    const form = attach(createForm());
+    const voidField = attach(form.createVoidField({ name: "voidField" }));
+
+    voidField.setData("This is data");
+    voidField.setContent("This is Content");
+
+    expect(voidField.data).toEqual("This is data");
+    expect(voidField.content).toEqual("This is Content");
+});
+
+// 设置字段验证状态
+test("setErrors/setWarnings/setSuccesss/setValidator", async () => {
+    const form = attach(createForm());
+    const aa = attach(form.createField({ name: "aa" }));
+    const bb = attach(form.createField({ name: "bb" }));
+    const cc = attach(form.createField({ name: "cc" }));
+    const dd = attach(form.createField({ 
+        name: "dd",
+        validator() {
+            return new Promise(() => {});
+        }
+    }));
+
+    aa.setSelfErrors(["error"]);
+    aa.setSelfWarnings(["warning"]);
+    aa.setSelfSuccesses(["success"]);
+    bb.setSelfSuccesses(["success"]);
+    cc.setSelfWarnings(["warning"]);
+
+    expect(aa.selfErrors).toEqual(['error']);
+    expect(aa.valid).toBeFalsy();
+    expect(aa.selfWarnings).toEqual(['warning']);
+    expect(aa.selfSuccesses).toEqual(['success']);
+
+    // aa 的字段存在 errors，优先级高于 success
+    expect(aa.validateStatus).toEqual("error");
+    expect(bb.validateStatus).toEqual("success");
+    expect(cc.validateStatus).toEqual("warning");
+
+    aa.setValidator("date");
+    await aa.onInput("123");
+
+    // 2 个错误包含：setSelfErrors、setValidator("date")
+    expect(aa.selfErrors.length).toEqual(2);
+
+    dd.onInput("123");
+    await sleep();
+
+    expect(dd.validateStatus).toEqual("validating");
+});
+
+// 字段联动
+test("reactions", () => {
+    const form = attach(createForm());
+    const aa = attach(form.createField({ name: "aa" }));
+    const bb = attach(form.createField({
+        name: "bb",
+        reactions: [
+            field => {
+                const aa = field.query("aa");
+                const initialValue = aa.get("initialValue");
+                const inputValue = aa.get("inputValue");
+
+                field.visible = aa.get("value") !== "123";
+                if (inputValue === "333") {
+                    field.editable = false;
+                } else if (inputValue === "444") {
+                    field.editable = true;
+                }
+
+                if (initialValue === "555") {
+                    field.readOnly = true;
+                } else if (initialValue === "666") {
+                    field.readOnly = false;
+                }
+            }
+        ],
+    }));
+
+    expect(bb.visible).toBeTruthy();
+    
+    aa.setValue("123");
+    expect(bb.visible).toBeFalsy();
+
+    aa.onInput("333");
+    expect(bb.editable).toBeFalsy();
+
+    aa.onInput("444");
+    expect(bb.editable).toBeTruthy();
+
+    aa.setInitialValue("555");
+    expect(bb.readOnly).toBeTruthy();
+
+    aa.setInitialValue("666");
+    expect(bb.readOnly).toBeFalsy();
+});
+
+// 容错
+test("fault tolerance", () => {
+    const form = attach(createForm());
+    const field = attach(form.createField({ name: "aa", value: 123 }));
+
+    field.setDisplay("none");
+    expect(field.value).toBeUndefined();
+
+    field.setDisplay("visible");
+    expect(field.value).toEqual(123);
+
+    field.setDisplay("none");
+    expect(field.value).toBeUndefined();
+
+    field.setValue(321);
+    expect(field.value).toBeUndefined();
+
+    field.setDisplay("visible");
+    expect(field.value).toEqual(321);
+
+    // @ts-ignore 设置错误值将被忽略
+    form.setDisplay(null);
+
+    // @ts-ignore 设置错误值将被忽略
+    form.setPattern(null);
+
+    // 不受错误的设置影响，创建的字段会按照默认值创建
+    const field2 = attach(form.createField({ name: "xxx" }));
+    expect(field2.display).toEqual("visible");
+    expect(field2.pattern).toEqual("editable");
+});
+
+// 初始值
+test("initialValue", () => {
+    const form = attach(createForm());
+    const field = attach(form.createArrayField({ initialValue: 123, name: "aaa" }));
+
+    expect(form.initialValues.aaa).toEqual(123);
+    expect(form.values.aaa).toEqual(123);
+    expect(field.initialValue).toEqual(123);
+    expect(field.value).toEqual(123);
+});
+
+// 无索引数组路径计算
+test("array path calculation with none index", async () => {
+    const form = attach(createForm());
+    const array = attach(form.createArrayField({ name: "array" }));
+
+    await array.push({ input: "123" });
+    const input = attach(form.createField({ basePath: "array", name: "0.input" }));
+
+    expect(input.path.toString()).toEqual("array.0.input");
+    expect(input.value).toEqual("123");
+});
+
+// 无索引嵌套虚拟节点的数组路径计算
+test("array path calculation with none index and void nested", async () => {
+    const form = attach(createForm());
+    const array = attach(form.createArrayField({ name: "array" }));
+
+    await array.push({ input: "123" });
+    attach(form.createVoidField({ basePath: "array", name: "0.column" }));
+
+    // 在虚拟节点下创建的字段可以跳过虚拟节点获取路径和值
+    const input = attach(form.createField({ basePath: "array.0.column", name: "input" }));
+    expect(input.path.toString()).toEqual("array.0.input");
+    expect(input.value).toEqual("123");
+});
+
+// 通过对象索引计算数组路径
+test("array path calculation with object index", async () => {
+    const form = attach(createForm());
+    const array = attach(form.createArrayField({ name: "array" }));
+
+    await array.push({ input: "123" });
+    attach(form.createObjectField({ basePath: "array", name: "0" }));
+
+    const input = attach(form.createField({ basePath: "array.0", name: "input" }));
+    expect(input.path.toString()).toEqual("array.0.input");
+    expect(input.value).toEqual("123");
+});
+
+// 通过虚拟索引计算数组路径
+test("array path calculation with object index", async () => {
+    const form = attach(createForm());
+    const array = attach(form.createArrayField({ name: "array" }));
+
+    await array.push("123");
+    attach(form.createVoidField({ basePath: "array", name: "0" }));
+
+    const input = attach(form.createField({ basePath: "array.0", name: "input" }));
+    expect(input.path.toString()).toEqual("array.0");
+    expect(input.value).toEqual("123");
+});
+
+// 外层包裹一个虚拟节点并通过虚拟索引计算数组路径
+test("array path calculation with void index and void wrapper", async () => {
+    const form = attach(createForm());
+    attach(form.createVoidField({ name: "layout" }));
+
+    const array_in_layout = attach(form.createArrayField({ basePath: "layout", name: "array_in_layout" }));
+    
+    // 从以上的例子中可以看出，只有将数组索引本身作为虚拟节点，字段可以用索引查找，并且直接赋值
+    // 而其他情况，无论是虚拟节点在索引下还是对象作为索引，字段都要通过索引+字段名查找，赋值也必须是一个对象
+    await array_in_layout.push("123");
+    attach(form.createVoidField({ basePath: "layout.array_in_layout", name: "0" }));
+
+    const input = attach(form.createField({ basePath: "layout.array_in_layout.0", name: "input" }));
+    expect(input.path.toString()).toEqual("array_in_layout.0");
+    expect(input.value).toEqual("123");
+});
+
+// 在联动中的联动
+test("reaction in reaction", () => {
+    const form = attach(createForm());
+    const void_ = attach(form.createVoidField({ name: "void" }));
+
+    attach(form.createField({ basePath: "void", initialValue: 123, name: "field1" }));
+    const field2 = attach(form.createField({
+        basePath: "void",
+        initialValue: 456,
+        name: "field2",
+        reactions: field => {
+            const f1 = field.query("field1");
+            field.display = f1.get("value") === 123 ? "visible" : "none";
+        }
+    }));
+
+    // 原本虚拟节点下的字段都会展示，但是由于虚拟节点隐藏不保留值，所以下面所有字段都是 undefined
+    void_.setDisplay("none");
+    expect(field2.display).toEqual("none");
+    expect(field2.value).toBeUndefined();
+});
+
+// 嵌套字段隐藏和验证
+test("nested fields hidden and selfValidate", async () => {
+    const form = attach(createForm());
+    const parent = attach(form.createVoidField({ name: "parent" }));
+
+    attach(form.createField({ basePath: "parent", name: "aa", required: true }));
+    attach(form.createField({ basePath: "parent", name: "bb", required: true }));
+
+    try {
+        await form.validate();
+    } catch {}
+
+    expect(form.invalid).toBeTruthy();
+    parent.display = "hidden";
+    
+    // 原本验证不合理的表单，因为 parent 隐藏之后，其下的子节点也隐藏变为合理
+    await form.validate();
+    expect(form.invalid).toBeFalsy();
+});
+
+// 深度嵌套字段隐藏和验证
+test("deep nested field hidden and selfValidate", async () => {
+    const form = attach(createForm());
+    const parent1 = attach(form.createVoidField({ name: "parent1" }));
+    const parent2 = attach(form.createVoidField({ basePath: "parent1", name: "parent2" }));
+    const aa = attach(form.createField({ basePath: "parent1.parent2", name: "aa", required: true }));
+    const bb = attach(form.createField({ basePath: "parent1.parent2", name: "bb", required: true }));
+
+    try {
+        await form.validate();
+    } catch {}
+
+    expect(form.invalid).toBeTruthy();
+
+    // 根节点是 hidden 则下面的节点都是 hidden
+    parent2.display = "visible";
+    parent1.display = "hidden";
+    expect(parent2.display).toEqual("hidden");
+    expect(aa.display).toEqual("hidden");
+    expect(bb.display).toEqual("hidden");
+
+    await form.validate();
+    expect(form.invalid).toBeFalsy();
+});
+
+// 深度嵌套字段隐藏和通过中间字段隐藏自身验证状态
+test("deep nested fields hidden and selfValidate with middle hidden", async () => {
+    const form = attach(createForm());
+    const parent1 = attach(form.createVoidField({ name: "parent1" }));
+    const parent2 = attach(form.createVoidField({ basePath: "parent1", name: "parent2" }));
+    const aa = attach(form.createField({ basePath: "parent1.parent2", name: "aa", required: true }));
+    const bb = attach(form.createField({ basePath: "parent1.parent2", name: "bb", required: true }));
+
+    try {
+        await form.validate();
+    } catch {}
+
+    expect(form.invalid).toBeTruthy();
+
+    // 父节点是 hidden，将无视根节点的 display，子节点都是 hidden
+    parent2.display = "hidden";
+    parent1.display = "none";
+    expect(parent2.display).toEqual("hidden");
+    expect(aa.display).toEqual("hidden");
+    expect(bb.display).toEqual("hidden");
+
+    await form.validate();
+    expect(form.invalid).toBeFalsy();
+});
+
+// 组件卸载和验证状态
+test("fields unmount and selfValidate", async () => {
+    const form = attach(createForm());
+    const field = attach(form.createField({ name: "parent", required: true }));
+
+    try {
+        await form.validate();
+    } catch {}
+    expect(form.invalid).toBeTruthy();
+
+    try {
+        field.onUnmount();
+        await form.validate();
+    } catch {}
+    expect(form.invalid).toBeTruthy();
+
+    form.clearFormGraph("parent");
+    await form.validate();
+
+    expect(form.invalid).toBeFalsy();
+});
