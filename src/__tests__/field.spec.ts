@@ -661,8 +661,37 @@ test("reset", async () => {
     expect(form.values.cc).toEqual(null);
 
     aa.onInput("xxxx");
-    expect(aa.value).toEqual("xxxx");
-
     dd.onInput(null);
+
+    expect(aa.value).toEqual("xxxx");
     expect(dd.value).toEqual(null);
+
+    aa.reset();
+    expect(aa.value).toEqual(123);
+    expect(form.values.aa).toEqual(123);
+
+    bb.onInput("xxxx");
+    expect(bb.value).toEqual("xxxx");
+
+    bb.reset();
+    expect(bb.value).toBeUndefined();
+    expect(form.values.bb).toBeUndefined();
+    
+    // 重置字段并强制清空字段值，字段值清空后无论之前的验证情况，都为有效等待下次触发验证
+    aa.reset({ forceClear: true });
+    cc.reset({ forceClear: true });
+
+    expect(aa.value).toBeUndefined();
+    expect(form.values.aa).toBeUndefined();
+    expect(cc.value).toBeUndefined();
+    expect(form.values.cc).toBeUndefined();
+    expect(aa.valid).toBeTruthy();
+    expect(cc.valid).toBeTruthy();
+
+    // 除非清空字段的时候要求同时发起验证，注意触发验证是一个微任务
+    await aa.reset({ forceClear: true, validate: true });
+    await cc.reset({ forceClear: true, validate: true });
+
+    expect(aa.valid).toBeFalsy();
+    expect(cc.valid).toBeFalsy();
 });
