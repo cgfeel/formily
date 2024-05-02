@@ -1,4 +1,5 @@
-import { createForm } from "@formily/core";
+import { Field, Form, createForm, isField, onFieldReact } from "@formily/core";
+import { autorun, batch } from "@formily/reactive";
 import { FC } from "react";
 import { attach, sleep } from "./shared";
 
@@ -1209,8 +1210,492 @@ test("fields unmount and selfValidate", async () => {
     } catch {}
     expect(form.invalid).toBeTruthy();
 
+    // 结果证明，字段卸载并不能改变验证结果，除非回收字段
     form.clearFormGraph("parent");
     await form.validate();
 
     expect(form.invalid).toBeFalsy();
+});
+
+// 数组字段下的自动清除
+test("auto clean with ArrayField", () => {
+    const form = attach(createForm());
+    attach(form.createArrayField({
+        initialValue: [{}, {}],
+        name: "array",
+    }));
+
+    attach(form.createField({ basePath: "array", name: "0.aa" }));
+    attach(form.createField({ basePath: "array", name: "1.aa" }));
+
+    const array1 = attach(form.createArrayField({
+        initialValue: [{}, {}],
+        name: "array1"
+    }));
+
+    attach(form.createField({ basePath: "array1", name: "0.aa" }));
+    attach(form.createField({ basePath: "array1", name: "1.aa" }));
+
+    const array2 = attach(form.createArrayField({
+        initialValue: [{}, {}],
+        name: "array2"
+    }));
+
+    attach(form.createField({ basePath: "array2", name: "0.aa" }));
+    attach(form.createField({ basePath: "array2", name: "1.aa" }));
+
+    expect(form.fields["array.1.aa"]).not.toBeUndefined();
+    expect(form.values.array).toEqual([{}, {}]);
+
+    // 数组字段接受浅覆盖也可以通过深覆盖，并清理索引子字段
+    form.setValues({ array: [{}] }, "shallowMerge");
+    expect(form.values.array).toEqual([{}]);
+    expect(form.fields["array.1.aa"]).toBeUndefined();
+    expect(form.fields["array.0.aa"]).not.toBeUndefined();
+
+    // 覆盖值不影响 array1
+    expect(form.fields["array1.0.aa"]).not.toBeUndefined();
+    expect(form.fields["array1.1.aa"]).not.toBeUndefined();
+    expect(form.values.array1).toEqual([{}, {}]);
+
+    // 覆盖清空 array1，但不影响 array2
+    array1.setValue([]);
+    expect(form.fields["array1.0.aa"]).toBeUndefined();
+    expect(form.fields["array1.1.aa"]).toBeUndefined();
+    expect(form.fields["array2.0.aa"]).not.toBeUndefined();
+    expect(form.fields["array2.1.aa"]).not.toBeUndefined();
+
+    // 覆盖清空 array2
+    array2.setValue([]);
+    expect(form.fields["array2.0.aa"]).toBeUndefined();
+    expect(form.fields["array2.1.aa"]).toBeUndefined();
+});
+
+// 对象字段下的自动清除
+test("auto clean with ObjectField", () => {
+    const form = attach(createForm());
+    const initialValue = { aa: "aa", bb: "aa" };
+
+    attach(form.createObjectField({ name: "obj", initialValue }));
+    attach(form.createField({ basePath: "obj", name: "aa" }));
+    attach(form.createField({ basePath: "obj", name: "bb" }));
+
+    const obj1 = attach(form.createObjectField({ name: "obj1", initialValue }));
+    attach(form.createField({ basePath: "obj1", name: "aa" }));
+    attach(form.createField({ basePath: "obj1", name: "bb" }));
+
+    const obj2 = attach(form.createObjectField({ name: "obj2", initialValue }));
+    attach(form.createField({ basePath: "obj2", name: "aa" }));
+    attach(form.createField({ basePath: "obj2", name: "bb" }));
+
+    expect(form.fields["obj.aa"]).not.toBeUndefined();
+    expect(form.fields["obj.bb"]).not.toBeUndefined();
+    expect(form.values.obj).toEqual(initialValue);
+
+    // 对象字段可以浅覆盖值，但不会清除属性子字段
+    form.setValues({ obj: { aa: "123" } }, "shallowMerge");
+    expect(form.values.obj).toEqual({ aa: "123" });
+    expect(form.fields["obj.aa"]).not.toBeUndefined();
+    expect(form.fields["obj.bb"]).not.toBeUndefined();
+    expect(form.fields["obj1.aa"]).not.toBeUndefined();
+    expect(form.fields["obj1.bb"]).not.toBeUndefined();
+    expect(form.values.obj).toEqual({ aa: "123" });
+    expect(form.values.obj1).toEqual(initialValue);
+
+    // 可以深覆盖值，但不会清除属性子字段
+    obj1.setValue({});
+    expect(form.values.obj1).toEqual({});
+    expect(form.fields["obj1.aa"]).not.toBeUndefined();
+    expect(form.fields["obj1.bb"]).not.toBeUndefined();
+    expect(form.fields["obj2.aa"]).not.toBeUndefined();
+    expect(form.fields["obj2.bb"]).not.toBeUndefined();
+    expect(form.values.obj2).toEqual(initialValue);
+
+    // 深度覆盖，添加的值也是 undefined
+    obj2.setValue({ aa: "aa", bb: "bb", cc: "cc" });
+    expect(form.fields["obj2.aa"]).not.toBeUndefined();
+    expect(form.fields["obj2.bb"]).not.toBeUndefined();
+    expect(form.fields["obj2.cc"]).toBeUndefined();
+
+    // 添加属性值，子字段仍旧不存在，但是对象字段的值已发生改变
+    obj2.addProperty("cc", "123");
+    expect(form.fields["obj2.cc"]).toBeUndefined();
+    expect(obj2.value).toEqual({ aa: "aa", bb: "bb", cc: "123" });
+
+    // 直到添加字段后，则值和字段都存在
+    const cc = attach(form.createField({ basePath: "obj2", name: "cc" }));
+    expect(form.fields["obj2.cc"]).not.toBeUndefined();
+    expect(cc.value).toEqual("123");
+
+    // addProperty 虽然不能添加字段，但是 removeProperty 却可以删除字段
+    obj2.removeProperty("cc");
+    expect(form.fields["obj2.cc"]).toBeUndefined();
+});
+
+// 初始值为空
+test("initial value with empty", () => {
+    const form = attach(createForm());
+    const empty = attach(form.createField({ initialValue: "", name: "empty" }));
+    expect(empty.value).toEqual("");
+
+    const beNull = attach(form.createField({ initialValue: null, name: "null" }));
+    expect(beNull.value).toEqual(null);
+});
+
+// 字段提交
+test("field submit", async () => {
+    const form = attach(createForm({
+        initialValues: {
+            aa: { cc: "cc" }, bb: "bb"
+        }
+    }));
+
+    const childForm = attach(form.createObjectField({ name: "aa" }));
+    attach(form.createField({ name: "bb" }));
+    attach(form.createField({ basePath: "aa", name: "cc" }));
+
+    const onSubmit = jest.fn();
+
+    // 注意这里是对象字段提交，不是表单提交，字段也可以单独 submit
+    // 所以提交的值也只有 { cc: "cc" }，甚至不包括自身
+    await childForm.submit(onSubmit);
+    expect(onSubmit).toHaveBeenCalledWith({ cc: "cc" });
+});
+
+// 带有错误的字段提交
+test("field submit with error", async () => {
+    const form = attach(createForm());
+    const childForm = attach(form.createObjectField({ name: "aa" }));
+
+    attach(form.createField({ name: "bb", required: true }));
+    attach(form.createField({ basePath: "aa", name: "cc", required: true }));
+    const onSubmit = jest.fn();
+
+    try {
+        await childForm.submit(onSubmit);
+    } catch(e) {
+        expect(e).not.toBeUndefined();
+    }
+
+    // 字段提交和表单提交是一样的
+    expect(onSubmit).toHaveBeenCalledTimes(0);
+});
+
+// 初始值和展示状态的关系
+test("initial display with value", () => {
+    const form = attach(createForm());
+    const aa = attach(form.createField({ name: "aa", value: 123, visible: false }));
+    const bb = attach(form.createField({ name: "bb", value: 123, visible: true }));
+    const cc = attach(form.createField({ hidden: true, name: "cc", value: 123 }));
+
+    // visible: false 相当于 display: none，隐藏不保留值
+    expect(aa.value).toBeUndefined();
+    expect(aa.visible).toBeFalsy();
+
+    // visible: true 默认展示保留值状态
+    expect(bb.value).toEqual(123);
+    expect(bb.visible).toBeTruthy();
+
+    // display: hidden 时会隐藏 UI 但保留值
+    expect(cc.value).toEqual(123);
+    expect(cc.hidden).toBeTruthy();
+});
+
+// 字段受控展示状态
+test("state depend field visible value", async () => {
+    const form = attach(createForm());
+    const aa = attach(form.createField({ name: "aa" }));
+    const bb = attach(form.createField({ 
+        name: "bb",
+        reactions(field) {
+            field.visible = aa.value === "123"
+        }
+    }));
+    const cc = attach(form.createField({
+        name: "cc",
+        reactions(field) {
+            field.visible = aa.value === "123";
+            field.disabled = !bb.value;
+        }
+    }));
+
+    expect(bb.visible).toBeFalsy();
+    expect(cc.visible).toBeFalsy();
+    expect(cc.disabled).toBeTruthy();
+
+    // 巩固：修改字段值是同步的，但状态修改是微任务
+    aa.value = "123";
+    await sleep(10);
+
+    expect(bb.visible).toBeTruthy();
+    expect(cc.visible).toBeTruthy();
+    expect(cc.disabled).toBeTruthy();
+
+    aa.value = "321";
+    await sleep(10);
+
+    expect(bb.visible).toBeFalsy();
+    expect(cc.visible).toBeFalsy();
+    expect(cc.disabled).toBeTruthy();
+
+    aa.value = "";
+    await sleep(10);
+
+    expect(bb.visible).toBeFalsy();
+    expect(cc.visible).toBeFalsy();
+    expect(cc.disabled).toBeTruthy();
+
+    aa.value = "123";
+    bb.value = "123";
+    await sleep(10);
+
+    expect(bb.visible).toBeTruthy();
+    expect(cc.visible).toBeTruthy();
+    expect(cc.disabled).toBeFalsy();
+});
+
+// 字段值和初始值受控
+test("reactions initialValue and value",  async () => {
+    const form = attach(createForm({ initialValues: { aa: { input: "111" } } }));
+    attach(form.createObjectField({
+        name: "aa",
+        reactions: [
+            field => {
+                // 即便通过 field.query 收集依赖修改 initialValue 也一样无效
+                field.initialValue = { input: "123" };
+                field.query(".aa.input").take(target => {
+                    if (isField(target)) target.initialValue = "123";
+                });
+            }
+        ],
+    }));
+
+    // 这个例子再次说明，在创建字段前修改初始值要么直接赋值、要么在创建字段之后
+    // setInitialValues、reactions 都不可以
+    attach(form.createField({ basePath: "aa", name: "input" }));
+    expect(form.values.aa.input).toEqual("111");
+
+    await sleep();
+    expect(form.values.aa.input).toEqual("111");
+
+    // 但是有种情况例外，在 reaction 通过 field.query 收集字段并修改其 value，条件缺一个不可
+    const form1 = attach(createForm({ initialValues: { aa: { input: "111" } } }));
+    attach(form1.createObjectField({
+        name: "aa",
+        reactions: [
+            field => {
+                field.query(".aa.input").take(target => {
+                    if (isField(target)) target.value = "123";
+                });
+            }
+        ],
+    }));
+
+    attach(form1.createField({ basePath: "aa", name: "input" }));
+    expect(form1.values.aa.input).toEqual("123");
+});
+
+// 字段名叫 length 的初始值
+test("field name is length in initalize", () => {
+    const form = attach(createForm());
+
+    // 表单下的 length
+    const field = (form.createField({ initialValue: "123", name: "length" }));
+    expect(field.value).toEqual("123");
+
+    // 对象下的 length
+    attach(form.createObjectField({ name: "obj" }));
+    const array = attach(form.createArrayField({ basePath: "obj", initialValue: [1, 2], name: "length" }));
+
+    expect(array.value).toEqual([1, 2]);
+    expect(form.values.obj.length).toEqual([1, 2]);
+});
+
+// 字段名叫 length，动态分配初始值
+test("field name is length in dynamic assign", () => {
+    const form = attach(createForm());
+
+    // 表单下的 length
+    const field = (form.createField({ name: "length" }));
+    field.initialValue = "123";
+
+    expect(field.value).toEqual("123");
+
+    // 对象下的 length
+    attach(form.createObjectField({ name: "obj" }));
+    const array = attach(form.createArrayField({ basePath: "obj", name: "length" }));
+    array.initialValue = [1, 2]
+
+    expect(array.value).toEqual([1, 2]);
+    expect(form.values.obj.length).toEqual([1, 2]);
+});
+
+// 嵌套资源的修改
+test("nested field modified", async () => {
+    const form = attach(createForm());
+    const obj = attach(form.createObjectField({ name: "object" }));
+    const child = attach(form.createField({ basePath: "object", name: "child" }));
+
+    // 初始字段，表单，节点本身、节点子集都没有发生变更
+    expect(child.modified).toBeFalsy();
+    expect(child.selfModified).toBeFalsy();
+    expect(obj.modified).toBeFalsy();
+    expect(obj.selfModified).toBeFalsy();
+    expect(form.modified).toBeFalsy();
+
+    // 叶子节点发起输入，叶子节点本身和子集、父节点的子集和表单发生了变更、父节点本身没有变更
+    await child.onInput();
+    expect(child.modified).toBeTruthy();
+    expect(child.selfModified).toBeTruthy();
+    expect(obj.modified).toBeTruthy();
+    expect(obj.selfModified).toBeFalsy();
+    expect(form.modified).toBeTruthy();
+
+    // 父节点发起还原操作，只有表单本身发生了变更，其他没有变更
+    await obj.reset()
+    expect(child.modified).toBeFalsy();
+    expect(child.selfModified).toBeFalsy();
+    expect(obj.modified).toBeFalsy();
+    expect(obj.selfModified).toBeFalsy();
+    expect(form.modified).toBeTruthy();
+
+    // 表单发起还原，所有都回到初始设定，全部都没有修改过
+    await form.reset()
+    expect(child.modified).toBeFalsy();
+    expect(child.selfModified).toBeFalsy();
+    expect(obj.modified).toBeFalsy();
+    expect(obj.selfModified).toBeFalsy();
+    expect(form.modified).toBeFalsy();
+});
+
+// 重复调用字段的 setValidator
+test("field setValidator repeat call", async () => {
+    const form = attach(createForm());
+    const field = attach(form.createField({ name: "normal" }));
+
+    const validator1 = jest.fn();
+    const validator2 = jest.fn();
+    const validator3 = jest.fn();
+
+    // 巩固：发起验证、发起提交一定是微任务
+    field.setValidator([validator1, validator2, validator3]);
+    await form.validate();
+
+    expect(validator1).toHaveBeenCalledTimes(1);
+    expect(validator2).toHaveBeenCalledTimes(1);
+    expect(validator3).toHaveBeenCalledTimes(1);
+
+});
+
+// 在自定义验证器中获取上下文字段和表单
+test("custom validator to get ctx.field", async () => {
+    const form = attach(createForm());
+    const ctx: { field?: Field, form?: Form } = {};
+
+    attach(form.createField({
+        name: "aaa",
+        validator(value, rule, _ctx) {
+            ctx.field = _ctx.field;
+            ctx.form = _ctx.form;
+        }
+    }));
+
+    await form.submit();
+    expect(ctx.field).not.toBeUndefined();
+    expect(ctx.form).not.toBeUndefined();
+});
+
+// 单方向联动
+test("single direction linkage effect", async () => {
+    const form = attach(createForm());
+    const input1 = attach(form.createField({
+        name: "input1",
+        reactions: field => {
+            if (isField(field) && field.selfModified) {
+                input2.value = field.value;
+            }
+        }
+    }));
+
+    const input2 = attach(form.createField({ name: "input2" }));
+    await input1.onInput("123");
+    expect(input2.value).toBe("123");
+    await input1.onInput("321");
+    expect(input2.value).toBe("321");
+});
+
+// 修改字段路径会重新计算字段值
+test("path change will update computed value", () => {
+    const form = attach(createForm());
+    const input = attach(form.createField({ name: "input" }));
+    const value = jest.fn();
+
+    autorun(() => {
+        value(input.value);
+    });
+    batch(() => {
+        // 修改字段名，文档中没有这个方法说明
+        input.locate("select");
+        // input.value = "123";
+    });
+    
+    // 第一次调用是初始化，值没有定义所以是 undefined
+    // 第二次调用是修改字段名，虽然值没改，但还是发起了计算，所以得到的还是 undefined
+    expect(value).toHaveBeenNthCalledWith(2, undefined);
+    expect(input.path.toString()).toEqual("select");
+
+    // 第三次修改了值，所以这次得到的是 123
+    batch(() => {
+        input.value = "123";
+    });
+    expect(value).toHaveBeenNthCalledWith(3, "123");
+});
+
+// 重置对象字段
+test("object field reset", async () => {
+    const form = attach(createForm());
+    attach(form.createObjectField({ name: "obj" }));
+
+    const input = attach(form.createField({ basePath: "obj", name: "input" }));
+
+    form.setValues({ obj: { input: "123" } });
+    expect(input.value).toEqual("123");
+
+    await form.reset();
+    expect(input.value).toBeUndefined();
+});
+
+// 字段展示状态决定默认值是否有效
+test("field visible default value should work", () => {
+    const form = attach(createForm({
+        effects(form) {
+            onFieldReact("obj", field => {
+                field.visible = form.values.select !== "none";
+            });
+            onFieldReact("obj.input1", field => {
+                field.pattern = "disabled";
+                if (isField(field)) {
+                    field.initialValue = "123";
+                }
+            });
+            onFieldReact("obj.input2", field => {
+                if (isField(field)) {
+                    field.value = form.values.select;
+                }
+            });
+        }
+    }));
+
+    const select = attach(form.createField({ name: "select" }));
+    attach(form.createObjectField({ name: "obj" }));
+    attach(form.createField({ basePath: "obj", name: "input1" }));
+    attach(form.createField({ basePath: "obj", name: "input2" }));
+
+    select.value = "none";
+    expect(form.values.obj?.input1).toBeUndefined();
+    expect(form.getFieldState("obj.input1", state => state.display)).toEqual("none");
+
+    select.value = "visible";
+    expect(form.values.obj?.input1).toEqual("123");
+    expect(form.values.obj?.input2).toEqual("visible");
 });
