@@ -1,5 +1,5 @@
 import { Field, Form, createForm, isField, onFieldReact } from "@formily/core";
-import { autorun, batch } from "@formily/reactive";
+import { autorun, batch, observable } from "@formily/reactive";
 import { FC } from "react";
 import { attach, sleep } from "./shared";
 
@@ -1698,4 +1698,381 @@ test("field visible default value should work", () => {
     select.value = "visible";
     expect(form.values.obj?.input1).toEqual("123");
     expect(form.values.obj?.input2).toEqual("visible");
+});
+
+// 通过相邻路径查找值
+test("query value with sibling path syntax", () => {
+    const form = attach(createForm());
+    const fn = jest.fn();
+
+    attach(form.createVoidField({ name: "void" }));
+    attach(form.createObjectField({ basePath: "void", name: "obj" }));
+    attach(form.createField({
+        basePath: "void.obj",
+        name: "input",
+        reactions: [
+            field => fn(
+                field.query(".textarea").value(),
+                field.query(".textarea").initialValue(),
+            )
+        ]
+    }));
+
+    const textarea = attach(form.createField({
+        basePath: "void.obj",
+        initialValue: "aaa",
+        name: "textarea",
+    }));
+    
+    textarea.value = "123";
+    expect(fn).toHaveBeenCalledWith("123", "aaa");
+});
+
+// 相对路径查找虚拟节点下的字段
+test("relative query with void field", () => {
+    const form = attach(createForm());
+
+    attach(form.createVoidField({ name: "void" }));
+    const aa = attach(form.createField({ basePath: "void", name: "aa" }));
+
+    attach(form.createVoidField({ name: "mm" }));
+    const bb = attach(form.createField({ basePath: "mm", name: "bb" }));
+
+    // bb 向上查找一个节点 . 然后相邻的虚拟节点可以省略直接查找 .a
+    expect(bb.query(".").take()?.path.toString()).toEqual("mm");
+    expect(bb.query(".aa").take()).toBe(aa);
+});
+
+// 表单值和字段值定义和覆盖
+test("empty string or number or null value need rewite default value", () => {
+    const form = attach(createForm<Partial<Record<string, number|string|null>>>({
+        initialValues: { dd: 321 },
+        values: { aa: "", bb: 0, ee: null }
+    }));
+
+    attach(form.createField({ initialValue: "test", name: "aa" }));
+    attach(form.createField({ initialValue: 123, name: "bb" }));
+    attach(form.createField({ initialValue: "test", name: "cc" }));
+    attach(form.createField({ initialValue: 123, name: "dd" }));
+    attach(form.createField({ initialValue: "test", name: "ee" }));
+
+    // 表单设置了 value，字段设置了 initialValue，form 设置了值不会覆盖，没有的值会被覆盖
+    expect(form.initialValues.aa).toEqual("test");
+    expect(form.values.aa).toEqual("");
+
+    expect(form.initialValues.bb).toEqual(123);
+    expect(form.values.bb).toEqual(0);
+
+    expect(form.initialValues.cc).toEqual("test");
+    expect(form.values.cc).toEqual("test");
+
+    expect(form.initialValues.dd).toEqual(321);
+    expect(form.values.dd).toEqual(321);
+
+    expect(form.initialValues.ee).toEqual("test");
+    expect(form.values.ee).toEqual(null);
+});
+
+// 销毁字段同时销毁值
+test("destroy field need auto remove initialValue", () => {
+    const form = attach(createForm());
+    const aa = attach(form.createField({ initialValue: "test", name: "aa" }));
+
+    expect(form.initialValues.aa).toEqual("test");
+    expect(form.values.aa).toEqual("test");
+
+    aa.destroy();
+    expect(form.initialValues.aa).toBeUndefined();
+    expect(form.values.aa).toBeUndefined();
+});
+
+// 字段校验是否只校验第一个非法规则
+test("validateFirst", async () => {
+    const form = attach(createForm({ validateFirst: false }));
+    const aaValidate = jest.fn(() => "aaError");
+    const bbValidate = jest.fn(() => "bbError");
+    const ccValidate = jest.fn(() => "ccError");
+
+    const aa = attach(form.createField({ 
+        name: "aa",
+        validateFirst: true,
+        validator: [aaValidate, aaValidate]
+    }));
+
+    const bb = attach(form.createField({ 
+        name: "bb",
+        validateFirst: false,
+        validator: [bbValidate, bbValidate]
+    }));
+
+    const cc = attach(form.createField({ 
+        name: "cc",
+        validator: [ccValidate, ccValidate]
+    }));
+
+    await aa.onInput("aa");
+    await bb.onInput("bb");
+    await cc.onInput("cc");
+
+    expect(aaValidate).toHaveBeenCalledTimes(1);
+    expect(bbValidate).toHaveBeenCalledTimes(2);
+    expect(ccValidate).toHaveBeenCalledTimes(2);
+});
+
+// 注销字段不再响应联动
+test("reactions should not be triggered when field destroyed", () => {
+    const form = attach(createForm());
+    const handler = jest.fn();
+    const obs = observable({ bb: 123 });
+    const aa = attach(form.createField({
+        initialValue: "test",
+        name: "aa",
+        reactions() {
+            handler(obs.bb);
+        }
+    }));
+
+    // 初始化执行 1 次
+    expect(handler).toHaveBeenCalledTimes(1);
+
+    // 修改响应值执行 1 次
+    obs.bb = 321;
+    expect(handler).toHaveBeenCalledTimes(2);
+
+    aa.destroy();
+    obs.bb = 111;
+
+    // 注销字段后不再响应
+    expect(handler).toHaveBeenCalledTimes(2);
+});
+
+// 父级设置 readPretty 会覆盖 disabled、readOnly 的子集 pattern
+test("parent readPretty will overwrite self disabled or readOnly", () => {
+    const form = attach(createForm({ readPretty: true }));
+    const aa = attach(form.createField({ 
+        disabled: true, initialValue: "test", name: "aa" 
+    }));
+
+    const bb = attach(form.createField({ 
+        editable: true, initialValue: "test", name: "bb" 
+    }));
+
+    const cc = attach(form.createField({ 
+        initialValue: "test", name: "aa", pattern: "readOnly"
+    }));
+
+    expect(aa.pattern).toBe("readPretty");
+    expect(bb.pattern).toBe("editable");
+    expect(cc.pattern).toBe("readPretty");
+});
+
+// 字段验证错误，在字段验证中不影响其他字段验证状态
+test("conflict name for errors filter", async () => {
+    const form = attach(createForm());
+    const aa = attach(form.createField({ name: "aa", required: true }));
+    const aa1 = attach(form.createField({ name: "aa1", required: true }));
+
+    await aa1.onInput("");
+    expect(aa1.invalid).toBeTruthy();
+    expect(aa.invalid).toBeFalsy();
+});
+
+// 字段注销后赋值，将不再合并到表单值中
+test("field destroyed can not be assign value", () => {
+    const form = attach(createForm());
+    const aa = attach(form.createField({ name: "aa" }));
+
+    aa.destroy();
+    aa.initialValue = 222;
+    aa.value = 111;
+
+    expect(form.initialValues).toEqual({});
+    expect(form.values).toEqual({});
+});
+
+// 通过 onInput 通过 target 传值
+test("onInput could pass value with target", async () => {
+    const form = attach(createForm());
+    const aa = attach(form.createField({ name: "aa" }));
+    const bb = attach(form.createField({ name: "bb" }));
+
+    // 文档中演示了一个错误示范
+    await aa.onInput({ target: "123" });
+    expect(aa.value).toEqual({ target: "123" });
+
+    //  正确的传值方式
+    await bb.onInput({ target: { value: "123" } });
+    expect(bb.value).toEqual("123");
+});
+
+// 表单初始值忽略已注销的字段、展示状态 display: none 的字段
+test("field destroyed or display none should not be assign value form patch initialValues", () => {
+    const form = attach(createForm());
+    const aa = attach(form.createField({ display: "none", name: "aa" }));
+
+    aa.initialValue = "123";
+    expect(form.values).toEqual({});
+
+    aa.display = "visible";
+    expect(aa.value).toBe("123");
+    expect(form.values).toEqual({ aa: "123" });
+
+    aa.destroy();
+    expect(form.values).toEqual({});
+});
+
+// 注销字段不再响应联动-1
+test("onFieldReact with field destroyed", () => {
+    const fn = jest.fn();
+    const obs = observable({ value: 123 });
+    const form = attach(createForm({
+        effects() {
+            onFieldReact("aa", () => fn(obs.value));
+        }
+    }));
+
+    // 表单初始化不执行
+    expect(fn).toHaveBeenCalledTimes(0);
+
+    // 字段初始化执行一次
+    const aa = attach(form.createField({ name: "aa" }));
+    expect(fn).toHaveBeenCalledTimes(1);
+
+    // 赋值后执行一次
+    obs.value = 321;
+    expect(fn).toHaveBeenCalledTimes(2);
+
+    aa.destroy();
+    obs.value = 111;
+
+    // 注销字段后，不再响应联动
+    expect(fn).toHaveBeenCalledTimes(2);
+});
+
+// 字段 actions、字段方法注入、调用
+test("field actions", () => {
+    const form = attach(createForm());
+    const aa = attach(form.createField({ name: "aa" }));
+
+    expect(aa.actions).toEqual({});
+    
+    aa.inject({
+        testa: () => 123,
+    });
+    expect(aa.invoke("testa")).toEqual(123);
+    
+    const fn = {
+        testa: () => 321,
+    };
+    aa.inject(fn);
+    expect(aa.invoke("testa")).toEqual(321);
+    expect(aa.actions).toEqual(fn);
+});
+
+// 字段隐藏保留值和不保留值
+test("field hidden value", () => {
+    const form = attach(createForm());
+    const aa = attach(form.createField({
+        initialValue: "123",
+        name: "aa",
+        hidden: true,
+    }));
+
+    const arrayField = attach(form.createArrayField({ hidden: true, name: "array" }));
+    const objectField = attach(form.createObjectField({ hidden: true, name: "object" }));
+
+    expect(form.values).toEqual({ aa: "123", array: [], object: {} });
+
+    // 隐藏字段不保留值
+    aa.setDisplay("none");
+    arrayField.setDisplay("none");
+    objectField.setDisplay("none");
+    expect(aa.value).toBeUndefined();
+    expect(arrayField.value).toBeUndefined();
+    expect(objectField.value).toBeUndefined();
+
+    // 隐藏字段保留值
+    aa.setDisplay("hidden");
+    arrayField.setDisplay("hidden");
+    objectField.setDisplay("hidden");
+    expect(aa.value).toEqual("123");
+    expect(arrayField.value).toEqual([]);
+    expect(objectField.value).toEqual({});
+});
+
+// 解构字段的展示状态
+test("field destructor path with display none", () => {
+    const form = attach(createForm());
+    const aa = attach(form.createArrayField({ name: "[aa,bb]" }));
+
+    expect(form.values).toEqual({ aa: undefined, bb: undefined });
+
+    // 直接将解构字段隐藏，解构的值将全部隐藏
+    aa.setDisplay("none");
+    expect(form.values).toEqual({});
+    expect(aa.value).toEqual([]);
+});
+
+// onInput 修改规则
+test("onInput should ignore HTMLInputEvent propagation", async () => {
+    const form = attach(createForm());
+    const aa = attach(form.createField({ name: "aa" }));
+    const mockHTMLInput = { value: "321" };
+    const mockHTMLUpdate = { value: "2" };
+    const mockDomEvent = { createTarget: mockHTMLInput, target: mockHTMLInput };
+
+    await aa.onInput(mockDomEvent);
+    expect(aa.value).toEqual("321");
+
+    // 传入的 currentTarget 不一致，无法修改值，由于 currentTarget 和 target 是一个对象，会进行深度全等比较
+    await aa.onInput({ currentTarget: { value: "4" }, target: { value: "2" } });
+    expect(aa.value).toEqual("321");
+
+    // 传入的值一致，可以修改值
+    await aa.onInput({ currentTarget: mockHTMLUpdate, target: mockHTMLUpdate });
+    expect(aa.value).toEqual("2");
+
+    // 不定义 currentTarget 会忽略比较，强制修改
+    await aa.onInput({ target: { value: "123" } });
+    expect(aa.value).toEqual("123");
+
+});
+
+test("onFocus and onBlur with invalid target value", async () => {
+    const form = attach(createForm());
+    const field = attach(form.createField({
+        name: "aa",
+        validateFirst: true,
+        value: "111",
+        validator: [
+            {
+                format: "date",
+                triggerType: "onFocus",
+            },
+            {
+                format: "url",
+                triggerType: "onBlur",
+            }
+        ],
+    }));
+
+    // 在 onFocus 和 onBlur 中传递一个空对象的 target，将跳过触发事件
+    await field.onFocus({ target: {} });
+    expect(field.selfErrors).toEqual([]);
+
+    await field.onBlur({ target: {} });
+    expect(field.selfErrors).toEqual([]);
+
+    // 不传递任何参数将触发验证
+    await field.onFocus();
+    expect(field.selfErrors).toEqual([
+        "The field value is not a valid date format"
+    ]);
+
+    // 错误是叠加上去的，虽然每次只验证第一个错误
+    await field.onBlur();
+    expect(field.selfErrors).toEqual([
+        "The field value is not a valid date format",
+        "The field value is a invalid url"
+    ]);
 });
