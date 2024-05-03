@@ -2038,6 +2038,7 @@ test("onInput should ignore HTMLInputEvent propagation", async () => {
 
 });
 
+// 通过聚焦和失焦对无效的目标值触发验证
 test("onFocus and onBlur with invalid target value", async () => {
     const form = attach(createForm());
     const field = attach(form.createField({
