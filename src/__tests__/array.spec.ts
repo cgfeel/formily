@@ -1,4 +1,4 @@
-import { createForm, onFieldValueChange, onFormInitialValuesChange, onFormValuesChange } from "@formily/core";
+import { createForm, isArrayField, isField, onFieldValueChange, onFormInitialValuesChange, onFormValuesChange } from "@formily/core";
 import { attach } from "./shared";
 
 // 创建数组字段
@@ -408,7 +408,8 @@ test("array field move api with children", () => {
     expect(form.fields["array.2.name"]).toBeUndefined();
 });
 
-test("array field remove memo leak", async () => {
+// 数组添加、删除、创建子字段触发回调
+test("array field remove memo leak", () => {
     const handler = jest.fn();
     const valuesChange = jest.fn();
     const initialValuesChange = jest.fn();
@@ -450,4 +451,424 @@ test("array field remove memo leak", async () => {
     // 数组子集的添加删除，数组字段添加和删除数据，都不会触发字段变更、也不会触发初始值变更
     expect(handler).toHaveBeenCalledTimes(0);
     expect(initialValuesChange).toHaveBeenCalledTimes(0);
+});
+
+// 嵌套字段的indexes，以及删除数组下的节点的坑点
+test("nest array remove", () => {
+    const form = attach(createForm());
+    const metrics = attach(form.createArrayField({ name: "metrics" }));
+
+    const mObjA = attach(form.createObjectField({ basePath: "metrics", name: "0" }));
+    const mObjB = attach(form.createObjectField({ basePath: "metrics", name: "1" }));
+
+    const mObjA0 = attach(form.createArrayField({ basePath: "metrics.0", name: "content" }));
+    const mObjB0 = attach(form.createArrayField({ basePath: "metrics.1", name: "content" }));
+
+    const obj00 = attach(form.createObjectField({ basePath: "metrics.0.content", name: "0" }));
+    const obj10 = attach(form.createObjectField({ basePath: "metrics.1.content", name: "0" }));
+
+    const attr00 = attach(form.createField({ basePath: "metrics.0.content.0", initialValue: "123", name: "attr" }));
+    const attr10 = attach(form.createField({ basePath: "metrics.1.content.0", initialValue: "123", name: "attr" }));
+
+    // 有一个快速的获取 indexes 的办法，就是去数节点路径中，有几个是数字路径
+    // 最外层的数组字段是没有 indexes 的
+    // [], path: metrics
+    expect(metrics.indexes).toEqual([]);
+
+    // 数组对象下的两个对象字段，分别索引为 index
+    // [{}, {}], path: metrics.0, metrics.1
+    expect(mObjA.indexes).toEqual([0]);
+    expect(mObjB.indexes).toEqual([1]);
+
+    //  对象字段没有索引，所以下面的数组字段按照 parent 的 index
+    // [{ content: [] }, { content: [] }], path: metrics.0.content, metrics.1.content
+    expect(mObjA0.indexes).toEqual([0]);
+    expect(mObjB0.indexes).toEqual([1]);
+
+    //  对象字段下的数组索引，按照父级索引，再到当前索引
+    // [{ content: [{}] }, { content: [{}] }], path: metrics.0.content.0, metrics.1.content.0
+    expect(obj00.indexes).toEqual([0, 0]);
+    expect(obj10.indexes).toEqual([1, 0]);
+
+    // 叶子节点是普通字段，本身没有索引，按照父级索引
+    // [{ content: [{ attr: "123" }] }, { content: [{ attr: "123"  }] }]
+    // path: metrics.0.content.0.attr, metrics.1.content.0.attr
+    expect(attr00.indexes).toEqual([0, 0]);
+    expect(attr10.indexes).toEqual([1, 0]);
+
+    // 按照上面的规则开始拿索引
+    expect(obj00.indexes[0]).toBe(0);
+
+    // index 的索引取 indexes 的最后一个值，这里的 indexes 是 [0, 0]
+    expect(obj00.index).toBe(0);
+
+    // index 的索引取 indexes 的最后一个值，这里的 indexes 是 [1, 0]
+    expect(obj10.index).toBe(0);
+    expect(obj10.indexes[0]).toBe(1);
+
+    // 等同 mObjB0，删除的是 obj10，注意：remove 不需要像文档一样，通过异步删除
+    const m1Content = form.query("metrics.1.content").take();
+    if (isArrayField(m1Content)) {
+        m1Content.remove(0);
+    }
+    
+    // 文档这里有错误，删除的是 metrics.1 下的字段，查询的是 metrics.0 的字段
+    expect(form.fields["metrics.0.content.0.attr"]).toBeDefined();
+    expect(form.fields["metrics.1.content.0"]).toBeUndefined();
+
+    // 神奇的事情来了，remove 可以删除节点，也可以删除节点值，但删除不了初始值
+    expect(form.initialValues.metrics?.[1]?.content?.[0]?.attr).toEqual("123");
+    expect(form.values.metrics?.[1]?.content?.[0]?.attr).toBeUndefined();
+
+    // 再把字段加回来，神奇的事情又发生了，之前的初始值和字段值都加回来了，要避免意想不到的情况，记得加上初始值哦
+    attach(form.createObjectField({ basePath: "metrics.1.content", name: "0" }));
+    attach(form.createField({ basePath: "metrics.1.content.0", name: "attr" }));
+
+    expect(form.initialValues.metrics?.[1]?.content?.[0]?.attr).toEqual("123");
+    expect(form.values.metrics?.[1]?.content?.[0]?.attr).toEqual("123");
+});
+
+// 数组字段的 indexes 需要避免无效的数字
+test("indexes: nest path need exclude incomplete number", () => {
+    const form = attach(createForm());
+    const objPathIncludeNum = attach(form.createField({ basePath: "metrics.0.a.10.iconWidth50", name: "attr" }));
+
+    // 巩固：快速的获取 indexes 的办法，就是去数节点路径中，有几个是数字路径，哪怕路径父级节点不存在
+    // 获取的indexes，就是路径中的数字集合，顺序按照路径从左到右的数组，且数字类型是数值
+    // index 获取的是 indexes 最后一个值
+    expect(objPathIncludeNum.indexes.length).toBe(2);
+    expect(objPathIncludeNum.indexes).toEqual([0, 10]);
+    expect(objPathIncludeNum.index).toBe(10);
+});
+
+// 在数组中没有字段的节点
+test("incomplete insertion of array elements", () => {
+    const form = attach(createForm({
+        values: {
+            array: [{ aa: 1 }, { aa: 2 }, { aa: 3 }],
+        }
+    }));
+    
+    const array = attach(form.createArrayField({ name: "array" }));
+    attach(form.createObjectField({ basePath: "array", name: "0" }));
+    attach(form.createField({ basePath: "array.0", name: "aa" }));
+    attach(form.createObjectField({ basePath: "array", name: "2" }));
+    attach(form.createField({ basePath: "array.2", name: "aa" }));
+
+    expect(form.fields["array.0.aa"]).toBeDefined();
+    expect(form.fields["array.1.aa"]).toBeUndefined();
+    expect(form.fields["array.2.aa"]).toBeDefined();
+
+    // 在数据头部插入一个节点，但不创建字段，现有的字段往后挪一个位置
+    array.unshift({});
+    expect(form.fields["array.0.aa"]).toBeUndefined();
+    expect(form.fields["array.1.aa"]).toBeDefined();
+    expect(form.fields["array.2.aa"]).toBeUndefined();
+    expect(form.fields["array.3.aa"]).toBeDefined();
+});
+
+// 数组节点中可以跳过虚拟节点，直接获取数据
+test("void array items need skip data", () => {
+    const form = attach(createForm());
+    const array = attach(form.createArrayField({ name: "array" }));
+    const array2 = attach(form.createArrayField({ name: "array2" }));
+
+    attach(form.createVoidField({ basePath: "array", name: "0" }));
+    attach(form.createVoidField({ basePath: "array.0", name: "space" }));
+    attach(form.createVoidField({ basePath: "array2", name: "0" }));
+
+    const select = attach(form.createField({ basePath: "array.0.space", name: "select" }));
+    const select2 = attach(form.createField({ basePath: "array2.0", name: "select2" }));
+
+    select.value = 123
+    select2.value = 123;
+    expect(array.value).toEqual([123]);
+    expect(array2.value).toEqual([123]);
+});
+
+// 数组字段清空
+test("array field reset", () => {
+    const form = attach(createForm());
+    const array = attach(form.createArrayField({ name: "array" }));
+
+    attach(form.createObjectField({ basePath: "array", name: "0" }));
+    attach(form.createObjectField({ basePath: "array.0", name: "input", value: "123" }));
+
+    // 带有 value 的数组重置，会将数组下的字段全部清空
+    form.reset("*");
+    expect(form.values).toEqual({ array: [] });
+    expect(form.fields["array.0"]).toBeUndefined();
+    expect(array.value).toEqual([]);
+
+    // 带有  initialValue 的数组重置，数组字段会变成一个空的对象值
+    attach(form.createObjectField({ basePath: "array", name: "0" }));
+    attach(form.createObjectField({ basePath: "array.0", initialValue: "123", name: "input" }));
+
+    form.reset("*");
+    expect(form.values).toEqual({ array: {} });
+    expect(form.fields["array.0"]).toBeUndefined();
+    expect(array.value).toEqual({});
+
+    // 强制清空带有 initialValue 的数组字段，效果同 value
+    // 但是有一点，重复创建带有 initialValue 的字段，会不受数组字段清空销毁，因此下面获取数组下的字段并非 unndefined
+    // 同理，如果重复创建带有 initialValue 的字段，如果不强制清空的清空下，值也会被保留
+    attach(form.createObjectField({ basePath: "array", name: "0" }));
+    attach(form.createObjectField({ basePath: "array.0", initialValue: "123", name: "input" }));
+
+    form.reset("*", { forceClear: true });
+    expect(form.values).toEqual({ array: [] });
+    expect(form.fields["array.0"]).toBeDefined();
+    expect(array.value).toEqual([]);
+});
+
+// 数组字段删除节点不会导致内存泄露
+test("array field remove can not memory leak", () => {
+    const handler = jest.fn();
+    const form = attach(createForm({
+        values: {
+            array: [{ aa: 1 }, { aa: 2 }]
+        },
+        effects() {
+            onFieldValueChange("array.*.aa", handler);
+        }
+    }));
+
+    const array = attach(form.createArrayField({ name: "array" }));
+    attach(form.createObjectField({ basePath: "array", name: "0" }));
+    attach(form.createField({ basePath: "array.0", name: "aa" }));
+    attach(form.createObjectField({ basePath: "array", name: "1" }));
+    attach(form.createField({ basePath: "array.1", name: "aa" }));
+
+    const bb = attach(form.createField({
+        basePath: "array.1",
+        name: "bb",
+        reactions: field => {
+            field.visible = field.query(".aa").value() === "123";
+        }
+    }));
+
+    expect(bb.visible).toBeFalsy();
+
+    // 删除下标 0 的字段，后面的字段你将自动向上移动一位
+    array.remove(0);
+    expect(form.fields["array.1.aa"]).toBeUndefined();
+
+    // 修改值后，使其展示
+    form.query("array.0.aa").take(field => {
+        if (isField(field)) field.value = "123";
+    });
+    expect(bb.visible).toBeTruthy();
+
+    // 这个是否发现只调用了 1 次，再次说明
+    // onFieldValueChange 在数组字段添加、删除节点不触发、只有修改值的时候才触发
+    expect(handler).toHaveBeenCalledTimes(1);
+});
+
+// 数组字段修补值
+test("array field patch values", () => {
+    const form = attach(createForm());
+    const arr = attach(form.createArrayField({ name: "a" }));
+
+    arr.unshift({});
+    attach(form.createObjectField({ basePath: "a", name: "0" }));
+    attach(form.createField({ basePath: "a.0", initialValue: "A", name: "c" }));
+    expect(form.values).toEqual({ a: [{ c: "A" }] });
+
+    // 再次重头部插入一个对象，之前的字段将后移一位
+    arr.unshift({});
+    expect(form.fields["a.1.c"]).toBeDefined();
+
+    // 在这里添加头部字段，但和文档不同，不用添加下标 1 的字段，因为已存在
+    attach(form.createObjectField({ basePath: "a", name: "0" }));
+    attach(form.createField({ basePath: "a.0", initialValue: "A", name: "c" }));
+    expect(form.values).toEqual({ a: [{ c: "A" }, { c: "A" }] });
+});
+
+// 数组字段初始值通过 remove 删除
+test("array remove with initialValues", () => {
+    const initialValues = {
+        array: [{ a: 1 }, { a: 2 }],
+    };
+    
+    const form = attach(createForm({ initialValues }));
+    const array = attach(form.createArrayField({ name: "array" }));
+
+    attach(form.createObjectField({ basePath: "array", name: "0" }));
+    attach(form.createObjectField({ basePath: "array", name: "1" }));
+    attach(form.createField({ basePath: "array.0", name: "a" }));
+    attach(form.createField({ basePath: "array.1", name: "a" }));
+    expect(form.values).toEqual(initialValues);
+
+    // 删除下标 1，value 会改变，initialValue 不改变
+    array.remove(1);
+    expect(form.values).toEqual({ array: [{ a: 1 }] });
+    expect(form.initialValues).toEqual(initialValues);
+
+    // 重置字段，拥有初始字段不受影响，但是下标 1 的字段在此之前已经 remove 了
+    form.reset();
+    expect(form.fields["array.0.a"]).toBeDefined();
+    expect(form.fields["array.1.a"]).toBeUndefined();
+
+    // 重新添加下标 1 的字段，文档中重复创建了下标 0 的字段，会被忽略
+    attach(form.createObjectField({ basePath: "array", name: "1" }));
+    attach(form.createField({ basePath: "array.1", name: "a" }));
+
+    expect(form.values).toEqual(initialValues);
+    expect(form.initialValues).toEqual(initialValues);
+
+    // 再次重置，值和字段都不变，因为数组的初始值不受 reset 改变
+    form.reset();
+    expect(form.fields["array.0.a"]).toBeDefined();
+    expect(form.fields["array.1.a"]).toBeDefined();
+
+    // 只有强制清除才能清空字段和值
+    form.reset("*", { forceClear: true });
+    expect(form.values).toEqual({ array: [] });
+    expect(form.fields["array.0.a"]).toBeUndefined();
+    expect(form.fields["array.1.a"]).toBeUndefined();
+});
+
+// 从 records 中查找数组字段
+test("records: find array fields", () => {
+    const initialValues = {
+        array: [{ a: 1 }, { a: 2 }]
+    }
+
+    const form = attach(createForm({ initialValues }));
+    attach(form.createArrayField({ name: "array" }));
+    attach(form.createObjectField({ basePath: "array", name: "0" }));
+    attach(form.createObjectField({ basePath: "array", name: "1" }));
+
+    const field0 = attach(form.createField({ basePath: "array.0", name: "a" }));
+    const field1 = attach(form.createField({ basePath: "array.1", name: "a" }));
+
+    expect(field0.records.length).toBe(2);
+    expect(field0.records).toEqual(initialValues.array);
+    expect(field1.records).toEqual(initialValues.array);
+    expect(field0.record).toEqual(initialValues.array[0]);
+    expect(field1.record).toEqual(initialValues.array[1]);
+});
+
+// 在数组嵌套字段中查找 record
+test("record: find array nest field record", () => {
+    const initialValues = {
+        array: [{ a: { b: { c: 1, d: 1 } } }, { a: { b: { c: 2, d: 2 } } }]
+    };
+
+    const form = attach(createForm({ initialValues }));
+    attach(form.createArrayField({ name: "array" }));
+    attach(form.createObjectField({ basePath: "array", name: "0" }));
+    attach(form.createObjectField({ basePath: "array.0", name: "a" }));
+    attach(form.createObjectField({ basePath: "array.0.a", name: "b" }));
+    attach(form.createObjectField({ basePath: "array", name: "1" }));
+    attach(form.createObjectField({ basePath: "array.1", name: "a" }));
+    attach(form.createObjectField({ basePath: "array.1.a", name: "b" }));
+
+    const field0 = attach(form.createField({ basePath: "array.0.a.b", name: "c" }));
+    const field1 = attach(form.createField({ basePath: "array.1.a.b", name: "c" }));
+    const field2 = attach(form.createField({ basePath: "array.1.a.b.c", name: "cc" }));
+
+    expect(field0.records.length).toBe(2);
+    expect(field1.records.length).toBe(2);
+    
+    // records 会找到最近的对象字段集合
+    expect(field1.records).toEqual(initialValues.array);
+
+    // 而 record 则找到最近的字段
+    expect(field0.record).toEqual({ c: 1, d: 1 });
+    expect(field1.record).toEqual({ c: 2, d: 2 });
+
+    // 如果当前字段是 undefined，就往上找一级
+    expect(field2.record).toEqual({ c: 2, d: 2 });
+
+    // 重新做个测试
+    const form1 = attach(createForm({ 
+        initialValues: {
+            array: [
+                { a: [{ c: [1, 2], d: [1, 2] }] }, 
+                { a: [{ c: [1, 2], d: [1, 2] }] }
+            ]
+        } 
+    }));
+
+    attach(form1.createArrayField({ name: "array" }));
+    attach(form1.createObjectField({ basePath: "array", name: "0" }));
+    attach(form1.createArrayField({ basePath: "array.0", name: "a" }));
+    attach(form1.createObjectField({ basePath: "array.0.a", name: "0" }));
+    const a0c0 = attach(form1.createArrayField({ basePath: "array.0.a.0", name: "c" }));
+    attach(form1.createField({ basePath: "array.0.a.0.c", name: "0" }));
+    attach(form1.createField({ basePath: "array.0.a.0.c", name: "1" }));
+    attach(form1.createArrayField({ basePath: "array.0.a.0", name: "d" }));
+    attach(form1.createField({ basePath: "array.0.a.0.d", name: "0" }));
+    const a0d1 = attach(form1.createField({ basePath: "array.0.a.0.d", name: "1" }));
+
+    attach(form1.createObjectField({ basePath: "array", name: "1" }));
+    attach(form1.createArrayField({ basePath: "array.1", name: "a" }));
+    attach(form1.createObjectField({ basePath: "array.1.a", name: "0" }));
+    const a1c0 = attach(form1.createArrayField({ basePath: "array.1.a.0", name: "c" }));
+    attach(form1.createField({ basePath: "array.1.a.0.c", name: "0" }));
+    attach(form1.createField({ basePath: "array.1.a.0.c", name: "1" }));
+    attach(form1.createArrayField({ basePath: "array.1.a.0", name: "d" }));
+    attach(form1.createField({ basePath: "array.1.a.0.d", name: "0" }));
+    const a1d1 = attach(form1.createField({ basePath: "array.1.a.0.d", name: "1" }));
+
+    expect(a0d1.records.length).toBe(2);
+    expect(a1d1.records.length).toBe(2);
+    
+    // records 会找到最近的对象字段集合
+    expect(a1d1.records).toEqual([1, 2]);
+
+    // 在当前集合中找到自身匹配的字段值
+    expect(a0d1.record).toBe(2);
+    expect(a1d1.record).toBe(2);
+
+    expect(a0c0.records).toEqual([{ c: [1, 2], d: [1, 2] }]);
+    expect(a1c0.records).toEqual([{ c: [1, 2], d: [1, 2] }]);
+    expect(a0c0.record).toEqual({ c: [1, 2], d: [1, 2] });
+    expect(a1c0.record).toEqual({ c: [1, 2], d: [1, 2] });
+});
+
+// 查找数组字段中的集合
+test("record: find array field record", () => {
+    const form = attach(createForm({
+        initialValues: {
+            array: [1, 2, 3]
+        }
+    }));
+
+    attach(form.createArrayField({ name: "array" }));
+    const field = attach(form.createField({ basePath: "array", name: "0" }));
+
+    expect(field.records.length).toBe(3);
+    expect(field.record).toEqual(1);
+});
+
+// 获取对象字段的集合
+test("record: find object field record", () => {
+    const form = attach(createForm({
+        initialValues: {
+            a: { b: { c: 1, d: 1 } }
+        }
+    }));
+
+    attach(form.createObjectField({ name: "a" }));
+    attach(form.createObjectField({ basePath: "a", name: "b" }));
+
+    // 对象中不能获取上级集合，只有数组中才有，但是可以拿自身的集合
+    const field = attach(form.createObjectField({ basePath: "a.b", name: "c" }));
+    expect(field.records).toBeUndefined();
+    expect(field.record).toEqual({ c: 1, d: 1 });
+});
+
+// 获取表单的集合
+test("record: find form fields", () => {
+    const initialValues = {
+        array: [{ a: 1 }, { a: 2 }],
+    };
+
+    const form = attach(createForm({ initialValues }));
+    const array = attach(form.createArrayField({ name: "array" }));
+    
+    // 表单根字段，则获取的集合是整个表单的值
+    expect(array.record).toEqual(initialValues);
 });
