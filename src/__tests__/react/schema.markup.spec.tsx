@@ -140,5 +140,35 @@ describe("markup schema field", () => {
         expect(queryByTestId("input")).toBeVisible();
     });
 
-    // 子节点
+    // 子节点 - 通过 props 设置 children
+    test("props children", () => {
+        const form = createForm();
+        const { queryByTestId } = render(
+            <Markup form={form}>
+                <SchemaField.Void
+                    x-component="TextComponent"
+                    x-component-props={{ children: "props", name: "children-test" }}
+                />
+            </Markup>,
+        );
+        expect(queryByTestId("children-test")).toBeVisible();
+        expect(queryByTestId("children-test")?.innerHTML).toEqual("props");
+    });
+
+    // 通过 x-content 设置 children
+    test("x-content", () => {
+        const form = createForm();
+        const { queryByTestId } = render(
+            <Markup form={form}>
+                <SchemaField.Void
+                    x-component="TextComponent"
+                    x-content="content"
+                    x-component-props={{ name: "content-test" }}
+                />
+            </Markup>,
+        );
+
+        expect(queryByTestId("content-test")).toBeVisible();
+        expect(queryByTestId("content-test")?.innerHTML).toEqual("content");
+    });
 });
