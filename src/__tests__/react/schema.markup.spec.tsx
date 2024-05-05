@@ -2,7 +2,7 @@ import { Form, createForm } from "@formily/core";
 import { FormProvider, createSchemaField } from "@formily/react";
 import { render } from "@testing-library/react";
 import { FC, PropsWithChildren } from "react";
-import { ArrayComponent, Input, ObjectComponent, TextComponent, VoidComponent } from "./SchemaComs";
+import { ArrayComponent, CustomObject, Input, ObjectComponent, TextComponent, VoidComponent } from "./SchemaComs";
 
 // 标记模型字段
 describe("markup schema field", () => {
@@ -170,5 +170,40 @@ describe("markup schema field", () => {
 
         expect(queryByTestId("content-test")).toBeVisible();
         expect(queryByTestId("content-test")?.innerHTML).toEqual("content");
+    });
+});
+
+// 字段递归
+describe("recursion field", () => {
+    const SchemaField = createSchemaField({
+        components: {
+            CustomObject,
+            Input,
+        },
+    });
+    const Markup: FC<PropsWithChildren<{ form: Form }>> = ({ children, form }) => (
+        <FormProvider form={form}>
+            <SchemaField>{children}</SchemaField>
+        </FormProvider>
+    );
+
+    // 只渲染 schema properties
+    test("onlyRenderProperties", () => {
+        const form = createForm();
+        const { queryAllByTestId } = render(
+            <Markup form={form}>
+                <SchemaField.Object x-component="CustomObject" x-component-props={{ onlyRenderProperties: false }}>
+                    <SchemaField.String x-component="Input" />
+                </SchemaField.Object>
+                <SchemaField.Object x-component="CustomObject">
+                    <SchemaField.String x-component="Input" />
+                </SchemaField.Object>
+                <SchemaField.Void x-component="CustomObject">
+                    <SchemaField.String x-component="Input" />
+                </SchemaField.Void>
+            </Markup>,
+        );
+
+        // expect(queryAllByTestId("object").length).toEqual(1);
     });
 });

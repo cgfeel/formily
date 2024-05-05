@@ -1,5 +1,5 @@
 import { ArrayField, ObjectField } from "@formily/core";
-import { useField } from "@formily/react";
+import { IRecursionFieldProps, RecursionField, useField, useFieldSchema } from "@formily/react";
 import { FC, InputHTMLAttributes, PropsWithChildren } from "react";
 
 export const ArrayComponent: FC = () => {
@@ -9,6 +9,21 @@ export const ArrayComponent: FC = () => {
             {value.map((_, index) => (
                 <Input key={index} value="" onChange={val => console.log(val)} />
             ))}
+        </div>
+    );
+};
+
+export const CustomObject: FC<CustomObjectProps> = ({ name = "object", onlyRenderProperties = true }) => {
+    const field = useField();
+    const schema = useFieldSchema();
+    return (
+        <div data-testid={name}>
+            <RecursionField
+                basePath={onlyRenderProperties ? field.address : undefined}
+                name={onlyRenderProperties ? schema.name : undefined}
+                schema={schema}
+                onlyRenderProperties={onlyRenderProperties}
+            />
         </div>
     );
 };
@@ -35,3 +50,7 @@ export const TextComponent: FC<PropsWithChildren<{ name?: string }>> = ({ childr
 export const VoidComponent: FC<PropsWithChildren> = ({ children }) => (
     <div data-testid="void-component">{children}</div>
 );
+
+interface CustomObjectProps extends Pick<IRecursionFieldProps, "onlyRenderProperties"> {
+    name?: string;
+}
