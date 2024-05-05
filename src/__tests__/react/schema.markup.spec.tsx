@@ -195,15 +195,17 @@ describe("recursion field", () => {
                 <SchemaField.Object x-component="CustomObject" x-component-props={{ onlyRenderProperties: false }}>
                     <SchemaField.String x-component="Input" />
                 </SchemaField.Object>
-                <SchemaField.Object x-component="CustomObject">
+                <SchemaField.Object x-component="CustomObject" x-component-props={{ name: "only-properties" }}>
                     <SchemaField.String x-component="Input" />
                 </SchemaField.Object>
-                <SchemaField.Void x-component="CustomObject">
+                <SchemaField.Void x-component="CustomObject" x-component-props={{ name: "only-properties" }}>
                     <SchemaField.String x-component="Input" />
                 </SchemaField.Void>
             </Markup>,
         );
 
-        // expect(queryAllByTestId("object").length).toEqual(1);
+        expect(queryAllByTestId("input").length).toEqual(3);
+        expect(queryAllByTestId("object").length).toEqual(1);
+        expect(queryAllByTestId("only-properties").length).toEqual(2);
     });
 });

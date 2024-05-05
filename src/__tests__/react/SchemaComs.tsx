@@ -13,6 +13,7 @@ export const ArrayComponent: FC = () => {
     );
 };
 
+// 设置 onlyRenderProperties 时，不能设置 path 否则会无限循环
 export const CustomObject: FC<CustomObjectProps> = ({ name = "object", onlyRenderProperties = true }) => {
     const field = useField();
     const schema = useFieldSchema();
