@@ -69,6 +69,10 @@ export const VoidComponent: FC<PropsWithChildren> = ({ children }) => (
     <div data-testid="void-component">{children}</div>
 );
 
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+    testid?: string;
+}
+
 export interface MarkupProps extends Pick<ISchemaFieldProps, "components" | "name" | "schema" | "scope"> {
     form: Form;
 }
@@ -86,10 +90,6 @@ interface CustomObjectProps
         "filterProperties" | "mapProperties" | "onlyRenderProperties" | "propsRecursion" | "onlyRenderSelf"
     > {
     name?: string;
-}
-
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-    testid?: string;
 }
 
 type OnChangeType<T extends any = any> = (val: T) => void;
