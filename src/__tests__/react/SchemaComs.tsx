@@ -69,7 +69,7 @@ export const VoidComponent: FC<PropsWithChildren> = ({ children }) => (
     <div data-testid="void-component">{children}</div>
 );
 
-export interface MarkupProps extends Pick<ISchemaFieldProps, "components" | "scope"> {
+export interface MarkupProps extends Pick<ISchemaFieldProps, "components" | "name" | "scope"> {
     form: Form;
 }
 
