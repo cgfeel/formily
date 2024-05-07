@@ -1,9 +1,10 @@
 import { createForm } from "@formily/core";
-import { FormProvider, createSchemaField } from "@formily/react";
+import { FormProvider, RecordScope, RecordsScope, createSchemaField } from "@formily/react";
 import { act, fireEvent, render, waitFor } from "@testing-library/react";
 import { FC, PropsWithChildren } from "react";
 import {
     ArrayComponent,
+    Button,
     CustomObject,
     IllegalObject,
     Input,
@@ -186,6 +187,7 @@ describe("markup schema field", () => {
 describe("recursion field", () => {
     const SchemaField = createSchemaField({
         components: {
+            Button,
             CustomObject,
             IllegalObject,
             Input,
@@ -199,8 +201,8 @@ describe("recursion field", () => {
     );
 
     // 只渲染 schema properties，在一个对象字段中，子节点都是 properties
-    // 实际测试过程中，加上 onlyRenderProperties 会将自身作为子集
-    // 这个时候如果给 RecursionField 加上 path，就会无限循环，反之则不会将自身作为子集
+    // 不加 onlyRenderProperties 会渲染自身，这个时候再加上 name 和 basePath，就会一层层无限循环
+    // 加上这个属性就只渲染 properties，也就会避免上述说的无限循环
     test("onlyRenderProperties", () => {
         const form = createForm();
         const { queryAllByTestId } = render(
@@ -624,5 +626,279 @@ describe("recursion field", () => {
             expect(form.query("input").get("required")).toBeTruthy();
             expect(form.query("input").get("validator")).toEqual([{ required: true }, { format: "email" }]);
         });
+    });
+
+    // 模型根据值响应
+    test("schema x-reactions when undefined", async () => {
+        const form = createForm();
+        const { queryByTestId } = render(
+            <Markup form={form}>
+                <SchemaField.String name="input" x-component="Input" required />
+                <SchemaField.String
+                    name="select"
+                    x-component="Input"
+                    x-component-props={{ testid: "select" }}
+                    x-reactions={{
+                        when: "{{$values.input}}",
+                        fulfill: {
+                            state: {
+                                visible: true,
+                            },
+                        },
+                        otherwise: {
+                            state: {
+                                visible: false,
+                            },
+                        },
+                    }}
+                    required
+                />
+            </Markup>,
+        );
+        await waitFor(() => {
+            expect(queryByTestId("input")).toBeVisible();
+            expect(queryByTestId("select")).toBeNull();
+        });
+        act(() => {
+            form.values.input = "123";
+        });
+        await waitFor(() => {
+            expect(queryByTestId("input")).toBeVisible();
+            expect(queryByTestId("select")).toBeVisible();
+        });
+    });
+
+    // 虚拟节点的子集
+    test("void field children", async () => {
+        const form = createForm();
+        const { queryByTestId } = render(
+            <Markup form={form}>
+                <SchemaField.Void
+                    x-component="TextComponent"
+                    x-component-props={{ name: "btn" }}
+                    x-content="placeholder"
+                />
+            </Markup>,
+        );
+        await waitFor(() => {
+            expect(queryByTestId("btn")?.textContent).toEqual("placeholder");
+        });
+    });
+
+    // 在响应执行过程中，调用第三方字段的值
+    test("x-reactions runner for target", async () => {
+        const form = createForm();
+        const getTarget = jest.fn();
+
+        // 这里的 button 使用 value 作为 children，而通过 onChange 触发更新 value
+        const { queryByTestId } = render(
+            <Markup form={form} scope={{ getTarget }}>
+                <SchemaField.String default="333" name="target" x-component="Input" />
+                <SchemaField.String
+                    x-component="Button"
+                    x-content="Click"
+                    x-component-props={{
+                        onClick: (event, onChange) => {
+                            event.preventDefault();
+                            onChange && onChange(" 123");
+                        },
+                    }}
+                    // 这里 onFieldInputValueChange 的作用是，当自身的值改变后执行响应，并将目标对象的值传过去
+                    // 而发起改变是通过 click 中发起 onChange
+                    x-reactions={[
+                        {
+                            target: ["target"],
+                            effects: ["onFieldInputValueChange"],
+                            fulfill: {
+                                run: "{{getTarget($target.value)}}",
+                            },
+                        },
+                    ]}
+                />
+            </Markup>,
+        );
+
+        const btn = queryByTestId("btn");
+        expect(btn).toBeVisible();
+
+        btn && fireEvent.click(btn);
+        await waitFor(() => {
+            expect(queryByTestId("btn")?.textContent).toEqual("Click 123");
+            expect(getTarget).toHaveBeenCalledWith("333");
+            expect(getTarget).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    // 多个响应的副作用隔离
+    test("multi x-reactions isolate effect", async () => {
+        const form = createForm();
+        const otherEffect = jest.fn();
+        const { getByTestId, queryByTestId } = render(
+            <Markup form={form}>
+                <SchemaField.String
+                    name="target"
+                    x-component="Input"
+                    x-reactions={[
+                        otherEffect,
+                        {
+                            dependencies: ["btn"],
+                            fulfill: {
+                                state: {
+                                    visible: "{{$deps[0] === '123'}}",
+                                },
+                            },
+                        },
+                    ]}
+                />
+                <SchemaField.String
+                    name="btn"
+                    x-component="Button"
+                    x-content="Click "
+                    x-component-props={{
+                        onClick: (event, onChange) => {
+                            event.preventDefault();
+                            onChange && onChange("123");
+                        },
+                    }}
+                />
+            </Markup>,
+        );
+        await waitFor(() => {
+            expect(queryByTestId("input")).toBeNull();
+        });
+
+        fireEvent.click(getByTestId("btn"));
+        await waitFor(() => {
+            expect(getByTestId("btn").textContent).toEqual("Click 123");
+            expect(getByTestId("input")).toBeVisible();
+            expect(otherEffect).toHaveBeenCalledTimes(1);
+        });
+
+        // 修改值只想做一个测试，otherEffect 只在初始化时执行一次，不会随着每次联动调用
+        // 因为它的内部并没有通过 field.query 或 form.values 添加依赖
+        act(() => {
+            form.values.btn = "321";
+        });
+
+        await waitFor(() => {
+            expect(getByTestId("btn").textContent).toEqual("Click 321");
+            expect(queryByTestId("input")).toBeNull();
+            expect(otherEffect).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    // 嵌套作用域集合 - 这里 RecordScope 一定要在 FormProvider 内部，SchemaField 外部
+    test("nested record scope", async () => {
+        const form = createForm();
+        const { queryByTestId } = render(
+            <FormProvider form={form}>
+                <RecordScope getIndex={() => 1} getRecord={() => ({ bb: "321" })}>
+                    <RecordScope getIndex={() => 2} getRecord={() => ({ aa: "123" })}>
+                        <SchemaField>
+                            <SchemaField.Void
+                                x-component="TextComponent"
+                                x-content="{{$record.aa + $record.$lookup.bb + $index + $lookup.$index}}"
+                                x-component-props={{ name: "text" }}
+                            />
+                        </SchemaField>
+                    </RecordScope>
+                </RecordScope>
+            </FormProvider>,
+        );
+        await waitFor(() => {
+            expect(queryByTestId("text")?.textContent).toEqual("12332121");
+        });
+    });
+
+    // 作用域集合字面量 - 这里 RecordScope 一定要在 FormProvider 内部，SchemaField 外部
+    test("literal record scope", async () => {
+        const form = createForm();
+        const { queryByTestId } = render(
+            <FormProvider form={form}>
+                <RecordScope getIndex={() => 2} getRecord={() => "123"}>
+                    <SchemaField>
+                        <SchemaField.Void
+                            x-component="TextComponent"
+                            x-content="{{$record + $index}}"
+                            x-component-props={{ name: "text" }}
+                        />
+                    </SchemaField>
+                </RecordScope>
+            </FormProvider>,
+        );
+        await waitFor(() => {
+            expect(queryByTestId("text")?.textContent).toEqual("1232");
+        });
+    });
+
+    // 作用域集合 - 这里 RecordScope 一定要在 FormProvider 内部，SchemaField 外部
+    test("records scope", async () => {
+        const form = createForm();
+        const { queryByTestId } = render(
+            <FormProvider form={form}>
+                <RecordsScope getRecords={() => [1, 2, 3]}>
+                    <SchemaField>
+                        <SchemaField.Void
+                            x-component="TextComponent"
+                            x-content="{{$records[2]}}"
+                            x-component-props={{ name: "text" }}
+                        />
+                    </SchemaField>
+                </RecordsScope>
+            </FormProvider>,
+        );
+        await waitFor(() => {
+            expect(queryByTestId("text")?.textContent).toEqual("3");
+        });
+    });
+
+    // 是否递归传递 mapProperties 和 filterProperties
+    // mapProperties: schema properties映射器，主要用于改写schema
+    // filterProperties: schema properties过滤器，被过滤掉的schema节点不会被渲染
+    test("propsRecursion as true", () => {
+        const form = createForm();
+        const { queryAllByTestId } = render(
+            <Markup form={form}>
+                <SchemaField.Object
+                    x-component="CustomObject"
+                    x-component-props={{
+                        propsRecursion: true,
+                        filterProperties: schema => schema["x-component"] !== "Input",
+                    }}>
+                    <SchemaField.String x-component="Input" />
+                    <SchemaField.Object x-component="TextComponent" x-component-props={{ name: "text" }}>
+                        <SchemaField.String x-component="Input" />
+                    </SchemaField.Object>
+                </SchemaField.Object>
+            </Markup>,
+        );
+
+        // object 是 RecursionField 本身的 testid，所以我加了一个组件 TextComponent
+        // 这样就证明了只过滤了组件 Input
+        expect(queryAllByTestId("input").length).toBe(0);
+        expect(queryAllByTestId("object").length).toBe(1);
+        expect(queryAllByTestId("text").length).toBe(1);
+    });
+
+    // 不提供 propsRecursion 过滤 schema 只能过滤下一级字段，对于更深层次的字段不能过滤
+    test("propsRecursion as empty", () => {
+        const form = createForm();
+        const { queryAllByTestId } = render(
+            <Markup form={form}>
+                <SchemaField.Object
+                    x-component="CustomObject"
+                    x-component-props={{
+                        filterProperties: schema => schema["x-component"] !== "Input",
+                    }}>
+                    <SchemaField.String x-component="Input" />
+                    <SchemaField.Object x-component="TextComponent" x-component-props={{ name: "text" }}>
+                        <SchemaField.String x-component="Input" />
+                    </SchemaField.Object>
+                </SchemaField.Object>
+            </Markup>,
+        );
+        expect(queryAllByTestId("input").length).toBe(1);
+        expect(queryAllByTestId("object").length).toBe(1);
+        expect(queryAllByTestId("text").length).toBe(1);
     });
 });

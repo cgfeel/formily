@@ -1,6 +1,6 @@
 import { ArrayField, Form, ObjectField } from "@formily/core";
 import { IRecursionFieldProps, ISchemaFieldProps, RecursionField, useField, useFieldSchema } from "@formily/react";
-import { FC, InputHTMLAttributes, PropsWithChildren } from "react";
+import { DOMAttributes, FC, InputHTMLAttributes, PropsWithChildren } from "react";
 
 export const ArrayComponent: FC = () => {
     const { value } = useField<ArrayField>();
@@ -13,7 +13,14 @@ export const ArrayComponent: FC = () => {
     );
 };
 
-// 设置 onlyRenderProperties 时，不能设置 path 否则会无限循环
+export const Button: FC<PropsWithChildren<ButtonProps>> = ({ children, value, onChange, onClick, testid = "btn" }) => (
+    <button data-testid={testid} onClick={e => onClick && onClick(e, onChange)}>
+        {children}
+        {value}
+    </button>
+);
+
+// 没有设置 onlyRenderProperties 时，不能设置 path 否则会无限循环
 export const CustomObject: FC<CustomObjectProps> = ({ onlyRenderProperties, name = "object", ...props }) => {
     const field = useField();
     const schema = useFieldSchema();
@@ -66,10 +73,17 @@ export interface MarkupProps extends Pick<ISchemaFieldProps, "components" | "sco
     form: Form;
 }
 
+interface ButtonProps<T extends DOMAttributes<HTMLButtonElement> = DOMAttributes<HTMLButtonElement>, V = any> {
+    testid?: string;
+    value?: V;
+    onClick?: (event: Parameters<Exclude<T["onClick"], undefined>>[0], onChange?: OnChangeType<V>) => void;
+    onChange?: OnChangeType<V>;
+}
+
 interface CustomObjectProps
     extends Pick<
         IRecursionFieldProps,
-        "filterProperties" | "mapProperties" | "onlyRenderProperties" | "onlyRenderSelf"
+        "filterProperties" | "mapProperties" | "onlyRenderProperties" | "propsRecursion" | "onlyRenderSelf"
     > {
     name?: string;
 }
@@ -77,3 +91,5 @@ interface CustomObjectProps
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     testid?: string;
 }
+
+type OnChangeType<T extends any = any> = (val: T) => void;
