@@ -13,8 +13,15 @@ export const ArrayComponent: FC = () => {
     );
 };
 
-export const Button: FC<PropsWithChildren<ButtonProps>> = ({ children, value, onChange, onClick, testid = "btn" }) => (
-    <button data-testid={testid} onClick={e => onClick && onClick(e, onChange)}>
+export const Button: FC<PropsWithChildren<ButtonProps>> = ({
+    children,
+    disabled,
+    value,
+    onChange,
+    onClick,
+    testid = "btn",
+}) => (
+    <button disabled={disabled} data-testid={testid} onClick={e => onClick && onClick(e, onChange)}>
         {children}
         {value}
     </button>
@@ -78,6 +85,7 @@ export interface MarkupProps extends Pick<ISchemaFieldProps, "components" | "nam
 }
 
 interface ButtonProps<T extends DOMAttributes<HTMLButtonElement> = DOMAttributes<HTMLButtonElement>, V = any> {
+    disabled?: true;
     testid?: string;
     value?: V;
     onClick?: (event: Parameters<Exclude<T["onClick"], undefined>>[0], onChange?: OnChangeType<V>) => void;
