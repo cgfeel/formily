@@ -47,6 +47,7 @@ describe("normal action", () => {
             obs.aa.bb = 444;
         });
         expect(handler).toHaveBeenCalledTimes(4);
+        expect(obs.aa.bb).toBe(444);
     });
 
     // 在跟踪函数中设置批量动作，批量动作不会被跟踪
@@ -73,5 +74,36 @@ describe("normal action", () => {
         obs.aa.bb = 321;
         expect(handler).toHaveBeenCalledTimes(1);
         expect(obs.cc).toBe(21);
+    });
+
+    // action 高阶绑定，和批量操作一样
+    // 除了回调函数之外，还接受一个上下文作为第二个参数
+    test("action.bound", () => {
+        const obs = observable({ aa: { bb: 123 } });
+        const handler = jest.fn();
+
+        // action.bound 不会立即执行，会返回一个函数以便需要时执行
+        const setData = action.bound!((data: number[]) => {
+            obs.aa.bb = data[0]??0;
+            obs.aa.bb = data[1]??0;
+        });
+
+        expect(handler).toHaveBeenCalledTimes(0);
+        autorun(() => {
+            handler(obs.aa.bb);
+        });
+
+        // 设置 autorun 之后会执行一次
+        expect(handler).toHaveBeenCalledTimes(1);
+
+        // 增加 2 次值修改
+        obs.aa.bb = 111;
+        obs.aa.bb = 222;
+        expect(handler).toHaveBeenCalledTimes(3);
+
+        // 批量执行只计算一次
+        setData([333, 444]);
+        action.bound!(() => {});
+        expect(handler).toHaveBeenCalledTimes(4);
     });
 });
