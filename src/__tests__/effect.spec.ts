@@ -1,4 +1,5 @@
 import { 
+    createEffectContext,
     createForm, 
     isField, 
     onFieldChange, 
@@ -8,6 +9,10 @@ import {
     onFieldMount, 
     onFieldReact, 
     onFieldUnmount, 
+    onFieldValidateEnd, 
+    onFieldValidateFailed, 
+    onFieldValidateStart, 
+    onFieldValidateSuccess, 
     onFieldValueChange, 
     onFormInit, 
     onFormInitialValuesChange, 
@@ -194,7 +199,7 @@ test("onFormSubmit", async () => {
     const submitSuccess = jest.fn();
     const submitFailed = jest.fn();
     const submitValidateStart = jest.fn();
-    const submitValidateFaild = jest.fn();
+    const submitValidateFailed = jest.fn();
     const submitValidateSuccess = jest.fn();
     const submitValidateEnd = jest.fn();
     const submitting = jest.fn();
@@ -207,7 +212,7 @@ test("onFormSubmit", async () => {
             onFormSubmitFailed(submitFailed)
             onFormSubmitSuccess(submitSuccess);
             onFormSubmitValidateStart(submitValidateStart);
-            onFormSubmitValidateFailed(submitValidateFaild);
+            onFormSubmitValidateFailed(submitValidateFailed);
             onFormSubmitValidateSuccess(submitValidateSuccess);
             onFormSubmitValidateEnd(submitValidateEnd);
         }
@@ -229,7 +234,7 @@ test("onFormSubmit", async () => {
 
     // 验证不通过除了验证成功，其他都触发了
     expect(submitValidateStart).toHaveBeenCalledTimes(1);
-    expect(submitValidateFaild).toHaveBeenCalledTimes(1);
+    expect(submitValidateFailed).toHaveBeenCalledTimes(1);
     expect(submitValidateEnd).toHaveBeenCalledTimes(1);
     expect(submitValidateSuccess).not.toHaveBeenCalled();
 
@@ -247,9 +252,9 @@ test("onFormSubmit", async () => {
     expect(submitSuccess).toHaveBeenCalledTimes(1);
     expect(submitting).toHaveBeenCalledTimes(1);
 
-    // 只有 submitValidateFaild 保留上次触发的 1 次，其他都 +1
+    // 只有 submitValidateFailed 保留上次触发的 1 次，其他都 +1
     expect(submitValidateStart).toHaveBeenCalledTimes(2);
-    expect(submitValidateFaild).toHaveBeenCalledTimes(1);
+    expect(submitValidateFailed).toHaveBeenCalledTimes(1);
     expect(submitValidateEnd).toHaveBeenCalledTimes(2);
     expect(submitValidateSuccess).toHaveBeenCalledTimes(1);
 });
@@ -259,14 +264,14 @@ test("onFormSubmit", async () => {
 test("onFormValidate", async () => {
     const validateStart = jest.fn();
     const validateEnd = jest.fn();
-    const validateFaild = jest.fn();
+    const validateFailed = jest.fn();
     const validateSuccess = jest.fn();
 
     const form = attach(createForm({
         effects: () => {
             onFormValidateStart(validateStart);
             onFormValidateEnd(validateEnd);
-            onFormValidateFailed(validateFaild);
+            onFormValidateFailed(validateFailed);
             onFormValidateSuccess(validateSuccess);
         }
     }));
@@ -279,7 +284,7 @@ test("onFormValidate", async () => {
     // 除了验证成功，其他都触发了
     expect(validateStart).toHaveBeenCalledTimes(1);
     expect(validateEnd).toHaveBeenCalledTimes(1);
-    expect(validateFaild).toHaveBeenCalledTimes(1);
+    expect(validateFailed).toHaveBeenCalledTimes(1);
     expect(validateSuccess).not.toHaveBeenCalled();
 
     // 输入一个值再验证
@@ -291,7 +296,7 @@ test("onFormValidate", async () => {
     // 除了验证失败，其他都+1
     expect(validateStart).toHaveBeenCalledTimes(2);
     expect(validateEnd).toHaveBeenCalledTimes(2);
-    expect(validateFaild).toHaveBeenCalledTimes(1);
+    expect(validateFailed).toHaveBeenCalledTimes(1);
     expect(validateSuccess).toHaveBeenCalledTimes(1);
 });
 
@@ -534,4 +539,156 @@ test("onFieldReact", async () => {
     // 所以实际开发过程中也需要注意避免重复执行
     field.setDisplay("hidden");
     expect(react).toHaveBeenCalledTimes(2);
+});
+
+// 字段验证
+test("onFieldValidate", async () => {
+    const validateStart = jest.fn();
+    const validateEnd = jest.fn();
+    const validateSuccess = jest.fn();
+    const validateFailed = jest.fn();
+
+    const form = attach(createForm({
+        effects:() => {
+            onFieldValidateStart("aa", validateStart);
+            onFieldValidateEnd("aa", validateEnd);
+            onFieldValidateSuccess("aa", validateSuccess);
+            onFieldValidateFailed("aa", validateFailed);
+        }
+    }));
+
+    const field = attach(form.createField({ name: "aa", required: true }));
+    try {
+        await field.validate();
+    } catch {}
+
+    expect(validateStart).toHaveBeenCalledTimes(1);
+    expect(validateEnd).toHaveBeenCalledTimes(1);
+    expect(validateFailed).toHaveBeenCalledTimes(1);
+    expect(validateSuccess).not.toHaveBeenCalled();
+
+    field.setValue("123");
+    try {
+        await field.validate();
+    } catch {}
+
+    expect(validateStart).toHaveBeenCalledTimes(2);
+    expect(validateEnd).toHaveBeenCalledTimes(2);
+    expect(validateFailed).toHaveBeenCalledTimes(1);
+    expect(validateSuccess).toHaveBeenCalledTimes(1);
+});
+
+// 副作用里异步监听生命周期会抛出错误
+test("async use will throw error", async () => {
+    const valueChange = jest.fn();
+    const info: Partial<Record<string, Error>> = {};
+
+    const form = attach(createForm({
+        effects: () => {
+            // 和文档不同，这里分别同步和异步设置，来演示它们的差异
+            onFieldValueChange("aa", valueChange);
+            setTimeout(() => {
+                try {
+                    onFieldValueChange("aa", valueChange);
+                } catch (e) {
+                    if (e instanceof Error) info.error = e;
+                }
+            }, 0);
+        }
+    }));
+
+    const aa = attach(form.createField({ name: "aa" }));
+
+    // 这里的 await 是为了适应上面的 setTimeout
+    await sleep(10);
+    aa.setValue("123");
+
+    expect(valueChange).toHaveBeenCalledTimes(1);
+    expect(info.error).toBeDefined();
+});
+
+// 副作用上下文
+test("effect context", async () => {
+    const context = createEffectContext<number>();
+    const context2 = createEffectContext<number>();
+    const context3 = createEffectContext<number>(123);
+    const info: Partial<Record<"result"|"result2", number>> & Partial<Record<"error"|"error2", Error>> = {};
+
+    const consumer = () => {
+        info.result = context.consume();
+    };
+    const consumer2 = () => {
+        // createEffectContext 上下文消费方也不能异步获取
+        setTimeout(() => {
+            try {
+                info.result = context2.consume();
+            } catch (e) {
+                if (e instanceof Error) info.error2 = e;
+            }
+        }, 0);
+    };
+    const consume3 = () => {
+        info.result2 = context3.consume();
+    };
+    attach(createForm({
+        effects: () => {
+            context.provide(123);
+            context3.provide();
+            consumer();
+
+            // createEffectContext 上下文提供方也不能异步获取
+            setTimeout(() => {
+                try {
+                    context2.provide(123);
+                } catch (e) {
+                    if (e instanceof Error) info.error = e;
+                }
+            }, 0);
+            consume3();
+            consumer2();
+        }
+    }));
+    
+    await sleep(10);
+
+    // 由 context 提供
+    expect(info.result).toEqual(123);
+    
+    // context3 没有提供任何值，但默认是 123
+    expect(info.result).toEqual(123);
+
+    // error 由 context2 提供者异步抛出错误
+    expect(info.error).toBeDefined();
+
+    // error2 由 context2 消费方异步抛出错误
+    expect(info.error2).toBeDefined();
+});
+
+// 遍历执行一遍生命周期
+// 暂且屏蔽，只能在内部进行测试，这里通过 form.lifecycles 进行演示
+
+/*import { runEffects } from "@formily/core/esm/shared/effective";
+test("runEffects", () => {
+    // runEffect 第一个参数为要传递的上下文，之后的参数为要循环遍历的回调函数
+    // runEffect 执行前会先清空全局生命周期、清空上下文、设置 effectStart、effectEnd
+    // 执行过程中会为 FormEffectContext 提供传入的 context
+    // 然后遍历每一个传入的回调函数，将上下文作为参数回传过去
+    // 之后清空上下文、设置 effectStart、effectEnd
+    // 最后将整个执行过程中收集到的生命周期作为数组返回
+    const num = runEffects(123, () => {
+        onFormMount(() => {});
+        onFormUnmount(() => {});
+    });
+    expect(num).toEqual(2);
+});*/
+
+// form.lifecycles 的源码 `return runEffects(this, this.props.effects)`
+test("runEffects", () => {
+    const form = attach(createForm({
+        effects: () => {
+            onFormMount(() => {});
+            onFormUnmount(() => {});
+        }
+    }));
+    expect(form.lifecycles.length).toBe(2);
 });
