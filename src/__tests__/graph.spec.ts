@@ -1,4 +1,4 @@
-import { createForm, isField, isObjectField } from "@formily/core";
+import { createForm, isField } from "@formily/core";
 import { attach } from "./shared";
 
 // 获取表单模型，设置表单模型
