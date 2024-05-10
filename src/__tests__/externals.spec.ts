@@ -1,4 +1,6 @@
 import { 
+    Field,
+    Form,
     createEffectHook,
     createForm, 
     isArrayField, 
@@ -15,7 +17,7 @@ import {
     isObjectFieldState, 
     isQuery, 
     isVoidField, 
-    isVoidFieldState 
+    isVoidFieldState, 
 } from "@formily/core";
 import { attach } from "./shared";
 
@@ -77,24 +79,53 @@ test("type checkers", () => {
     expect(isQuery(form.query("*"))).toBeTruthy();
 });
 
+// 自定义 effect
 test("createEffectHook", () => {
-    const info = {};
+    const info: { results: EffectItem[]; error?: Error } = {
+        results: []
+    };
+
     try {
         // 只能在 form 的 effect 中使用
         createEffectHook("xxx")();
-    } catch {}
+    } catch (e) {
+        if (e instanceof Error) info.error = e;
+    }
 
     const form = attach(createForm({
         effects: () => {
             createEffectHook("xxxa")();
-            createEffectHook("yyyb", (form, ctx) => (name: string, age: number) => {
-                console.log('aaa: ' + name);
-                console.log('age: ' + age);
-                console.log(isForm(form), isForm(ctx));
+            createEffectHook("yyyb", (payload, ctx) => (name: string, age: number) => {
+                info.results.push({ name, age, payload, ctx });
             })("name-yy", 18);
         }
     }));
 
+    const field = attach(form.createField({ name: "input" }));
+
     form.notify("xxxa");
     form.notify("yyyb");
+    form.notify("yyyb", field);
+
+    // @ts-ignore eslint 过不去，但方法存在
+    field.notify("yyyb");
+
+    expect(info.error).toBeDefined();
+    expect(info.results.length).toBe(3);
+
+    info.results.forEach(({ name, age, payload, ctx }, i) => {
+        expect(name).toEqual("name-yy");
+        expect(age).toBe(18);
+
+        // form 和 field 触发 notify 时不提供 payload，会将自身传过去
+        expect(i === 0 ? isForm(payload) : isField(payload)).toBeTruthy();
+        expect(isForm(ctx)).toBeTruthy();
+    });
 });
+
+interface EffectItem {
+    name: string;
+    age: number;
+    payload: Form| Field;
+    ctx: Form;
+}
