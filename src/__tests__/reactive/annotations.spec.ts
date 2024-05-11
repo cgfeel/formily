@@ -24,3 +24,8 @@ test("observable annotation", () => {
 
     // 官方文档有个内部方法 getObservableMaker 测试，这里无法调用跳过
 });
+
+test("shallow annotation", () => {
+    const obs = observable.shallow<any>({ aa: 111 });
+    const handler = jest.fn();
+});

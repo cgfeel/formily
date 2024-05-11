@@ -587,6 +587,7 @@ describe("annotation action", () => {
         );
 
         // 初始化后不会立即响应，即便将值修改为一样的也不会响应
+        // 这里初始化不响应，是因为调用 handler 是在 reaction 的第二个参数 subscribe
         obs.aa = 0;
         expect(handler).toHaveBeenCalledTimes(0);
 
@@ -639,6 +640,7 @@ describe("annotation action", () => {
         );
 
         // 改变的值没有变化
+        // 这里初始化不响应，是因为调用 handler 是在 reaction 的第二个参数 subscribe
         obs.aa = 0;
         expect(handler).toHaveBeenCalledTimes(0);
 
