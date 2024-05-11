@@ -1,4 +1,4 @@
-import { isObservable, observe, observable, reaction } from "@formily/reactive";
+import { action, isObservable, observe, observable, reaction } from "@formily/reactive";
 
 // 创建劫持对象 - 默认深度劫持
 test("observable annotation", () => {
@@ -79,4 +79,63 @@ test("box annotation", () => {
     expect(handler).toHaveBeenCalledTimes(2);
     expect(handler).toHaveBeenNthCalledWith(1, 123);
     expect(handler).toHaveBeenNthCalledWith(2, boxValue);
+});
+
+// 创建引用劫持响应式对象
+test("ref annotation", () => {
+    const obs = observable.ref(123);
+    const handler = jest.fn();
+    const handler1 = jest.fn();
+
+    observe(obs, handler1);
+    reaction(() => handler(obs.value));
+
+    obs.value = 333;
+    expect(handler1).toHaveBeenCalledTimes(1);
+    expect(handler).toHaveBeenCalledTimes(2);
+    expect(handler1.mock.calls[0][0]).toMatchObject({ value: 333 });
+    expect(handler).toHaveBeenNthCalledWith(1, 123);
+    expect(handler).toHaveBeenNthCalledWith(2, 333);
+});
+
+// 批量操作中更新劫持对象
+test("action annotation", () => {
+    const obs = observable<Partial<Record<string, number>>>({});
+    const setData = action.bound!(() => {
+        obs.aa = 123;
+        obs.bb = 321;
+    });
+
+    // 这里 handler 作为 reaction 的 subscribe，初始化不会立即执行
+    const handler = jest.fn();
+    reaction(
+        () => [obs.aa, obs.bb],
+        handler,
+    )
+
+    setData();
+    expect(handler).toHaveBeenCalledTimes(1);
+
+    // 触发响应传递的参数，第一个是新参数[aa, bb]，第二个是老参数，由于没有设定所有都是 undefined
+    expect(handler).toHaveBeenCalledWith([123, 321], [undefined, undefined]);
+});
+
+// 非批量操作中更新劫持对象
+test("no action annotation", () => {
+    const obs = observable<Partial<Record<string, number>>>({});
+    const setData = () => {
+        obs.aa = 123;
+        obs.bb = 321;
+    };
+
+    const handler = jest.fn();
+    reaction(
+        () => [obs.aa, obs.bb],
+        handler
+    );
+
+    setData();
+    expect(handler).toHaveBeenCalledTimes(2);
+    expect(handler).toHaveBeenNthCalledWith(1, [123, undefined], [undefined, undefined]);
+    expect(handler).toHaveBeenNthCalledWith(2, [123, 321], [123, undefined]);
 });
