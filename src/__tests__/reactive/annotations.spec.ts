@@ -1,4 +1,4 @@
-import { action, isObservable, observe, observable, reaction } from "@formily/reactive";
+import { action, autorun, isObservable, observe, observable, reaction } from "@formily/reactive";
 
 // 创建劫持对象 - 默认深度劫持
 test("observable annotation", () => {
@@ -138,4 +138,102 @@ test("no action annotation", () => {
     expect(handler).toHaveBeenCalledTimes(2);
     expect(handler).toHaveBeenNthCalledWith(1, [123, undefined], [undefined, undefined]);
     expect(handler).toHaveBeenNthCalledWith(2, [123, 321], [123, undefined]);
+});
+
+// 创建一个计算缓存器
+test("computed annotation", () => {
+    const obs = observable({ aa: 11, bb: 22 });
+    const handler = jest.fn(() => obs.aa + obs.bb);
+    const runner1 = jest.fn();
+    const runner2 = jest.fn();
+    const runner3 = jest.fn();
+
+    const compu = observable.computed(handler);
+    expect(compu.value).toBe(33);
+    expect(handler).toHaveBeenCalledTimes(1);
+
+    // 修改值后，不拿 compu.value 就不会响应
+    obs.aa = 22;
+    expect(handler).toHaveBeenCalledTimes(1);
+
+    // 拿 value 后会增加响应次数
+    expect(compu.value).toBe(44);
+    expect(handler).toHaveBeenCalledTimes(2);
+
+    // autorun 中添加 compu.value 会自动个收集依赖
+    const dispose = autorun(() => {
+        compu.value;
+        runner1();
+    });
+
+    const dispose2 = autorun(() => {
+        compu.value;
+        runner2();
+    });
+
+    // autorun 初始化会调用 1 次
+    expect(runner1).toHaveBeenCalledTimes(1);
+    expect(runner2).toHaveBeenCalledTimes(1);
+
+    // 更新值后会通过 autorun 自动收集依赖、并且通过 compu.value 响应 handler
+    // autorun 有两个，由于第一次修改后，第二次响应值没变，也就只增加响应 1 次
+    obs.bb = 33;
+    expect(handler).toHaveBeenCalledTimes(3);
+
+    // 而 auturun 响应回调函数中会分别执行
+    expect(runner1).toHaveBeenCalledTimes(2);
+    expect(runner2).toHaveBeenCalledTimes(2);
+
+    // 获取计算值，数值没变就不会触发响应
+    expect(compu.value).toEqual(55);
+    expect(handler).toHaveBeenCalledTimes(3);
+
+    // 再次修改 aa
+    obs.aa = 11;
+    expect(runner1).toHaveBeenCalledTimes(3);
+    expect(runner2).toHaveBeenCalledTimes(3);
+    expect(handler).toHaveBeenCalledTimes(4);
+    expect(compu.value).toEqual(44);
+
+    // 停止第一个 autorun 响应，再修改值
+    dispose();
+    obs.aa = 22;
+
+    expect(runner1).toHaveBeenCalledTimes(3);
+    expect(runner2).toHaveBeenCalledTimes(4);
+    expect(handler).toHaveBeenCalledTimes(5);
+    expect(compu.value).toEqual(55);
+
+    // 停止第二个 autorun 响应，再修改值
+    dispose2();
+    obs.aa = 33;
+
+    expect(runner1).toHaveBeenCalledTimes(3);
+    expect(runner2).toHaveBeenCalledTimes(4);
+
+    // autorun 都不响应，也就没有触发 compu.value
+    expect(handler).toHaveBeenCalledTimes(5);
+
+    // 响应计算的值仍旧正常，获取后触发响应
+    expect(compu.value).toEqual(66);
+    expect(handler).toHaveBeenCalledTimes(6);
+
+    // 再次添加 autorun
+    autorun(() => {
+        compu.value;
+        runner3();
+    });
+
+    // 初始化会执行一次
+    expect(runner3).toHaveBeenCalledTimes(1);
+
+    // 数值没更新也就不会触发响应
+    expect(compu.value).toEqual(66);
+    expect(handler).toHaveBeenCalledTimes(6);
+
+    // 再次修改值
+    obs.aa = 11;
+    expect(runner3).toHaveBeenCalledTimes(2);
+    expect(compu.value).toEqual(44);
+    expect(handler).toHaveBeenCalledTimes(7);
 });
