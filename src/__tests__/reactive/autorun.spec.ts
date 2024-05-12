@@ -658,3 +658,38 @@ test("autorun.effect with deps", async () => {
     expect(fn).toHaveBeenLastCalledWith(4);
     expect(effect).toHaveBeenCalledTimes(2);
 });
+
+// autorun.effect 不添加依赖默认为 [{}]
+test("autorun.effect with default deps", async () => {
+    const obs = observable({ bb: 0 });
+    const fn = jest.fn();
+    const effect = jest.fn();
+
+    const dispose = autorun(() => {
+        // 没有依赖的情况下，默认会随每次响应，自动添加一个微任务
+        autorun.effect(() => effect());
+        fn(obs.bb);
+    });
+
+    obs.bb++;
+    obs.bb++;
+    obs.bb++;
+    obs.bb++;
+
+    // 初始化 1 次，递增 4 次，微任务等待执行
+    expect(fn).toHaveBeenCalledTimes(5);
+    expect(fn).toHaveBeenCalledWith(4);
+    expect(effect).toHaveBeenCalledTimes(0);
+
+    await sleep(0);
+    expect(fn).toHaveBeenCalledTimes(5);
+    expect(effect).toHaveBeenCalledTimes(5);
+
+    // 停止响应后再更新数据
+    dispose();
+    obs.bb++;
+
+    await sleep(0);
+    expect(fn).toHaveBeenCalledTimes(5);
+    expect(effect).toHaveBeenCalledTimes(5);
+});
