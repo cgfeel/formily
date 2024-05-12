@@ -1,4 +1,4 @@
-import { action, autorun, isObservable, observe, observable, reaction } from "@formily/reactive";
+import { action, autorun, define, isObservable, model, observe, observable, reaction, untracked } from "@formily/reactive";
 
 // 创建劫持对象 - 默认深度劫持
 test("observable annotation", () => {
@@ -236,4 +236,247 @@ test("computed annotation", () => {
     expect(runner3).toHaveBeenCalledTimes(2);
     expect(compu.value).toEqual(44);
     expect(handler).toHaveBeenCalledTimes(7);
+});
+
+// 创建一个链式计算缓存器
+test("computed chain annotation", () => {
+    const obs = observable({ aa: 11, bb: 22 });
+    const handler1 = jest.fn(() => obs.aa + obs.bb);
+    const compu1 = observable.computed(handler1);
+
+    const handler2 = jest.fn(() => (compu1.value||0) + 33);
+    const compu2 = observable.computed(handler2);
+
+    // 初始化会执行一次
+    const dispose = autorun(() => compu2.value);
+    expect(handler1).toHaveBeenCalledTimes(1);
+    expect(handler2).toHaveBeenCalledTimes(1);
+    
+    // 再次拿到值没有改变，不会重复调用
+    expect(compu2.value).toBe(66);
+    expect(handler1).toHaveBeenCalledTimes(1);
+    expect(handler2).toHaveBeenCalledTimes(1);
+
+    // 修改值后两个值都会重新计算
+    obs.aa = 22;
+    expect(handler1).toHaveBeenCalledTimes(2);
+    expect(handler2).toHaveBeenCalledTimes(2);
+    expect(compu2.value).toBe(77);
+    expect(handler1).toHaveBeenCalledTimes(2);
+    expect(handler2).toHaveBeenCalledTimes(2);
+
+    // 停止响应再修改值，不能自动获取 values 也就不会增加响应次数
+    dispose();
+    obs.aa = 11;
+    expect(handler1).toHaveBeenCalledTimes(2);
+    expect(handler2).toHaveBeenCalledTimes(2);
+
+    // 手动获取 value 会触发响应
+    expect(compu2.value).toBe(66);
+    expect(handler1).toHaveBeenCalledTimes(3);
+    expect(handler2).toHaveBeenCalledTimes(3);
+});
+
+// 快速定义领域模型
+test("computed with array length", () => {
+    const obs = model({
+        // 普通属性自动声明 observable
+        arr: ["1"],
+        // getter/setter 属性自动声明 computed
+        get isEmpty() {
+            return this.arr.length === 0;
+        },
+        get isNotEmpty() {
+            return this.arr.length !== 0;
+        }
+    });
+
+    const handler = jest.fn();
+    autorun(() => {
+        handler(obs.isEmpty);
+        handler(obs.isNotEmpty);
+    });
+
+    // 初始化自动调用两次
+    expect(handler).toHaveBeenCalledTimes(2);
+
+    obs.arr = [];
+    expect(handler).toHaveBeenCalledTimes(4);
+
+    obs.arr = ["4"];
+    expect(handler).toHaveBeenCalledTimes(6);
+});
+
+// 快速定义领域模型 - 创建一个计算缓存器
+test("computed width computed array length", () => {
+    const obs = model({
+        arr: [1],
+        get arr2() {
+            return this.arr.map((item: number) => item + 1);
+        },
+        get isEmpty() {
+            return this.arr2.length === 0;
+        },
+        get isNotEmpty() {
+            return this.arr2.length !== 0;
+        }
+    });
+
+    const handler = jest.fn();
+    const handler2 = jest.fn();
+
+    autorun(() => {
+        handler(obs.isNotEmpty);
+        handler2(obs.arr2);
+    });
+
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler).toHaveBeenCalledWith(true);
+    expect(handler2).toHaveBeenCalledTimes(1);
+    expect(handler2.mock.calls[0][0]).toEqual([2]);
+
+    // 插入一个值，不需要获取对象的 value，就会执行计算缓存器
+    obs.arr.push(2);
+    expect(handler).toHaveBeenCalledTimes(2);
+    expect(handler).toHaveBeenCalledWith(true);
+    expect(handler2).toHaveBeenCalledTimes(2);
+    expect(handler2.mock.calls[1][0]).toEqual([2, 3]);
+
+    // 设置为空
+    obs.arr = [];
+    expect(handler).toHaveBeenCalledTimes(3);
+    expect(handler).toHaveBeenCalledWith(false);
+    expect(handler2).toHaveBeenCalledTimes(3);
+    expect(handler2.mock.calls[2][0]).toEqual([]);
+});
+
+// 快速定义领域模型 - 创建一个自动收集依赖的计算缓存器
+test("computed recollect dependencies", () => {
+    const computed = jest.fn();
+    const obs = model({
+        aa: "aaa", bb: "bbb", cc: "ccc",
+        get compute() {
+            computed();
+            return this.aa === 'aaa' ? this.bb : this.cc;
+        },
+    });
+
+    const handler = jest.fn();
+    autorun(() => handler(obs.compute));
+
+    expect(obs.compute).toEqual("bbb");
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(computed).toHaveBeenCalledTimes(1);
+    expect(handler).toHaveBeenNthCalledWith(1, "bbb");
+
+    // 修改 aa 和 bb，由于 aa 更改后不需要引用 bb，所以这里只响应 1 次
+    obs.aa = "111";
+    obs.bb = "222";
+
+    expect(obs.compute).toEqual("ccc");
+    expect(handler).toHaveBeenCalledTimes(2);
+    expect(computed).toHaveBeenCalledTimes(2);
+    expect(handler).toHaveBeenNthCalledWith(2, "ccc");
+
+    // 将 aa 再次修改回 aaa，重新计算
+    obs.aa = "aaa";
+    expect(obs.compute).toEqual("222");
+    expect(handler).toHaveBeenCalledTimes(3);
+    expect(computed).toHaveBeenCalledTimes(3);
+    expect(handler).toHaveBeenNthCalledWith(3, "222");
+
+    // 再修改 bbb，由于 aa 为 aaa，所以响应继续 +1
+    obs.bb = "qqq";
+    expect(obs.compute).toEqual("qqq");
+    expect(handler).toHaveBeenCalledTimes(4);
+    expect(computed).toHaveBeenCalledTimes(4);
+    expect(handler).toHaveBeenNthCalledWith(4, "qqq");
+});
+
+// 创建一个容错的计算缓存器
+test("computed no params", () => {
+    // @ts-ignore 
+    const compu1 = observable.computed(null);
+
+    // @ts-ignore
+    const compu2 = observable.computed();
+
+    // 这两种方式都是错误的引入计算缓存器，得到的结果也是 undefined
+    expect(compu1.value).toBeUndefined();
+    expect(compu2.value).toBeUndefined();
+});
+
+// 使用一个带有 get 属性方法的对象，创建一个计算缓存器
+test("computed object params", () => {
+    const compu1 = observable.computed({ get: () => {} });
+    const compu2 = observable.computed({ get: () => "input" });
+
+    // 根据 get 方法返回值得到 value
+    expect(compu1.value).toBeUndefined();
+    expect(compu2.value).toEqual("input");
+});
+
+// untracked: 用法与 batch 相似，在给定的 untracker 函数内部永远不会被依赖收集
+test("computed no track get", () => {
+    const obs = observable({ aa: 123 });
+    const get = jest.fn(() => obs.aa);
+    const compu = observable.computed({ get });
+
+    // 添加一个 autorun 自动计算值，初始化后自动响应 1 次
+    autorun(() => compu.value);
+    expect(get).toHaveBeenCalledTimes(1);
+
+    // 以后无论获取几次都是响应 1 次
+    expect(compu.value).toBe(123);
+    expect(compu.value).toBe(123);
+    expect(get).toHaveBeenCalledTimes(1);
+
+    // 添加一个不跟踪的收集函数，每获取一次就重新计算一次
+    untracked(() => {
+        expect(compu.value).toBe(123);
+        expect(compu.value).toBe(123);
+    });
+    expect(get).toHaveBeenCalledTimes(3);
+
+    // action 和 untracked 一样
+    action(() => {
+        expect(compu.value).toBe(123);
+        expect(compu.value).toBe(123);
+    });
+    expect(get).toHaveBeenCalledTimes(5);
+});
+
+// 手动定义一个类为领域模型
+test("computed cache descriptor", () => {
+    class A {
+        _value = 0;
+        constructor() {
+            define(this, {
+                _value: observable.ref,
+                value: observable.computed
+            });
+        }
+        get value() {
+            return this._value;
+        }
+    }
+
+    const obs1 = new A();
+    const obs2 = new A();
+
+    const handler1 = jest.fn();
+    const handler2 = jest.fn();
+
+    autorun(() => handler1(obs1.value));
+    autorun(() => handler2(obs2.value));
+
+    // autorun 初始化会执行一次
+    expect(handler1).toHaveBeenCalledTimes(1);
+    expect(handler2).toHaveBeenCalledTimes(1);
+
+    // 修改 computed 依赖的值，会重新计算
+    obs1._value = 123;
+    obs2._value = 123;
+    expect(handler1).toHaveBeenCalledTimes(2);
+    expect(handler2).toHaveBeenCalledTimes(2);
 });
