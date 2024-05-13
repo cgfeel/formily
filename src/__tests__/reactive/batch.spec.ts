@@ -56,6 +56,7 @@ describe("normal batch", () => {
         expect(handler).toHaveBeenCalledTimes(1);
         expect(obs.cc).toEqual(21);
 
+        // 更新数据会继续响应
         obs.aa.bb = { cc: 321 };
         expect(handler).toHaveBeenCalledTimes(2);
         expect(obs.cc).toEqual(41);
@@ -71,13 +72,59 @@ describe("normal batch", () => {
         
         const handler = jest.fn();
         autorun(() => handler(obs.aa.bb));
+
         expect(handler).toHaveBeenCalledTimes(1);
+        expect(obs.aa.bb).toBe(123);
 
         obs.aa.bb = 111;
         obs.aa.bb = 222;
         expect(handler).toHaveBeenCalledTimes(3);
+        expect(obs.aa.bb).toBe(222);
 
-        // 批量ca哟
+        // 批量操作增加 1 次
         setData();
+        batch(() => {});
+        expect(handler).toHaveBeenCalledTimes(4);
+        expect(obs.aa.bb).toBe(444);
+    });
+
+    // 在 track 函数中使用 batch
+    test("batch.bound track", () => {
+        const obs = observable({ 
+            aa: { bb: 123 }, 
+            cc: 1
+        });
+
+        const handler = jest.fn();
+        autorun(() => {
+            const action = batch.bound!(() => {
+                handler(obs.aa.bb);
+                obs.cc += 20;
+            });
+            action();
+        });
+
+        expect(handler).toHaveBeenCalledTimes(1);
+        expect(obs.cc).toBe(21);
+
+        obs.aa.bb = 321;
+        expect(handler).toHaveBeenCalledTimes(2);
+        expect(obs.cc).toBe(41);
+    });
+
+    // batch.scope 批量操作中分批执行
+    test("batch.scope", () => {
+        const obs = observable<Partial<Record<string, number|string>>>({});
+        const handler = jest.fn();
+
+        autorun(() => handler(obs.aa, obs.bb, obs.cc, obs.dd));
+        batch(() => {
+            batch.scope!(() => {
+                obs.aa = 123;
+            });
+            batch.scope!(() => {
+                obs.cc = "ccc";
+            });
+        });
     });
 });
