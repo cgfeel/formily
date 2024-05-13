@@ -844,7 +844,7 @@ test("autorun recollect dependencies", () => {
     expect(fn).toHaveBeenCalledTimes(2);
 });
 
-// reaction 中医来记录
+// reaction 中依赖记录
 test("reaction recollect dependencies", () => {
     const obs = observable({ aa: "aaa", bb: "bbb", cc: "ccc" });
     const fn1 = jest.fn();
