@@ -693,3 +693,202 @@ test("autorun.effect with default deps", async () => {
     expect(fn).toHaveBeenCalledTimes(5);
     expect(effect).toHaveBeenCalledTimes(5);
 });
+
+// autorun.effect 在 autorun 外部使用将抛出错误
+test("autorun.effect not in autorun", () => {
+    expect(() => autorun.effect(() => {})).toThrow();
+});
+
+// autorun.effect 容错
+test("autorun.effct with invalid params", () => {
+    // autorun.effect 只接受一个函数，传入无效的参数不会正常执行，本应抛出错误也不会出现
+    // @ts-ignore 
+    autorun.effect({});
+});
+
+// 在批量操作过程中停止 autorun 响应
+test("autorun dispos in batch", () => {
+    const obs = observable({ value: 123 });
+    const handler = jest.fn();
+    
+    // 初始化会执行 1 次
+    const dispos = autorun(() => handler(obs.value));
+    expect(handler).toHaveBeenCalledTimes(1);
+
+    // 在批量操作过程中停止响应，不会继续调用
+    batch(() => {
+        obs.value = 321;
+        dispos();
+    });
+    expect(handler).toHaveBeenCalledTimes(1);
+});
+
+// 依赖 observable.computed 计算设置的值
+test("set value by computed depend", () => {
+    const obs = observable<any>({});
+    const comp1 = observable.computed(() => obs.aa?.bb);
+    const comp2 = observable.computed(() => obs.aa?.cc);
+
+    const handler = jest.fn();
+    autorun(() => handler(comp1.value, comp2.value));
+
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler).toHaveBeenCalledWith(undefined, undefined);
+
+    obs.aa = { bb: 123, cc: 321 };
+    expect(handler).toHaveBeenCalledTimes(2);
+    expect(handler).toHaveBeenNthCalledWith(2, 123, 321);
+});
+
+// 依赖 observable.computed 删除劫持响应对象
+test("delete value by computed depend", () => {
+    const obs = observable<any>({ a: { b: 1, c: 2 } });
+    const comp1 = observable.computed(() => obs.a?.b);
+    const comp2 = observable.computed(() => obs.a?.c);
+
+    const handler = jest.fn();
+    autorun(() => handler(comp1.value, comp2.value));
+
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler).toHaveBeenCalledWith(1, 2);
+
+    delete obs.a;
+    expect(handler).toHaveBeenCalledTimes(2);
+    expect(handler).toHaveBeenNthCalledWith(2, undefined, undefined);
+});
+
+// 依赖 observable.computed 使用 Set 类型的对象
+test("set Set value by computed depend", () => {
+    const obs = observable({ set: new Set() });
+    const comp1 = observable.computed(() => obs.set.has(1));
+    const comp2 = observable.computed(() => obs.set.size);
+
+    const handler = jest.fn();
+    autorun(() => handler(comp1.value, comp2.value));
+
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler).toHaveBeenCalledWith(false, 0);
+
+    obs.set.add(1);
+    expect(handler).toHaveBeenCalledTimes(2);
+    expect(handler).toHaveBeenNthCalledWith(2, true, 1);
+});
+
+// 依赖 observable.computed 删除 Set 类型子集
+test("delete Set by computed depend", () => {
+    const obs = observable({ set: new Set([1]) });
+    const comp1 = observable.computed(() => obs.set.has(1));
+    const comp2 = observable.computed(() => obs.set.size);
+
+    const handler = jest.fn();
+    autorun(() => handler(comp1.value, comp2.value));
+
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler).toHaveBeenCalledWith(true, 1);
+
+    obs.set.delete(1);
+    expect(handler).toHaveBeenCalledTimes(2);
+    expect(handler).toHaveBeenCalledWith(false, 0);
+});
+
+// 依赖 observable.computed 使用 Map 类型的对象
+test("set Map value by computed depend", () => {
+    const obs = observable({ map: new Map() });
+    const comp1 = observable.computed(() => obs.map.has(1));
+    const comp2 = observable.computed(() => obs.map.size);
+
+    const handler = jest.fn();
+    autorun(() => handler(comp1.value, comp2.value));
+
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler).toHaveBeenCalledWith(false, 0);
+
+    obs.map.set(1, 1);
+    expect(handler).toHaveBeenCalledTimes(2);
+    expect(handler).toHaveBeenCalledWith(true, 1);
+});
+
+// 依赖 observable.computed 删除 Map 类型子集
+test("delete Map by computed depend", () => {
+    const obs = observable({ map: new Map([[1, 1]]) });
+    const comp1 = observable.computed(() => obs.map.has(1));
+    const comp2 = observable.computed(() => obs.map.size);
+
+    const handler = jest.fn();
+    autorun(() => handler(comp1.value, comp2.value));
+
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler).toHaveBeenCalledWith(true, 1);
+
+    obs.map.delete(1);
+    expect(handler).toHaveBeenCalledTimes(2);
+    expect(handler).toHaveBeenNthCalledWith(2, false, 0);
+});
+
+// autorun 中依赖记录
+test("autorun recollect dependencies", () => {
+    const obs = observable({ aa: "aaa", bb: "bbb", cc: "ccc" });
+    const fn = jest.fn();
+
+    autorun(() => {
+        fn();
+        return obs.aa === "aaa" ? obs.bb : obs.cc;
+    });
+    expect(fn).toHaveBeenCalledTimes(1);
+
+    // 修改 aa，不再响应 bb
+    obs.aa = "111";
+    expect(fn).toHaveBeenCalledTimes(2);
+
+    obs.bb = "222";
+    expect(fn).toHaveBeenCalledTimes(2);
+});
+
+// reaction 中医来记录
+test("reaction recollect dependencies", () => {
+    const obs = observable({ aa: "aaa", bb: "bbb", cc: "ccc" });
+    const fn1 = jest.fn();
+    const fn2 = jest.fn();
+    const tirgger1 = jest.fn();
+    const tirgger2 = jest.fn();
+
+    reaction(
+        () => {
+            fn1();
+            return obs.aa === "aaa" ? obs.bb : obs.cc;
+        },
+        tirgger1
+    );
+    
+    expect(fn1).toHaveBeenCalledTimes(1);
+    expect(tirgger1).toHaveBeenCalledTimes(0);
+
+    reaction(
+        () => {
+            fn2();
+            return obs.aa === "aaa" ? obs.bb : obs.cc;
+        },
+        tirgger2,
+        {
+            fireImmediately: true
+        }
+    );
+    
+    // 只有 fireImmediately: true 才会初始化立即执行 subscribe
+    expect(fn2).toHaveBeenCalledTimes(1);
+    expect(tirgger2).toHaveBeenCalledTimes(1);
+
+    // 修改 aa 不在 响应 bb
+    obs.aa = "111";
+    expect(fn1).toHaveBeenCalledTimes(2);
+    expect(fn2).toHaveBeenCalledTimes(2);
+    expect(tirgger1).toHaveBeenCalledTimes(1);
+    expect(tirgger2).toHaveBeenCalledTimes(2);
+
+    // 不再响应 bb
+    obs.bb = "222";
+    expect(fn1).toHaveBeenCalledTimes(2);
+    expect(fn2).toHaveBeenCalledTimes(2);
+    expect(tirgger1).toHaveBeenCalledTimes(1);
+    expect(tirgger2).toHaveBeenCalledTimes(2);
+});
