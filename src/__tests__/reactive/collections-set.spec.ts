@@ -128,4 +128,228 @@ describe("Set", () => {
         expect(handler).toHaveBeenCalledTimes(5);
         expect(handler).toHaveBeenCalledWith(0);
     });
+
+    // 在 autorun 中通过 set.keys 获取值
+    test("should autorun keys iteration", () => {
+        const handler = jest.fn();
+        const set = observable(new Set<number>());
+
+        autorun(() => {
+            let sum = 0;
+            for (let key of set.keys()) {
+                sum += key;
+            }
+            handler(sum);
+        });
+
+        expect(handler).toHaveBeenCalledTimes(1);
+        expect(handler).toHaveBeenCalledWith(0);
+
+        set.add(3);
+        expect(handler).toHaveBeenCalledTimes(2);
+        expect(handler).toHaveBeenCalledWith(3);
+
+        set.add(2);
+        expect(handler).toHaveBeenCalledTimes(3);
+        expect(handler).toHaveBeenCalledWith(5);
+
+        set.delete(3);
+        expect(handler).toHaveBeenCalledTimes(4);
+        expect(handler).toHaveBeenCalledWith(2);
+
+        set.clear();
+        expect(handler).toHaveBeenCalledTimes(5);
+        expect(handler).toHaveBeenCalledWith(0);
+    });
+
+    // 在 autorun 中通过 set.values 获取值
+    test("should autorun values iteration", () => {
+        const handler = jest.fn();
+        const set = observable(new Set<number>());
+
+        // 由于 set 只有 键值，所以 keys 和 values 是一样的
+        autorun(() => {
+            let sum = 0;
+            for (let num of set.values()) {
+                sum += num;
+            }
+            handler(sum);
+        });
+
+        expect(handler).toHaveBeenCalledTimes(1);
+        expect(handler).toHaveBeenCalledWith(0);
+
+        set.add(3);
+        expect(handler).toHaveBeenCalledTimes(2);
+        expect(handler).toHaveBeenCalledWith(3);
+
+        set.add(2);
+        expect(handler).toHaveBeenCalledTimes(3);
+        expect(handler).toHaveBeenCalledWith(5);
+
+        set.delete(3);
+        expect(handler).toHaveBeenCalledTimes(4);
+        expect(handler).toHaveBeenCalledWith(2);
+
+        set.clear();
+        expect(handler).toHaveBeenCalledTimes(5);
+        expect(handler).toHaveBeenCalledWith(0);
+    });
+
+    // 在 autorun 中通过 set.entries 获取值
+    test("should autorun entries iteration", () => {
+        const handler = jest.fn();
+        const set = observable(new Set<number>());
+
+        // entries 拿到数组第一个值第二个值都是一样的，取哪个都可以
+        autorun(() => {
+            let sum = 0;
+            for (let [, num] of set.entries()) {
+                sum += num;
+            }
+            handler(sum);
+        });
+
+        expect(handler).toHaveBeenCalledTimes(1);
+        expect(handler).toHaveBeenCalledWith(0);
+
+        set.add(3);
+        expect(handler).toHaveBeenCalledTimes(2);
+        expect(handler).toHaveBeenCalledWith(3);
+
+        set.add(2);
+        expect(handler).toHaveBeenCalledTimes(3);
+        expect(handler).toHaveBeenCalledWith(5);
+
+        set.delete(3);
+        expect(handler).toHaveBeenCalledTimes(4);
+        expect(handler).toHaveBeenCalledWith(2);
+
+        set.clear();
+        expect(handler).toHaveBeenCalledTimes(5);
+        expect(handler).toHaveBeenCalledWith(0);
+    });
+
+    // 在 autorun 中不响应 set 错误的自定义属性
+    test("should not autorun custom property mutations", () => {
+        const handler = jest.fn();
+        const set = observable(new Set());
+
+        // @ts-ignore 这样写在 eslint 是错误的
+        autorun(() => handler(set["customProp"]));
+        expect(handler).toHaveBeenCalledTimes(1);
+        expect(handler).toHaveBeenCalledWith(undefined);
+
+        // @ts-ignore
+        set["customProp"] = "Hello world";
+        expect(handler).toHaveBeenCalledTimes(1);
+    });
+
+    // 在 autorun 中不响应没有变更的 Set 对象
+    test("should not autorun non value changing mutations", () => {
+        const handler = jest.fn();
+        const set = observable(new Set());
+
+        autorun(() => handler(set.has("value")));
+        expect(handler).toHaveBeenCalledTimes(1);
+        expect(handler).toHaveBeenCalledWith(false);
+
+        set.add("value");
+        expect(handler).toHaveBeenCalledTimes(2);
+        expect(handler).toHaveBeenCalledWith(true);
+
+        set.add("value");
+        expect(handler).toHaveBeenCalledTimes(2);
+
+        set.delete("value");
+        expect(handler).toHaveBeenCalledTimes(3);
+        expect(handler).toHaveBeenCalledWith(false);
+
+        set.delete("value");
+        expect(handler).toHaveBeenCalledTimes(3);
+
+        // 清空一个空的 set 对象不会触发响应
+        set.clear();
+        expect(handler).toHaveBeenCalledTimes(3);
+    });
+
+    // 在 autorun 中不响应原生数据迭代
+    test("should not autorun raw iterations", () => {
+        const handler = jest.fn();
+        const set = observable(new Set<number>());
+
+        autorun(() => {
+            const dataRaw = raw(set);
+            let sum = 0;
+
+            for (let [, num] of dataRaw.entries()) {
+                sum += num;
+            }
+
+            for (let key of dataRaw.keys()) {
+                sum += key;
+            }
+
+            for (let num of dataRaw.values()) {
+                sum += num;
+            }
+
+            dataRaw.forEach(num => (sum += num));
+            handler(sum);
+        });
+
+        expect(handler).toHaveBeenCalledTimes(1);
+        expect(handler).toHaveBeenCalledWith(0);
+
+        set.add(2);
+        set.add(3);
+        expect(handler).toHaveBeenCalledTimes(1);
+
+        set.delete(2);
+        expect(handler).toHaveBeenCalledTimes(1);
+    });
+
+    // 在 autorun 中不响应原生数据的新增、删除
+    test("should not be triggered by raw mutations", () => {
+        const handler = jest.fn();
+        const set = observable(new Set());
+        const dataRaw = raw(set);
+
+        autorun(() => handler(set.has("value")));
+        expect(handler).toHaveBeenCalledTimes(1);
+        expect(handler).toHaveBeenCalledWith(false);
+
+        dataRaw.add("value");
+        dataRaw.delete("value");
+        dataRaw.clear();
+        expect(handler).toHaveBeenCalledTimes(1);
+    });
+
+    // 在 autorun 中不响应原生数据的 Set.size
+    test("should not autorun raw size mutations", () => {
+        const handler = jest.fn();
+        const set = observable(new Set());
+
+        autorun(() => handler(raw(set).size));
+        expect(handler).toHaveBeenCalledTimes(1);
+        expect(handler).toHaveBeenCalledWith(0);
+
+        set.add("value");
+        expect(handler).toHaveBeenCalledTimes(1);
+        expect(handler).toHaveBeenCalledWith(0);
+    });
+
+    // 在 autorun 中不响应来自原生数据添加的项目
+    test("should not be triggered by raw size mutations", () => {
+        const handler = jest.fn();
+        const set = observable(new Set());
+
+        autorun(() => handler(set.size));
+        expect(handler).toHaveBeenCalledTimes(1);
+        expect(handler).toHaveBeenCalledWith(0);
+
+        raw(set).add("value");
+        expect(handler).toHaveBeenCalledTimes(1);
+        expect(handler).toHaveBeenCalledWith(0);
+    });
 });
