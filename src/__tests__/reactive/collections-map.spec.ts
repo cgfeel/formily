@@ -14,20 +14,31 @@ describe("Map", () => {
         const handler = jest.fn();
         const map = observable(new Map());
 
-        autorun(() => handler(map.get("key")));
+        // 初始化先依赖一个永远不存在的 key
+        autorun(() => handler(map.get("unkey")));
         expect(handler).toHaveBeenCalledTimes(1);
         expect(handler).toHaveBeenLastCalledWith(undefined);
 
+        // 设置 key 不会响应，因为 autorun 没有收集对应的依赖
         map.set('key', 'value');
+        expect(handler).toHaveBeenCalledTimes(1);
+        expect(handler).toHaveBeenLastCalledWith(undefined);
+
+        // 重新监听依赖
+        autorun(() => handler(map.get("newKey")));
         expect(handler).toHaveBeenCalledTimes(2);
+        expect(handler).toHaveBeenLastCalledWith(undefined);
+
+        map.set('newKey', 'value');
+        expect(handler).toHaveBeenCalledTimes(3);
         expect(handler).toHaveBeenLastCalledWith("value");
 
-        map.set('key', 'value2');
-        expect(handler).toHaveBeenCalledTimes(3);
+        map.set('newKey', 'value2');
+        expect(handler).toHaveBeenCalledTimes(4);
         expect(handler).toHaveBeenLastCalledWith("value2");
 
-        map.delete("key");
-        expect(handler).toHaveBeenCalledTimes(4);
+        map.delete("newKey");
+        expect(handler).toHaveBeenCalledTimes(5);
         expect(handler).toHaveBeenLastCalledWith(undefined);
     });
 
