@@ -42,4 +42,90 @@ describe("Set", () => {
         expect(handler).toHaveBeenCalledTimes(5);
         expect(handler).toHaveBeenLastCalledWith(false);
     });
+
+    // 在 autorun 中响应 set.size
+    test("should autorun size mutations", () => {
+        const handler = jest.fn();
+        const set = observable(new Set());
+
+        autorun(() => handler(set.size));
+        expect(handler).toHaveBeenCalledTimes(1);
+        expect(handler).toHaveBeenCalledWith(0);
+
+        set.add("value");
+        set.add("value2");
+        expect(handler).toHaveBeenCalledTimes(3);
+        expect(handler).toHaveBeenCalledWith(2);
+
+        set.delete("value");
+        expect(handler).toHaveBeenCalledTimes(4);
+        expect(handler).toHaveBeenCalledWith(1);
+
+        set.clear();
+        expect(handler).toHaveBeenCalledTimes(5);
+        expect(handler).toHaveBeenCalledWith(0);
+    });
+
+    // 在 autorun 中通过 forof 迭代 set
+    test("should autorun for of iteration", () => {
+        const handler = jest.fn();
+        const set = observable(new Set<number>());
+
+        autorun(() => {
+            let sum = 0;
+            for (let num of set) {
+                sum += num;
+            }
+            handler(sum);
+        });
+        expect(handler).toHaveBeenCalledTimes(1);
+        expect(handler).toHaveBeenCalledWith(0);
+
+        set.add(3);
+        expect(handler).toHaveBeenCalledTimes(2);
+        expect(handler).toHaveBeenCalledWith(3);
+
+        set.add(2);
+        expect(handler).toHaveBeenCalledTimes(3);
+        expect(handler).toHaveBeenCalledWith(5);
+
+        set.delete(3);
+        expect(handler).toHaveBeenCalledTimes(4);
+        expect(handler).toHaveBeenCalledWith(2);
+
+        set.clear();
+        expect(handler).toHaveBeenCalledTimes(5);
+        expect(handler).toHaveBeenCalledWith(0);
+    });
+
+    // 在 autorun 中通过 forEach 迭代 set
+    test("should autorun forEach iteration", () => {
+        const handler = jest.fn();
+        const set = observable(new Set<number>());
+
+        autorun(() => {
+            let sum = 0;
+            set.forEach(num => sum += num);
+            handler(sum);
+        });
+
+        expect(handler).toHaveBeenCalledTimes(1);
+        expect(handler).toHaveBeenCalledWith(0);
+
+        set.add(3);
+        expect(handler).toHaveBeenCalledTimes(2);
+        expect(handler).toHaveBeenCalledWith(3);
+
+        set.add(2);
+        expect(handler).toHaveBeenCalledTimes(3);
+        expect(handler).toHaveBeenCalledWith(5);
+
+        set.delete(3);
+        expect(handler).toHaveBeenCalledTimes(4);
+        expect(handler).toHaveBeenCalledWith(2);
+
+        set.clear();
+        expect(handler).toHaveBeenCalledTimes(5);
+        expect(handler).toHaveBeenCalledWith(0);
+    });
 });
