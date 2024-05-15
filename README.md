@@ -639,3 +639,10 @@
 ### Core Library
 
 我将使用 `formily` 将这个库里对应的对象和属性，做成在线工具的形式进行演示，建议本地运行上手操作
+
+#### createForm
+
+创建一个 `form` 对象，其对象属性可以直接通过演示操作查看效果
+
+<img width="639" alt="image" src="https://github.com/cgfeel/formily/assets/578141/dd99e88c-2346-44b6-9c7b-451c86a6bf32">
+
