@@ -682,3 +682,6 @@
 -   状态检查：`isFormState`、`isFieldState`、`isArrayFieldState`、`isObjectFieldState`、`isVoidFieldState`、`isGeneralFieldState`、`isDataFieldState`
 
 本地使用 `formily` 进行演示，更多请本地运行查看：
+
+<img width="677" alt="image" src="https://github.com/cgfeel/formily/assets/578141/b8fa5ba1-68cf-4f4b-895c-5062c8816f82">
+
