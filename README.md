@@ -646,3 +646,14 @@
 
 <img width="639" alt="image" src="https://github.com/cgfeel/formily/assets/578141/dd99e88c-2346-44b6-9c7b-451c86a6bf32">
 
+#### Form Effect Hooks
+
+表单生命周期
+
+-   加载卸载：`onFormInit`、`onFormMount`、`onFormUnmount`
+-   表单变化：`onFormReact`、`onFormValuesChange`、`onFormInitialValuesChange`、`onFormInputChange`
+-   表单提交：`onFormSubmitStart`、`onFormSubmitSuccess`、`onFormSubmitEnd`、`onFormSubmitFailed`、`onFormSubmit`
+-   提交验证：`onFormSubmitValidateStart`、`onFormSubmitValidateSuccess`、`onFormSubmitValidateFailed`、`onFormSubmitValidateEnd`
+-   表单验证：`onFormValidateStart`、`onFormValidateEnd`、`onFormValidateSuccess`、`onFormValidateFailed`
+
+声明周期顺序在本地演示说明，更多请本地运行查看：
