@@ -698,3 +698,13 @@
 
 <img width="637" alt="image" src="https://github.com/cgfeel/formily/assets/578141/ac7867d1-3e57-4c9f-a293-e9b30d6701f1">
 
+#### Form Validator Registry
+
+`formily` 验证格式、定制信息、定制模板、校验规则、语言等，包含：
+
+-   `setValidateLanguage`：定制语言
+-   `registerValidateFormats`：注册校验格式，包含全局注册、局部注册
+-   `registerValidateLocale`：定制提示
+-   `registerValidateMessageTemplateEngine`：定制信息模板
+-   `registerValidateRules`：定制校验规则，包含全局定制、局部定制
+-   `getValidateLocaleIOSCode`：获取内置存在的 `ISO Code`
