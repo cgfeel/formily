@@ -657,3 +657,6 @@
 -   表单验证：`onFormValidateStart`、`onFormValidateEnd`、`onFormValidateSuccess`、`onFormValidateFailed`
 
 声明周期顺序在本地演示说明，更多请本地运行查看：
+
+<img width="507" alt="image" src="https://github.com/cgfeel/formily/assets/578141/9eb69c18-cdee-4536-967b-b5567e6c19d4">
+
