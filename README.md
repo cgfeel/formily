@@ -2,6 +2,22 @@
 
 按照 `formily` 官方文档，最小化复现每个示例。本项目不提供线上预览，请直接在本地运行`npm install && npm run start`
 
+**示例包含 4 个文档：**
+
+-   `formily` 主文档：https://formilyjs.org/zh-CN
+-   `@formily/reactive`：https://reactive.formilyjs.org/zh-CN
+-   `@formily/core`：https://core.formilyjs.org/zh-CN
+-   `@formily/react`：https://react.formilyjs.org/zh-CN
+
+其中组件部分采用 `@formily/antd-v5`，围绕主文档作为演示。不包含 `@formily/vue`，以 `React` 作为技术栈，在 `formily` 中两者大同小异
+
+**演示分两部分：**
+
+-   页面演示：`src/page` 目录下，下载安装安装依赖后 `npm run start`
+-   单元测试：`src/__test__` 目录下，下载安装安装依赖后 `npm run test`
+
+所有示例根据自己理解添加了说明、并根据自己的理解补充示例
+
 ## 工程文件
 
 主要的使用的包：
