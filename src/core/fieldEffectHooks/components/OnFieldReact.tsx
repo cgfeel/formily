@@ -30,7 +30,7 @@ const OnFieldReact: FC = () => {
         <Panel
             footer={
                 <p>
-                    用于监听某个字段已卸载的副作用钩子，我们在调用 <code>onUnmount</code> 的时候就会触发卸载事件
+                    它的核心原理就是字段初始化的时候会执行回调函数，同时自动追踪依赖，依赖数据发生变化时回调函数会重复执行
                 </p>
             }
             header={<h2>onFieldReact - 实现字段响应式逻辑</h2>}>

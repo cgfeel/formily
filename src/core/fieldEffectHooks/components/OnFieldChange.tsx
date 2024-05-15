@@ -23,7 +23,6 @@ const OnFieldChange: FC = () => {
         <Panel
             footer={
                 <div>
-                    <p>用于监听某个字段的属性变化的副作用钩子</p>
                     <p>
                         在设置字段组件的时候会先经监控值变化，然后再监控组件变化（上下文顺序），设置的{" "}
                         <code>response</code> 也因此发生了覆盖
@@ -34,7 +33,7 @@ const OnFieldChange: FC = () => {
                     </p>
                 </div>
             }
-            header={<h2>onFieldReact - 实现字段响应式逻辑</h2>}>
+            header={<h2>onFieldChange - 监听某个字段的属性变化的副作用</h2>}>
             <ActionResponse response={response}>
                 <button
                     onClick={() => {
