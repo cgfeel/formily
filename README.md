@@ -693,3 +693,8 @@
 -   支持自定义路径匹配查询结果
 
 更多请本地运行查看：
+
+<img width="634" alt="image" src="https://github.com/cgfeel/formily/assets/578141/9cec78f8-de13-4208-bfd4-405515a30f0e">
+
+<img width="637" alt="image" src="https://github.com/cgfeel/formily/assets/578141/ac7867d1-3e57-4c9f-a293-e9b30d6701f1">
+
