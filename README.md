@@ -670,3 +670,15 @@
 
 <img width="385" alt="image" src="https://github.com/cgfeel/formily/assets/578141/0a56834c-09aa-47f4-8914-a57986e011bc">
 
+#### Form Hooks API
+
+-   创建自定义钩子监听器：`createEffectHook`，详细见单元测试补充
+-   创建一个副作用的上下文：`createEffectContext`，提供一个 `provide`，将组件中的能力托管出来，提供一个消费方 `consume` 在外部消费上下文托管对象
+-   在表单生命周期中获取当前 `form` 对象：`useEffectForm`，可以搭配 `createEffectContext` 一起使用
+
+#### Form Checkers
+
+-   对象检查：`isForm`、`isField`、`isArrayField`、`isObjectField`、`isVoidField`、`isGeneralField`、`isDataField`、`isQuery`
+-   状态检查：`isFormState`、`isFieldState`、`isArrayFieldState`、`isObjectFieldState`、`isVoidFieldState`、`isGeneralFieldState`、`isDataFieldState`
+
+本地使用 `formily` 进行演示，更多请本地运行查看：
