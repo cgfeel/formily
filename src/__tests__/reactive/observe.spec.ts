@@ -222,3 +222,8 @@ test("observe dynamic tree", () => {
     childTree1.aa = 321;
     expect(handler1).toHaveBeenCalledTimes(3);
 });
+
+// observer 响应对象传递为函数将会抛错
+test("invalid target", () => {
+    expect(() => observe(function() {})).toThrow();
+});
