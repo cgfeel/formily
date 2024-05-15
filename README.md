@@ -9,7 +9,7 @@
 -   `@formily/core`：https://core.formilyjs.org/zh-CN
 -   `@formily/react`：https://react.formilyjs.org/zh-CN
 
-其中组件部分采用 `@formily/antd-v5`，围绕主文档作为演示。不包含 `@formily/vue`，以 `React` 作为技术栈，在 `formily` 中两者大同小异
+其中组件采用 `@formily/antd-v5`，以主文档作为演示。不包含 `@formily/vue`，技术栈为 `React`，在 `formily` 中两者大同小异
 
 **演示分两部分：**
 
@@ -633,3 +633,9 @@
 -   可以把 `observer` 和 `Observer` 的关系看作是 `memo` 和 `useMemo`
 -   演示中将文档示例做了拆分，建议对照比较
 -   没有记录 `vue` 部分，当前以 `React` 技术栈为主
+
+---- 分割线 ----
+
+### Core Library
+
+我将使用 `formily` 将这个库里对应的对象和属性，做成在线工具的形式进行演示，建议本地运行上手操作
