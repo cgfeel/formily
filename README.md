@@ -681,7 +681,15 @@
 -   对象检查：`isForm`、`isField`、`isArrayField`、`isObjectField`、`isVoidField`、`isGeneralField`、`isDataField`、`isQuery`
 -   状态检查：`isFormState`、`isFieldState`、`isArrayFieldState`、`isObjectFieldState`、`isVoidFieldState`、`isGeneralFieldState`、`isDataFieldState`
 
-本地使用 `formily` 进行演示，更多请本地运行查看：
+本地使用 `formily` 开发演示工具，更多请本地运行查看：
 
 <img width="677" alt="image" src="https://github.com/cgfeel/formily/assets/578141/b8fa5ba1-68cf-4f4b-895c-5062c8816f82">
 
+#### Form Path
+
+本地使用 `formily` 开发演示工具
+
+-   包含：属性、数据路径语法、匹配路径语法、方法、静态方法进
+-   支持自定义路径匹配查询结果
+
+更多请本地运行查看：
