@@ -667,3 +667,6 @@
 -   字段验证：`onFieldValidateStart`、`onFieldValidateEnd`、`onFieldValidateFailed`、`onFieldValidateSuccess`
 
 生命周期顺序在本地演示说明，更多请本地运行查看：
+
+<img width="385" alt="image" src="https://github.com/cgfeel/formily/assets/578141/0a56834c-09aa-47f4-8914-a57986e011bc">
+
