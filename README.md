@@ -787,6 +787,8 @@
 
 ### Reactive Library
 
+内部方法不再当前研究范围，不包含测试用例：`array.spec.ts` [[查看](https://github.com/alibaba/formily/blob/formily_next/packages/reactive/src/__tests__/array.spec.ts)]
+
 #### `action`
 
 -   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/action.spec.ts
@@ -1144,6 +1146,12 @@
 
 ### Core Library
 
+内部方法不再当前研究范围，不包含测试用例：
+
+-   `heart.spec.ts` [[查看](https://github.com/alibaba/formily/blob/formily_next/packages/core/src/__tests__/heart.spec.ts)]
+-   `internals.spec.ts` [[查看](https://github.com/alibaba/formily/blob/formily_next/packages/core/src/__tests__/internals.spec.ts)]
+-   `lifecycle.spec.ts` [[查看](https://github.com/alibaba/formily/blob/formily_next/packages/core/src/__tests__/lifecycle.spec.ts)]
+
 #### ArrayField
 
 -   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/array.spec.ts
@@ -1174,3 +1182,9 @@
 -   查找数组字段中的 `record`
 -   获取对象字段的 `record`
 -   获取表单的 `record`
+
+#### effect
+
+-   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/effect.spec.ts
+
+表单生命周期
