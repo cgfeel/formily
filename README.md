@@ -795,7 +795,7 @@
 
 `action` 批量操作普通用法：
 
--   不使用 `action` 每次修改劫持对象都会响应一次
+-   不使用 `action` 每次修改 `observable` 都会响应一次
 -   `action` 内部所有修改只记录一次响应
 -   在 `track` 函数中使用 `action`
 -   `action.bound` 绑定一个批量操作
@@ -899,3 +899,11 @@
 -   `autorun` 依赖 `observable.computed` 删除 `Map` 类型子集
 -   `autorun` 中有条件的依赖收集
 -   `reaction` 中有条件的依赖收集、`subscrible`、`fireImmediately`
+
+#### `batch`
+
+-   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/batch.spec.ts
+
+定义批量操作，内部可以收集依赖
+
+`batch` 批量操作普通用法：

@@ -2,7 +2,7 @@ import { action, autorun, batch, define, observable, reaction } from "@formily/r
 
 // action 批量操作普通用法
 describe("normal action", () => {
-    // 不使用 action 每次修改劫持对象都会响应一次
+    // 不使用 action 每次修改 observable 都会响应一次
     test("no action", () => {
         const obs = observable({ aa: { bb: 123 } });
         const handler = jest.fn();
