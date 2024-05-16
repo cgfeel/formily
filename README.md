@@ -950,6 +950,19 @@
 -   在 `autorun` 中不响应 `WeakMap` 原生对象
 -   在 `autorun` 中不响应来自 `WeakMap` 原生对象增删操作
 
+#### `observable` - `WeakSet`
+
+-   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/collections-weakset.spec.ts
+
+劫持 `WeakSet` 类型对象作为 `observable` 对象
+
+-   创建一个 `WeakSet` 类型的 `observable` 对象
+-   在 `autorun` 中响应 `WeakSet` 对象
+-   在 `autorun` 中不响应 `WeakSet` 对象不合理的自定义属性更新
+-   在 `autorun` 中不响应 `WeakSet` 对象没有更新的属性
+-   在 `autorun` 中不响应 `WeakSet` 原生对象
+-   在 `autorun` 中不响应来自 `WeakSet` 原生对象触发的增删操作
+
 #### 浅响应 `autorun`、`reaction`
 
 -   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/autorun.spec.ts
