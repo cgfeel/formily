@@ -937,6 +937,19 @@
 -   在 `autorun` 中不响应 `set` 类型原生数据的 `set.size`
 -   在 `autorun` 中不响应来自 `set` 类型原生数据添加的项目
 
+#### `observable` - `WeakMap`
+
+-   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/collections-weakmap.spec.ts
+
+劫持 `WeakMap` 类型对象作为 `observable` 对象
+
+-   创建一个 `WeakMap` 类型的 `observable` 对象
+-   在 `autorun` 中响应 `WeakMap` 类型对象
+-   在 `autorun` 中不响应 `WeakMap` 不合理的自定义属性更新
+-   在 `autorun` 中不响应 `WeakMap` 中没有更新的属性
+-   在 `autorun` 中不响应 `WeakMap` 原生对象
+-   在 `autorun` 中不响应来自 `WeakMap` 原生对象增删操作
+
 #### 浅响应 `autorun`、`reaction`
 
 -   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/autorun.spec.ts

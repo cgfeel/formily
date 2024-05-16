@@ -1,8 +1,8 @@
 import { autorun, observable, raw } from "@formily/reactive";
 
-// 劫持 WeakMap 类型对象作为响应对象
+// 劫持 WeakMap 类型对象作为 observable 对象
 describe("WeakMap", () => {
-    // 创建一个 WeakMap 类型的响应劫持对象
+    // 创建一个 WeakMap 类型的 observable 对象
     test("should be a proper JS WeakMap", () => {
         const weakMap = observable(new WeakMap());
         expect(weakMap).toBeInstanceOf(WeakMap);
