@@ -1350,3 +1350,13 @@
 自定义 `effect`：
 
 -   `createEffectHook`
+
+#### 表单字段模型操作
+
+-   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/graph.spec.ts
+
+字段模型操作方法
+
+-   回收字段模型：`form.clearFormGraph`
+-   获取字段模型：`form.getFormGraph`
+-   设置字段模型：`form.setFormGraph`
