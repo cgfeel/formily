@@ -791,4 +791,6 @@
 -   文档：
     -   `@formily/reactive` [[查看](https://reactive.formilyjs.org/zh-CN)]
 
-update
+#### `action`
+
+`action` 批量操作普通用法
