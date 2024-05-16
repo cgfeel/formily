@@ -1270,6 +1270,23 @@
 -   创建 `ObjectField` 对象：`createObjectField`
 -   `ObjectField` 对象的方法：`field.addProperty`、`field.removeProperty`、`field.existProperty`
 
+#### VoidField
+
+-   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/void.spec.ts
+
+虚拟字段：
+
+-   创建虚拟节点，注销虚拟节点：`createVoidField`、`field.destroy`
+-   创建带有属性的虚拟节点
+-   设置组件和组件属性：`field.setComponent`、`field.setComponentProps`
+-   设置标题、描述：`setTitle`、`setDescription`
+-   设置包装器和包装器属性：`setDecorator`、`setDecoratorProps`
+-   设置、获取状态：`setState`、`getState`
+-   嵌套展示、字段模式：`setPattern`、`setDisplay`
+-   联动：`reactions`
+-   容错机制
+-   子集联动：`reactions` + `field.query`
+
 #### form
 
 -   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/form.spec.ts
