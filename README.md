@@ -640,6 +640,11 @@
 
 ### Core Library
 
+-   URL：`/core`
+-   目录：https://github.com/cgfeel/formily/blob/main/src/page/Core.tsx
+-   包含章节：
+    -   整个 API 文档 [[查看](https://core.formilyjs.org/zh-CN/api/entry/create-form)]
+
 我将使用 `formily` 将这个库里对应的对象和属性，做成在线工具的形式进行演示，建议本地运行上手操作
 
 #### createForm
