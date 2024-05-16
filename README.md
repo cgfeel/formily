@@ -1152,6 +1152,84 @@
 -   `internals.spec.ts` [[查看](https://github.com/alibaba/formily/blob/formily_next/packages/core/src/__tests__/internals.spec.ts)]
 -   `lifecycle.spec.ts` [[查看](https://github.com/alibaba/formily/blob/formily_next/packages/core/src/__tests__/lifecycle.spec.ts)]
 
+#### Field
+
+-   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/field.spec.ts
+
+普通字段
+
+-   创建字段：`createField`
+-   创建带有属性的字段
+-   字段值和展示状态：`display`、`value`
+-   嵌套展示和表单模式：`display`、`pattern`
+-   设置字段值、初始值：`setValue`、`setInitialValues`
+-   设置字段加载状态和验证状态：`setLoading`、`setValidating`
+-   设置字段组件和组件属性：`setComponent`、`setComponentProps`
+-   设置装饰组件和装饰组件的属性：`setDecorator`、`setDecoratorProps`
+-   响应式初始值：`reactions`
+-   字段验证状态、错误、警告、成功、有效、无效、验证状态、反馈信息：`selfValidate`、`errors`、`warnings`、`successes`、`valid`、`invalid`、`validateStatus`、`queryFeedbacks`
+-   设置验证器：`setValidatorRule`
+-   字段查询：`query`
+-   初始值为空：`initialValue`
+-   有初始值的对象字段
+-   有初始值的数组对象
+-   重置对象字段的初始值：`form.reset`
+-   字段重置：`field.reset`
+-   匹配路径：`field.match`
+-   获取、设置字段状态：`setState`、`getState`
+-   设置字段数据源：`setDataSource`
+-   设置字段标题和介绍：`setTitle`、`setDescription`
+-   必填字段，设置必填：`required`、`setRequired`
+-   设置字段值的 data 和 content：`setData`、`setContent`
+-   设置虚拟字段的 data 和 content
+-   设置字段验证状态：`setErrors`、`setWarnings`、`setSuccesss`、`setValidator`
+-   字段联动：`reactions`
+-   字段容错
+-   初始值：`initialValue`
+-   无索引数组路径计算，下标 0 创建字段 `0.input`：`[{ input: "123" }]`
+-   无索引嵌套虚拟节点的数组路径计算，下标 0 创建虚拟节点 `column`，可以直接忽略，直接查找虚拟节点下的 `input`：`[{ input: "123" }]`
+-   通过对象索引计算数组路径，下标 0 是对象节点，对象节点下的 `input`：`[{ input: "123" }]`
+-   通过虚拟索引计算数组路径，下标 0 作为虚拟节点，节点下包含字段：`["123"]`
+-   外层包裹一个虚拟节点并通过虚拟索引计算数组路径，可忽略外最层
+-   在联动中收集依赖触发响应：`reaction` + `field.query`
+-   嵌套字段隐藏和验证：`display`、`field.validate`
+-   深度嵌套字段隐藏和验证
+-   深度嵌套字段隐藏和通过中间字段隐藏自身验证状态
+-   字段卸载和验证状态：`field.onUnmount`、`field.validate`
+-   数组字段下的自动清除：`form.setValues({ array: [] }`
+-   对象字段下的自动清除：`obj1.setValue({})`，表现和数组字段不一样，建议查看单元测试
+-   初始值为空的字段：`initialValue: ""|null`
+-   字段提交：`field.submit`
+-   带有错误的字段提交
+-   初始值和展示状态的关系：`initialValue`、`visible`
+-   字段受控展示状态：`reactions` + `visible`
+-   字段值和初始值受控：`reactions` + `initialValue`
+-   字段名叫 `length`（`JS` 保护名称） 的初始值
+-   字段名叫 `length`，动态分配初始值
+-   嵌套资源的修改
+-   重复调用字段的 `setValidator`
+-   在自定义验证器中获取上下文字段和表单（第三个参数）
+-   单方向联动
+-   修改字段路径会重新计算字段值：`field.locate`
+-   重置对象字段：`form.reset`
+-   字段展示状态决定默认值是否有效：`visible`
+-   通过相邻路径查找值：`.{path}`
+-   相对路径查找虚拟节点下的字段
+-   表单值和字段值定义和覆盖
+-   销毁字段同时销毁值：`field.destroy`
+-   字段校验是否只校验第一个非法规则：`validateFirst`
+-   注销字段不再响应联动：`field.destroy`
+-   父级设置 `readPretty` 会覆盖 `disabled`、`readOnly` 的子集 `pattern`
+-   字段验证错误，在字段验证中不影响其他字段验证状态
+-   字段注销后赋值，将不再合并到表单值中
+-   `onInput` 通过 `target` 传值：`field.onInput({ target })`
+-   表单初始值忽略已注销的字段、展示状态 `display: none` 的字段
+-   字段 `actions`、字段方法注入 `inject`、调用 `invoke`
+-   字段隐藏保留值 `display: hidden` 和不保留值 `display: none`
+-   解构字段的展示状态：`{ name: [aa,bb] }`
+-   `onInput` 修改规则：`field.onInput({ currentTarget, target });`
+-   通过聚焦和失焦对无效的目标值触发验证：`validator: [{ triggerType }]`
+
 #### ArrayField
 
 -   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/array.spec.ts
@@ -1206,3 +1284,17 @@
 -   `form.lifecycles` 表单副作用集合
 
 > 备注：无论是表单提交还是表单验证，它们都是微任务
+
+#### 检查类型
+
+-   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/externals.spec.ts
+
+检查对象类型：
+
+-   检查字段：`isField`、`isArrayField`、`isObjectField`、`isVoidField`、`isDataField`、`isGeneralField`
+-   检查字段状态：`isFieldState`、`isArrayFieldState`、`isObjectFieldState`、`isVoidFieldState`、`isDataFieldState`、`isGeneralFieldState`
+-   检查表单：`isForm`、`isFormState`、`isQuery`
+
+自定义 `effect`：
+
+-   `createEffectHook`

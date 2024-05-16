@@ -83,7 +83,7 @@ test("create field props", () => {
     expect(field6.value).toBeUndefined();
 });
 
-// 字段值和展示
+// 字段值和展示状态
 test("field display and value", () => {
     const form = attach(createForm());
     const arrayField = attach(form.createArrayField({ name: "array" }));
@@ -176,7 +176,7 @@ test("field display and value", () => {
     expect(valueField.value).toEqual("123");
 });
 
-// 嵌套展示和模式
+// 嵌套展示和表单模式
 test("nested display/pattern", () => {
     const form = attach(createForm());
     const object_ = attach(form.createObjectField({ name: "object" }));
@@ -349,7 +349,7 @@ test("setDecorator/setDecoratorProps", () => {
     });
 });
 
-// 响应式初始值
+// `reactions` 响应式初始值
 test("reaction initialValue", () => {
     const form = attach(createForm({
         values: { aa: 123 }
@@ -513,7 +513,7 @@ test("selfValidate/errors/warnings/successes/valid/invalid/validateStatus/queryF
 });
 
 // 设置验证器
-test("setValidateRule", () => {
+test("setValidatorRule", () => {
     const form = attach(createForm());
     const field1 = attach(form.createField({ name: "aa", validator: [{ required: true }] }));
     const field2 = attach(form.createField({ name: "bb", validator: "phone" }));
@@ -697,7 +697,7 @@ test("reset", async () => {
     expect(cc.valid).toBeFalsy();
 });
 
-// 匹配
+// 匹配路径
 test("match", () => {
     const form = attach(createForm<Partial<Record<string, number>>>({
         initialValues: { aa: 123 },
@@ -1102,7 +1102,7 @@ test("array path calculation with void index and void wrapper", async () => {
     expect(input.value).toEqual("123");
 });
 
-// 在联动中的联动
+// 在联动中收集依赖触发响应
 test("reaction in reaction", () => {
     const form = attach(createForm());
     const void_ = attach(form.createVoidField({ name: "void" }));
@@ -1194,7 +1194,7 @@ test("deep nested fields hidden and selfValidate with middle hidden", async () =
     expect(form.invalid).toBeFalsy();
 });
 
-// 组件卸载和验证状态
+// 字段卸载和验证状态
 test("fields unmount and selfValidate", async () => {
     const form = attach(createForm());
     const field = attach(form.createField({ name: "parent", required: true }));
@@ -1332,7 +1332,7 @@ test("auto clean with ObjectField", () => {
     expect(form.fields["obj2.cc"]).toBeUndefined();
 });
 
-// 初始值为空
+// 初始值为空的字段
 test("initial value with empty", () => {
     const form = attach(createForm());
     const empty = attach(form.createField({ initialValue: "", name: "empty" }));
@@ -1890,7 +1890,7 @@ test("field destroyed can not be assign value", () => {
     expect(form.values).toEqual({});
 });
 
-// 通过 onInput 通过 target 传值
+// onInput 通过 target 传值
 test("onInput could pass value with target", async () => {
     const form = attach(createForm());
     const aa = attach(form.createField({ name: "aa" }));
