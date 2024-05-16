@@ -170,7 +170,7 @@ test("array field move up/down then fields move", () => {
     expect(form.fields["array.3.value"]).toBe(line3);
 });
 
-// 懒查询数组字段
+// 查询数组字段下标路径
 test("lazy array field query each", () => {
     const form = attach(createForm());
     const array = attach(form.createArrayField({ name: "array" }));
@@ -219,7 +219,7 @@ test("lazy array field query each", () => {
     ]);
 });
 
-// 虚拟子节点
+// 数组字段中的虚拟子节点
 test("void children", () => {
     const form = attach(createForm());
     const array = attach(form.createArrayField({ name: "array" }));
@@ -233,7 +233,7 @@ test("void children", () => {
     expect(array.value).toEqual([123])
 });
 
-// 交换子集
+// 交换数组字段的子集
 test("exchange children", () => {
     const form = attach(createForm());
     const array = attach(form.createArrayField({ name: "array" }));
@@ -250,7 +250,7 @@ test("exchange children", () => {
     expect(form.query("array.0.aaa").take()).toBeUndefined();
 });
 
-// 容错
+// 数组字段容错
 test("fault tolerance", () => {
     const form = attach(createForm());
     const array = attach(form.createArrayField({ name: "array" }));
@@ -318,7 +318,7 @@ test("fault tolerance", () => {
 });
 
 
-// 突变容错 - 和上面一个单元测试一样
+// 修改数组字段容错 - 和上面一个单元测试一样
 test("mutation fault tolerance", () => {
     const form = attach(createForm());
     const pushArray = attach(form.createArrayField({ name: "array1" }));
@@ -541,7 +541,7 @@ test("indexes: nest path need exclude incomplete number", () => {
     expect(objPathIncludeNum.index).toBe(10);
 });
 
-// 在数组中没有字段的节点
+// 在数组字段中没有字段的节点
 test("incomplete insertion of array elements", () => {
     const form = attach(createForm({
         values: {
@@ -828,7 +828,7 @@ test("record: find array nest field record", () => {
     expect(a1c0.record).toEqual({ c: [1, 2], d: [1, 2] });
 });
 
-// 查找数组字段中的集合
+// 查找数组字段中的 `record`
 test("record: find array field record", () => {
     const form = attach(createForm({
         initialValues: {
@@ -843,7 +843,7 @@ test("record: find array field record", () => {
     expect(field.record).toEqual(1);
 });
 
-// 获取对象字段的集合
+// 获取对象字段的 `record`
 test("record: find object field record", () => {
     const form = attach(createForm({
         initialValues: {
@@ -860,7 +860,7 @@ test("record: find object field record", () => {
     expect(field.record).toEqual({ c: 1, d: 1 });
 });
 
-// 获取表单的集合
+// 获取表单的 `record`
 test("record: find form fields", () => {
     const initialValues = {
         array: [{ a: 1 }, { a: 2 }],
