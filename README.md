@@ -963,6 +963,29 @@
 -   在 `autorun` 中不响应 `WeakSet` 原生对象
 -   在 `autorun` 中不响应来自 `WeakSet` 原生对象触发的增删操作
 
+#### `define`
+
+-   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/define.spec.ts
+
+手动定义领域模型
+
+-   `define` + `observable`，响应手动定义领域模型
+-   `define` + `observable.shallow`，响应手动定义浅劫持领域模型
+-   `define` + `observable.box`，响应手动定义一个带有 `get`/`set` 方法的领域模型
+-   `define` + `observable.ref`，响应手动定义一个领域模型的引用
+-   `define` + `observable` + `batch`，批量操作中响应手动定义的领域模型
+-   `define` + `observable.computed`，响应手动定义一个领域模型的计算缓存器
+-   `define` 手动定义领域模型容错机制
+-   `model` 快速定义领域模型
+
+`model` 是快速定义一个模型
+
+-   `getter`/`setter` 属性自动声明 `computed`
+-   函数自动声明 `action`
+-   普通属性自动声明 `observable`
+
+`define` 需要手动定义对象，可以是对象，也可以是一个类，需要手动指定对象属性、方法作为 `observable`
+
 #### 浅响应 `autorun`、`reaction`
 
 -   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/autorun.spec.ts

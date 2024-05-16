@@ -114,7 +114,7 @@ describe("makeObservable", () => {
         expect(handler).toHaveBeenLastCalledWith(123);
     });
 
-    // define + observable.box，响应手动定义一个领域模型的引用
+    // define + observable.ref，响应手动定义一个领域模型的引用
     test("ref annotation", () => {
         const target: any = {};
         define(target, {
