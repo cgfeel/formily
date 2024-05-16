@@ -800,7 +800,7 @@
 -   在 `track` 函数中使用 `action`
 -   `action.bound` 绑定一个批量操作
 -   在 `track` 函数中使用 `action.bound`
--   `action.scope` 在批量操作中分批执行
+-   `action.scope` 在 `action` 中分批执行
 -   使用 `action.socpe.bound`
 -   在 `track` 函数中使用 `action.scope`
 -   在 `track` 函数中使用 `action.scope.bound`
@@ -907,3 +907,10 @@
 定义批量操作，内部可以收集依赖
 
 `batch` 批量操作普通用法：
+
+-   不使用 `batch` 每次修改 `observable` 都会响应一次
+-   `batch` 内部所有修改只记录一次响应
+-   在 `track` 函数中使用 `batch`
+-   `batch.bound` 绑定一个批量操作
+-   在 `track` 函数中使用 `batch.bound`
+-   `batch.scope` 在 `batch` 中分批执行

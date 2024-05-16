@@ -113,7 +113,7 @@ describe("normal batch", () => {
         expect(obs.cc).toBe(41);
     });
 
-    // batch.scope 批量操作中分批执行
+    // batch.scope 在 batch 中分批执行
     test("batch.scope", () => {
         const obs = observable<Partial<Record<string, number|string>>>({});
         const handler = jest.fn();

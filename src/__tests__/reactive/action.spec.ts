@@ -139,7 +139,7 @@ describe("normal action", () => {
         expect(obs.cc).toBe(21);
     });
 
-    // action.scope 在批量操作中分批执行
+    // action.scope 在 action 中分批执行
     test("action.scope xxx", () => {
         const obs = observable<Partial<Record<string, number|string>>>({});
         const handler = jest.fn();
