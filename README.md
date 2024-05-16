@@ -649,7 +649,7 @@
 
 #### createForm
 
-创建一个 `form` 对象，其对象属性可以直接通过演示操作查看效果
+创建一个 `form` 对象，其对象属性可以直接通过本地演示操作查看效果
 
 <img width="639" alt="image" src="https://github.com/cgfeel/formily/assets/578141/dd99e88c-2346-44b6-9c7b-451c86a6bf32">
 
@@ -719,3 +719,62 @@
 更多往下查看单元测试
 
 ---- 分割线 ----
+
+### React Library
+
+-   URL：`/react`
+-   目录：https://github.com/cgfeel/formily/blob/main/src/page/ReactLibrary.tsx
+-   包含章节：
+    -   整个 API 文档 [[查看](https://react.formilyjs.org/zh-CN/api/components/field)]
+
+详细了解建议：查看本地演示或查看单元测试
+
+#### Components
+
+-   `Field`：普通字段
+-   `ArrayField`：数组字段
+-   `ObjectField`：对象字段
+-   `VoidField`：虚拟字段
+-   `SchemaField`：解析 `Schema`、渲染字段、提供 `scope`、传递上下文
+-   `RecursionField`：递归渲染组件，主要有 2 种，将属性递归，组件自身递归。详细见单元测试
+-   `FormProvider`：入口组件，传递上下文
+-   `FormConsumer`：在 `SchemaField` 外部消费表单
+-   `ExpressionScope`：自定义组件内部给 `json-schema` 表达式传递局部作用域
+-   `RecordScope`：作用域注入组件一个有层级对象，主要三个变量：`$record`、`$index`、`$lookup`
+-   `RecordsScope`：作用域注入组件一个对象集合，主要三个变量：`$records`
+
+#### Hooks
+
+-   `useExpressionScope`：自定义组件中读取表达式作用域
+-   `useField`：自定义组件内读取当前字段属性，操作字段状态等
+-   `useFieldSchema`：自定义组件中读取当前字段的 `Schema` 信息
+-   `useForm`：自定义组件中读取当前 `Form` 实例
+-   `useFormEffect`：自定义组件中往当前 `Form` 实例额外注入副作用逻辑
+-   `userParentForm`：读取最近的 `Form` 或者 `ObjectField` 实例
+
+**本地演示补充：**
+
+-   `useExpressionScope` 包含各个层级作用域下发捕获
+-   `useField` 和 `useFieldSchema` 区别
+-   `userParentForm` 补充了父子表单交互示例
+
+#### Shared
+
+-   `connect`：第三方组件库的无侵入接入 `Formily`
+-   `mapProps`：将 `Field` 属性与组件属性映射的适配器函数，主要与 `connect` 函数搭配使用
+-   `mapReadPretty`：给组件赋予阅读状态，主要与 `connect` 函数搭配使用
+-   `observer`：为 `react` 函数组件添加 `reactive` 特性
+
+**需要通过单元测试了解：**
+
+以下建议通过单元测试、`formily` 组件源码了解使用
+
+-   `FormContext`：`Form` 上下文，可以获取当前 `Form` 实例
+-   `FieldContext`：字段上下文，可以获取当前字段实例
+-   `SchemaMarkupContext`：`Schema` 标签上下文
+-   `SchemaContext`：字段 `Schema` 上下文
+-   `SchemaExpressionScopeContext`：`Schema` 表达式作用域上下文
+-   `SchemaOptionsContext`：`Schema` 全局参数上下文，主要用于获取从 `createSchemaField` 传入的参数
+-   `Schema`：解析、转换、编译 `json-schema` 的能力
+
+> 从 `@formily/react` 中可以导出 `Schema` 这个 `Class`，但是不希望使用 `@formily/react`，可以单独依赖 `@formily/json-schema` 这个包
