@@ -787,4 +787,8 @@
 
 ### Reactive Library
 
-补充
+-   目录：https://github.com/cgfeel/formily/tree/main/src/__tests__/reactive
+-   文档：
+    -   `@formily/reactive` [[查看](https://reactive.formilyjs.org/zh-CN)]
+
+update
