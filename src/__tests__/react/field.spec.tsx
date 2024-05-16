@@ -233,10 +233,12 @@ test("content", async () => {
 
     const { queryByTestId } = render(<MyComponent />);
     act(() => {
-        form.query("aa").take(field =>
-            field.setState(state => {
-                state.initialValue = "custom-field";
-            }),
+        form.query("aa").take(
+            field =>
+                isField(field) &&
+                field.setState(state => {
+                    state.initialValue = "custom-field";
+                }),
         );
     });
 

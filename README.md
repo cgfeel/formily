@@ -1384,3 +1384,19 @@
 -   回收字段模型：`form.clearFormGraph`
 -   获取字段模型：`form.getFormGraph`
 -   设置字段模型：`form.setFormGraph`
+
+---- 分割线 ----
+
+### React Library
+
+#### `ExpressionScope`
+
+-   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/react/expression.spec.tsx
+
+自定义组件内部给 `json-schema` 表达式传递局部作用域：
+
+-   创建带有 `ExpressionScope` 组件的表单
+-   忽略编译 `{{variable}}`
+-   表单隐藏和可见：`form.fields[{name}].hidden`、`form.fields[{name}].visible`
+
+#### `ExpressionScope`
