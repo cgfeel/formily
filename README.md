@@ -1130,3 +1130,12 @@
 -   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/hasCollected.spec.ts
 
 检测某段执行逻辑是否存在依赖收集
+
+#### `untracker`
+
+-   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/untracked.spec.ts
+
+`untracker` 函数内部永远不会被依赖收集，和 `action` 一样，不同的是 `untracker` 不支持批量操作
+
+-   `untracker` 函数内部永远不会被依赖收集
+-   `untracker` 不提供参数什么也不会发生
