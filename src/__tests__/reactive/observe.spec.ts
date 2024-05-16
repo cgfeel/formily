@@ -43,7 +43,7 @@ test("deep observe", () => {
     expect(handler).toHaveBeenCalledTimes(5);
 });
 
-// observe 浅响应
+// observe 浅响应 - 第三个参数设置 `false`
 test("shallow observe", () => {
     const handler = jest.fn();
     const obs = observable<any>({
@@ -96,7 +96,7 @@ test("root replace observe", () => {
     expect(handler1).toHaveBeenCalledTimes(3);
 });
 
-// observe 停止响应 - 1
+// observe 通过 `dispose` 停止响应 - 1
 test("dispose observe", () => {
     const obs = observable<any>({
         aa: {
@@ -119,7 +119,7 @@ test("dispose observe", () => {
     expect(handler).toHaveBeenCalledTimes(1);
 });
 
-// observe 停止响应 - 2
+// observe 通过 `dispose` 停止响应 - 2
 test("dispose observe", () => {
     const obs = observable<any>({
         aa: {
@@ -156,7 +156,7 @@ test("dispose observe", () => {
     expect(handler).toHaveBeenCalledTimes(4);
 });
 
-// observe 中 track 函数的使用
+// observe 中 track 函数的使用给定的参数进行条件判断
 test("array delete", () => {
     const array = observable([{ value: 1 }, { value: 2 }]);
     const fn = jest.fn();
@@ -182,8 +182,8 @@ test("array delete", () => {
     dispose();
 });
 
-// observer 树中动态添加的 observer 节点，会响应深度修改
-// observer 树中静态存在的 observer 节点，只响应浅度修改
+// observable 对象树中动态添加的 observable 节点，会响应深度修改
+// observable 对象树中静态存在的 observable 节点，只响应浅度修改
 test("observe dynamic tree", () => {
     const tree = observable<Record<string, number[]>>({ input: observable([]) });
     const childTree = observable<number[]>([]);

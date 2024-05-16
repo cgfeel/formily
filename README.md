@@ -965,6 +965,8 @@
 
 #### `observable` - `other`
 
+-   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/observable.spec.ts
+
 -   `array observable` 操作
 -   `contains` 判断 `observable` 对象中是否包含指定对象
 -   不能直接设置 `observable` 的 `__proto__`
@@ -1052,6 +1054,31 @@
 -   `autorun` 中有条件的依赖收集
 -   `reaction` 中有条件的依赖收集、`subscrible`、`fireImmediately`
 
+#### 深响应 `observe`
+
+-   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/observe.spec.ts
+
+监听 `observable` 对象的所有操作，支持深度监听也支持浅监听，只有 `observable` 支持深度监听，其他都是浅监听
+
+-   `observe` 深响应
+-   `observe` 浅响应 - 第三个参数设置 `false`
+-   `observe` 响应根节点替换
+-   `observe` 通过 `dispose` 停止响应
+-   `observe` 中 `track` 函数的使用给定的参数进行条件判断
+-   `observe` 中动态树，见注 ②
+-   `observe` 响应对象传递为函数将会抛错
+
+注 ①：
+
+> 当收集 `observable` 对象作为依赖进行响应的时候，修改的值没有变化，那么不会触发响应，这仅限于对象的值是原始类型数据；如果对象的值是引用类型的数据，由于引用的地址发生了改变，即便看上去值是一样的，依旧会触发响应，除非更新的对象也是同一个引用地址的值
+
+注 ②：
+
+-   `observable` 对象树中动态添加的 `observable` 节点，会响应深度修改
+-   `observable` 对象树中静态存在的 `observable` 节点，只响应浅度修改
+
+详细见单元测试代码
+
 #### `observable` 对象检查、转换
 
 -   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/externals.spec.ts
@@ -1088,5 +1115,7 @@
 -   递归 `observable` 并打印 `JS`
 
 #### `hasCollected`
+
+-   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/hasCollected.spec.ts
 
 检测某段执行逻辑是否存在依赖收集
