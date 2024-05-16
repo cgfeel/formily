@@ -8,13 +8,20 @@ test("base tracker", () => {
     const view = () => fn(obs.value);
     const scheduler = () => tracker.track(view);
 
+    // 初始化时不会响应
     const tracker = new Tracker(scheduler);
+    expect(fn).toHaveBeenCalledTimes(0);
+
+    // 修改预期依赖的值不会响应
+    obs.value = 321;
+    expect(fn).toHaveBeenCalledTimes(0);
+
+    // 一定要手动跟踪一次才会产生依赖
     tracker.track(view);
-
     expect(fn).toHaveBeenCalledTimes(1);
-    expect(fn).toHaveBeenLastCalledWith(undefined);
+    expect(fn).toHaveBeenLastCalledWith(321);
 
-    // 在跟踪的 track 函数中收集了 obs.value 作为依赖，更新后会重新触发响应
+    // 之后每次修改依赖的值，会触发 Tracker 中的 `scheduler` 来决定响应
     obs.value = 123;
     expect(fn).toHaveBeenCalledTimes(2);
     expect(fn).toHaveBeenLastCalledWith(123);
@@ -48,6 +55,7 @@ test("nested tracker", () => {
     tracker.dispose();
 });
 
+// Tracker 根据条件收集依赖
 test("tracker recollect dependencies", () => {
     const obs = observable({ aa: "aaa", bb: "bbb", cc: "ccc" });
     const fn = jest.fn();
@@ -72,7 +80,7 @@ test("tracker recollect dependencies", () => {
     tracker.track();
 });
 
-// 共享跟踪调度器
+// Tracker 共享跟踪调度器
 test("shared scheduler with multi tracker (mock react strict mode)", () => {
     const obs = observable<{ value?: number }>({});
     const component = () => obs.value;

@@ -1054,11 +1054,22 @@
 -   `autorun` 中有条件的依赖收集
 -   `reaction` 中有条件的依赖收集、`subscrible`、`fireImmediately`
 
+#### 浅响应 `Tracker`
+
+-   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/tracker.spec.ts
+
+在依赖发生变化时不会重复执行 `tracker` 函数，需要用户手动重复执行，只会触发 `scheduler`
+
+-   `Tracker` 手动跟踪基础用法
+-   `Tracker` 嵌套跟踪
+-   `Tracker` 根据条件收集依赖
+-   `Tracker` 共享跟踪调度器
+
 #### 深响应 `observe`
 
 -   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/observe.spec.ts
 
-监听 `observable` 对象的所有操作，支持深度监听也支持浅监听，只有 `observable` 支持深度监听，其他都是浅监听
+监听 `observable` 对象的所有操作，支持深度监听也支持浅监听，只有 `observe` 支持深度监听，其他都是浅监听
 
 -   `observe` 深响应
 -   `observe` 浅响应 - 第三个参数设置 `false`
