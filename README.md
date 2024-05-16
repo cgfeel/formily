@@ -634,6 +634,8 @@
 -   演示中将文档示例做了拆分，建议对照比较
 -   没有记录 `vue` 部分，当前以 `React` 技术栈为主
 
+更多往下查看单元测试
+
 ---- 分割线 ----
 
 ### Core Library
@@ -708,3 +710,7 @@
 -   `registerValidateMessageTemplateEngine`：定制信息模板
 -   `registerValidateRules`：定制校验规则，包含全局定制、局部定制
 -   `getValidateLocaleIOSCode`：获取内置存在的 `ISO Code`
+
+更多往下查看单元测试
+
+---- 分割线 ----
