@@ -787,13 +787,11 @@
 
 ### Reactive Library
 
--   目录：https://github.com/cgfeel/formily/tree/main/src/__tests__/reactive
--   文档：
-    -   `@formily/reactive` [[查看](https://reactive.formilyjs.org/zh-CN)]
-
 #### `action`
 
 不可收集依赖的批量操作，具体特性见单元测试
+
+-   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/action.spec.ts
 
 `action` 批量操作普通用法：
 
@@ -819,3 +817,25 @@
 -   `track` 函数中使用模型 `action.scope.bound`
 -   嵌套 `action` 批量操作在 `reaction` 中 `subscrible`
 -   嵌套 `action` 和 `batch` 批量操作在 `reaction` 中 `subscrible`
+
+### `observable`
+
+创建不同响应式行为的 `observable` 对象
+
+-   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/annotations.spec.ts
+
+-   `observable` 创建劫持对象 - 默认深度劫持
+-   `observable.shallow` 创建的是浅劫持响应式对象
+-   `observable.box` 创建引用劫持响应式对象，带有 `get`/`set` 方法
+-   `observable.ref` 创建引用劫持响应式对象
+-   `action.bound` 中更新 `observable` 对象
+-   非批量操作中更新 `observable` 对象
+-   `observable.computed` 创建一个计算缓存器
+-   创建一个链式 `observable.computed`
+-   `model` 快速定义领域模型
+-   `model` 中创建一个计算缓存器，计算数组长度
+-   `model` 中创建一个计算缓存器，收集依赖
+-   `observable.computed` 容错机制
+-   `observable.computed` 接受一个带有 get 属性方法的对象
+-   `untracked` 中使用 `observable.computed` 对象
+-   `define` 定义一个类为领域模型

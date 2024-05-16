@@ -1,6 +1,6 @@
 import { action, autorun, define, isObservable, model, observe, observable, reaction, untracked } from "@formily/reactive";
 
-// 创建劫持对象 - 默认深度劫持
+// observable 创建劫持对象 - 默认深度劫持
 test("observable annotation", () => {
     const obs = observable<any>({ aa: 111 })
     const handler = jest.fn();
@@ -27,7 +27,7 @@ test("observable annotation", () => {
     // 官方文档有个内部方法 getObservableMaker 测试，这里无法调用跳过
 });
 
-// 创建的是浅劫持响应式对象
+// observable.shallow 创建的是浅劫持响应式对象
 test("shallow annotation", () => {
     const obs = observable.shallow<any>({ aa: 111 });
     const handler = jest.fn();
@@ -62,7 +62,7 @@ test("shallow annotation", () => {
     expect(handler).toHaveBeenCalledTimes(2);
 });
 
-// 创建引用劫持响应式对象，带有 get/set 方法
+// observable.box 创建引用劫持响应式对象，带有 get/set 方法
 test("box annotation", () => {
     const obs = observable.box(123);
     const handler = jest.fn();
@@ -81,7 +81,7 @@ test("box annotation", () => {
     expect(handler).toHaveBeenNthCalledWith(2, boxValue);
 });
 
-// 创建引用劫持响应式对象
+// observable.ref 创建引用劫持响应式对象
 test("ref annotation", () => {
     const obs = observable.ref(123);
     const handler = jest.fn();
@@ -98,7 +98,7 @@ test("ref annotation", () => {
     expect(handler).toHaveBeenNthCalledWith(2, 333);
 });
 
-// 批量操作中更新劫持对象
+// action.bound 中更新 observable 对象
 test("action annotation", () => {
     const obs = observable<Partial<Record<string, number>>>({});
     const setData = action.bound!(() => {
@@ -120,7 +120,7 @@ test("action annotation", () => {
     expect(handler).toHaveBeenCalledWith([123, 321], [undefined, undefined]);
 });
 
-// 非批量操作中更新劫持对象
+// 非批量操作中更新 observable 对象
 test("no action annotation", () => {
     const obs = observable<Partial<Record<string, number>>>({});
     const setData = () => {
@@ -140,7 +140,7 @@ test("no action annotation", () => {
     expect(handler).toHaveBeenNthCalledWith(2, [123, 321], [123, undefined]);
 });
 
-// 创建一个计算缓存器
+// observable.computed 创建一个计算缓存器
 test("computed annotation", () => {
     const obs = observable({ aa: 11, bb: 22 });
     const handler = jest.fn(() => obs.aa + obs.bb);
@@ -238,9 +238,10 @@ test("computed annotation", () => {
     expect(handler).toHaveBeenCalledTimes(7);
 });
 
-// 创建一个链式计算缓存器
+// 创建一个链式 observable.computed
 test("computed chain annotation", () => {
     const obs = observable({ aa: 11, bb: 22 });
+
     const handler1 = jest.fn(() => obs.aa + obs.bb);
     const compu1 = observable.computed(handler1);
 
@@ -277,7 +278,7 @@ test("computed chain annotation", () => {
     expect(handler2).toHaveBeenCalledTimes(3);
 });
 
-// 快速定义领域模型
+// model 快速定义领域模型
 test("computed with array length", () => {
     const obs = model({
         // 普通属性自动声明 observable
@@ -307,7 +308,7 @@ test("computed with array length", () => {
     expect(handler).toHaveBeenCalledTimes(6);
 });
 
-// 快速定义领域模型 - 创建一个计算缓存器
+// model 中创建一个计算缓存器，计算数组长度
 test("computed width computed array length", () => {
     const obs = model({
         arr: [1],
@@ -350,7 +351,7 @@ test("computed width computed array length", () => {
     expect(handler2.mock.calls[2][0]).toEqual([]);
 });
 
-// 快速定义领域模型 - 创建一个自动收集依赖的计算缓存器
+// model 中创建一个计算缓存器，收集依赖
 test("computed recollect dependencies", () => {
     const computed = jest.fn();
     const obs = model({
@@ -393,7 +394,7 @@ test("computed recollect dependencies", () => {
     expect(handler).toHaveBeenNthCalledWith(4, "qqq");
 });
 
-// 创建一个容错的计算缓存器
+// observable.computed 容错机制
 test("computed no params", () => {
     // @ts-ignore 
     const compu1 = observable.computed(null);
@@ -406,7 +407,7 @@ test("computed no params", () => {
     expect(compu2.value).toBeUndefined();
 });
 
-// 使用一个带有 get 属性方法的对象，创建一个计算缓存器
+// observable.computed 接受一个带有 get 属性方法的对象
 test("computed object params", () => {
     const compu1 = observable.computed({ get: () => {} });
     const compu2 = observable.computed({ get: () => "input" });
@@ -416,6 +417,7 @@ test("computed object params", () => {
     expect(compu2.value).toEqual("input");
 });
 
+// untracked 中使用 observable.computed 对象
 // untracked: 用法与 batch 相似，在给定的 untracker 函数内部永远不会被依赖收集
 test("computed no track get", () => {
     const obs = observable({ aa: 123 });
@@ -446,7 +448,7 @@ test("computed no track get", () => {
     expect(get).toHaveBeenCalledTimes(5);
 });
 
-// 手动定义一个类为领域模型
+// define 定义一个类为领域模型
 test("computed cache descriptor", () => {
     class A {
         _value = 0;
