@@ -839,3 +839,63 @@
 -   `observable.computed` 接受一个带有 get 属性方法的对象
 -   `untracked` 中使用 `observable.computed` 对象
 -   `define` 定义一个类为领域模型
+
+### 浅响应 `autorun`、`reaction`
+
+-   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/autorun.spec.ts
+
+接收一个 `tracker` 函数用于响应 `observable` 数据变化，他们都返回一个 `dispose` 函数用于停止响应。分别如下：
+
+-   `autorun`：只接受 `tracker` 函数
+-   `reaction`：
+    -   接受 `tracker` 函数
+    -   接受 `callback` 函数作为 `subscrible`
+    -   接受一个属性用于初始化执行、脏检查等
+
+除此之外在 `tracker` 函数中会自动收集 `observable` 依赖，除非：
+
+-   使用了非 `observable` 对象
+-   使用的对象被 `action`、`untracked` 包裹
+
+注意：
+
+-   浅响应只响应指定对象，对象下的属性除非指定情况下会收集，否则不会主动收集
+-   `reaction` 可以通过 `equals` 脏检查将对象通过 `JSON.stringify` 转换成字符串作为深比较，但建议深比较通过下方的 `observe` 来响应
+
+测试示例：
+
+-   创建一个 `autorun`
+-   创建一个 `reaction`，监听 `subscrible` 订阅
+-   `reaction` 初始化后立即响应
+-   `reaction` 中 `subscrible` 不收集依赖
+-   `reaction` 中进行数据的脏检查
+-   `reaction` 响应中浅比较 - 默认
+-   `reaction` 响应中深比较
+-   在 `autorun` 中递增 `observable` 对象
+-   `autorun` 初始化收集的依赖决定后续响应情况
+-   `autorun` 中间接递归响应 - 单向递归
+-   `autorun` 中间接递归响应 - 批量操作递归
+-   `autorun` 跳出响应前，通过头部赋值收集依赖
+-   `autorun.memo` 在 `autorun` 中用于创建持久引用数据
+-   使用 `observable` 对象创建一个 `autorun.memo`
+-   `autorun.effect` 在 `autorun` 添加一个微任务，在响应结束前执行
+-   `autorun.memo` 中添加依赖
+-   `autorun.memo` 响应依赖更新以及 `autorun` 停止响应
+-   `autorun.memo` 容错，传递无效值
+-   在 `autorun` 外部使用 `autorun.memo` 会抛出错误
+-   在 `autorun` 中不使用 `autorun.memo` 无效递增
+-   `autorun.effect` 微任务的执行和结束回调
+-   `autorun.effect` 结束前 `autorun` 已 `dispose`
+-   `autorun.effect` 添加依赖
+-   `autorun.effect` 不添加依赖默认为 `[{}]`，随 `autorun` 每次都响应
+-   `autorun.effect` 在 `autorun` 外部使用将抛出错误
+-   `autorun.effect` 容错
+-   在 `batch` 内部停止 `autorun` 响应
+-   `autorun` 依赖 `observable.computed` 计算的值
+-   `autorun` 依赖 `observable.computed` 对象在 `delete` 后的响应
+-   `autorun` 依赖 `observable.computed` 使用 `Set` 类型对象
+-   `autorun` 依赖 `observable.computed` 删除 `Set` 类型子集
+-   `autorun` 依赖 `observable.computed` 使用 `Map` 类型对象
+-   `autorun` 依赖 `observable.computed` 删除 `Map` 类型子集
+-   `autorun` 中有条件的依赖收集
+-   `reaction` 中有条件的依赖收集、`subscrible`、`fireImmediately`

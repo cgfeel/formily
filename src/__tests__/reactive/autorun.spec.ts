@@ -1,6 +1,7 @@
 import { autorun, batch, define, observable, reaction } from "@formily/reactive";
 import { sleep } from "../shared";
 
+// 创建一个 autorun
 // 接收一个 tracker 函数，如果函数内部有消费 observable 数据，数据发生变化时，tracker 函数会重复执行
 test("autorun", () => {
     const obs = observable({ aa: { bb: 123 } });
@@ -23,6 +24,7 @@ test("autorun", () => {
     expect(handler).toHaveBeenCalledTimes(2);
 });
 
+// 创建一个 reaction，监听 subscrible 订阅
 // 接收一个 tracker 函数，与 callback 响应函数
 // 如果 tracker 内部有消费 observable 数据，数据发生变化时，tracker 函数会重复执行，
 // 但是 callback 执行必须要求 tracker 函数返回值发生变化时才执行
@@ -50,7 +52,7 @@ test("reaction", () => {
     expect(handler).toHaveBeenCalledTimes(1);
 });
 
-// 初始化后立即响应
+// reaction 初始化后立即响应
 test("reaction fireImmediately", () => {
     const obs = observable({ aa: { bb: 123 } });
     const handler = jest.fn();
@@ -82,7 +84,7 @@ test("reaction fireImmediately", () => {
     expect(handler).toHaveBeenCalledTimes(2);
 });
 
-// 在响应的 subscribe 中不收集依赖
+// reaction 中 subscribe 不收集依赖
 test("reaction untrack handler", () => {
     const obs = observable({ aa: { bb: 123, cc: 123 } });
     const handler = jest.fn();
@@ -104,7 +106,7 @@ test("reaction untrack handler", () => {
     dispose();
 });
 
-// 在响应中进行数据的脏检查
+// reaction 中进行数据的脏检查
 test("reaction dirty check", () => {
     // 通过 define 劫持 obs.aa 为一个响应引用
     const obs = { aa: 123 };
@@ -132,7 +134,7 @@ test("reaction dirty check", () => {
     expect(handler).toHaveBeenCalledTimes(1);
 });
 
-// 响应中浅比较 - 默认
+// reaction 响应中浅比较 - 默认
 test("reaction with shallow equals", () => {
     const obs = {
         aa: { bb: 123 }
@@ -157,7 +159,7 @@ test("reaction with shallow equals", () => {
     expect(handler).toHaveBeenCalledTimes(1);
 });
 
-// 响应中深比较 - 通过自定义 equals 进行脏检查
+// reaction 中深比较 - 通过自定义 equals 进行脏检查
 test("reaction with deep equals", () => {
     const obs = {
         aa: { bb: 123 }
@@ -182,7 +184,7 @@ test("reaction with deep equals", () => {
     expect(handler).toHaveBeenCalledTimes(0);
 });
 
-// 在 autorun 中尾递增
+// 在 autorun 中递增 observable 对象
 test("autorun direct recursive react", () => {
     const obs = observable({ value: 1 });
     autorun(() => {
@@ -191,6 +193,9 @@ test("autorun direct recursive react", () => {
 
     // autorun 初始化为 1，自身 ++ 为 2
     expect(obs.value).toEqual(2);
+
+    obs.value = 3;
+    expect(obs.value).toEqual(4);
 });
 
 // autorun 初始化收集的依赖决定后续响应情况
@@ -309,7 +314,7 @@ test("autorun indirect alive recursive react", () => {
     expect(cc.value).toEqual(3);
 });
 
-// 跳出响应前，通过头部赋值添加依赖
+// autorun 跳出响应前，通过头部赋值收集依赖
 test("autorun direct recursive react with head track", () => {
     const obs1 = observable<Partial<Record<string, string>>>({});
     const obs2 = observable<Partial<Record<string, string>>>({});
@@ -335,6 +340,7 @@ test("autorun direct recursive react with head track", () => {
     expect(fn).toHaveBeenCalledWith("111", "222");
 });
 
+// autorun.memo
 // 在 autorun 中用于创建持久引用数据，仅仅只会受依赖变化而重新执行 memo 内部函数
 // 注意：请不要在 If/For 这类语句中使用，因为它内部是依赖执行顺序来绑定当前 autorun 的
 test("autorun.memo", () => {
@@ -366,6 +372,7 @@ test("autorun.memo", () => {
     expect(fn).toHaveBeenCalledWith(4, 4);
 });
 
+// 使用 observable 对象创建一个 autorun.memo
 // 使用 observable 在 autorun 中创建持久引用数据 -  和普通对象表现一致
 test("autorun.memo with observable", () => {
     const obs1 = observable({ aa: 0 });
@@ -394,6 +401,7 @@ test("autorun.memo with observable", () => {
     expect(fn).toHaveBeenCalledTimes(4);
 });
 
+// autorun.effect 在 autorun 添加一个微任务，在响应结束前执行
 // 在 autorun 中用于响应 autorun 第一次执行的下一个微任务时机与响应 autorun 的 dispose
 // 注意：请不要在 If/For 这类语句中使用，因为它内部是依赖执行顺序来绑定当前 autorun 的
 test("autorun.memo with observable and effect", async () => {
@@ -428,6 +436,7 @@ test("autorun.memo with observable and effect", async () => {
     await sleep(0);
     expect(fn).toHaveBeenCalledTimes(5);
     expect(fn).toHaveBeenNthCalledWith(5, 3, 5);
+    dispose();
 });
 
 // autorun.memo 中添加依赖
@@ -459,7 +468,7 @@ test("autorun.memo with deps", () => {
     expect(fn).toHaveBeenNthCalledWith(6, 4, 0);
 });
 
-// autorun 和 autorun.memo 使用后，发起停止响应
+// autorun.memo 响应依赖更新以及 autorun 停止响应
 test("autorun.memo with deps and dispose", () => {
     const obs = observable({ bb: 0, cc: 0 });
     const fn = jest.fn();
@@ -520,7 +529,7 @@ test("autorun.memo not in autorun", () => {
     expect(() => autorun.memo(() => ({ aa: 0 }))).toThrow();
 });
 
-// 在 autorun 中不使用 memo 递增
+// 在 autorun 中不使用 autorun.memo 无效递增
 test("autorun no memo", () => {
     const obs = observable({ bb: 0 });
     const fn = jest.fn();
@@ -544,7 +553,7 @@ test("autorun no memo", () => {
     expect(fn).toHaveBeenNthCalledWith(5, 4, 0);
 });
 
-// autorun 中添加一个微任务
+// autorun.effect 微任务的执行和结束回调
 test("autorun.effect", async () => {
     const obs = observable({ bb: 0 });
     const fn = jest.fn();
@@ -581,7 +590,7 @@ test("autorun.effect", async () => {
     expect(disposer).toHaveBeenCalledTimes(1);
 });
 
-// autorun.effect 结束时 autorun 已停止响应
+// autorun.effect 结束前 autorun 已 dispose
 test("autorun.effect dispose when autorun dispose", async () => {
     const obs = observable({ bb: 0 });
     const fn = jest.fn();
@@ -659,7 +668,7 @@ test("autorun.effect with deps", async () => {
     expect(effect).toHaveBeenCalledTimes(2);
 });
 
-// autorun.effect 不添加依赖默认为 [{}]
+// autorun.effect 不添加依赖默认为 [{}]，随 autorun 每次都响应
 test("autorun.effect with default deps", async () => {
     const obs = observable({ bb: 0 });
     const fn = jest.fn();
@@ -706,7 +715,7 @@ test("autorun.effct with invalid params", () => {
     autorun.effect({});
 });
 
-// 在批量操作过程中停止 autorun 响应
+// 在 batch 内部停止 autorun 响应
 test("autorun dispos in batch", () => {
     const obs = observable({ value: 123 });
     const handler = jest.fn();
@@ -723,7 +732,7 @@ test("autorun dispos in batch", () => {
     expect(handler).toHaveBeenCalledTimes(1);
 });
 
-// 依赖 observable.computed 计算设置的值
+// autorun 依赖 observable.computed 计算的值
 test("set value by computed depend", () => {
     const obs = observable<any>({});
     const comp1 = observable.computed(() => obs.aa?.bb);
@@ -740,7 +749,7 @@ test("set value by computed depend", () => {
     expect(handler).toHaveBeenNthCalledWith(2, 123, 321);
 });
 
-// 依赖 observable.computed 删除劫持响应对象
+// autorun 依赖 observable.computed 对象在 delete 后的响应
 test("delete value by computed depend", () => {
     const obs = observable<any>({ a: { b: 1, c: 2 } });
     const comp1 = observable.computed(() => obs.a?.b);
@@ -757,7 +766,7 @@ test("delete value by computed depend", () => {
     expect(handler).toHaveBeenNthCalledWith(2, undefined, undefined);
 });
 
-// 依赖 observable.computed 使用 Set 类型的对象
+// autorun 依赖 observable.computed 使用 Set 类型对象
 test("set Set value by computed depend", () => {
     const obs = observable({ set: new Set() });
     const comp1 = observable.computed(() => obs.set.has(1));
@@ -774,7 +783,7 @@ test("set Set value by computed depend", () => {
     expect(handler).toHaveBeenNthCalledWith(2, true, 1);
 });
 
-// 依赖 observable.computed 删除 Set 类型子集
+// autorun 依赖 observable.computed 删除 Set 类型子集
 test("delete Set by computed depend", () => {
     const obs = observable({ set: new Set([1]) });
     const comp1 = observable.computed(() => obs.set.has(1));
@@ -791,7 +800,7 @@ test("delete Set by computed depend", () => {
     expect(handler).toHaveBeenCalledWith(false, 0);
 });
 
-// 依赖 observable.computed 使用 Map 类型的对象
+// autorun 依赖 observable.computed 使用 Map 类型对象
 test("set Map value by computed depend", () => {
     const obs = observable({ map: new Map() });
     const comp1 = observable.computed(() => obs.map.has(1));
@@ -808,7 +817,7 @@ test("set Map value by computed depend", () => {
     expect(handler).toHaveBeenCalledWith(true, 1);
 });
 
-// 依赖 observable.computed 删除 Map 类型子集
+// autorun 依赖 observable.computed 删除 Map 类型子集
 test("delete Map by computed depend", () => {
     const obs = observable({ map: new Map([[1, 1]]) });
     const comp1 = observable.computed(() => obs.map.has(1));
@@ -825,7 +834,7 @@ test("delete Map by computed depend", () => {
     expect(handler).toHaveBeenNthCalledWith(2, false, 0);
 });
 
-// autorun 中依赖记录
+// autorun 中有条件的依赖收集
 test("autorun recollect dependencies", () => {
     const obs = observable({ aa: "aaa", bb: "bbb", cc: "ccc" });
     const fn = jest.fn();
@@ -844,7 +853,7 @@ test("autorun recollect dependencies", () => {
     expect(fn).toHaveBeenCalledTimes(2);
 });
 
-// reaction 中依赖记录
+// reaction 中有条件的依赖收集、subscrible、fireImmediately
 test("reaction recollect dependencies", () => {
     const obs = observable({ aa: "aaa", bb: "bbb", cc: "ccc" });
     const fn1 = jest.fn();
