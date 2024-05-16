@@ -1236,24 +1236,24 @@
 
 数组字段：
 
--   创建数组字段
--   数组字段方法
--   数组字段下标操作和交换
--   数组下标字段移动
--   查询数组字段下标路径
--   数组字段中的虚拟子节点
--   交换数组字段的子集
+-   创建数组字段：`createArrayField`
+-   数组字段方法：`push`、`pop`、`unshift`、`remove`、`insert`、`move`、`shift`、`moveDown`、`moveUp`
+-   数组字段下标操作和交换：`push`、`pop`、`unshift`、`remove`、`insert`、`move`
+-   数组下标字段移动：`move`
+-   查询数组字段下标路径：`form.query`、`form.fields`
+-   数组字段中的虚拟子节点：`basePath`
+-   交换数组字段的子集：`move`
 -   数组字段容错
 -   修改数组字段容错
 -   数组字段通过 `move` API 移动子集
--   数组添加、删除、创建子字段触发回调
--   嵌套字段的 `indexes`，以及删除数组下的节点的坑点
--   数组字段的 `indexes` 需要避免无效的数字
--   在数组字段中没有字段的节点
--   数组节点中可以跳过虚拟节点，直接获取数据
--   数组字段清空
--   数组字段删除节点不会导致内存泄露
--   数组字段修补值
+-   数组添加、删除、创建子字段触发回调：`onFormValuesChange`、`onFormInitialValuesChange`、`onFieldValueChange`
+-   嵌套字段的 `indexes`，以及删除数组下的节点的坑点：`field.indexs`
+-   数组字段的 `indexes` 需要避免无效的数字：`field.index`
+-   在数组字段中没有字段的节点：`unshift`
+-   数组节点中可以跳过虚拟节点，直接获取数据：`basePath`
+-   数组字段清空：`form.reset("*")`
+-   数组字段删除节点不会导致内存泄露：`onFieldValueChange`
+-   数组字段修补值：`unshift`
 -   数组字段初始值通过 `remove` 删除
 -   从 `records` 中查找数组字段
 -   在数组嵌套字段中查找 `record`
@@ -1267,18 +1267,18 @@
 
 表单、字段生命周期：
 
--   表单初始化、挂载、卸载监听
--   监听表单值改变、表单初始值改变
--   监听表单输入
--   表单响应式逻辑
--   重置表单
--   表单提交
--   表单验证 - 和提交验证不同在于，表单验证不需要通过提交触发
--   字段主动受控
--   字段初始化、字段挂载、字段卸载
--   字段初始值变更、字段值变更、字段输入值变更
--   字段被动受控
--   字段验证
+-   表单初始化、挂载、卸载监听：`onFormInit`、`OnFormMount`、`onFormUnmount`
+-   监听表单值改变、表单初始值改变：`onFormValueChange`、`onFormInitialValueChange`
+-   监听表单输入：`onFormInputChange`
+-   表单响应式逻辑：`onFormReact`
+-   重置表单：`onFormReset`
+-   表单提交：`onFormSubmit`
+-   表单验证：`onFormValidate`
+-   字段主动受控：`onFieldChange`
+-   字段初始化、字段挂载、字段卸载：`onFieldInit`、`onFieldMount`、`onFieldUnmout`
+-   字段初始值变更、字段值变更、字段输入值变更：`onFieldInitialValueChange`、`onFieldValueChange`、`onFieldInputValueChange`
+-   字段被动受控：`onFieldReact`
+-   字段验证：`onFieldValidate`
 -   副作用里异步监听生命周期会抛出错误
 -   `createEffectContext` 副作用上下文
 -   `form.lifecycles` 表单副作用集合
