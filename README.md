@@ -789,9 +789,9 @@
 
 #### `action`
 
-不可收集依赖的批量操作，具体特性见单元测试
-
 -   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/action.spec.ts
+
+不可收集依赖的批量操作，具体特性见单元测试
 
 `action` 批量操作普通用法：
 
@@ -820,9 +820,9 @@
 
 ### `observable`
 
-创建不同响应式行为的 `observable` 对象
-
 -   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/annotations.spec.ts
+
+创建不同响应式行为的 `observable` 对象：
 
 -   `observable` 创建劫持对象 - 默认深度劫持
 -   `observable.shallow` 创建的是浅劫持响应式对象
