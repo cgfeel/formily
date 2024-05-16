@@ -1404,3 +1404,9 @@
 -   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/react/field.spec.tsx
 
 `createField` 的 `React` 实现：
+
+-   没有 `FormProvider` 上下文渲染 `Field` 会抛出错误
+
+不包含：
+
+-   `ReactiveField`：这个字段不对外导出，可以通过 `ArrayField` 进行了解
