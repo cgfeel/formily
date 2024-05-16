@@ -916,6 +916,27 @@
 -   `map` 类型的 `observable` 对象中允许设置一个普通对象，或是 `observable` 对象作为 `value`
 -   浅劫持 `map` 对象，不会响应对象的属性值修改
 
+#### `observable` - `Set`
+
+-   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/collections-set.spec.ts
+
+劫持 `Set` 类型对象作为 `observable` 对象
+
+-   创建一个 `set` 类型的 `observable` 对象
+-   在 `autorun` 中响应 `set` 类型对象
+-   在 `autorun` 中响应 `set.size`
+-   在 `autorun` 中通过 `for of` 迭代 `set`
+-   在 `autorun` 中通过 `forEach` 迭代 `set`
+-   在 `autorun` 中通过 `for of` 迭代 `set.keys` 获取值
+-   在 `autorun` 中通过 `for of` 迭代 `set.values` 获取值
+-   在 `autorun` 中通过 `for of` 迭代 `set.entries` 获取值
+-   在 `autorun` 中不响应 `set` 错误的自定义属性
+-   在 `autorun` 中不响应没有变更的 `set` 对象
+-   在 `autorun` 中不响应 `set` 类型原生数据迭代
+-   在 `autorun` 中不响应 `set` 类型原生数据的新增、删除
+-   在 `autorun` 中不响应 `set` 类型原生数据的 `set.size`
+-   在 `autorun` 中不响应来自 `set` 类型原生数据添加的项目
+
 #### 浅响应 `autorun`、`reaction`
 
 -   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/autorun.spec.ts

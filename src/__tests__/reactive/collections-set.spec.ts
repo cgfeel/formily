@@ -1,8 +1,8 @@
 import { autorun, observable, raw } from "@formily/reactive";
 
-// 劫持 Set 类型对象作为响应对象
+// 劫持 Set 类型对象作为 observable 对象
 describe("Set", () => {
-    // 创建一个 Set 类型的响应劫持对象
+    // 创建一个 set 类型的 observable 对象
     test("should be a proper JS Set", () => {
         const set = observable(new Set());
         expect(set).toBeInstanceOf(Set);
@@ -66,7 +66,7 @@ describe("Set", () => {
         expect(handler).toHaveBeenCalledWith(0);
     });
 
-    // 在 autorun 中通过 forof 迭代 set
+    // 在 autorun 中通过 for of 迭代 set
     test("should autorun for of iteration", () => {
         const handler = jest.fn();
         const set = observable(new Set<number>());
@@ -129,7 +129,7 @@ describe("Set", () => {
         expect(handler).toHaveBeenCalledWith(0);
     });
 
-    // 在 autorun 中通过 set.keys 获取值
+    // 在 autorun 中通过 for of 迭代 set.keys 获取值
     test("should autorun keys iteration", () => {
         const handler = jest.fn();
         const set = observable(new Set<number>());
@@ -162,7 +162,7 @@ describe("Set", () => {
         expect(handler).toHaveBeenCalledWith(0);
     });
 
-    // 在 autorun 中通过 set.values 获取值
+    // 在 autorun 中通过 for of 迭代 set.values 获取值
     test("should autorun values iteration", () => {
         const handler = jest.fn();
         const set = observable(new Set<number>());
@@ -196,7 +196,7 @@ describe("Set", () => {
         expect(handler).toHaveBeenCalledWith(0);
     });
 
-    // 在 autorun 中通过 set.entries 获取值
+    // 在 autorun 中通过 `for of` 迭代 `set.entries` 获取值
     test("should autorun entries iteration", () => {
         const handler = jest.fn();
         const set = observable(new Set<number>());
@@ -273,7 +273,7 @@ describe("Set", () => {
         expect(handler).toHaveBeenCalledTimes(3);
     });
 
-    // 在 autorun 中不响应原生数据迭代
+    // 在 autorun 中不响应 set 类型原生数据迭代
     test("should not autorun raw iterations", () => {
         const handler = jest.fn();
         const set = observable(new Set<number>());
@@ -309,7 +309,7 @@ describe("Set", () => {
         expect(handler).toHaveBeenCalledTimes(1);
     });
 
-    // 在 autorun 中不响应原生数据的新增、删除
+    // 在 autorun 中不响应 set 类型原生数据的新增、删除
     test("should not be triggered by raw mutations", () => {
         const handler = jest.fn();
         const set = observable(new Set());
@@ -325,7 +325,7 @@ describe("Set", () => {
         expect(handler).toHaveBeenCalledTimes(1);
     });
 
-    // 在 autorun 中不响应原生数据的 Set.size
+    // 在 autorun 中不响应 set 类型原生数据的 set.size
     test("should not autorun raw size mutations", () => {
         const handler = jest.fn();
         const set = observable(new Set());
@@ -339,7 +339,7 @@ describe("Set", () => {
         expect(handler).toHaveBeenCalledWith(0);
     });
 
-    // 在 autorun 中不响应来自原生数据添加的项目
+    // 在 autorun 中不响应来自 set 类型原生数据添加的项目
     test("should not be triggered by raw size mutations", () => {
         const handler = jest.fn();
         const set = observable(new Set());
