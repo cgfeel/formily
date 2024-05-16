@@ -1,7 +1,7 @@
 import { createForm } from '@formily/core';
 import { attach } from './shared';
 
-// 测试创建 objectField 对象
+// 测试创建 ObjectField 对象
 test('create object field', () => {
     // 创建一个 form 对象并挂载
     const form = attach(createForm())
@@ -22,7 +22,7 @@ test('create object field', () => {
     expect(object.existProperty).toBeDefined()
 })
 
-// 测试 objectField 对象的方法
+// 测试 ObjectField 对象的方法
 test('create object field methods', () => {
     const form = attach(createForm())
     const object = attach(

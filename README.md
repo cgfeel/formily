@@ -1261,9 +1261,16 @@
 -   获取对象字段的 `record`
 -   获取表单的 `record`
 
-#### form
+#### ObjectField
 
-表单对象
+-   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/object.spec.ts
+
+对象字段：
+
+-   创建 `ObjectField` 对象：`createObjectField`
+-   `ObjectField` 对象的方法：`field.addProperty`、`field.removeProperty`、`field.existProperty`
+
+#### form
 
 -   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/form.spec.ts
 
