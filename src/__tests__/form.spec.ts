@@ -166,7 +166,7 @@ test("setValues/setInitialValues", () => {
     });
 });
 
-// 不能覆盖初始值的字段，
+// 没有值的字段会使用初始值合并
 test('no field initialValues merge', () => {
     const form = attach(createForm<{ aa: string, bb?: string }>({ 
         values: { aa: '123' }, 
@@ -190,7 +190,7 @@ test("setLoading", async () => {
     expect(form.loading).toBeTruthy();
 });
 
-// 设置值为 null
+// 允许设置值为 null
 test("setValues with null", () => {
     const form = attach(createForm());
     const data = {
@@ -201,11 +201,10 @@ test("setValues with null", () => {
     form.setInitialValues(data);
     form.setValues(data);
 
-
     expect(form.values).toEqual(data);
 });
 
-// 响应式表单值
+// 允许设置表单值为 observable 对象
 test("observable values/initialValues", () => {
     const values = observable<Record<string, number>>({ aa: 123, bb: 321 });
     const initialValues = observable({ cc: 321, dd: 456 });
@@ -951,7 +950,7 @@ test('reset array field', async () => {
     expect(form.values).toEqual({ array: [] });
 });
 
-// 充值对象字段
+// 重置对象字段
 test('reset object field', async () => {
     const values = {
         object: { value: 123 }
