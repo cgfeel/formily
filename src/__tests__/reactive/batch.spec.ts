@@ -142,7 +142,7 @@ describe("normal batch", () => {
         expect(handler).toHaveBeenNthCalledWith(4, 123, 321, "ccccc", "ddddd");
     });
 
-    // batch.scope.bound 分批绑定批量操作
+    // 使用 batch.socpe.bound
     test("batch.scope bound", () => {
         const obs = observable<Partial<Record<string, number | string>>>({});
         const handler = jest.fn();
@@ -249,7 +249,7 @@ describe("normal batch", () => {
         expect(obs.cc).toBe(30);
     });
 
-    // 批量操作抛出错误
+    // 在 batch 中抛出错误
     test("batch error", () => {
         const handler = jest.fn();
         try {
@@ -377,7 +377,7 @@ describe("annotation batch", () => {
         expect(obs.cc).toBe(41);
     });
 
-    // 定义模型中使用 batch.scope
+    // define 中使用 batch.scope
     test("batch.scope", () => {
         const obs = define<DefineDataType>({
             aa: null, bb: null, cc: null, dd: null,
@@ -414,7 +414,7 @@ describe("annotation batch", () => {
         expect(handler).toHaveBeenNthCalledWith(4, 123, 321, "ccccc", "ddddd");
     });
 
-    // 定义模型中使用 batch.scope.bound
+    // define 中使用 batch.scope.bound
     test("batch.scope bound", () => {
         const obs = define<DefineDataType>({
             aa: null, bb: null, cc: null, dd: null,
@@ -511,7 +511,7 @@ describe("annotation batch", () => {
     });
 });
 
-// 批量操作结束回调， batch 独有 action 没有
+// 批量操作结束回调，batch 独有 action 没有
 describe("batch endpoint", () => {
     // batch.endpoint 注册批量执行结束回调
     test("normal endpoint", () => {
@@ -528,7 +528,7 @@ describe("batch endpoint", () => {
         expect(tokens).toEqual(["inner", "wrapper", "endpoint"]);
     });
 
-    // batch.endpoint 意外的结束
+    // batch.endpoint 意外的结束 - 不提供回调也不会执行
     test("unexpect endpoint", () => {
         const token: string[] = [];
         const inner = batch.bound!(() => {
@@ -551,7 +551,7 @@ describe("batch endpoint", () => {
     });
 });
 
-// 在 reaction 收集依赖
+// 在 reaction 有效的收集依赖触发 subscrible
 test("reaction collect in batch valid", () => {
     const handler = jest.fn();
     const obs = observable({ aa: 11, bb: 22, cc: 33 });
@@ -587,17 +587,22 @@ test("reaction collect in batch valid", () => {
     expect(handler).toHaveBeenCalledWith(44, 22);
 });
 
-// 在 reaction subscript 中收集依赖
+// 在 reaction subscript 中无效的依赖不会反向触发响应
 test("reaction collect in batch invalid", () => {
     const obs = observable({ aa: 11, bb: 22, cc: 33 });
+    const fn = jest.fn();
+    const subscrible = jest.fn();
+
+    // 初始化不响应
     reaction(
         () => obs.aa,
         () => {
             void obs.cc;
+            subscrible();
         }
     );
+    expect(subscrible).toHaveBeenCalledTimes(0);
 
-    const fn = jest.fn();
     autorun(() => {
         batch.scope!(() => {
             obs.aa = obs.bb;
@@ -605,13 +610,19 @@ test("reaction collect in batch invalid", () => {
         fn();
     });
 
+    // 初始化随着 autorun 默认执行赋值 aa，触发 subscrible
     expect(fn).toHaveBeenCalledTimes(1);
+    expect(subscrible).toHaveBeenCalledTimes(1);
 
+    // 修改 bb 触发连锁反应
     obs.bb = 44;
     expect(fn).toHaveBeenCalledTimes(2);
+    expect(subscrible).toHaveBeenCalledTimes(2);
 
+    // 但是修改 cc 在 subscrible 中是不会主动收集依赖
     obs.cc = 55;
     expect(fn).toHaveBeenCalledTimes(3);
+    expect(subscrible).toHaveBeenCalledTimes(2);
 });
 
 type DefineDataType = {

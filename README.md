@@ -914,3 +914,38 @@
 -   `batch.bound` 绑定一个批量操作
 -   在 `track` 函数中使用 `batch.bound`
 -   `batch.scope` 在 `batch` 中分批执行
+-   使用 `batch.socpe.bound`
+-   在 `track` 函数中使用 `batch.scope`
+-   在 `track` 函数中使用 `batch.socpe.bound`
+-   在 `batch` 中抛出错误
+
+`define` 定义模型中使用 `batch` 批量操作：
+
+-   `define` 中使用 `batch`
+-   在 `track` 函数中使用模型 `batch`
+-   `define` 中使用 `batch.bound`
+-   `track` 函数中使用模型 `batch.bound`
+-   `define` 中使用 `batch.scope`
+-   `define` 中使用 `batch.socpe.bound`
+-   在 `track` 函数中使用模型 `batch.scope`
+-   在 `track` 函数中使用 `batch.socpe.bound`
+
+批量操作结束回调，`batch` 独有 `action` 没有：
+
+-   `batch.endpoint` 注册批量执行结束回调
+-   `batch.endpoint` 意外的结束 - 不提供回调也不会执行
+-   直接使用 `batch.endpoint`
+
+> `batch.endpoint` 不是微任务，而是单纯的回调函数
+
+其他：
+
+-   在 `reaction` 有效的收集依赖触发 `subscrible`
+-   在 `reaction subscript` 中无效的依赖不会反向触发响应
+
+参考：
+
+> `reaction` 中 `subscrible` 不收集依赖
+
+-   正常的情况：`track` 函数会收集依赖，上面的两个例子是通过 `autorun` 收集依赖触发 `reaction` 的 `track` 函数依赖响应
+-   不正常的情况：在 `reaction` 的 `subscrible` 函数中会随着 `track` 函数响应触发调用，但在 `subscrible` 添加 `observable` 对象，试图更新反向触发响应是行不通的
