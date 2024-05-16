@@ -1,8 +1,8 @@
 import { autorun, batch, define, observable, reaction } from "@formily/reactive";
 
-// 批量操作普通用法
+// batch 批量操作普通用法
 describe("normal batch", () => {
-    // 不使用批量操作，每次修改劫持对象都会响应一次
+    // 不使用 batch 每次修改劫持对象都会响应一次
     test("no batch", () => {
         const obs = observable({ aa: { bb: 123 } });
         const handler = jest.fn();
@@ -19,7 +19,7 @@ describe("normal batch", () => {
         expect(handler).toHaveBeenCalledTimes(5);
     });
 
-    // 使用批量操作，内部所有修改只记录一次响应
+    // batch 内部所有修改只记录一次响应
     test("batch", () => {
         const obs = observable({ aa: { bb: 123 } });
         const handler = jest.fn();
@@ -63,7 +63,7 @@ describe("normal batch", () => {
         expect(obs.cc).toEqual(41);
     });
 
-    // action.bound 绑定一个批量操作
+    // batch.bound 绑定一个批量操作
     test("batch.bound", () => {
         const obs = observable({ aa: { bb: 123 } });
         const setData = batch.bound!(() => {
@@ -89,7 +89,7 @@ describe("normal batch", () => {
         expect(obs.aa.bb).toBe(444);
     });
 
-    // 在 track 函数中使用 batch
+    // 在 track 函数中使用 batch.bound
     test("batch.bound track", () => {
         const obs = observable({ 
             aa: { bb: 123 }, 
@@ -265,9 +265,9 @@ describe("normal batch", () => {
     });
 });
 
-// 定义模型中使用批量操作
+// define 定义模型中使用 batch 批量操作
 describe("annotation batch", () => {
-    // 定义模型中绑定 batch
+    // define 中使用 batch
     test("batch", () => {
         const obs = define({
             aa: { bb: 123 },
@@ -323,7 +323,7 @@ describe("annotation batch", () => {
         expect(obs.cc).toBe(41);
     });
 
-    // 定义模型中使用 batch.bound
+    // define 中使用 batch.bound
     test("batch.bound", () => {
         const obs = define({
             aa: { bb: 123 },
@@ -353,7 +353,7 @@ describe("annotation batch", () => {
         expect(handler).toHaveBeenNthCalledWith(4, 444);
     });
 
-    // track 函数中使用模型中国的 batch.bound
+    // track 函数中使用模型 batch.bound
     test("batch.bound track", () => {
         const handler = jest.fn();
         const obs = define({

@@ -1,7 +1,8 @@
 import { action, autorun, batch, define, observable, reaction } from "@formily/reactive";
 
+// action 批量操作普通用法
 describe("normal action", () => {
-    // 没有批量动作
+    // 不使用 action 每次修改劫持对象都会响应一次
     test("no action", () => {
         const obs = observable({ aa: { bb: 123 } });
         const handler = jest.fn();
@@ -25,7 +26,7 @@ describe("normal action", () => {
         expect(handler).toHaveBeenCalledTimes(5);
     });
 
-    // 批量动作
+    // action 内部所有修改只记录一次响应
     test("action", () => {
         const obs = observable({ aa: { bb: 123 } });
 
@@ -50,7 +51,7 @@ describe("normal action", () => {
         expect(obs.aa.bb).toBe(444);
     });
 
-    // 在跟踪函数中设置批量动作，批量动作不会被跟踪
+    // 在 track 函数中使用 action
     test("action track", () => {
         const handler = jest.fn();
         const obs = observable({
@@ -76,7 +77,7 @@ describe("normal action", () => {
         expect(obs.cc).toBe(21);
     });
 
-    // action 高阶绑定，和批量操作一样
+    // action.bound 绑定一个批量操作
     // 除了回调函数之外，还接受一个上下文作为第二个参数
     test("action.bound", () => {
         const obs = observable({ aa: { bb: 123 } });
@@ -112,7 +113,7 @@ describe("normal action", () => {
         expect(handler).toHaveBeenCalledTimes(5);
     });
 
-    // 在 autorun track 中调用 action.bound
+    // 在 track 函数中使用 action.bound
     test("action.bound track", () => {
         const handler = jest.fn();
         const obs = observable({
@@ -138,7 +139,7 @@ describe("normal action", () => {
         expect(obs.cc).toBe(21);
     });
 
-    // action.scope 在批量中分开执行
+    // action.scope 在批量操作中分批执行
     test("action.scope xxx", () => {
         const obs = observable<Partial<Record<string, number|string>>>({});
         const handler = jest.fn();
@@ -256,7 +257,7 @@ describe("normal action", () => {
         expect(handler).toHaveBeenCalledTimes(19);
     });
 
-    // 在 autorun 中使用 action.scope 只执行 1 次，和 autorun 使用 action 一样
+    // 在 track 函数中使用 action.scope，只执行 1 次，和 autorun 使用 action 一样
     test("action.scope track", () => {
         const handler = jest.fn();
         const obs = observable({
@@ -280,7 +281,7 @@ describe("normal action", () => {
         expect(obs.cc).toEqual(21);
     });
 
-    // 在 autorun 中使用 action.scope.bound 只执行 1 次，和 autorun 使用 action.bound 一样
+    // 在 track 函数中使用 action.scope.bound，只执行 1 次，和 autorun 使用 action.bound 一样
     test("action.scope bound track", () => {
         const handler = jest.fn();
         const obs = observable({
@@ -306,8 +307,9 @@ describe("normal action", () => {
     });
 });
 
+// define 定义模型中使用 action 批量操作
 describe("annotation action", () => {
-    // 手动定义模型执行批量操作
+    // define 中使用 action
     test("action", () => {
         // 手动定义模型
         const obs = define({
@@ -352,7 +354,7 @@ describe("annotation action", () => {
         expect(handler1).toHaveBeenCalledTimes(1);
     });
 
-    // 在 autorun 中通过定义模型去执行 action
+    // 在 track 函数中使用模型 action
     test("action track", () => {
         const handler = jest.fn();
         const obs = define({
@@ -381,7 +383,7 @@ describe("annotation action", () => {
         expect(obs.cc).toBe(21);
     });
 
-    // 手动定义模型时绑定 action.bound
+    // define 中使用 action.bound
     test("action.bound", () => {
         const handler = jest.fn();
         const obs = define({
@@ -409,7 +411,7 @@ describe("annotation action", () => {
         expect(handler).toHaveBeenCalledTimes(4);
     });
 
-    // 在 autorun 中通过定义模型去执行 action.bound，效果和 action 一样
+    // track 函数中使用模型 action.bound
     test("action.bound track", () => {
         const handler = jest.fn();
         const obs = define({ 
@@ -438,7 +440,7 @@ describe("annotation action", () => {
         expect(obs.cc).toEqual(21);
     });
 
-    // 批量操作作用域
+    // define 中使用 action.scope
     test("action.scope", () => {
         const handler = jest.fn();
         const obs = define<DefineItemsType>({
@@ -483,7 +485,7 @@ describe("annotation action", () => {
         expect(handler).toHaveBeenCalledTimes(6);
     });
 
-    // 在批量操作作用域中使用 bound
+    // define 中使用 action.scope.bound
     test("action.scope bound", () => {
         const handler = jest.fn();
         const obs = define<DefineItemsType>({
@@ -517,7 +519,7 @@ describe("annotation action", () => {
         expect(handler).toHaveBeenCalledTimes(4);
     });
 
-    // 在 autorun 的 track 函数中使用 action.scope，和 action 一样不会重复响应
+    // track 函数中使用模型 action.scope
     test("action.scope track", () => {
         const handler = jest.fn();
         const obs = define({
@@ -547,7 +549,7 @@ describe("annotation action", () => {
         expect(obs.cc).toBe(99);
     });
 
-    // 在 autorun 的 track 函数中使用 action.scope.bound，和 action 一样不会重复响应
+    // track 函数中使用模型 action.scope.bound
     test("action.scope bound track", () => {
         const handler = jest.fn();
         const obs = define({
@@ -575,7 +577,7 @@ describe("annotation action", () => {
         expect(obs.cc).toBe(21);
     });
 
-    // 去响应嵌套的批量操作
+    // 嵌套 action 批量操作在 reaction 中 subscrible
     test("nested action to reaction", () => {
         const obs = observable({ aa: 0 });
         const handler = jest.fn();
@@ -618,7 +620,7 @@ describe("annotation action", () => {
         expect(handler).toHaveBeenCalledTimes(2);
     });
 
-    // action 嵌套 batch 去响应，结果一样的，不同的是在 autorun 中会收集 batch 的依赖
+    // 嵌套 action 和 batch 批量操作在 reaction 中 subscrible
     test("nested action/batch to reaction", () => {
         const handler = jest.fn();
         const obs = define({

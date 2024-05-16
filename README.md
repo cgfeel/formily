@@ -793,4 +793,29 @@
 
 #### `action`
 
-`action` 批量操作普通用法
+不可收集依赖的批量操作，具体特性见单元测试
+
+`action` 批量操作普通用法：
+
+-   不使用 `action` 每次修改劫持对象都会响应一次
+-   `action` 内部所有修改只记录一次响应
+-   在 `track` 函数中使用 `action`
+-   `action.bound` 绑定一个批量操作
+-   在 `track` 函数中使用 `action.bound`
+-   `action.scope` 在批量操作中分批执行
+-   使用 `action.socpe.bound`
+-   在 `track` 函数中使用 `action.scope`
+-   在 `track` 函数中使用 `action.scope.bound`
+
+`define` 定义模型中使用 `action` 批量操作：
+
+-   `define` 中使用 `action`
+-   在 `track` 函数中使用模型 `action`
+-   `define` 中使用 `action.bound`
+-   `track` 函数中使用模型 `action.bound`
+-   `define` 中使用 `action.scope`
+-   `define` 中使用 `action.scope.bound`
+-   `track` 函数中使用模型 `action.scope`
+-   `track` 函数中使用模型 `action.scope.bound`
+-   嵌套 `action` 批量操作在 `reaction` 中 `subscrible`
+-   嵌套 `action` 和 `batch` 批量操作在 `reaction` 中 `subscrible`
