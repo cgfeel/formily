@@ -131,7 +131,7 @@ test("onFormInputChange", () => {
     expect(valuesChange).toHaveBeenCalledTimes(2);
 });
 
-// 表单被动受控
+// 表单响应式逻辑
 test("onFormReact", () => {
     const fieldReact = jest.fn();
     const formReact = jest.fn();
@@ -607,7 +607,7 @@ test("async use will throw error", async () => {
     expect(info.error).toBeDefined();
 });
 
-// 副作用上下文
+// `createEffectContext` 副作用上下文
 test("effect context", async () => {
     const context = createEffectContext<number>();
     const context2 = createEffectContext<number>();
