@@ -868,7 +868,7 @@
 -   正常的情况：`track` 函数会收集依赖，其他中两个例子是通过 `autorun` 收集依赖触发 `reaction` 的 `track` 函数中的依赖进行响应
 -   不正常的情况：在 `reaction` 的 `subscrible` 函数中会随着 `track` 函数响应触发调用，但在 `subscrible` 添加 `observable` 对象，试图更新反向触发响应是行不通的
 
-#### `observable`
+#### `annotations` - `observable`
 
 -   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/annotations.spec.ts
 
@@ -963,6 +963,12 @@
 -   在 `autorun` 中不响应 `WeakSet` 原生对象
 -   在 `autorun` 中不响应来自 `WeakSet` 原生对象触发的增删操作
 
+#### `observable` - `other`
+
+-   `array observable` 操作
+-   `contains` 判断 `observable` 对象中是否包含指定对象
+-   不能直接设置 `observable` 的 `__proto__`
+
 #### 创建模型：`define`、`model`
 
 -   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/define.spec.ts
@@ -1046,7 +1052,7 @@
 -   `autorun` 中有条件的依赖收集
 -   `reaction` 中有条件的依赖收集、`subscrible`、`fireImmediately`
 
-#### 对象检查、转换
+#### `observable` 对象检查、转换
 
 -   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/externals.spec.ts
 
@@ -1080,3 +1086,7 @@
 补充：
 
 -   递归 `observable` 并打印 `JS`
+
+#### `hasCollected`
+
+检测某段执行逻辑是否存在依赖收集

@@ -1,6 +1,6 @@
 import { contains, observable } from "@formily/reactive";
 
-// array obserble 操作
+// array observable 操作
 test("array mutation", () => {
     const arr = observable([1, 2, 3, 4]);
     arr.splice(2, 1);
@@ -8,7 +8,7 @@ test("array mutation", () => {
     expect(arr).toEqual([1, 2, 4]);
 });
 
-// 判断劫持翠香中是否包含指定对象
+// contains 判断 observable 对象中是否包含指定对象
 test("observable contains", () => {
     const subElement = { cc: 333 };
     const element = { aa: subElement };
