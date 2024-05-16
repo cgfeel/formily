@@ -963,7 +963,7 @@
 -   在 `autorun` 中不响应 `WeakSet` 原生对象
 -   在 `autorun` 中不响应来自 `WeakSet` 原生对象触发的增删操作
 
-#### `define`
+#### 创建模型：`define`、`model`
 
 -   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/define.spec.ts
 
@@ -1045,3 +1045,38 @@
 -   `autorun` 依赖 `observable.computed` 删除 `Map` 类型子集
 -   `autorun` 中有条件的依赖收集
 -   `reaction` 中有条件的依赖收集、`subscrible`、`fireImmediately`
+
+#### 对象检查、转换
+
+-   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/externals.spec.ts
+
+**`isSupportObservable`：**
+
+判断可以作为 `observable` 对象的类型，可以作为 `observable` 对象的类型：
+
+-   `observable` 对象
+-   不在排除范围的对象：类声明对象、普通对象、`Array`、`Map`、`WeakMap`、`Set`、`WeakSet`
+
+不可以作为响应劫持对象的类型：
+
+-   `null`、`React Node`、`MomentJS` 对象、`JSON Schema`、带有 `toJS`/`toJSON` 方法的对象
+
+**`isObservable`：**
+
+判断对象是否为 `observable` 对象
+
+**`makeRaw`：**
+
+-   创建一个永远不可以作为 `observable` 的对象
+-   标记一个类，使其声明的对象永远不可作为 `observable`
+
+**`markObservable`：**
+
+-   将一个带有 `toJS` 方法的对象作为 `observable`
+-   `markObservable` 只能接受一个对象作为 `observable`，不能将函数转换为 `observable`
+
+> `makeRaw` 的权重比 `markObservable` 高，无论是 `makeRaw` 包裹 `markObservable`，还是 `markObservable` 包裹 `makeRaw` 都不能够作为 `observable` 对象
+
+补充：
+
+-   递归 `observable` 并打印 `JS`

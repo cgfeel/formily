@@ -1,7 +1,7 @@
 import { isObservable, isSupportObservable, markObservable, markRaw, observable, toJS } from "@formily/reactive";
 
-// 可以作为响应劫持对象的类型：
-//  - 响应类型对象、不再排除范围的对象（类声明、普通对象、数组、Map、WeakMap、Set、WeakSet对象）
+// 判断可以作为 observable 对象的类型：
+//  - observable 对象、不在排除范围的对象（类声明对象、普通对象、Array、Map、WeakMap、Set、WeakSet对象）
 // 不可以作为响应劫持对象的类型：
 //  - null、React Node、MomentJS 对象、JSON Schema、带有 toJS/toJSON 方法的对象
 test("is support observable", () => {
@@ -110,7 +110,7 @@ describe("mark operation", () => {
     });
 });
 
-// 递归引用打印 JS
+// 递归 observable 并打印 JS
 test("recursive references tojs", () => {
     const obj: any = { aa: 111 };
     obj.obj = obj;
