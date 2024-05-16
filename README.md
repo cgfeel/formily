@@ -818,7 +818,7 @@
 -   嵌套 `action` 批量操作在 `reaction` 中 `subscrible`
 -   嵌套 `action` 和 `batch` 批量操作在 `reaction` 中 `subscrible`
 
-### `observable`
+#### `observable`
 
 -   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/annotations.spec.ts
 
@@ -840,7 +840,33 @@
 -   `untracked` 中使用 `observable.computed` 对象
 -   `define` 定义一个类为领域模型
 
-### 浅响应 `autorun`、`reaction`
+#### `observable` - `Map`
+
+-   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/collections-map.spec.ts
+
+劫持 `Map` 类型对象作为 `observable` 对象：
+
+-   创建一个 `Map` 类型的 `observable` 对象
+-   在 `autorun` 中响应 `map` 类型对象
+-   在 `autorun` 中响应 `map.size`
+-   在 `autorun` 中通过 `for of` 迭代 `map` 获取值
+-   在 `autorun` 中通过 `forEach` 迭代 `map` 获取值
+-   在 `autorun` 中通过 `for of` 迭代 `map.keys` 获取值
+-   在 `autorun` 中通过 `for of` 迭代 `map.values` 获取值
+-   在 `autorun` 中通过 `for of` 迭代 `map.entries` 获取值
+-   在 `autorun` 中通过 `map.clear` 触发响应
+-   在 `autorun` 中不响应错误的 `map` 自定义属性
+-   在 `autorun` 中不响应未更新的数据
+-   在 `autorun` 中不响应 `map` 类型原始数据
+-   在 `autorun` 中不响应 `map` 类型原始数据迭代
+-   在 `autorun` 中不响应 `map` 类型原始数据的增删操作
+-   在 `autorun` 中不响应 `map` 类型原始数据长度
+-   在 `autorun` 中不响应 `map` 类型原始数据添加
+-   `map` 类型的 `observable` 对象中允许使用 `object` 作为 `key`
+-   `map` 类型的 `observable` 对象中允许设置一个普通对象，或是 `observable` 对象作为 `value`
+-   浅劫持 `map` 对象，不会响应对象的属性值修改
+
+#### 浅响应 `autorun`、`reaction`
 
 -   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/autorun.spec.ts
 
@@ -945,7 +971,7 @@
 
 参考：
 
-> `reaction` 中 `subscrible` 不收集依赖
+> `reaction` 中 `subscrible` 不收集依赖 [[查看](#%E6%B5%85%E5%93%8D%E5%BA%94-autorunreaction)]
 
 -   正常的情况：`track` 函数会收集依赖，上面的两个例子是通过 `autorun` 收集依赖触发 `reaction` 的 `track` 函数依赖响应
 -   不正常的情况：在 `reaction` 的 `subscrible` 函数中会随着 `track` 函数响应触发调用，但在 `subscrible` 添加 `observable` 对象，试图更新反向触发响应是行不通的

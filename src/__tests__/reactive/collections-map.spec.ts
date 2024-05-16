@@ -1,8 +1,8 @@
 import { autorun, observable, raw } from "@formily/reactive";
 
-// 劫持 Map 类型对象作为响应对象
+// 劫持 Map 类型对象作为 observable 对象
 describe("Map", () => {
-    // 创建一个 Map 类型的响应劫持对象
+    // 创建一个 Map 类型的 observable 对象
     test("should be a proper JS Map", () => {
         const map = observable(new Map());
         expect(map).toBeInstanceOf(Map);
@@ -66,7 +66,7 @@ describe("Map", () => {
         expect(handler).toHaveBeenNthCalledWith(5, 0);
     });
 
-    // 在 autorun 中通过 forof 迭代 map 获取值
+    // 在 autorun 中通过 for of 迭代 map 获取值
     test("should autorun for of iteration", () => {
         const handler = jest.fn();
         const map = observable(new Map<string, number>());
@@ -130,7 +130,7 @@ describe("Map", () => {
         expect(handler).toHaveBeenLastCalledWith(0);
     });
 
-    // 在 autorun 中通过 forof 迭代 map.keys 获取值
+    // 在 autorun 中通过 for of 迭代 map.keys 获取值
     test("should autorun keys iteration", () => {
         const handler = jest.fn();
         const map = observable(new Map<number, number>());
@@ -163,7 +163,7 @@ describe("Map", () => {
         expect(handler).toHaveBeenLastCalledWith(0);
     });
 
-    // 在 autorun 中通过 forof 迭代 map.values 获取值
+    // 在 autorun 中通过 for of 迭代 map.values 获取值
     test("should autorun values iteration", () => {
         const handler = jest.fn();
         const map = observable(new Map<string, number>());
@@ -196,7 +196,7 @@ describe("Map", () => {
         expect(handler).toHaveBeenLastCalledWith(0);
     });
 
-    // 在 autorun 中通过 forof 迭代 map.entries 获取值
+    // 在 autorun 中通过 for of 迭代 map.entries 获取值
     test("should autorun entries iteration", () => {
         const handler = jest.fn();
         const map = observable(new Map<string, number>());
@@ -263,7 +263,7 @@ describe("Map", () => {
         expect(handler).toHaveBeenCalledTimes(1);
     });
 
-    // 在 autorun 中不响应为更新的数据
+    // 在 autorun 中不响应未更新的数据
     test("should not autorun non value changing mutations", () => {
         const handler = jest.fn();
         const map = observable(new Map());
@@ -293,7 +293,7 @@ describe("Map", () => {
         expect(handler).toHaveBeenCalledTimes(3);
     });
 
-    // 在 autorun 中不响应原始数据
+    // 在 autorun 中不响应 map 类型原始数据
     test("should not autorun raw data", () => {
         const handler = jest.fn();
         const map = observable(new Map());
@@ -310,7 +310,7 @@ describe("Map", () => {
         expect(handler).toHaveBeenCalledTimes(1);
     });
 
-    // 在 autorun 中不响应原始数据迭代
+    // 在 autorun 中不响应 map 类型原始数据迭代
     test("should not autorun raw iterations", () => {
         const handler = jest.fn();
         const map = observable(new Map());
@@ -349,7 +349,7 @@ describe("Map", () => {
         expect(handler).toHaveBeenCalledTimes(1);
     });
 
-    // 在 autorun 中不响应 Map 原始数据的增删操作
+    // 在 autorun 中不响应 map 类型原始数据的增删操作
     test("should not be triggered by raw mulations", () => {
         const handler = jest.fn();
         const map = observable(new Map());
@@ -369,7 +369,7 @@ describe("Map", () => {
         expect(handler).toHaveBeenCalledTimes(1);
     });
 
-    // 在 autorun 中不响应 Map 原始数据长度
+    // 在 autorun 中不响应 map 类型原始数据长度
     test("should not autorun raw size mutations", () => {
         const handler = jest.fn();
         const map = observable(new Map());
@@ -382,7 +382,7 @@ describe("Map", () => {
         expect(handler).toHaveBeenCalledTimes(1);
     });
 
-    // 在 autorun 中不响应 Map 原始数据添加
+    // 在 autorun 中不响应 map 类型原始数据添加
     test("should not be triggered by raw size mutaitions", () => {
         const handler = jest.fn();
         const map = observable(new Map());
@@ -395,7 +395,7 @@ describe("Map", () => {
         expect(handler).toHaveBeenCalledTimes(1);
     });
 
-    // Map 类型的劫持对象中允许使用 object 作为 key
+    // map 类型的 observable 对象中允许使用 object 作为 key
     test("should support object as key", () => {
         const handler = jest.fn();
         const key = {};
@@ -416,7 +416,7 @@ describe("Map", () => {
         expect(handler).toHaveBeenLastCalledWith(1);
     });
 
-    // Map 类型的劫持对象中允许设置一个普通对象，或是劫持对象作为 item
+    // map 类型的 observable 对象中允许设置一个普通对象，或是 observable 对象作为 value
     test("observer object", () => {
         const handler = jest.fn();
         const map = observable(new Map<string, Partial<Record<string, string>>>([]));
@@ -440,7 +440,7 @@ describe("Map", () => {
         expect(handler).toHaveBeenCalledTimes(3);
     });
 
-    // 浅劫持 Map 对象，不会响应对象的属性增删改
+    // 浅劫持 map 对象，不会响应对象的属性值修改
     test("shallow", () => {
         const handler = jest.fn();
         const map = observable.shallow(new Map<string, Partial<Record<string, string>>>([]));
