@@ -865,7 +865,7 @@
 
 > `reaction` 中 `subscrible` 不收集依赖 [[查看](#%E6%B5%85%E5%93%8D%E5%BA%94-autorunreaction)]
 
--   正常的情况：`track` 函数会收集依赖，上面的两个例子是通过 `autorun` 收集依赖触发 `reaction` 的 `track` 函数依赖响应
+-   正常的情况：`track` 函数会收集依赖，其他中两个例子是通过 `autorun` 收集依赖触发 `reaction` 的 `track` 函数中的依赖进行响应
 -   不正常的情况：在 `reaction` 的 `subscrible` 函数中会随着 `track` 函数响应触发调用，但在 `subscrible` 添加 `observable` 对象，试图更新反向触发响应是行不通的
 
 #### `observable`
