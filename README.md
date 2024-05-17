@@ -1405,7 +1405,13 @@
 
 `createField` 的 `React` 实现：
 
--   没有 `FormProvider` 上下文渲染 `Field` 会抛出错误
+-   没有 `FormProvider` 上下文渲染 `Field` 会抛出错误'
+-   渲染字段：`Field`、`ArrayField`、`ObjectField`、`VoidField`
+-   字段属性基础操作：`mounted`
+-   数组字段属性：`moveDown`、`mounted`、`value`
+-   注入副作用逻辑：`observer` + `useFormEffects` + `onFieldChange`
+-   第三方组件库的无侵入接入 `Formily`
+-   字段验证和卸载：`onFieldUnmount`、`form.validate`
 
 不包含：
 

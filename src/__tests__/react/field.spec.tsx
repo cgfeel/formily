@@ -319,7 +319,6 @@ test("field unmount and validate", async () => {
         await form.validate();
     } catch {}
 
-    // 这件事告诉我们即便
     expect(form.invalid).toBeTruthy();
 
     // 巩固，字段节点卸载后并不会影响表单验证，也不影响表单中已经存在卸载字段的事实
