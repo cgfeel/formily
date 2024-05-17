@@ -1413,7 +1413,7 @@
 -   字段属性基础操作：`mounted`
 -   数组字段属性：`moveDown`、`mounted`、`value`
 -   注入副作用逻辑：`observer` + `useFormEffects` + `onFieldChange`
--   第三方组件库的无侵入接入 `Formily`
+-   第三方组件库的无侵入接入 `Formily`：`connect` + `mapProps` + `mapReadPretty`
 -   字段验证和卸载：`onFieldUnmount`、`form.validate`
 
 不包含：
@@ -1456,7 +1456,7 @@
 -   数组节点：`SchemaField.Array`
 -   对象节点：`SchemaField.Object`
 -   其他节点：`SchemaField.Markup`
--   节点传 `children props`，虚拟节点支持 `SchemaField.Markup` 不支持
+-   虚拟节点支持 `children props`，`SchemaField.Markup` 不支持 `children`
 -   子节点 - 通过 `props` 设置 `children`
 -   通过 `x-content` 设置 `children`
 
@@ -1465,7 +1465,7 @@
 -   `onlyRenderProperties`：只渲染 `schema properties`
 -   `mapProperties`：`schema properties`映射器，主要用于改写`schema`
 -   `filterProperties`：`schema properties`过滤器，被过滤掉的 `schema` 节点不会被渲染
--   `onlyRenderSelf`：是否只渲染自身，不渲染 `properties`
+-   `onlyRenderSelf`：是否只渲染自身，不渲染 `properties`，注 ①
 -   引入一个无效的 `schema`
 -   `schema` 联动：`x-reactions`
 -   作用域范围：`scope`
@@ -1483,10 +1483,10 @@
 -   多个响应的副作用隔离
     -   触发更新：`onClick` + `onChange`
     -   `x-reactions` 响应：`dependencies` + `{{$deps}}`
--   嵌套作用域集合：`RecordScope`
--   作用域集合字面量：`{{$record + $index}}`
+-   嵌套作用域记录对象：`RecordScope`
+-   作用域记录对象字面量：`{{$record + $index}}`
 -   作用域集合：`RecordsScope`
 -   `propsRecursion`：`RecursionField` 的 `proprety` 是否递归传递 `mapProperties` 和 `filterProperties`
 -   不提供 `propsRecursion` 过滤 `schema` 只能过滤下一级字段，对于更深层次的字段不能过滤
 
-> 备注： `ObjectField` 下所有子集都是 `properties`
+> 注 ①： `ObjectField` 下所有子集都是 `properties`

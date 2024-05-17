@@ -787,7 +787,7 @@ describe("recursion field", () => {
         });
     });
 
-    // 嵌套作用域集合 - 这里 RecordScope 一定要在 FormProvider 内部，SchemaField 外部
+    // 嵌套作用域记录对象 - 这里 RecordScope 一定要在 FormProvider 内部，SchemaField 外部
     test("nested record scope", async () => {
         const form = createForm();
         const { queryByTestId } = render(
@@ -810,7 +810,7 @@ describe("recursion field", () => {
         });
     });
 
-    // 作用域集合字面量 - 这里 RecordScope 一定要在 FormProvider 内部，SchemaField 外部
+    // 作用域记录对象字面量 - 这里 RecordScope 一定要在 FormProvider 内部，SchemaField 外部
     test("literal record scope", async () => {
         const form = createForm();
         const { queryByTestId } = render(
