@@ -1072,7 +1072,7 @@
 
 -   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/reactive/observe.spec.ts
 
-监听 `observable` 对象的所有操作，支持深度监听也支持浅监听，只有 `observe` 支持深度监听，其他都是浅监听
+监听 `observable` 对象的所有操作，支持深度监听也支持浅监听
 
 -   `observe` 深响应
 -   `observe` 浅响应 - 第三个参数设置 `false`
