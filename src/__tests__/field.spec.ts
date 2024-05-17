@@ -1530,7 +1530,7 @@ test("field name is length in dynamic assign", () => {
     expect(form.values.obj.length).toEqual([1, 2]);
 });
 
-// 嵌套资源的修改
+// 嵌套字段的修改
 test("nested field modified", async () => {
     const form = attach(createForm());
     const obj = attach(form.createObjectField({ name: "object" }));
@@ -1568,7 +1568,7 @@ test("nested field modified", async () => {
     expect(form.modified).toBeFalsy();
 });
 
-// 重复调用字段的 setValidator
+// 连续验证字段
 test("field setValidator repeat call", async () => {
     const form = attach(createForm());
     const field = attach(form.createField({ name: "normal" }));
@@ -1786,7 +1786,7 @@ test("destroy field need auto remove initialValue", () => {
     expect(form.values.aa).toBeUndefined();
 });
 
-// 字段校验是否只校验第一个非法规则
+// 字段校验只校验第一个非法规则
 test("validateFirst", async () => {
     const form = attach(createForm({ validateFirst: false }));
     const aaValidate = jest.fn(() => "aaError");
@@ -1866,7 +1866,7 @@ test("parent readPretty will overwrite self disabled or readOnly", () => {
     expect(cc.pattern).toBe("readPretty");
 });
 
-// 字段验证错误，在字段验证中不影响其他字段验证状态
+// 字段验证错误，不影响其他字段
 test("conflict name for errors filter", async () => {
     const form = attach(createForm());
     const aa = attach(form.createField({ name: "aa", required: true }));
@@ -1877,7 +1877,7 @@ test("conflict name for errors filter", async () => {
     expect(aa.invalid).toBeFalsy();
 });
 
-// 字段注销后赋值，将不再合并到表单值中
+// 字段注销后不再合并到表单值中
 test("field destroyed can not be assign value", () => {
     const form = attach(createForm());
     const aa = attach(form.createField({ name: "aa" }));
@@ -1905,7 +1905,7 @@ test("onInput could pass value with target", async () => {
     expect(bb.value).toEqual("123");
 });
 
-// 表单初始值忽略已注销的字段、展示状态 display: none 的字段
+// 表单初始值忽略已注销的字段、隐藏的字段：display: none、field.destroy
 test("field destroyed or display none should not be assign value form patch initialValues", () => {
     const form = attach(createForm());
     const aa = attach(form.createField({ display: "none", name: "aa" }));

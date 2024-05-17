@@ -1173,7 +1173,7 @@
 -   字段查询：`query`
 -   初始值为空：`initialValue: ""`
 -   有初始值的对象字段：`initialValue: { obj: {} }`
--   有初始值的数组对象
+-   有初始值的数组对象：`initialValue: [1, 2]`
 -   重置对象字段的初始值：`form.reset`
 -   字段重置：`field.reset`
 -   匹配路径：`field.match`
@@ -1182,7 +1182,7 @@
 -   设置字段标题和介绍：`setTitle`、`setDescription`
 -   必填字段，设置必填：`required`、`setRequired`
 -   设置字段值的 data 和 content：`setData`、`setContent`
--   设置虚拟字段的 data 和 content
+-   设置虚拟字段的 data 和 content：`setData`、`setContent`
 -   设置字段验证状态：`setErrors`、`setWarnings`、`setSuccesss`、`setValidator`
 -   字段联动：`reactions`
 -   字段容错
@@ -1194,11 +1194,11 @@
 -   外层包裹一个虚拟节点并通过虚拟索引计算数组路径，可忽略外最层
 -   在联动中收集依赖触发响应：`reaction` + `field.query`
 -   嵌套字段隐藏和验证：`display`、`field.validate`
--   深度嵌套字段隐藏和验证
+-   深度嵌套字段隐藏和验证：`display`、`form.validate`
 -   深度嵌套字段隐藏和通过中间字段隐藏自身验证状态
 -   字段卸载和验证状态：`field.onUnmount`、`field.validate`
 -   数组字段下的自动清除：`form.setValues({ array: [] }`
--   对象字段下的自动清除：`obj1.setValue({})`，表现和数组字段不一样，建议查看单元测试
+-   对象字段下的自动清除：`obj1.setValue({})`，和数组字段不一样，建议看单元测试
 -   初始值为空的字段：`initialValue: ""|null`
 -   字段提交：`field.submit`
 -   带有错误的字段提交
@@ -1207,24 +1207,24 @@
 -   字段值和初始值受控：`reactions` + `initialValue`
 -   字段名叫 `length`（`JS` 保护名称） 的初始值
 -   字段名叫 `length`，动态分配初始值
--   嵌套资源的修改
--   重复调用字段的 `setValidator`
--   在自定义验证器中获取上下文字段和表单（第三个参数）
--   单方向联动
+-   嵌套字段的修改：`field.modified`、`field.selfModified`
+-   连续验证字段:`field.setValidator([validator1, validator2])`
+-   在自定义验证器中获取上下文字段和表单：`validator(_, __, _ctx) {}`
+-   单方向联动：`reactions`
 -   修改字段路径会重新计算字段值：`field.locate`
 -   重置对象字段：`form.reset`
--   字段展示状态决定默认值是否有效：`visible`
+-   字段展示状态决定默认值是否有效：`onFieldReact` + `field.visible`
 -   通过相邻路径查找值：`.{path}`
 -   相对路径查找虚拟节点下的字段
--   表单值和字段值定义和覆盖
+-   表单值和字段值定义和覆盖：`initialValue`、`value`
 -   销毁字段同时销毁值：`field.destroy`
--   字段校验是否只校验第一个非法规则：`validateFirst`
--   注销字段不再响应联动：`field.destroy`
+-   字段校验只校验第一个非法规则：`validateFirst: true`
+-   注销字段不再响应联动：`field.destroy` + `reactions`
 -   父级设置 `readPretty` 会覆盖 `disabled`、`readOnly` 的子集 `pattern`
--   字段验证错误，在字段验证中不影响其他字段验证状态
--   字段注销后赋值，将不再合并到表单值中
+-   字段验证错误，不影响其他字段
+-   字段注销后不再合并到表单值中：`field.destroy`
 -   `onInput` 通过 `target` 传值：`field.onInput({ target })`
--   表单初始值忽略已注销的字段、展示状态 `display: none` 的字段
+-   表单初始值忽略已注销的字段、隐藏的字段：`display: none`、`field.destroy`
 -   字段 `actions`、字段方法注入 `inject`、调用 `invoke`
 -   字段隐藏保留值 `display: hidden` 和不保留值 `display: none`
 -   解构字段的展示状态：`{ name: [aa,bb] }`
