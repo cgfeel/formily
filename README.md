@@ -1167,12 +1167,12 @@
 -   设置字段加载状态和验证状态：`setLoading`、`setValidating`
 -   设置字段组件和组件属性：`setComponent`、`setComponentProps`
 -   设置装饰组件和装饰组件的属性：`setDecorator`、`setDecoratorProps`
--   响应式初始值：`reactions`
+-   响应式初始值：`reactions` + `field.initialValue`
 -   字段验证状态、错误、警告、成功、有效、无效、验证状态、反馈信息：`selfValidate`、`errors`、`warnings`、`successes`、`valid`、`invalid`、`validateStatus`、`queryFeedbacks`
 -   设置验证器：`setValidatorRule`
 -   字段查询：`query`
--   初始值为空：`initialValue`
--   有初始值的对象字段
+-   初始值为空：`initialValue: ""`
+-   有初始值的对象字段：`initialValue: { obj: {} }`
 -   有初始值的数组对象
 -   重置对象字段的初始值：`form.reset`
 -   字段重置：`field.reset`
