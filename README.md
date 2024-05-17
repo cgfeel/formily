@@ -9,7 +9,7 @@
 -   `@formily/core`：https://core.formilyjs.org/zh-CN
 -   `@formily/react`：https://react.formilyjs.org/zh-CN
 
-其中组件采用 `@formily/antd-v5`，以主文档作为演示。不包含 `@formily/vue`，技术栈为 `React`，在 `formily` 中两者大同小异
+其中组件采用 `@formily/antd-v5` 为主文档作演示。不包含 `@formily/vue`，技术栈为 `React`，在 `formily` 中两者大同小异
 
 **演示分两部分：**
 
@@ -26,6 +26,8 @@
 -   脚手架：`Create React App` + `react-app-rewired` + `customize-cra`
 -   表单和UI库：`formily ` + `antd` + `antd-style`
 -   数据模拟：`mocker-api` + `mockjs`
+
+> 启动项目前直接 `npm install`
 
 和官方文档（以下简称“文档”）不同点：
 
