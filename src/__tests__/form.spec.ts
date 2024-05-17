@@ -999,7 +999,7 @@ test("initialValues merge values before create field", () => {
     expect(arr_1_aa.value).toEqual("456");
 });
 
-// 不能匹配空值
+// 不能匹配的字段为空值
 test("no patch with empty initialValues", () => {
     const form = attach(createForm({
         values: {
@@ -1166,7 +1166,7 @@ test("setValues deep merge", () => {
     expect(form.values).toEqual(update);
 });
 
-// 异常验证
+// validator 中 throw new Error
 test("exception validate", async () => {
     const form = attach(createForm());
     attach(form.createField({
@@ -1378,7 +1378,7 @@ test("validate will skip unmounted", async () => {
     expect(validator).toHaveBeenCalledTimes(4);
 });
 
-// 跳过验证不可编辑
+// 跳过验证不可编辑的字段
 test("validate will skip uneditable", async () => {
     const validateA = jest.fn();
     const validateB = jest.fn();
@@ -1630,7 +1630,7 @@ test("form initial values ref should not changed with setInitialValues", () => {
     expect(form.initialValues).toEqual({ aa: "321", bb: "456", cc: "555" });
 });
 
-// 赋值一个未定义的表单不会报错，并且会被表单忽略（这种情况是不被类型允许的）
+// 表单字段设为 undefined 不会报错，会被表单忽略（这种情况是不被类型允许的）
 test("form query undefined query should not throw error", () => {
     const form = attach(createForm());
 

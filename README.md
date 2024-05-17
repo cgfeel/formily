@@ -1242,7 +1242,7 @@
 -   数组字段下标操作和交换：`push`、`pop`、`unshift`、`remove`、`insert`、`move`
 -   数组下标字段移动：`move`
 -   查询数组字段下标路径：`form.query`、`form.fields`
--   数组字段中的虚拟子节点：`basePath`
+-   数组字段中的虚拟子节点：`createVoidField` + `basePath`
 -   交换数组字段的子集：`move`
 -   数组字段容错
 -   修改数组字段容错
@@ -1250,10 +1250,10 @@
 -   数组添加、删除、创建子字段触发回调：`onFormValuesChange`、`onFormInitialValuesChange`、`onFieldValueChange`
 -   嵌套字段的 `indexes`，以及删除数组下的节点的坑点：`field.indexs`
 -   数组字段的 `indexes` 需要避免无效的数字：`field.index`
--   在数组字段中没有字段的节点：`unshift`
--   数组节点中可以跳过虚拟节点，直接获取数据：`basePath`
--   数组字段清空：`form.reset("*")`
--   数组字段删除节点不会导致内存泄露：`onFieldValueChange`
+-   在数组字段中没有字段的节点：`unshift({})`
+-   数组节点中可以跳过虚拟节点，直接获取数据
+-   数组字段清空：`form.reset("*")`、`form.reset("*", { forceClear: true })`
+-   数组字段删除节点不会导致内存泄露：`remove` + `onFieldValueChange`
 -   数组字段修补值：`unshift`
 -   数组字段初始值通过 `remove` 删除
 -   从 `records` 中查找数组字段
@@ -1306,37 +1306,39 @@
 -   添加、删除、覆盖式更新副作用：`addEffects`、`removeEffects`、`setEffects`
 -   字段查询：`query`
 -   通知、订阅、取消订阅：`notify`、`subscribe`、`unsubscribe`
--   设置和获取表单状态、设置和获取字字段状态：`setState`、`getState`、`setFormState`、`getFormState`、`setFieldState`、`getFieldState`
+-   设置和获取表单状态、字段状态：`setState`、`getState`、`setFormState`、`getFormState`、`setFieldState`、`getFieldState`
 -   表单验证：`validate`、`valid`、`invalid`、`errors`、`warnings`、`successes`、`clearErrors`、`clearWarnings`、`clearSuccess`、`queryFeedbacks`
 -   表单模式：`setPattern`、`pattern`、`editable`、`readOnly`、`disabled`、`readPretty`
 -   表单展示状态：`setDisplay`、`display`、`visible`、`hidden`
--   表单提交：`submit`
--   表单重置：`reset`
+-   表单提交：`form.submit`
+-   表单重置：`form.reset`
 -   测试表单在调试工具下的表现，检查 `__FORMILY_DEV_TOOLS_HOOK__` 对象
--   重置数组字段
--   重置对象字段
--   创建字段前初始值合并表单值
--   不能匹配空值
--   创建字段后合并初始值
--   删除表单中没有定义的值：`hasOwnProperty`
+-   重置数组字段：`form.reset`
+-   重置对象字段：`form.reset`
+-   创建字段前初始值合并表单值，注 ①
+-   不能匹配的字段为空值
+-   创建字段后合并初始值，和注 ① 一样，不同的是赋值的顺序
+-   删除表单中没有定义的值：`display` + `hasOwnProperty`
 -   初始值为空数组
 -   表单生命周期触发回调：`onFormInitialValuesChange`、`onFormValuesChange`
--   修改表单中的数组字段默认值：`onFormValuesChange`
+-   修改表单中的数组字段默认值：`push` + `onFormValuesChange`
 -   深度合并值：`form.setValues`
--   异常验证
+-   `validator` 中 `throw new Error`
 -   可重复声明表单字段并覆盖字段值：`designable: true`
 -   跳过验证 `display: none` 的字段
 -   跳过验证已卸载：`aa.onUnmount` 不能跳过，需要回收字段：`form.clearFormGraph`
--   跳过验证不可编辑：`field.editable = false`
+-   跳过验证不可编辑的字段：`field.editable = false`
 -   带有格式的验证命令：`validator: { format }`、`validator(value) {}`
 -   卸载表单不会影响字段值：`form.onMount`
 -   回收字段会清除字段值：`form.clearFormGraph("*")`
 -   回收字段不清除字段值：`form.clearFormGraph("*", false)`
 -   表单自动回收不可见的字段值：`reactions` + `visible`
 -   通过异步设置初始值，自动隐藏表单不可见的字段值：`reactions` + `visible`、`form.setInitialValues`
--   表单值不会因为 `setValues` 改变
--   表单初始值不会因为 `setInitialValues` 改变
--   赋值一个未定义的表单不会报错，并且会被表单忽略
+-   表单值不会因为 `setValues` 改变，注 ②
+-   表单初始值不会因为 `setInitialValues` 改变，注 ②
+-   表单字段设为 `undefined` 不会报错，会被表单忽略：`form.fields['a'] = undefined;`
+
+> 注 ②，在表单字段创建前不能通过 `setValue` 或 `setInitialValue` 赋值，但是可以通过表单直接赋值 `form.value = {}` 或 `form.initialValue = {}`，字段创建后不再受到限制
 
 #### effect
 
