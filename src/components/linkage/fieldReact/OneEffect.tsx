@@ -20,17 +20,6 @@ const OneEffect: FC = () => (
                 </p>
                 <ul>
                     <li>
-                        在 <code>Field Effect Hooks</code> 文档[
-                        <a href="https://core.formilyjs.org/zh-CN/api/entry/field-effect-hooks">查看</a>]
-                        中所有包含“某个字段”的 <code>hook</code> 都是主动联动
-                    </li>
-                    <li>
-                        不巧被动联动的 <code>hook</code> 只有一个 <code>onFieldReact</code>
-                    </li>
-                </ul>
-                <p>由此得出：</p>
-                <ul>
-                    <li>
                         需要监控表单的生命周期，如：<code>onFieldInit</code>、<code>onFieldMount</code>
                         ，需要用到主动监控，同理在响应过程中需要用到 <code>Effect</code> 的情况通常也是主动联动
                     </li>
