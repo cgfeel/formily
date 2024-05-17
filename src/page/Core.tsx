@@ -82,13 +82,8 @@ const items: TabsProps["items"] = [
         ),
     },
     {
-        disabled: true,
         key: "models",
-        label: "Models",
-    },
-    {
-        key: "form",
-        label: "Form",
+        label: "Models...",
         children: (
             <Suspense fallback={<>loading...</>}>
                 <Form />

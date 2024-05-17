@@ -1,13 +1,11 @@
-import { IFieldProps, createForm } from "@formily/core";
+import { IFieldProps } from "@formily/core";
 import { Field } from "@formily/react";
 import { FC } from "react";
 import Wraper, { WraperProps } from "../../hooks/useField/Wraper";
 import FormItem from "./FormItem";
 import Input from "./Input";
 
-const form = createForm();
-
-const Connect: FC<ConnectProps> = ({ footer, header, ...props }) => (
+const Connect: FC<ConnectProps> = ({ footer, form, header, ...props }) => (
     <Wraper footer={footer} form={form} header={header}>
         <Field
             {...props}
@@ -21,7 +19,7 @@ const Connect: FC<ConnectProps> = ({ footer, header, ...props }) => (
 );
 
 export interface ConnectProps
-    extends Pick<WraperProps, "footer" | "header">,
+    extends Pick<WraperProps, "footer" | "form" | "header">,
         Pick<IFieldProps, "initialValue" | "pattern"> {}
 
 export default Connect;

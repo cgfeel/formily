@@ -1,8 +1,15 @@
+import { createForm } from "@formily/core";
 import { TabsProps } from "antd";
 import { Suspense, lazy } from "react";
 
+const connectForm = createForm();
+const mapPropsForm = createForm();
+const mapReadForm = createForm();
+
 const Connect = lazy(() => import("./shared/connect"));
 const Observer = lazy(() => import("../reactive/ObserverCom"));
+const ReactContext = lazy(() => import("./shared/ReactContext"));
+const Schema = lazy(() => import("./shared/Schema"));
 
 const sharedItems: Exclude<TabsProps["items"], undefined> = [
     {
@@ -32,12 +39,22 @@ const sharedItems: Exclude<TabsProps["items"], undefined> = [
                             </p>
                         </div>
                     }
+                    form={connectForm}
                     header={
                         <h2>
                             <code>connect</code>
                         </h2>
                     }
                 />
+            </Suspense>
+        ),
+    },
+    {
+        key: "context",
+        label: "context",
+        children: (
+            <Suspense fallback={<>Loading...</>}>
+                <ReactContext />
             </Suspense>
         ),
     },
@@ -62,6 +79,7 @@ const sharedItems: Exclude<TabsProps["items"], undefined> = [
                             </ul>
                         </div>
                     }
+                    form={mapPropsForm}
                     header={
                         <h2>
                             <code>mapProps</code>
@@ -85,6 +103,7 @@ const sharedItems: Exclude<TabsProps["items"], undefined> = [
                             </p>
                         </div>
                     }
+                    form={mapReadForm}
                     header={
                         <h2>
                             <code>mapReadPretty</code>
@@ -135,6 +154,15 @@ const sharedItems: Exclude<TabsProps["items"], undefined> = [
                         </h2>
                     }
                 />
+            </Suspense>
+        ),
+    },
+    {
+        key: "schema",
+        label: "Schema",
+        children: (
+            <Suspense fallback={<>Loading...</>}>
+                <Schema />
             </Suspense>
         ),
     },
