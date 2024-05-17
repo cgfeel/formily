@@ -27,7 +27,7 @@ test("render form", () => {
 // 查询最近的 ObjectField 或 Form
 test("useParentForm", () => {
     const form = createForm();
-    const { container, queryByTestId } = render(
+    const { queryByTestId } = render(
         <FormProvider form={form}>
             <ObjectField name="aa">
                 <Field name="bb">
