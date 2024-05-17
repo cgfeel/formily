@@ -451,7 +451,7 @@ describe("recursion field", () => {
         expect(info.cc).toBeTruthy();
     });
 
-    // x-content 通过作用域将组件作为子集插入
+    // x-content 通过 scope 将组件作为 children
     test("expression x-content", async () => {
         const form = createForm();
         const { queryByTestId } = render(
@@ -609,7 +609,7 @@ describe("recursion field", () => {
         });
     });
 
-    // 模型验证和必填
+    // schema 验证和必填
     test("schema x-validator/required", async () => {
         const form = createForm({
             values: {
@@ -628,7 +628,7 @@ describe("recursion field", () => {
         });
     });
 
-    // 模型根据值响应
+    // schema 根据值响应
     test("schema x-reactions when undefined", async () => {
         const form = createForm();
         const { queryByTestId } = render(
@@ -668,7 +668,7 @@ describe("recursion field", () => {
         });
     });
 
-    // 虚拟节点的子集
+    // 虚拟节点的 children
     test("void field children", async () => {
         const form = createForm();
         const { queryByTestId } = render(

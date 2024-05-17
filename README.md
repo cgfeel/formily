@@ -1437,3 +1437,53 @@
 -   通过 `JsonSchema` 渲染单一对象字段
 -   通过 `x-component-props` 传递 `children`
 -   通过 `x-content` 传递 `children`
+
+#### `MarkupSchema`
+
+-   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/react/schema.markup.spec.tsx
+
+使用 `MarkupSchema` 渲染节点：
+
+-   字符节点：`SchemaField.String`
+-   布尔节点：`SchemaField.Boolean`
+-   数值节点：`SchemaField.Number`
+-   日期节点：`SchemaField.Date`
+-   日期时间节点：`SchemaField.DateTime`
+-   虚拟节点：`SchemaField.Void`
+-   数组节点：`SchemaField.Array`
+-   对象节点：`SchemaField.Object`
+-   其他节点：`SchemaField.Markup`
+-   节点传 `children props`，虚拟节点支持 `SchemaField.Markup` 不支持
+-   子节点 - 通过 `props` 设置 `children`
+-   通过 `x-content` 设置 `children`
+
+`RecursionField` 递归渲染组件：
+
+-   `onlyRenderProperties`：只渲染 `schema properties`
+-   `mapProperties`：`schema properties`映射器，主要用于改写`schema`
+-   `filterProperties`：`schema properties`过滤器，被过滤掉的 `schema` 节点不会被渲染
+-   `onlyRenderSelf`：是否只渲染自身，不渲染 `properties`
+-   引入一个无效的 `schema`
+-   `schema` 联动：`x-reactions`
+-   作用域范围：`scope`
+-   `x-content` 通过 `scope` 将组件作为 `children`
+-   作用域内隐藏和展示：`x-visible`
+-   作用域联动设置值：`x-value`
+-   通过作用域嵌套更新组件属性：`x-component-props`
+-   通过联动嵌套更新组件属性：`x-reactions`
+-   `schema` 验证和必填：`x-validator`、`required`
+-   `schema` 根据值响应：`{{$values.input}}`
+-   虚拟节点的 `children`
+-   在响应执行过程中，调用第三方字段的值
+    -   触发更新：`onClick` + `onChange`
+    -   `x-reactions` 响应：`target` + `onFieldInputValueChange`
+-   多个响应的副作用隔离
+    -   触发更新：`onClick` + `onChange`
+    -   `x-reactions` 响应：`dependencies` + `{{$deps}}`
+-   嵌套作用域集合：`RecordScope`
+-   作用域集合字面量：`{{$record + $index}}`
+-   作用域集合：`RecordsScope`
+-   `propsRecursion`：`RecursionField` 的 `proprety` 是否递归传递 `mapProperties` 和 `filterProperties`
+-   不提供 `propsRecursion` 过滤 `schema` 只能过滤下一级字段，对于更深层次的字段不能过滤
+
+> 备注： `ObjectField` 下所有子集都是 `properties`
