@@ -27,7 +27,7 @@
 -   表单和UI库：`formily ` + `antd` + `antd-style`
 -   数据模拟：`mocker-api` + `mockjs`
 
-> 启动项目前直接 `npm install`
+> 启动项目前需要先安装一次依赖：`npm install`
 
 和官方文档（以下简称“文档”）不同点：
 
