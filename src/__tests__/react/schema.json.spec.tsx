@@ -71,7 +71,7 @@ describe("json schema field", () => {
         expect(queryByTestId("input")).toBeVisible();
     });
 
-    // 通过 x-component-props 传递子集
+    // 通过 x-component-props 传递 children
     test("x-component-props children", () => {
         const form = createForm();
         const { queryByTestId } = render(
@@ -96,7 +96,7 @@ describe("json schema field", () => {
         expect(queryByTestId("children-test")?.innerHTML).toEqual("children");
     });
 
-    // 通过 x-content 传递子集
+    // 通过 x-content 传递 children
     test("x-content", async () => {
         const form = createForm();
         const { queryByTestId } = render(

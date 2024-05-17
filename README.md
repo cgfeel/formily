@@ -1425,3 +1425,15 @@
 
 -   渲染表单：`FormProvider`、`FormConsumer`
 -   查询最近的 `ObjectField` 或 `Form`：`useParentForm`
+
+#### `JsonSchema`
+
+-   目录：https://github.com/cgfeel/formily/blob/main/src/__tests__/react/schema.json.spec.tsx
+
+使用 `JsonSchema` 渲染：
+
+-   通过 `JsonSchema` 渲染单一字段
+-   通过 `JsonSchema` 渲染带有对象字段的表单
+-   通过 `JsonSchema` 渲染单一对象字段
+-   通过 `x-component-props` 传递 `children`
+-   通过 `x-content` 传递 `children`
