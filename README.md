@@ -396,7 +396,6 @@
 
 -   `onFieldValueChange` 主动联动，`onFieldReact` 被动联动
 -   也可以在 `schema` 响应中使用 `reactions`，区别在于：主动联动有 `target` 属性
--   在联动的钩子中：[[Field Effect Hooks](https://core.formilyjs.org/zh-CN/api/entry/field-effect-hook)]，只有 `onFieldReact` 是被动联动，其他全部是主动联动
 
 **因此：**
 
