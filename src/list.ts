@@ -88,6 +88,10 @@ export const router = {
         name: "React Library",
         path: lazy(() => import("./page/ReactLibrary")),
     },
+    "/fishedee": {
+        name: "博主 fishedee 的 formily 例子",
+        path: lazy(() => import("./page/Fishedee")),
+    },
 } as const;
 
 export type RouterKey = keyof typeof router;
