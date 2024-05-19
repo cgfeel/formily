@@ -68,7 +68,7 @@ const Rule: FC = () => (
             </p>
         }
         form={form}
-        header={<h2>core.3.2.1 规则校验</h2>}>
+        header={<h2>core.3.2.1-3.27: 规则校验</h2>}>
         <Field type="number" field={form.query("minimum").take()} />
         <Field field={form.query("min").take()} />
         <Field field={form.query("custom").take()} />
