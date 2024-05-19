@@ -6,6 +6,9 @@ const Count = lazy(() => import("../fishedee/count"));
 const Display = lazy(() => import("../fishedee/display"));
 const FieldAction = lazy(() => import("../fishedee/fieldAction"));
 const InitialValue = lazy(() => import("../fishedee/initialvalue"));
+const ValidateInput = lazy(() => import("../fishedee/validateInput"));
+const ValidateRule = lazy(() => import("../fishedee/validateInput/Rule"));
+const ValidateType = lazy(() => import("../fishedee/validateInput/ValidateType"));
 
 const items: TabsProps["items"] = [
     {
@@ -37,19 +40,11 @@ const items: TabsProps["items"] = [
         label: "core",
     },
     {
-        key: "field-action",
+        key: "field-value",
         label: "字段值的获取与更新",
         children: (
             <Suspense fallback={<>loading...</>}>
                 <FieldAction />
-            </Suspense>
-        ),
-    },
-    {
-        key: "initialvalue",
-        label: "表单初始值",
-        children: (
-            <Suspense fallback={<>loading...</>}>
                 <InitialValue />
             </Suspense>
         ),
@@ -60,6 +55,17 @@ const items: TabsProps["items"] = [
         children: (
             <Suspense fallback={<>loading...</>}>
                 <Display />
+            </Suspense>
+        ),
+    },
+    {
+        key: "validate",
+        label: "校验和反馈",
+        children: (
+            <Suspense fallback={<>loading...</>}>
+                <ValidateInput />
+                <ValidateType />
+                <ValidateRule />
             </Suspense>
         ),
     },
