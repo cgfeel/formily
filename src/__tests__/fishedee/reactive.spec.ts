@@ -2,6 +2,7 @@ import { Tracker, action, autorun, batch, define, model, observable, observe, re
 
 // 来自文档，单元测试纠正了文档中的一些错误
 // https://blog.fishedee.com/2021/07/13/Formily%E7%9A%84Reactive%E7%9A%84%E7%BB%8F%E9%AA%8C%E6%B1%87%E6%80%BB
+// 6.1 是错的，正确的是 batch 在 autorun 依旧会收集依赖
 
 describe("observable", () => {
     test("testObservable1", () => {
