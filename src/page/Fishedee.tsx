@@ -3,6 +3,9 @@ import { FC, Suspense, lazy } from "react";
 
 const CoreReactive = lazy(() => import("../fishedee/coreReactive"));
 const Count = lazy(() => import("../fishedee/count"));
+const Display = lazy(() => import("../fishedee/display"));
+const FieldAction = lazy(() => import("../fishedee/fieldAction"));
+const InitialValue = lazy(() => import("../fishedee/initialvalue"));
 
 const items: TabsProps["items"] = [
     {
@@ -28,10 +31,40 @@ const items: TabsProps["items"] = [
             </Suspense>
         ),
     },
+    {
+        disabled: true,
+        key: "core",
+        label: "core",
+    },
+    {
+        key: "field-action",
+        label: "字段值的获取与更新",
+        children: (
+            <Suspense fallback={<>loading...</>}>
+                <FieldAction />
+            </Suspense>
+        ),
+    },
+    {
+        key: "initialvalue",
+        label: "表单初始值",
+        children: (
+            <Suspense fallback={<>loading...</>}>
+                <InitialValue />
+            </Suspense>
+        ),
+    },
+    {
+        key: "display",
+        label: "展示状态",
+        children: (
+            <Suspense fallback={<>loading...</>}>
+                <Display />
+            </Suspense>
+        ),
+    },
 ];
 
-const Fishedee: FC = () => (
-    <Tabs defaultActiveKey="observer-count" tabPosition="left" items={items} destroyInactiveTabPane />
-);
+const Fishedee: FC = () => <Tabs defaultActiveKey="observer-count" tabPosition="left" items={items} />;
 
 export default Fishedee;

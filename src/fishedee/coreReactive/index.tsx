@@ -67,7 +67,7 @@ const CoreReactive: FC = () => (
         }
         header={
             <h2>
-                仅用 <code>@formily/reactive</code> 实现表单逻辑
+                core.0：仅用 <code>@formily/reactive</code> 实现表单逻辑
             </h2>
         }>
         <FormProvider form={data}>

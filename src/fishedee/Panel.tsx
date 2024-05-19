@@ -7,12 +7,12 @@ const useStyles = createStyles(css`
     width: 600px;
 `);
 
-const Panel: FC<PropsWithChildren<PanelProps>> = ({ children, footer, header }) => {
-    const { styles } = useStyles();
+const Panel: FC<PropsWithChildren<PanelProps>> = ({ children, className, footer, header }) => {
+    const { styles, cx } = useStyles();
     const stylish = useStylish();
 
     return (
-        <div className={stylish.wraper}>
+        <div className={cx(stylish.wraper, className)}>
             {header}
             <div className={stylish.pannel}>
                 <Card className={styles}>{children}</Card>
@@ -23,6 +23,7 @@ const Panel: FC<PropsWithChildren<PanelProps>> = ({ children, footer, header }) 
 };
 
 export interface PanelProps {
+    className?: string;
     footer?: ReactNode;
     header?: ReactNode;
 }
