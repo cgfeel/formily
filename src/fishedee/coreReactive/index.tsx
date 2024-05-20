@@ -90,7 +90,7 @@ const CoreReactive: FC = () => (
                         backgroundColor: style.backgroundColor === "#eee" ? undefined : "#eee",
                     };
                 }}>
-                切换 age 组件的 {"decoratorProps[style.height]"}
+                切换 age 组件的 {"decoratorProps[style.background]"}
             </button>
             <Field name="age" />
             <button
