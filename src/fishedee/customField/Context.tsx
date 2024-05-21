@@ -1,4 +1,4 @@
-import { Field, Form } from "@formily/core";
+import { ArrayField, Field, Form, isArrayField } from "@formily/core";
 import { IProviderProps, observer } from "@formily/react";
 import {
     Attributes,
@@ -10,6 +10,10 @@ import {
     createElement,
     useContext,
 } from "react";
+
+const isCreateChildren = (field: Field, target: any): target is ReactNode => {
+    return !isArrayField(field) && target !== undefined;
+};
 
 const isCreateType = (target: any): target is Parameters<typeof createElement>[0] => {
     const type = typeof target;
@@ -35,21 +39,28 @@ const FormProviderInner: FC<PropsWithChildren<IProviderProps>> = ({ children, fo
     <FormContext.Provider value={form}>{children}</FormContext.Provider>
 );
 
+type ChildrenFn = (index: number) => ReactNode;
+
 // 状态桥接组件
-const ReactiveField: FC<PropsWithChildren<ReactiveFieldProps>> = ({ children, field, attr = {} }) => {
+const ReactiveField = <F extends Field, C = F extends ArrayField ? ChildrenFn : ReactNode>({
+    children,
+    field,
+    attr = {},
+}: ReactiveFieldProps<F, C>) => {
     if (!field.visible) return null;
 
     const componetRaw = Array.isArray(field.component) ? field.component[0] : field.component;
+    const attrData = Object.assign(
+        {
+            ...field.componentProps,
+            ...attr,
+        },
+        isArrayField(field) ? { children } : undefined,
+    );
+
     const component = !isCreateType(componetRaw)
         ? null
-        : createElement(
-              componetRaw,
-              {
-                  ...field.componentProps,
-                  ...attr,
-              },
-              children,
-          );
+        : createElement(componetRaw, attrData, isCreateChildren(field, children) ? children : undefined);
 
     const decoratorRaw = Array.isArray(field.decorator) ? field.decorator[0] : field.decorator;
     const decorator = !isCreateType(decoratorRaw) ? null : createElement(decoratorRaw, field.decoratorProps, component);
@@ -64,8 +75,9 @@ interface FormConsumerProps {
     children: (form: Form) => ReactNode;
 }
 
-interface ReactiveFieldProps {
-    field: Field;
+interface ReactiveFieldProps<F, C> {
+    children: C;
+    field: F;
     attr?: Attributes;
 }
 
