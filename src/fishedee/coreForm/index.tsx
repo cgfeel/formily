@@ -54,7 +54,33 @@ const form = createForm({
 });
 
 const CoreForm: FC = () => (
-    <Panel>
+    <Panel
+        footer={
+            <div>
+                <p>
+                    在演示过程中我将 <code>button</code> 也作为了 <code>Field</code>，通过自定义 <code>effect</code>{" "}
+                    通过 <code>form.notify</code> 实现表单联动
+                </p>
+                <p>
+                    添加 <code>core</code> 后和之前仅用 <code>reactive</code> 对比的优点：
+                </p>
+                <ul>
+                    <li>
+                        表单值变得纯粹，如：<code>{"{ name: string, age: number }"}</code>
+                        ，而之前将表单渲染、验证逻辑都加在表单值中
+                    </li>
+                    <li>支持表单路径查找、依赖收集，让表单联动变得可行</li>
+                    <li>自动响应表单验证</li>
+                    <li>拥有了生命周期</li>
+                    <li>渲染逻辑和交互逻辑分离</li>
+                </ul>
+            </div>
+        }
+        header={
+            <h2>
+                core.10: 为之前的 <code>reactive</code> 表单增加 <code>core</code>
+            </h2>
+        }>
         <FormProvider form={form}>
             <Field
                 name="upname"
