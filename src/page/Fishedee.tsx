@@ -14,6 +14,8 @@ const FormPath = lazy(() => import("../core/formPath"));
 const InitialValue = lazy(() => import("../fishedee/initialvalue"));
 const Linkage = lazy(() => import("./LinkAges"));
 const Pattern = lazy(() => import("../fishedee/pattern"));
+const ReactField = lazy(() => import("../fishedee/reactField"));
+const SchemaField = lazy(() => import("../fishedee/schemaField"));
 const ValidateInput = lazy(() => import("../fishedee/validateInput"));
 const ValidateRule = lazy(() => import("../fishedee/validateInput/Rule"));
 const ValidateType = lazy(() => import("../fishedee/validateInput/ValidateType"));
@@ -171,6 +173,29 @@ const items: TabsProps["items"] = [
         children: (
             <Suspense fallback={<>loading...</>}>
                 <CoreForm />
+            </Suspense>
+        ),
+    },
+    {
+        disabled: true,
+        key: "react",
+        label: "react",
+    },
+    {
+        key: "field",
+        label: "字段的 React 实现",
+        children: (
+            <Suspense fallback={<>loading...</>}>
+                <ReactField />
+            </Suspense>
+        ),
+    },
+    {
+        key: "schema-field",
+        label: "字段模型 SchemaField",
+        children: (
+            <Suspense fallback={<>loading...</>}>
+                <SchemaField />
             </Suspense>
         ),
     },

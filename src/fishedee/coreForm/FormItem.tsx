@@ -18,14 +18,14 @@ const FormItem: FC<PropsWithChildren> = ({ children }) => {
     const field = useContext(FieldContext);
     const { styles } = useStyles();
 
-    const { decoratorProps } = field;
+    const { decoratorProps, errors = [] } = field;
     return (
         <div>
-            <div className={styles.wrap} style={decoratorProps.style}>
+            <div className={styles.wrap} style={decoratorProps?.style}>
                 {field.title}
             </div>
             {children}
-            <div className={styles.tips}>{field.errors.map(item => item.messages).join(",")}</div>
+            <div className={styles.tips}>{errors.map(item => item.messages).join(",")}</div>
         </div>
     );
 };
