@@ -42,11 +42,7 @@ const FormProviderInner: FC<PropsWithChildren<IProviderProps>> = ({ children, fo
 type ChildrenFn = (index: number) => ReactNode;
 
 // 状态桥接组件
-const ReactiveField = <F extends Field, C = F extends ArrayField ? ChildrenFn : ReactNode>({
-    children,
-    field,
-    attr = {},
-}: ReactiveFieldProps<F, C>) => {
+const ReactiveField = <F extends Field>({ children, field, attr = {} }: ReactiveFieldProps<F>) => {
     if (!field.visible) return null;
 
     const componetRaw = Array.isArray(field.component) ? field.component[0] : field.component;
@@ -60,25 +56,27 @@ const ReactiveField = <F extends Field, C = F extends ArrayField ? ChildrenFn : 
 
     const component = !isCreateType(componetRaw)
         ? null
-        : createElement(componetRaw, attrData, isCreateChildren(field, children) ? children : undefined);
+        : isCreateChildren(field, children)
+          ? createElement(componetRaw, attrData, children)
+          : createElement(componetRaw, attrData);
 
     const decoratorRaw = Array.isArray(field.decorator) ? field.decorator[0] : field.decorator;
     const decorator = !isCreateType(decoratorRaw) ? null : createElement(decoratorRaw, field.decoratorProps, component);
 
-    return <FieldContext.Provider value={field}>{decorator}</FieldContext.Provider>;
+    return <FieldContext.Provider value={field}>{decorator || component}</FieldContext.Provider>;
 };
 
-const FieldConsumer = observer(FormConsumerInner);
+const FormConsumer = observer(FormConsumerInner);
 const FormProvider = observer(FormProviderInner);
 
 interface FormConsumerProps {
     children: (form: Form) => ReactNode;
 }
 
-interface ReactiveFieldProps<F, C> {
-    children: C;
+interface ReactiveFieldProps<F> {
+    children?: F extends ArrayField ? ChildrenFn : ReactNode;
     field: F;
     attr?: Attributes;
 }
 
-export { FieldContext, FieldConsumer, FormContext, FormProvider, ReactiveField };
+export { FieldContext, FormConsumer, FormContext, FormProvider, ReactiveField };

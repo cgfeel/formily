@@ -3,6 +3,8 @@ import { observer } from "@formily/react";
 import { FC, PropsWithChildren, ReactNode, useContext, useId } from "react";
 import { FieldContext, FormContext, ReactiveField } from "./Context";
 
+const EmptyComponent: FC<PropsWithChildren> = ({ children }) => <>{children}</>;
+
 const ArrayFieldInner = <
     Decorator extends JSXComponent = any,
     Component extends JSXComponent = any,
@@ -15,12 +17,8 @@ const ArrayFieldInner = <
     const form = useContext(FormContext);
     const parent = useContext(FieldContext);
 
-    const name = props.name || useId();
-    const field = form.createArrayField({
-        ...props,
-        name: name,
-        basePath: parent?.address,
-    });
+    const attr = Object.assign({ name: useId() }, props, { basePath: parent?.address });
+    const field = form.createArrayField(attr);
 
     return (
         <ReactiveField attr={{ value: field.value, onChange: field.onInput }} field={field}>
@@ -41,12 +39,8 @@ const FieldInner = <
     const form = useContext(FormContext);
     const parent = useContext(FieldContext);
 
-    const name = props.name || useId();
-    const field = form.createField({
-        ...props,
-        name: name,
-        basePath: parent?.address,
-    });
+    const attr = Object.assign({ name: useId() }, props, { basePath: parent?.address });
+    const field = form.createField(attr);
 
     return (
         <ReactiveField attr={{ value: field.value, onChange: field.onInput }} field={field}>
@@ -67,12 +61,10 @@ const ObjectFieldInner = <
     const form = useContext(FormContext);
     const parent = useContext(FieldContext);
 
-    const name = props.name || useId();
-    const field = form.createObjectField({
-        ...props,
-        name: name,
-        basePath: parent?.address,
-    });
+    const attr = Object.assign({ name: useId() }, props, { basePath: parent?.address });
+    const field = form.createObjectField(attr);
+
+    if (Array.isArray(field.component) && field.component[0] === undefined) field.component[0] = EmptyComponent;
 
     return <ReactiveField field={field}>{children}</ReactiveField>;
 };
@@ -86,7 +78,10 @@ interface ArrayFieldProps<
     Component extends JSXComponent = any,
     TextType = any,
     ValueType = any,
-> extends IFieldProps<Decorator, Component, TextType, ValueType> {
+> extends IFieldProps<Decorator, Component, TextType, ValueType>,
+        ArrayProps {}
+
+export interface ArrayProps {
     children?: (index: number) => ReactNode;
 }
 

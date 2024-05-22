@@ -6,6 +6,7 @@ const CoreForm = lazy(() => import("../fishedee/coreForm"));
 const CoreReactive = lazy(() => import("../fishedee/coreReactive"));
 const Count = lazy(() => import("../fishedee/count"));
 const CreateField = lazy(() => import("../fishedee/createField"));
+const CustomField = lazy(() => import("../fishedee/customField"));
 const Display = lazy(() => import("../fishedee/display"));
 const FieldAction = lazy(() => import("../fishedee/fieldAction"));
 const FieldEffectHooks = lazy(() => import("../core/fieldEffectHooks"));
@@ -196,6 +197,15 @@ const items: TabsProps["items"] = [
         children: (
             <Suspense fallback={<>loading...</>}>
                 <SchemaField />
+            </Suspense>
+        ),
+    },
+    {
+        key: "custom-field",
+        label: "复现字段",
+        children: (
+            <Suspense fallback={<>loading...</>}>
+                <CustomField />
             </Suspense>
         ),
     },
