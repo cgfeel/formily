@@ -19,6 +19,7 @@ const FormItem: FC<PropsWithChildren> = ({ children }) => {
     const { styles } = useStyles();
 
     const { decoratorProps, errors = [] } = field;
+    // console.log("items", field);
     return (
         <div>
             <div className={styles.wrap} style={decoratorProps?.style}>

@@ -7,6 +7,8 @@ const CoreReactive = lazy(() => import("../fishedee/coreReactive"));
 const Count = lazy(() => import("../fishedee/count"));
 const CreateField = lazy(() => import("../fishedee/createField"));
 const CustomField = lazy(() => import("../fishedee/customField"));
+const CustomJsonSchema = lazy(() => import("../fishedee/customSchema/JsonSchema"));
+const CustomMarkupSchema = lazy(() => import("../fishedee/customSchema/MarkupSchema"));
 const Display = lazy(() => import("../fishedee/display"));
 const FieldAction = lazy(() => import("../fishedee/fieldAction"));
 const FieldEffectHooks = lazy(() => import("../core/fieldEffectHooks"));
@@ -206,6 +208,16 @@ const items: TabsProps["items"] = [
         children: (
             <Suspense fallback={<>loading...</>}>
                 <CustomField />
+            </Suspense>
+        ),
+    },
+    {
+        key: "custom-schema",
+        label: "复现字段模型",
+        children: (
+            <Suspense fallback={<>loading...</>}>
+                {/* <CustomJsonSchema /> */}
+                <CustomMarkupSchema />
             </Suspense>
         ),
     },
