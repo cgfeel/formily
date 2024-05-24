@@ -216,7 +216,7 @@ const items: TabsProps["items"] = [
         label: "复现字段模型",
         children: (
             <Suspense fallback={<>loading...</>}>
-                {/* <CustomJsonSchema /> */}
+                <CustomJsonSchema />
                 <CustomMarkupSchema />
             </Suspense>
         ),

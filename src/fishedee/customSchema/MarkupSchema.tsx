@@ -20,7 +20,7 @@ const form = createForm({
 });
 
 const MarkupSchema: FC = () => (
-    <Panel>
+    <Panel header={<h2>Core4.2: 复现 JsonSchema</h2>}>
         <FormProvider form={form}>
             <SchemaField>
                 <SchemaField.Object name="person" title="个人信息" x-decorator="VoidComponent">

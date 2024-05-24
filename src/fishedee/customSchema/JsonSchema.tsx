@@ -81,7 +81,28 @@ const schema: ISchema = {
 };
 
 const JsonSchema: FC = () => (
-    <Panel>
+    <Panel
+        footer={
+            <div>
+                <p>优化：</p>
+                <ul>
+                    <li>
+                        <code>schema</code> 的类型直接沿用了 <code>ISchema</code>，并没有像文档那样自定义
+                    </li>
+                    <li>
+                        完全按照 <code>formily</code> 来处理，通过 <code>createSchemaField</code> 返回一个{" "}
+                        <code>SchemaField</code> 组件用来解析 <code>Schema</code>
+                    </li>
+                    <li>
+                        完全按照 <code>React</code> 组件规范来，将模型渲染分成 3 个组件 <code>RenderCom</code>、
+                        <code>RenderProperties</code>、<code>RecursionField</code>
+                        ，而并非在一个组件中，通过传统函数的形式渲染
+                    </li>
+                </ul>
+                <p>原理：</p>
+            </div>
+        }
+        header={<h2>Core4.1: 复现 JsonSchema</h2>}>
         <FormProvider form={form}>
             <SchemaField schema={schema} />
             <code className="consumer">

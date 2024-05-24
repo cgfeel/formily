@@ -7,12 +7,13 @@ const RANGE = ["array", "number", "object", "string"];
 const SchemaContext = createContext<ISchema>({} as ISchema);
 const SchemaOptionsContext = createContext<SchemaOptionsInstance>({} as SchemaOptionsInstance);
 
-function hasProperty<A extends Record<PropertyKey, any>, B extends PropertyKey>(obj: A, property: B): Boolean {
-    return property in obj;
-}
+const isKey = <T extends Record<PropertyKey, any>, U extends PropertyKey>(
+    item: T,
+    key: U,
+): item is T & Record<U, unknown> => key in item;
 
 function has<A extends Record<PropertyKey, any>>(obj: A, data: A, property: PropertyKey): boolean {
-    return hasProperty(obj, property) && hasProperty(data, property) && obj[property] === data[property];
+    return isKey(obj, property) && isKey(data, property) && obj[property] === data[property];
 }
 
 const isAllowItems = <T extends ISchema["items"]>(items: T, data: T) => {
@@ -26,7 +27,7 @@ const isAllowItems = <T extends ISchema["items"]>(items: T, data: T) => {
 // 1.对于 ArrayField 字段，children 就是 items，而其他字段不需要这个属性，所以剔除
 // 2.对于 ArrayField 字段，properties 就是 children，不同的是 items 是第一项，其他都是 properties
 // 3.对于 ObjectField 字段，字段，properties 就是 children，而其他字段不需要这个属性，所以剔除
-const SchemaComponent: FC<PropsWithChildren<ISchema & { ignor?: boolean }>> = ({ children, ignor, ...props }) => {
+const SchemaComponent: FC<PropsWithChildren<ISchema>> = ({ children, ...props }) => {
     const parent = useContext(SchemaContext);
     const { name: nameRaw, type: typeRaw } = props;
     const name = String(nameRaw || "");

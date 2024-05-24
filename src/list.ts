@@ -92,6 +92,10 @@ export const router = {
         name: "博主 fishedee 的 formily 例子",
         path: lazy(() => import("./page/Fishedee")),
     },
+    "/object-base": {
+        name: "自定义递增组件",
+        path: lazy(() => import("./page/ObjectBase")),
+    },
 } as const;
 
 export type RouterKey = keyof typeof router;
