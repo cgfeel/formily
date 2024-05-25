@@ -63,10 +63,9 @@ const ObjectFieldInner = <
 
     const attr = Object.assign({ name: useId() }, props, { basePath: parent?.address });
     const field = form.createObjectField(attr);
-    // console.log(attr);
 
+    // 如果 ArrayField 没有提供 component 默认定义一个以便展现 children field
     if (Array.isArray(field.component) && field.component[0] === void 0) field.component[0] = EmptyComponent;
-
     return <ReactiveField field={field}>{children}</ReactiveField>;
 };
 

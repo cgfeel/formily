@@ -40,7 +40,6 @@ const RenderCom: FC<RecursionFieldProps> = ({ name: propsName, onlyRenderPropert
         title,
     };
 
-    name === "test" && console.log("items", schema);
     return !isObjectField(Field) ? (
         <Field {...attr} />
     ) : (

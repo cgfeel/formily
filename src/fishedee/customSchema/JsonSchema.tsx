@@ -99,7 +99,28 @@ const JsonSchema: FC = () => (
                         ，而并非在一个组件中，通过传统函数的形式渲染
                     </li>
                 </ul>
-                <p>原理：</p>
+                <p>
+                    原理，将 <code>Schema</code> 递归转化为 <code>Field Props</code>，(上一章节练习：复现字段)：
+                </p>
+                <ul>
+                    <li>
+                        <code>RenderCom</code>：提供 <code>FieldSchemaContext</code>，作为整个模型的上下文提供
+                    </li>
+                    <li>
+                        <code>RecursionField</code>：将 <code>schema</code> 转化为 <code>Schema</code>，并将{" "}
+                        <code>ObjectField</code> 透传 <code>children</code> 将重新递归包裹 <code>RecursionField</code>
+                    </li>
+                    <li>
+                        <code>RenderProperties</code>：要么指定只渲染 <code>schema properties</code>，要么作为{" "}
+                        <code>ObjectField</code> 递归渲染 <code>schema.properties</code>，递归时会遍历当前{" "}
+                        <code>properties</code>，每一个 <code>item</code> 都是一个新的 <code>RenderProperties</code>
+                    </li>
+                </ul>
+                <p>
+                    对于 <code>createSchemaField</code> 目前只要了解{" "}
+                    <code>{"<RecursionField schema={baseSchema} onlyRenderProperties />"}</code>，这个文件中其他都是为了{" "}
+                    <code>MarkSchema</code>
+                </p>
             </div>
         }
         header={<h2>Core4.1: 复现 JsonSchema</h2>}>
