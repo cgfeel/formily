@@ -6,10 +6,10 @@ import { FC, PropsWithChildren, ReactNode } from "react";
 import useStylish from "../commonStylish";
 
 const useStyles = createStyles(css`
-    width: 600px;
+    width: 86%;
 `);
 
-const Panel: FC<PropsWithChildren<PanelProps>> = ({ buttonItem, children, footer, form, header }) => {
+const Panel: FC<PropsWithChildren<PanelProps>> = ({ children, footer, form, header }) => {
     const { styles } = useStyles();
     const stylish = useStylish();
     return (
