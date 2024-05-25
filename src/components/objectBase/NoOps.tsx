@@ -22,17 +22,10 @@ const form = createForm({
     },
 });
 
-const ObjectBaseExample: FC = () => (
-    <Panel form={form} header={<h2>定义一个折叠查询 - 完整示例</h2>}>
+const NoOps: FC = () => (
+    <Panel form={form} header={<h2>定义一个折叠查询 - 取消逻辑判断</h2>}>
         <SchemaField>
             <SchemaField.Object name="search" x-component="ObjectCollapse">
-                <SchemaField.String
-                    x-component="ObjectCollapse.Options"
-                    enum={[
-                        { value: "and", label: "且" },
-                        { value: "or", label: "或" },
-                    ]}
-                />
                 <SchemaField.Object x-component="ObjectCollapse.CollapsePanel">
                     <SchemaField.Void x-component="Space">
                         <SchemaField.String name="key" x-component="Input" x-decorator="FormItem" />
@@ -60,4 +53,4 @@ const ObjectBaseExample: FC = () => (
     </Panel>
 );
 
-export default ObjectBaseExample;
+export default NoOps;

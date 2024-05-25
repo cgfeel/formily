@@ -1,8 +1,10 @@
+import { usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
 import { ObjectField } from "@formily/core";
-import { FC, PropsWithChildren } from "react";
 import { ISchema, RecursionField, Schema, observer, useField, useFieldSchema } from "@formily/react";
-import ObjectBase, { useObject } from "./ObjectBase";
 import { Button, Card, Col, Empty, Row } from "antd";
+import { FC, PropsWithChildren } from "react";
+import ObjectBase, { IObjectBaseProps, useObject } from "./ObjectBase";
+import useStyle from "./styles";
 
 const defaultDataValue: DefaultDataType = {
     ops: "and",
@@ -29,25 +31,29 @@ const isOperationComponent = (schema: ISchema) =>
 
 const CollapsePanel: FC<PropsWithChildren> = ({ children }) => <>{children}</>;
 
-const InternalObjectCollapse: FC<PropsWithChildren<ObjectCollapseProps>> = ({ defaultData = defaultDataValue }) => {
+const InternalObjectCollapse: FC<PropsWithChildren<ObjectCollapseProps>> = ({
+    defaultData = defaultDataValue,
+    ...props
+}) => {
     const field = useField<ObjectField>();
     const dataSource = getDataSource(field.value);
 
+    const prefix = usePrefixCls("formily-object-collapse", props);
     const schema = useFieldSchema();
     if (!schema) throw new Error("can not found schema object");
 
     return (
-        <ObjectBase defaultData={defaultData}>
+        <ObjectBase {...props} defaultData={defaultData}>
             {Object.keys(dataSource).length === 0 ? (
                 <RenderEmpty field={field} />
             ) : (
-                <RenderItems dataSource={dataSource} schema={schema} />
+                <RenderItems dataSource={dataSource} prefix={prefix} schema={schema} />
             )}
         </ObjectBase>
     );
 };
 
-const RenderAddition: FC<Omit<RenderItemsProps, "dataSource">> = ({ schema, path = "" }) =>
+const RenderAddition: FC<Omit<RenderItemsProps, "dataSource" | "prefix">> = ({ schema, path = "" }) =>
     schema.reduceProperties((addition, schema, key) => {
         return isAdditionComponent(schema) ? <RecursionField schema={schema} name={`${path}.${key}`} /> : addition;
     }, null);
@@ -69,11 +75,12 @@ const RenderEmpty: FC<{ field: ObjectField }> = ({ field }) => {
     );
 };
 
-const RenderItems: FC<RenderItemsProps> = ({ dataSource, schema, path = "" }) => {
+const RenderItems: FC<RenderItemsProps> = ({ dataSource, prefix, schema, path = "" }) => {
     const { children = [] } = dataSource;
-    return (
+    const [wrapSSR] = useStyle(prefix);
+    return wrapSSR(
         <ObjectBase.Item record={dataSource}>
-            <Row>
+            <Row className={`${prefix}-item`}>
                 <RenderOps path={path} schema={schema} />
                 <Col flex="auto">
                     {children.map((item, i) =>
@@ -82,6 +89,7 @@ const RenderItems: FC<RenderItemsProps> = ({ dataSource, schema, path = "" }) =>
                                 dataSource={item}
                                 key={i}
                                 path={[path, "children", i].join(".")}
+                                prefix={prefix}
                                 schema={schema}
                             />
                         ) : (
@@ -95,11 +103,15 @@ const RenderItems: FC<RenderItemsProps> = ({ dataSource, schema, path = "" }) =>
                     <RenderAddition path={path} schema={schema} />
                 </Col>
             </Row>
-        </ObjectBase.Item>
+        </ObjectBase.Item>,
     );
 };
 
-const RenderCollapse: FC<PropsWithChildren<Omit<RenderItemsProps, "dataSource">>> = ({ children, path, schema }) => {
+const RenderCollapse: FC<PropsWithChildren<Omit<RenderItemsProps, "dataSource" | "prefix">>> = ({
+    children,
+    path,
+    schema,
+}) => {
     return schema.reduceProperties((collapse, schema) => {
         return !isOperationComponent(schema) ? (
             <Row gutter={8}>
@@ -114,13 +126,13 @@ const RenderCollapse: FC<PropsWithChildren<Omit<RenderItemsProps, "dataSource">>
     }, null);
 };
 
-const RenderOps: FC<Omit<RenderItemsProps, "dataSource">> = ({ schema, path = "" }) => {
-    return schema.reduceProperties((ops, schema, key) => {
-        return isOpsComponent(schema) ? <RecursionField schema={schema} name={[path, key].join(".")} /> : ops;
+const RenderOps: FC<Omit<RenderItemsProps, "dataSource" | "prefix">> = ({ schema, path = "" }) => {
+    return schema.reduceProperties((ops, schema) => {
+        return isOpsComponent(schema) ? <RecursionField schema={schema} name={[path, "ops"].join(".")} /> : ops;
     }, null);
 };
 
-const RenderRemove: FC<Omit<RenderItemsProps, "dataSource">> = ({ schema, path = "" }) =>
+const RenderRemove: FC<Omit<RenderItemsProps, "dataSource" | "prefix">> = ({ schema, path = "" }) =>
     schema.reduceProperties((addition, schema, key) => {
         return isRemoveComponent(schema) ? <RecursionField schema={schema} name={`${path}.${key}`} /> : addition;
     }, null);
@@ -131,12 +143,13 @@ const ObjectCollapse = Object.assign(ObjectBase.mixin(observer(InternalObjectCol
 
 interface RenderItemsProps {
     dataSource: DataType;
+    prefix: string;
     schema: Schema;
     path?: string;
 }
 
-interface ObjectCollapseProps {
-    defaultData?: DefaultDataType;
+interface ObjectCollapseProps extends Partial<IObjectBaseProps> {
+    prefixCls?: string;
 }
 
 type DataType = {

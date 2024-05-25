@@ -22,8 +22,8 @@ const form = createForm({
     },
 });
 
-const ObjectBaseExample: FC = () => (
-    <Panel form={form} header={<h2>定义一个折叠查询 - 完整示例</h2>}>
+const NoAction: FC = () => (
+    <Panel form={form} header={<h2>定义一个折叠查询 - 不要所有操作</h2>}>
         <SchemaField>
             <SchemaField.Object name="search" x-component="ObjectCollapse">
                 <SchemaField.String
@@ -48,8 +48,6 @@ const ObjectBaseExample: FC = () => (
                         <SchemaField.String name="value" x-component="Input" x-decorator="FormItem" />
                     </SchemaField.Void>
                 </SchemaField.Object>
-                <SchemaField.Void x-component="ObjectCollapse.Remove" />
-                <SchemaField.Void x-component="ObjectCollapse.Addition" x-decorator="FormItem" />
             </SchemaField.Object>
         </SchemaField>
         <code className="consumer">
@@ -60,4 +58,4 @@ const ObjectBaseExample: FC = () => (
     </Panel>
 );
 
-export default ObjectBaseExample;
+export default NoAction;

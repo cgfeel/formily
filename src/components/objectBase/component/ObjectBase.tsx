@@ -71,10 +71,10 @@ const Item: FC<PropsWithChildren<IObjectBaseItemProps>> = ({ children, record, .
     </ItemContext.Provider>
 );
 
-const Options: FC = () => {
+const Options: FC<ObjectOptionsProps> = ({ width = "70px" }) => {
     const field = useField<Field>();
     return (
-        <Col flex="70px">
+        <Col flex={width}>
             <Select value={field.value} options={field.dataSource || []} onChange={value => (field.value = value)} />
         </Col>
     );
@@ -138,8 +138,12 @@ export interface ObjectAdditionProps {
 
 export interface ObjectBaseMixins {
     Addition: FC<ObjectAdditionProps>;
-    Options: FC;
+    Options: FC<ObjectOptionsProps>;
     Remove: FC<ObjectRemoveProps>;
+}
+
+export interface ObjectOptionsProps {
+    width?: string;
 }
 
 export interface ObjectRemoveProps {
