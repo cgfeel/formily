@@ -58,6 +58,25 @@ const RenderAddition: FC<Omit<RenderItemsProps, "dataSource" | "prefix">> = ({ s
         return isAdditionComponent(schema) ? <RecursionField schema={schema} name={`${path}.${key}`} /> : addition;
     }, null);
 
+const RenderCollapse: FC<PropsWithChildren<Omit<RenderItemsProps, "dataSource" | "prefix">>> = ({
+    children,
+    path,
+    schema,
+}) => {
+    return schema.reduceProperties((collapse, schema) => {
+        return !isOperationComponent(schema) ? (
+            <Row gutter={8}>
+                <Col>
+                    <RecursionField schema={schema} name={path} />
+                </Col>
+                <Col>{children}</Col>
+            </Row>
+        ) : (
+            collapse
+        );
+    }, null);
+};
+
 const RenderEmpty: FC<{ field: ObjectField }> = ({ field }) => {
     const {
         props: { defaultData },
@@ -105,25 +124,6 @@ const RenderItems: FC<RenderItemsProps> = ({ dataSource, prefix, schema, path = 
             </Row>
         </ObjectBase.Item>,
     );
-};
-
-const RenderCollapse: FC<PropsWithChildren<Omit<RenderItemsProps, "dataSource" | "prefix">>> = ({
-    children,
-    path,
-    schema,
-}) => {
-    return schema.reduceProperties((collapse, schema) => {
-        return !isOperationComponent(schema) ? (
-            <Row gutter={8}>
-                <Col>
-                    <RecursionField schema={schema} name={path} />
-                </Col>
-                <Col>{children}</Col>
-            </Row>
-        ) : (
-            collapse
-        );
-    }, null);
 };
 
 const RenderOps: FC<Omit<RenderItemsProps, "dataSource" | "prefix">> = ({ schema, path = "" }) => {
