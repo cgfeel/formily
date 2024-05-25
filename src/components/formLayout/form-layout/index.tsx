@@ -61,7 +61,7 @@ export const FormLayout: FC<PropsWithChildren<IFormLayoutProps>> & {
         }
         return (
             <FormLayoutDeepContext.Provider value={newDeepLayout}>
-                <FormLayoutShallowContext.Provider value={shallow ? props : undefined}>
+                <FormLayoutShallowContext.Provider value={shallow ? props : void 0}>
                     {children}
                 </FormLayoutShallowContext.Provider>
             </FormLayoutDeepContext.Provider>

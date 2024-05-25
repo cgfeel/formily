@@ -65,7 +65,7 @@ const ObjectFieldInner = <
     const field = form.createObjectField(attr);
     // console.log(attr);
 
-    if (Array.isArray(field.component) && field.component[0] === undefined) field.component[0] = EmptyComponent;
+    if (Array.isArray(field.component) && field.component[0] === void 0) field.component[0] = EmptyComponent;
 
     return <ReactiveField field={field}>{children}</ReactiveField>;
 };

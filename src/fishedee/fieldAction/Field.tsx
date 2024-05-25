@@ -30,7 +30,7 @@ const Field: FC<FieldProps> = ({ name }) => {
         onFieldClear((form: Form) => {
             setMount(false);
             setValue(form.values[name]);
-            setComponent(Array.isArray(form.values[name]?.component) ? form.values[name]?.component[0] : undefined);
+            setComponent(Array.isArray(form.values[name]?.component) ? form.values[name]?.component[0] : void 0);
         });
     });
     return (

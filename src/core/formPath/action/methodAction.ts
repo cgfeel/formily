@@ -32,7 +32,7 @@ const jsonLimit = (value: string): [object|undefined, string] => {
     try {
         return [JSON.parse(value), ''];
     } catch {
-        return [undefined, '"❌ 不是有效的 JSON"'];
+        return [void 0, '"❌ 不是有效的 JSON"'];
     }
 };
 
@@ -221,7 +221,7 @@ FormPath.parse('${path}').setIn(target, '${value}')`,
 const fieldMethod: Record<string, ActionMethod> = {
     action_concat: (field, path) => {
         const target = dataPathLimit(field, path);
-        if (target !== undefined) {
+        if (target !== void 0) {
             const [array, value] = nodeValue(field, 'concat');
             target.value = FormPath.parse(path).concat(array, value).toString();
         }
@@ -256,7 +256,7 @@ const fieldMethod: Record<string, ActionMethod> = {
     },
     action_forEach: (field, path) => {
         const target = dataPathLimit(field, path);
-        if (target !== undefined) {
+        if (target !== void 0) {
             const keys: Array<string|number> = [];
             FormPath.parse(path).forEach(key => keys.push(key));
 
@@ -283,7 +283,7 @@ const fieldMethod: Record<string, ActionMethod> = {
     },
     action_map: (field, path) => {
         const target = dataPathLimit(field, path);
-        if (target !== undefined) {
+        if (target !== void 0) {
             target.value = FormPath.parse(path).map((key) => `${key}~`).toString();
         }
     },
@@ -301,26 +301,26 @@ const fieldMethod: Record<string, ActionMethod> = {
     },
     action_parent: (field, path) => {
         const target = dataPathLimit(field, path);
-        if (target !== undefined) {
+        if (target !== void 0) {
             target.value = FormPath.parse(path).parent().toString();
         }
     },
     action_pop: (field, path) => {
         const target = dataPathLimit(field, path);
-        if (target !== undefined) {
+        if (target !== void 0) {
             target.value = FormPath.parse(path).pop().toString();
         }
     },
     action_push: (field, path) => {
         const target = dataPathLimit(field, path);
-        if (target !== undefined) {
+        if (target !== void 0) {
             const [array, value] = nodeValue(field, 'push');
             target.value = FormPath.parse(path).push(array, value).toString();
         }
     },
     action_reduce: (field, path) => {
         const target = dataPathLimit(field, path);
-        if (target !== undefined) {
+        if (target !== void 0) {
             target.value = FormPath.parse(path).reduce(count => ++count, 0).toString();
         }
     },
@@ -337,14 +337,14 @@ const fieldMethod: Record<string, ActionMethod> = {
     },
     action_splice: (field, path) => {
         const target = dataPathLimit(field, path);
-        if (target !== undefined) {
+        if (target !== void 0) {
             const [[start, del], array] = spliceValue(field);
             target.value = FormPath.parse(path).splice(start, del, ...array).toString();
         }
     },
     action_slice: (field, path) => {
         const target = dataPathLimit(field, path);
-        if (target !== undefined) {
+        if (target !== void 0) {
             const slice = Number(target.query('.slice-input').value()??1);
             target.value = FormPath.parse(path).slice(slice).toString();
         }
@@ -357,7 +357,7 @@ const fieldMethod: Record<string, ActionMethod> = {
     },
     action_transform: (field, path) => {
         const target = dataPathLimit(field, path);
-        if (target !== undefined) {
+        if (target !== void 0) {
             target.value = FormPath.parse(path).transform(/\w+/, path => `yy.${path}.zz`).toString();
         }
     }

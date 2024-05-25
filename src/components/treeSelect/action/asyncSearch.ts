@@ -21,7 +21,7 @@ const asyncDataSource = (pattern: FormPathPattern, service: FormServerType) => {
                 const timer = setInterval(() => {
                     if (loops) return;
                     clearInterval(timer);
-                    resolve(undefined);
+                    resolve(void 0);
                 }, 500);
             }),
         });

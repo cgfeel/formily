@@ -9,7 +9,7 @@ const form = createForm({
             if (!isField(field)) return;
             const count = field.query("count").value();
             const price = field.query("price").value();
-            if (count !== undefined && price !== undefined) {
+            if (count !== void 0 && price !== void 0) {
                 field.value = count * price;
             }
         });
@@ -17,7 +17,7 @@ const form = createForm({
             if (!isField(field)) return;
             const count = field.query("count").value();
             const total = field.query("total").value();
-            if (total !== undefined && count > 0) {
+            if (total !== void 0 && count > 0) {
                 field.value = total / count;
             }
         });
@@ -25,7 +25,7 @@ const form = createForm({
             if (!isField(field)) return;
             const total = field.query("total").value();
             const price = field.query("price").value();
-            if (total !== undefined && price > 0) {
+            if (total !== void 0 && price > 0) {
                 field.value = total / price;
             }
         });

@@ -33,7 +33,7 @@ const form = createForm({
                 case "age":
                     const { style = {} } = field.decoratorProps;
                     field.setDecoratorProps({
-                        style: { ...style, backgroundColor: style.backgroundColor === "#eee" ? undefined : "#eee" },
+                        style: { ...style, backgroundColor: style.backgroundColor === "#eee" ? void 0 : "#eee" },
                     });
                     break;
                 case "name":

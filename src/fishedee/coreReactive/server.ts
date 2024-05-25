@@ -10,7 +10,7 @@ const requireValidator = (data: any): string => {
     if (typeof data === 'string') {
         return data === '' ? "缺少参数" : "";
     }
-    return data === undefined ? "缺少参数" : "";
+    return data === void 0 ? "缺少参数" : "";
 };
 
 const data = observable<Record<string, FieldType>>({
@@ -59,7 +59,7 @@ const data = observable<Record<string, FieldType>>({
         errors: [],
         title: "年龄",
         validator: [requireValidator],
-        value: undefined,
+        value: void 0,
         visible: true,
         onInput(event) {
             if ("value" in event.target) {
@@ -76,7 +76,7 @@ const data = observable<Record<string, FieldType>>({
         errors: [],
         title: "密码",
         validator: [requireValidator],
-        value: undefined,
+        value: void 0,
         visible: true,
         onInput(event) {
             if ("value" in event.target) {

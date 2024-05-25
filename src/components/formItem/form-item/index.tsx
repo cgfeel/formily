@@ -77,12 +77,12 @@ export const BaseItem: FC<PropsWithChildren<IFormItemProps>> = ({ children, ...p
     let enableCol = false;
     if (labelWidth || wrapperWidth) {
         if (labelWidth) {
-            labelStyle.width = labelWidth === "auto" ? undefined : labelWidth;
-            labelStyle.maxWidth = labelWidth === "auto" ? undefined : labelWidth;
+            labelStyle.width = labelWidth === "auto" ? void 0 : labelWidth;
+            labelStyle.maxWidth = labelWidth === "auto" ? void 0 : labelWidth;
         }
         if (wrapperWidth) {
-            wrapperStyle.width = wrapperWidth === "auto" ? undefined : wrapperWidth;
-            wrapperStyle.maxWidth = wrapperWidth === "auto" ? undefined : wrapperWidth;
+            wrapperStyle.width = wrapperWidth === "auto" ? void 0 : wrapperWidth;
+            wrapperStyle.maxWidth = wrapperWidth === "auto" ? void 0 : wrapperWidth;
         }
         // 栅格模式
     }

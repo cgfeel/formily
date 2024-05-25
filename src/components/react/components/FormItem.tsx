@@ -15,7 +15,7 @@ const FormItem = connect(
                 ? props
                 : {
                       ...props,
-                      help: field.selfErrors.length ? field.selfErrors : undefined,
+                      help: field.selfErrors.length ? field.selfErrors : void 0,
                   },
     ),
 );

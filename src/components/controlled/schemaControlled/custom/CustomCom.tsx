@@ -15,7 +15,7 @@ const CustomCom: FC = () => {
 
     useEffect(() => {
         form.clearFormGraph(`${address}.*`); //回收字段模型
-        setSchema(type === undefined ? {} : DYNAMIC_INJECT_SCHEMA[type]);
+        setSchema(type === void 0 ? {} : DYNAMIC_INJECT_SCHEMA[type]);
     }, [address, form, type, setSchema]);
 
     // onlyRenderProperties：是否只渲染properties

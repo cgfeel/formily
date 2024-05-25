@@ -59,7 +59,7 @@ const OnInputSchema: FC = () => (
                         dependencies: ["price"],
                         fulfill: {
                             state: {
-                                value: "{{$deps[0] !== undefined ? $self.value * $deps[0] : $target.value}}",
+                                value: "{{$deps[0] !== void 0 ? $self.value * $deps[0] : $target.value}}",
                             },
                         },
                     },
@@ -77,7 +77,7 @@ const OnInputSchema: FC = () => (
                         dependencies: ["count"],
                         fulfill: {
                             state: {
-                                value: "{{$deps[0] !== undefined ? $self.value * $deps[0] : $target.value}}",
+                                value: "{{$deps[0] !== void 0 ? $self.value * $deps[0] : $target.value}}",
                             },
                         },
                     },

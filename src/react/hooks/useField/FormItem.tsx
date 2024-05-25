@@ -8,7 +8,7 @@ const FormItem: FC<PropsWithChildren> = ({ children }) => {
     return isField(field) ? (
         <Form.Item
             extra={field.description}
-            help={field.selfErrors.length ? field.selfErrors : undefined}
+            help={field.selfErrors.length ? field.selfErrors : void 0}
             label={field.title}
             validateStatus={field.validateStatus}>
             {children}

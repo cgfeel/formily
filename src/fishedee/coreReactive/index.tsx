@@ -87,7 +87,7 @@ const CoreReactive: FC = () => (
                     const { style = {} } = decoratorProps;
                     decoratorProps.style = {
                         ...style,
-                        backgroundColor: style.backgroundColor === "#eee" ? undefined : "#eee",
+                        backgroundColor: style.backgroundColor === "#eee" ? void 0 : "#eee",
                     };
                 }}>
                 切换 age 组件的 {"decoratorProps[style.background]"}

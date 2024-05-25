@@ -12,7 +12,7 @@ import {
 } from "react";
 
 const isCreateChildren = (field: Field, target: any): target is ReactNode => {
-    return !isArrayField(field) && target !== undefined;
+    return !isArrayField(field) && target !== void 0;
 };
 
 const isCreateType = (target: any): target is Parameters<typeof createElement>[0] => {
@@ -51,7 +51,7 @@ const ReactiveField = <F extends Field>({ children, field, attr = {} }: Reactive
             ...field.componentProps,
             ...attr,
         },
-        isArrayField(field) ? { children } : undefined,
+        isArrayField(field) ? { children } : void 0,
     );
 
     const component = !isCreateType(componetRaw)
@@ -76,7 +76,7 @@ interface FormConsumerProps {
 interface ReactiveFieldProps<F> {
     children?: F extends ArrayField ? ChildrenFn : ReactNode;
     field: F;
-    attr?: Attributes;
+    attr?: Attributes & { value?: any; onChange?: (...args: any[]) => void };
 }
 
 export { FieldContext, FormConsumer, FormContext, FormProvider, ReactiveField };

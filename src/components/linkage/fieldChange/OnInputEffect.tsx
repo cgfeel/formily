@@ -6,7 +6,7 @@ import SchemaField from "../SchemaField";
 const form = createForm({
     effects: () => {
         onFieldInputValueChange("total", field => {
-            if (!isField(field) || field.value === undefined) return;
+            if (!isField(field) || field.value === void 0) return;
 
             // 计算数量：总价 / 单价
             form.setFieldState("count", state => {
@@ -27,7 +27,7 @@ const form = createForm({
             isField(field) &&
                 form.setFieldState("total", state => {
                     const count = form.values.count;
-                    if (count !== undefined) state.value = field.value * count;
+                    if (count !== void 0) state.value = field.value * count;
                 });
         });
         onFieldInputValueChange("count", field => {
@@ -35,7 +35,7 @@ const form = createForm({
             isField(field) &&
                 form.setFieldState("total", state => {
                     const price = form.values.price;
-                    if (price !== undefined) state.value = field.value * price;
+                    if (price !== void 0) state.value = field.value * price;
                 });
         });
     },

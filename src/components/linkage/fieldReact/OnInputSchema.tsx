@@ -30,7 +30,7 @@ const OnInputSchema: FC = () => (
                 x-decorator="FormItem"
                 x-reactions={{
                     dependencies: ["count", "price"],
-                    when: "{{$deps[0] !== undefined && $deps[1] !== undefined}}",
+                    when: "{{$deps[0] !== void 0 && $deps[1] !== void 0}}",
                     fulfill: {
                         state: {
                             value: "{{$deps[0] * $deps[1]}}",
@@ -45,7 +45,7 @@ const OnInputSchema: FC = () => (
                 x-decorator="FormItem"
                 x-reactions={{
                     dependencies: ["price", "total"],
-                    when: "{{$deps[0] > 0 && $deps[1] !== undefined}}",
+                    when: "{{$deps[0] > 0 && $deps[1] !== void 0}}",
                     fulfill: {
                         state: {
                             value: "{{$deps[1] / $deps[0]}}",
@@ -60,7 +60,7 @@ const OnInputSchema: FC = () => (
                 x-decorator="FormItem"
                 x-reactions={{
                     dependencies: ["count", "total"],
-                    when: "{{$deps[0] > 0 && $deps[1] !== undefined}}",
+                    when: "{{$deps[0] > 0 && $deps[1] !== void 0}}",
                     fulfill: {
                         state: {
                             value: "{{$deps[1] / $deps[0]}}",

@@ -22,7 +22,7 @@ const transform = (data: Record<string, LocationItem | string> | undefined = {})
         const _cities = transform(cities);
         const _districts = transform(districts);
 
-        const children = _cities.length ? _cities : _districts.length ? _districts : undefined;
+        const children = _cities.length ? _cities : _districts.length ? _districts : void 0;
         return [
             ...buf,
             {

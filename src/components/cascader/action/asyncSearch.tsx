@@ -53,7 +53,7 @@ const pushData = <T extends FieldDataSource[number] = FieldDataSource[number]>(
         ...item,
         ...(item.value === value
             ? { children }
-            : item.children === undefined
+            : item.children === void 0
               ? {}
               : { children: pushData(item.children, value, children) }),
     }));

@@ -13,7 +13,7 @@ const FormItem = connect(
         },
         (props, field) => ({
             ...props,
-            ...(isField(field) ? { help: field.selfErrors.length ? field.selfErrors : undefined } : {}),
+            ...(isField(field) ? { help: field.selfErrors.length ? field.selfErrors : void 0 } : {}),
         }),
     ),
 );

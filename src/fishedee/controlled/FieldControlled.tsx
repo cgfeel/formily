@@ -12,8 +12,8 @@ const obs = observable<Partial<Record<string, string>>>({
 const form = createForm({
     values: obs,
     effects: () => {
-        onFieldReact("name", field => isField(field) && obs.age !== undefined && field.setValue(obs.age));
-        onFieldReact("age", field => isField(field) && obs.name !== undefined && field.setValue(obs.name));
+        onFieldReact("name", field => isField(field) && obs.age !== void 0 && field.setValue(obs.age));
+        onFieldReact("age", field => isField(field) && obs.name !== void 0 && field.setValue(obs.name));
     },
 });
 

@@ -44,7 +44,7 @@ const buttonClick = (field: ReactNode, initialValues?: Form["initialValues"]) =>
         })
         .forOpen((payload = {}, next) => {
             setTimeout(() => {
-                if (initialValues !== undefined) payload.initialValues = initialValues;
+                if (initialValues !== void 0) payload.initialValues = initialValues;
                 next(payload);
             }, 1000);
         })

@@ -90,7 +90,7 @@ const Remove: FC<ObjectRemoveProps> = ({ title = "删除", filter = defaultFilte
     return (
         <Button
             onClick={() => {
-                if (index !== undefined) {
+                if (index !== void 0) {
                     record.children.splice(index, 1);
                     field.value = handler(toJS(field.value)) || {};
                 }

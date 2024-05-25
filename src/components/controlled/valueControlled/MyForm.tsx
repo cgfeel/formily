@@ -10,17 +10,17 @@ const MyFormInternal = <T extends FormType = FormType>(
     const [defaultValueData] = useState(value || defaultValue);
     const form = useRef(
         createForm<T>({
-            ...(defaultValueData === undefined ? {} : { values: defaultValueData }),
+            ...(defaultValueData === void 0 ? {} : { values: defaultValueData }),
             effects: () => {
                 onFormValuesChange(form => onChange && onChange(form.values));
             },
         }),
     );
 
-    const data = value === undefined ? value : JSON.stringify(value);
+    const data = value === void 0 ? value : JSON.stringify(value);
     useEffect(() => {
         // 第二个参数见：https://core.formilyjs.org/zh-CN/api/models/form#iformmergestrategy
-        data !== undefined && form.current.setValues(JSON.parse(data), "overwrite");
+        data !== void 0 && form.current.setValues(JSON.parse(data), "overwrite");
     }, [form, data]);
 
     useImperativeHandle(ref, () => ({

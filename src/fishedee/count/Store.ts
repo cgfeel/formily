@@ -22,7 +22,7 @@ const CounterStore = {
 };
 
 function extractMode(index: number) {
-    if (list.index[index] === undefined) {
+    if (list.index[index] === void 0) {
         list.index[index] = model({ ...CounterStore });
     }
     return list.index[index];

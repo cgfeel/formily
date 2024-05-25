@@ -18,9 +18,9 @@ const RenderCom: FC<RecursionFieldProps> = ({ name: propsName, onlyRenderPropert
     const options = useContext(SchemaOptionsContext);
 
     const type = String(schema.type || "");
-    const Field = isField(type) ? FieldGroup[type] : undefined;
+    const Field = isField(type) ? FieldGroup[type] : void 0;
 
-    if (Field === undefined) return null;
+    if (Field === void 0) return null;
     if (["array", "object"].indexOf(type) >= 0 && onlyRenderProperties) {
         return <RenderProperties schemas={schema.properties} />;
     }
@@ -35,8 +35,8 @@ const RenderCom: FC<RecursionFieldProps> = ({ name: propsName, onlyRenderPropert
         component: [options[schema["x-component"]], schema["x-component-props"]],
         decorator: [options[schema["x-decorator"]], schema["x-component-props"]],
         name: name || propsName || "",
-        required: required === undefined ? required : Boolean(required),
-        validator: validator.length ? validator : undefined,
+        required: required === void 0 ? required : Boolean(required),
+        validator: validator.length ? validator : void 0,
         title,
     };
 

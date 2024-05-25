@@ -35,8 +35,8 @@ export const CustomObject: FC<CustomObjectProps> = ({ onlyRenderProperties, name
         <div data-testid={name}>
             <RecursionField
                 {...props}
-                basePath={onlyRenderProperties ? field.address : undefined}
-                name={onlyRenderProperties ? schema.name : undefined}
+                basePath={onlyRenderProperties ? field.address : void 0}
+                name={onlyRenderProperties ? schema.name : void 0}
                 schema={schema}
                 onlyRenderProperties={onlyRenderProperties}
             />

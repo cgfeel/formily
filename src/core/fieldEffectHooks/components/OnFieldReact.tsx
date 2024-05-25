@@ -11,7 +11,7 @@ const OnFieldReact: FC = () => {
                 effects: () => {
                     onFieldReact("target", () => {
                         switch (form.values.target) {
-                            case undefined:
+                            case void 0:
                                 setResponse("字段已挂载");
                                 break;
                             case null:
