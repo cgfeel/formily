@@ -23,7 +23,7 @@ const form = createForm({
 });
 
 const Logic: FC = () => (
-    <Panel form={form} header={<h2>定义一个折叠查询 - 完整示例</h2>}>
+    <Panel form={form} header={<h2>不修改模型自定义新的逻辑</h2>}>
         <SchemaField>
             <SchemaField.Object
                 name="search"

@@ -1,14 +1,6 @@
 import { Field as FieldRaw, Form, IFieldProps, JSXComponent } from "@formily/core";
 import { IProviderProps, observer } from "@formily/react";
-import {
-    DOMAttributes,
-    FC,
-    MemoExoticComponent,
-    PropsWithChildren,
-    createContext,
-    createElement,
-    useContext,
-} from "react";
+import { FC, MemoExoticComponent, PropsWithChildren, createContext, createElement, useContext } from "react";
 
 const isCreateType = (target: any): target is Parameters<typeof createElement>[0] => {
     const type = typeof target;
@@ -39,14 +31,14 @@ const FieldInner = <
     const decoratorRaw = Array.isArray(field.decorator) ? field.decorator[0] : field.decorator;
     const { componentProps, decoratorProps } = field;
 
+    const attr: Record<string, any> = {
+        ...componentProps,
+        value: field.value,
+        onChange: field.onInput,
+    };
+
     // 渲染字段，将字段状态 UI 组件关联
-    const component = !isCreateType(componetRaw)
-        ? null
-        : createElement(componetRaw, {
-              ...componentProps,
-              value: field.value,
-              onChange: field.onInput,
-          });
+    const component = !isCreateType(componetRaw) ? null : createElement(componetRaw, attr);
 
     const decorator = !isCreateType(decoratorRaw) ? null : createElement(decoratorRaw, decoratorProps, component);
     return <FieldContext.Provider value={field}>{decorator}</FieldContext.Provider>;
@@ -57,14 +49,5 @@ const FormProvider: FC<PropsWithChildren<IProviderProps>> = ({ children, form })
 );
 
 const Field = observer(FieldInner);
-
-declare module "react" {
-    export interface Attributes extends NewToken {}
-}
-
-interface NewToken {
-    value?: any;
-    onChange?: DOMAttributes<HTMLInputElement>["onChange"];
-}
 
 export { Field, FieldContext, FormContext, FormProvider };
