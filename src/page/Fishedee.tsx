@@ -1,8 +1,10 @@
 import { Alert, Tabs, TabsProps } from "antd";
 import { FC, Suspense, lazy } from "react";
 
+const ChildrenRender = lazy(() => import("../fishedee/reactField/childrenRender"));
 const Controlled = lazy(() => import("../fishedee/controlled"));
 const CoreForm = lazy(() => import("../fishedee/coreForm"));
+const CoreReaction = lazy(() => import("../fishedee/coreReaction"));
 const CoreReactive = lazy(() => import("../fishedee/coreReactive"));
 const Count = lazy(() => import("../fishedee/count"));
 const CreateField = lazy(() => import("../fishedee/createField"));
@@ -18,6 +20,7 @@ const InitialValue = lazy(() => import("../fishedee/initialvalue"));
 const Linkage = lazy(() => import("./LinkAges"));
 const Pattern = lazy(() => import("../fishedee/pattern"));
 const ReactField = lazy(() => import("../fishedee/reactField"));
+const ReactiveOther = lazy(() => import("../fishedee/reactiveOther"));
 const SchemaField = lazy(() => import("../fishedee/schemaField"));
 const ValidateInput = lazy(() => import("../fishedee/validateInput"));
 const ValidateRule = lazy(() => import("../fishedee/validateInput/Rule"));
@@ -39,7 +42,7 @@ const items: TabsProps["items"] = [
     },
     {
         key: "observer-count",
-        label: "计数器",
+        label: "5: 计数器",
         children: (
             <Suspense fallback={<>loading...</>}>
                 <Count />
@@ -47,8 +50,17 @@ const items: TabsProps["items"] = [
         ),
     },
     {
+        key: "reactive-other",
+        label: "reactive:  其他",
+        children: (
+            <Suspense fallback={<>loading...</>}>
+                <ReactiveOther />
+            </Suspense>
+        ),
+    },
+    {
         key: "reactive-form",
-        label: "reactive 实现表单",
+        label: "core.0: reactive 实现表单",
         children: (
             <Suspense fallback={<>loading...</>}>
                 <CoreReactive />
@@ -62,7 +74,7 @@ const items: TabsProps["items"] = [
     },
     {
         key: "field-value",
-        label: "字段值的获取与更新",
+        label: "1: 字段值的获取与更新",
         children: (
             <Suspense fallback={<>loading...</>}>
                 <FieldAction />
@@ -72,7 +84,7 @@ const items: TabsProps["items"] = [
     },
     {
         key: "display",
-        label: "展示状态",
+        label: "2: 展示状态",
         children: (
             <Suspense fallback={<>loading...</>}>
                 <Display />
@@ -81,7 +93,7 @@ const items: TabsProps["items"] = [
     },
     {
         key: "validate",
-        label: "校验和反馈",
+        label: "3: 校验和反馈",
         children: (
             <Suspense fallback={<>loading...</>}>
                 <ValidateInput />
@@ -92,7 +104,7 @@ const items: TabsProps["items"] = [
     },
     {
         key: "pattern",
-        label: "交互模式",
+        label: "4: 交互模式",
         children: (
             <Suspense fallback={<>loading...</>}>
                 <Pattern />
@@ -101,7 +113,7 @@ const items: TabsProps["items"] = [
     },
     {
         key: "form-effect",
-        label: "表单生命周期",
+        label: "5.1: 表单生命周期",
         children: (
             <Suspense fallback={<>loading...</>}>
                 <EffectAlert />
@@ -111,7 +123,7 @@ const items: TabsProps["items"] = [
     },
     {
         key: "field-effect",
-        label: "字段生命周期",
+        label: "5.2: 字段生命周期",
         children: (
             <Suspense fallback={<>loading...</>}>
                 <EffectAlert />
@@ -120,22 +132,17 @@ const items: TabsProps["items"] = [
         ),
     },
     {
-        key: "reaction",
-        label: "联动",
+        key: "core-reaction",
+        label: "6: 依赖追踪",
         children: (
             <Suspense fallback={<>loading...</>}>
-                <Alert
-                    type="warning"
-                    message="联动用了官方文档演示，fish 文档中只演示了循环联动的一部分，不够直观也不够全面"
-                    style={{ marginBottom: 24, marginTop: 24 }}
-                />
-                <Linkage />
+                <CoreReaction />
             </Suspense>
         ),
     },
     {
         key: "create-field",
-        label: "字段",
+        label: "7: 字段类型",
         children: (
             <Suspense fallback={<>loading...</>}>
                 <CreateField />
@@ -144,7 +151,7 @@ const items: TabsProps["items"] = [
     },
     {
         key: "form-path",
-        label: "字段路径",
+        label: "8: 字段路径",
         children: (
             <Suspense fallback={<>loading...</>}>
                 <Alert
@@ -158,7 +165,7 @@ const items: TabsProps["items"] = [
     },
     {
         key: "controlled",
-        label: "表单受控",
+        label: "9: 表单受控",
         children: (
             <Suspense fallback={<>loading...</>}>
                 <Alert
@@ -172,7 +179,7 @@ const items: TabsProps["items"] = [
     },
     {
         key: "core-form",
-        label: "reactive + core 实现表单",
+        label: "10: reactive + core 实现表单",
         children: (
             <Suspense fallback={<>loading...</>}>
                 <CoreForm />
@@ -186,7 +193,7 @@ const items: TabsProps["items"] = [
     },
     {
         key: "field",
-        label: "字段的 React 实现",
+        label: "1: Field 的 React 实现",
         children: (
             <Suspense fallback={<>loading...</>}>
                 <ReactField />
@@ -194,8 +201,17 @@ const items: TabsProps["items"] = [
         ),
     },
     {
+        key: "field-example",
+        label: "1: Field 实践案例",
+        children: (
+            <Suspense fallback={<>loading...</>}>
+                <ChildrenRender />
+            </Suspense>
+        ),
+    },
+    {
         key: "schema-field",
-        label: "字段模型 SchemaField",
+        label: "2: 字段模型 SchemaField",
         children: (
             <Suspense fallback={<>loading...</>}>
                 <SchemaField />
@@ -204,7 +220,7 @@ const items: TabsProps["items"] = [
     },
     {
         key: "custom-field",
-        label: "复现字段",
+        label: "3: 复现 Field",
         children: (
             <Suspense fallback={<>loading...</>}>
                 <CustomField />
@@ -213,11 +229,39 @@ const items: TabsProps["items"] = [
     },
     {
         key: "custom-schema",
-        label: "复现字段模型",
+        label: "4: 复现字段模型",
         children: (
             <Suspense fallback={<>loading...</>}>
                 <CustomJsonSchema />
                 <CustomMarkupSchema />
+            </Suspense>
+        ),
+    },
+    {
+        key: "schema-linkage",
+        label: "5: Schema 联动 - 官方",
+        children: (
+            <Suspense fallback={<>loading...</>}>
+                <Alert
+                    type="warning"
+                    message="联动用了官方文档演示，fish 文档中只演示了循环联动的一部分，不够直观也不够全面"
+                    style={{ marginBottom: 24, marginTop: 24 }}
+                />
+                <Linkage />
+            </Suspense>
+        ),
+    },
+    {
+        key: "schema-reaction",
+        label: "5: Schema 联动 - 非官方",
+        children: (
+            <Suspense fallback={<>loading...</>}>
+                <Alert
+                    type="warning"
+                    message="联动用了官方文档演示，fish 文档中只演示了循环联动的一部分，不够直观也不够全面"
+                    style={{ marginBottom: 24, marginTop: 24 }}
+                />
+                <Linkage />
             </Suspense>
         ),
     },

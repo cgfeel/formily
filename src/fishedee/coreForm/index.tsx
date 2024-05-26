@@ -75,7 +75,7 @@ const CoreForm: FC = () => (
                     <li>渲染逻辑和交互逻辑分离</li>
                 </ul>
                 <p>
-                    渲染逻辑（原理基和仅使用 <code>reactive</code> 基本没变）：
+                    渲染逻辑（原理和 0: 仅使用 <code>reactive</code> 基本没变）：
                 </p>
                 <ul>
                     <li>

@@ -80,6 +80,12 @@ const CustomField: FC = () => (
                         <code>ObjectField</code>，通过包裹 <code>ReactiveField</code> 提供 <code>context</code>
                     </li>
                 </ul>
+                <p>备注：</p>
+                <ul>
+                    <li>
+                        <code>Field</code> 中组件和包装组件渲染见 1: <code>Field</code> 实践案例
+                    </li>
+                </ul>
             </div>
         }
         header={

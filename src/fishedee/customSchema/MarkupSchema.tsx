@@ -51,10 +51,16 @@ const MarkupSchema: FC = () => (
                         之后的过程就可以直接参考 <code>JsonSchema</code> 渲染原理
                     </li>
                 </ul>
-                <p>
-                    备注：对于 <code>type</code> 为 <code>array</code> 的 <code>items</code>、<code>properties</code>{" "}
-                    的提取和文档稍有不同，因为发现文档示例在 <code>context</code> 更新过程中，存在丢失的情况
-                </p>
+                <p>备注：</p>
+                <ul>
+                    <li>
+                        对于 <code>type</code> 为 <code>array</code> 的 <code>items</code>、<code>properties</code>{" "}
+                        的提取和文档稍有不同，因为发现文档示例在 <code>context</code> 更新过程中，存在丢失的情况
+                    </li>
+                    <li>
+                        对于表单的实现，从 <code>Reactive</code> 到 <code>schema</code> 是层层递进的，建议看看
+                    </li>
+                </ul>
             </div>
         }
         header={<h2>Core4.2: 复现 JsonSchema</h2>}>

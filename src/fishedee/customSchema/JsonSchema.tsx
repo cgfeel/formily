@@ -145,6 +145,12 @@ const JsonSchema: FC = () => (
                         <code>Field</code> 渲染在节点 <code>schema</code> 上下文内
                     </li>
                 </ul>
+                <p>备注：</p>
+                <ul>
+                    <li>
+                        <code>Schema</code> 中组件和包装组件渲染见 2: 字段模型 <code>SchemaField</code>
+                    </li>
+                </ul>
             </div>
         }
         header={<h2>Core4.1: 复现 JsonSchema</h2>}>

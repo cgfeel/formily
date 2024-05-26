@@ -93,7 +93,7 @@ export const router = {
         path: lazy(() => import("./page/Fishedee")),
     },
     "/object-base": {
-        name: "自定义递增组件",
+        name: "作业：自定义递增组件",
         path: lazy(() => import("./page/ObjectBase")),
     },
 } as const;

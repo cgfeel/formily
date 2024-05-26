@@ -23,7 +23,22 @@ const form = createForm({
 });
 
 const ObjectBaseExample: FC = () => (
-    <Panel form={form} header={<h2>定义一个折叠查询 - 完整示例</h2>}>
+    <Panel
+        footer={
+            <div>
+                <p>
+                    来自群友的提问，复现掘金 <code>DMS</code> 案例 [
+                    <a href="https://juejin.cn/post/7005869798483558431">查看</a>]
+                </p>
+                <p>优点：</p>
+                <ul>
+                    <li>简洁，总共就 2 文件</li>
+                    <li>一套模型下，在不修改任何代码，可以无限自定义逻辑渲染</li>
+                </ul>
+            </div>
+        }
+        form={form}
+        header={<h2>定义一个折叠查询 - 完整示例</h2>}>
         <SchemaField>
             <SchemaField.Object name="search" x-component="ObjectCollapse">
                 <SchemaField.String
