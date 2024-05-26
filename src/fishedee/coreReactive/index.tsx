@@ -63,6 +63,32 @@ const CoreReactive: FC = () => (
                     <li>表单的初始值怎样导入</li>
                     <li>缺少表单对象的反馈</li>
                 </ul>
+                <p>渲染逻辑：</p>
+                <ul>
+                    <li>
+                        提供一个 <code>FormProvider</code> 作为整个表单上下文，将所有数据和渲染逻辑都以{" "}
+                        <code>observer</code> 类型提供
+                    </li>
+                    <li>
+                        表单统一通过 <code>Field</code> 封装
+                        <ul>
+                            <li>
+                                将 <code>component</code> 通过 <code>createElement</code> 创建一个新的组件
+                            </li>
+                            <li>
+                                将创建的组件分配给 <code>decorator</code> 作为 <code>children</code>，再次通过{" "}
+                                <code>createElement</code> 创建一个新的组件
+                            </li>
+                            <li>
+                                将创建的组件包裹在 <code>FieldContext</code> 中，以便 <code>component</code> 和{" "}
+                                <code>decorator</code> 使用字段上下文
+                            </li>
+                            <li>
+                                在字段中直接修改 <code>observer</code> 修改数据
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         }
         header={

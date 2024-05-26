@@ -20,7 +20,44 @@ const form = createForm({
 });
 
 const MarkupSchema: FC = () => (
-    <Panel header={<h2>Core4.2: 复现 JsonSchema</h2>}>
+    <Panel
+        footer={
+            <div>
+                <p>
+                    完全按照 <code>formily</code> 来优化：
+                </p>
+                <ul>
+                    <li>
+                        将 <code>schema</code> 不同的渲染方式，用一套逻辑实现。没有像文档那样分成两套实现{" "}
+                        <code>JsonSchema</code> 和 <code>MarkupSchema</code>
+                    </li>
+                    <li>
+                        对于模型字段创建通过 <code>createFormSchema</code> 实现，而不是分为两个组件实现
+                    </li>
+                </ul>
+                <p>
+                    渲染逻辑（和 <code>JsonSchema</code> 一样）：
+                </p>
+                <ul>
+                    <li>
+                        通过上下文 <code>SchemaContext.Provider</code> 不断递归更新，用到了 <code>object</code>{" "}
+                        对象引用地址一致的特性
+                    </li>
+                    <li>
+                        然后将更新的 <code>context</code> 共享{" "}
+                        <code>{"<RecursionField schema={baseSchema} onlyRenderProperties />"}</code>
+                    </li>
+                    <li>
+                        之后的过程就可以直接参考 <code>JsonSchema</code> 渲染原理
+                    </li>
+                </ul>
+                <p>
+                    备注：对于 <code>type</code> 为 <code>array</code> 的 <code>items</code>、<code>properties</code>{" "}
+                    的提取和文档稍有不同，因为发现文档示例在 <code>context</code> 更新过程中，存在丢失的情况
+                </p>
+            </div>
+        }
+        header={<h2>Core4.2: 复现 JsonSchema</h2>}>
         <FormProvider form={form}>
             <SchemaField>
                 <SchemaField.Object name="person" title="个人信息" x-decorator="VoidComponent">

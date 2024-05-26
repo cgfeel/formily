@@ -100,27 +100,51 @@ const JsonSchema: FC = () => (
                     </li>
                 </ul>
                 <p>
-                    原理，将 <code>Schema</code> 递归转化为 <code>Field Props</code>，(上一章节练习：复现字段)：
+                    渲染原理，三个方法递归 <code>schema</code> 实现（在“复现字段”基础上）：
                 </p>
                 <ul>
                     <li>
-                        <code>RenderCom</code>：提供 <code>FieldSchemaContext</code>，作为整个模型的上下文提供
+                        <code>RenderCom</code>：将 <code>Schema</code> 递归转化为 <code>Field Props</code>
+                        <ul>
+                            <li>
+                                如果 <code>type</code> 是 <code>object</code> 或 <code>array</code>，传递了{" "}
+                                <code>onlyRenderProperties</code> 属性，则会放弃自身渲染，将{" "}
+                                <code>schema.properties</code> 交给 <code>RenderProperties</code> 处理
+                            </li>
+                            <li>
+                                如果 <code>type</code> 是 <code>object</code> 会将 <code>schema.properties</code> 交给{" "}
+                                <code>RenderProperties</code> 处理
+                            </li>
+                            <li>
+                                其他情况只转换并传递 <code>Field Props</code> 进行渲染
+                            </li>
+                        </ul>
                     </li>
                     <li>
-                        <code>RecursionField</code>：将 <code>schema</code> 转化为 <code>Schema</code>，并将{" "}
-                        <code>ObjectField</code> 透传 <code>children</code> 将重新递归包裹 <code>RecursionField</code>
+                        <code>RecursionField</code>：提供 <code>FieldSchemaContext</code>，为每一个节点包裹{" "}
+                        <code>schema</code> 节点
                     </li>
                     <li>
-                        <code>RenderProperties</code>：要么指定只渲染 <code>schema properties</code>，要么作为{" "}
-                        <code>ObjectField</code> 递归渲染 <code>schema.properties</code>，递归时会遍历当前{" "}
-                        <code>properties</code>，每一个 <code>item</code> 都是一个新的 <code>RenderProperties</code>
+                        <code>RenderProperties</code>：遍历每一个 <code>schema.properties</code>，为它们包裹一个{" "}
+                        <code>RecursionField</code>，将上下文匹配到节点
                     </li>
                 </ul>
-                <p>
-                    对于 <code>createSchemaField</code> 目前只要了解{" "}
-                    <code>{"<RecursionField schema={baseSchema} onlyRenderProperties />"}</code>，这个文件中其他都是为了{" "}
-                    <code>MarkSchema</code>
-                </p>
+                <p>补充：</p>
+                <ul>
+                    <li>
+                        对于 <code>createSchemaField</code> 目前只要了解{" "}
+                        <code>{"<RecursionField schema={baseSchema} onlyRenderProperties />"}</code>
+                        ，这个文件中其他都是为了 <code>MarkupSchema</code>
+                    </li>
+                    <li>
+                        <code>schema</code> 中的 <code>properties</code>、<code>items</code> 通过{" "}
+                        <code>JsonSchema</code> 写出来，不用在组件中去判断做区分
+                    </li>
+                    <li>
+                        整个过程就是不断递归遍历 <code>schema</code> 并将每一个节点包裹一个上下文，在节点{" "}
+                        <code>Field</code> 渲染在节点 <code>schema</code> 上下文内
+                    </li>
+                </ul>
             </div>
         }
         header={<h2>Core4.1: 复现 JsonSchema</h2>}>

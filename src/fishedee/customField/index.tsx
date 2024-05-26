@@ -66,23 +66,18 @@ const CustomField: FC = () => (
                         <code>FieldContext</code>
                     </li>
                 </ul>
-                <p>表单渲染原理：</p>
+                <p>
+                    渲染原理（理基在 <code>reactive</code> + <code>core</code> 基础上）：
+                </p>
                 <ul>
                     <li>
-                        在 <code>ReactiveField</code> 中将 <code>component</code> 这个 <code>props</code> 指定的组件{" "}
-                        <code>createElement</code> 一个新的元素，并将自身的 <code>children</code>{" "}
-                        透传以便后续遍历继续生成；如果没有提供则为 <code>null</code>
+                        将原来的 <code>Field</code> 改为一个基础组件 <code>ReactiveField</code>，不再组件内部创建{" "}
+                        <code>Field</code> 而是接受一个 <code>Field</code> 对象的 <code>props</code>，允许{" "}
+                        <code>component</code> 或 <code>decorator</code> 没有提供的情况（设置为 <code>null</code>）
                     </li>
                     <li>
-                        创建包装对象 <code>decorator</code>，方法和 <code>component</code> 一样，并将{" "}
-                        <code>component</code> 作为子元素；如果没有提供则为 <code>null</code>
-                    </li>
-                    <li>
-                        将上面创建的包装对象包裹在 <code>FieldContext</code> 以便后续使用
-                    </li>
-                    <li>
-                        这样就可以在 <code>component</code> 和 <code>decorator</code>{" "}
-                        中分别拿到字段和表单的上下文进行使用
+                        对外将 <code>Field</code> 分别拆分为 <code>Field</code>、<code>ArrayField</code>、
+                        <code>ObjectField</code>，通过包裹 <code>ReactiveField</code> 提供 <code>context</code>
                     </li>
                 </ul>
             </div>

@@ -74,6 +74,22 @@ const CoreForm: FC = () => (
                     <li>拥有了生命周期</li>
                     <li>渲染逻辑和交互逻辑分离</li>
                 </ul>
+                <p>
+                    渲染逻辑（原理基和仅使用 <code>reactive</code> 基本没变）：
+                </p>
+                <ul>
+                    <li>
+                        整个表单由 <code>observable</code> 更换为 <code>createForm</code> 创建的 <code>Form</code>{" "}
+                        对象，在 <code>Form</code> 对象中实现数据响应
+                    </li>
+                    <li>
+                        在 <code>Field</code> 封装过程中也通过 <code>form.createField</code>{" "}
+                        来创建字段，并提供给上下文共享
+                    </li>
+                    <li>
+                        这样就赋予了表单生命周期 <code>effect</code>，并且想有 <code>Field</code> 的验证、路径查找等能力
+                    </li>
+                </ul>
             </div>
         }
         header={
