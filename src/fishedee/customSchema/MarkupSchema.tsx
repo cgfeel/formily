@@ -32,7 +32,7 @@ const MarkupSchema: FC = () => (
                         <code>JsonSchema</code> 和 <code>MarkupSchema</code>
                     </li>
                     <li>
-                        对于模型字段创建通过 <code>createFormSchema</code> 实现，而不是分为两个组件实现
+                        对于模型字段创建通过 <code>createSchemaField</code> 实现，而不是分为两个组件实现
                     </li>
                 </ul>
                 <p>

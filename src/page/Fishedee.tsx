@@ -22,6 +22,7 @@ const Pattern = lazy(() => import("../fishedee/pattern"));
 const ReactField = lazy(() => import("../fishedee/reactField"));
 const ReactiveOther = lazy(() => import("../fishedee/reactiveOther"));
 const SchemaField = lazy(() => import("../fishedee/schemaField"));
+const SchemaReaction = lazy(() => import("../fishedee/schemaReaction"));
 const ValidateInput = lazy(() => import("../fishedee/validateInput"));
 const ValidateRule = lazy(() => import("../fishedee/validateInput/Rule"));
 const ValidateType = lazy(() => import("../fishedee/validateInput/ValidateType"));
@@ -244,7 +245,7 @@ const items: TabsProps["items"] = [
             <Suspense fallback={<>loading...</>}>
                 <Alert
                     type="warning"
-                    message="联动用了官方文档演示，fish 文档中只演示了循环联动的一部分，不够直观也不够全面"
+                    message="推荐查看官方文档演示，fish 文档中只演示了循环联动的一部分"
                     style={{ marginBottom: 24, marginTop: 24 }}
                 />
                 <Linkage />
@@ -256,12 +257,7 @@ const items: TabsProps["items"] = [
         label: "5: Schema 联动 - 非官方",
         children: (
             <Suspense fallback={<>loading...</>}>
-                <Alert
-                    type="warning"
-                    message="联动用了官方文档演示，fish 文档中只演示了循环联动的一部分，不够直观也不够全面"
-                    style={{ marginBottom: 24, marginTop: 24 }}
-                />
-                <Linkage />
+                <SchemaReaction />
             </Suspense>
         ),
     },
