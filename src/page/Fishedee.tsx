@@ -11,6 +11,7 @@ const CreateField = lazy(() => import("../fishedee/createField"));
 const CustomField = lazy(() => import("../fishedee/customField"));
 const CustomJsonSchema = lazy(() => import("../fishedee/customSchema/JsonSchema"));
 const CustomMarkupSchema = lazy(() => import("../fishedee/customSchema/MarkupSchema"));
+const CustomTable = lazy(() => import("../fishedee/customTable"));
 const Display = lazy(() => import("../fishedee/display"));
 const FieldAction = lazy(() => import("../fishedee/fieldAction"));
 const FieldEffectHooks = lazy(() => import("../core/fieldEffectHooks"));
@@ -258,6 +259,15 @@ const items: TabsProps["items"] = [
         children: (
             <Suspense fallback={<>loading...</>}>
                 <SchemaReaction />
+            </Suspense>
+        ),
+    },
+    {
+        key: "custom-table",
+        label: "6: 自定义表格组件",
+        children: (
+            <Suspense fallback={<>loading...</>}>
+                <CustomTable />
             </Suspense>
         ),
     },
