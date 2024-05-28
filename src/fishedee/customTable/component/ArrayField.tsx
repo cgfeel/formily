@@ -1,13 +1,11 @@
 import { ArrayBase } from "@formily/antd-v5";
+import { usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
 import { isArrayField } from "@formily/core";
 import { RecursionField, Schema, observer, useField, useFieldSchema } from "@formily/react";
 import { Empty, Table, TableProps } from "antd";
+import cls from "classnames";
 import { FC, PropsWithChildren } from "react";
-
-const isAdditionComponent = (schema: Schema) => schema["x-component"].indexOf("Addition") > -1;
-
-const isSchema = (schema: Schema, ...components: string[]) =>
-    components.filter(name => (schema["x-component"] || "").indexOf(name) > -1).length > 0;
+import useStyles from "./style";
 
 const compileColumns = (schema: Schema[]) => {
     const parseSource = (item: Schema): ColumnsType => {
@@ -38,6 +36,11 @@ const compileColumns = (schema: Schema[]) => {
     }, []);
 };
 
+const isAdditionComponent = (schema: Schema) => schema["x-component"].indexOf("Addition") > -1;
+
+const isSchema = (schema: Schema, ...components: string[]) =>
+    components.filter(name => (schema["x-component"] || "").indexOf(name) > -1).length > 0;
+
 const Column: FC<PropsWithChildren<ColumnsType[number]>> = ({ children, ...props }) => (
     <div data-test={props.key}>{children}</div>
 );
@@ -45,6 +48,8 @@ const Column: FC<PropsWithChildren<ColumnsType[number]>> = ({ children, ...props
 const InternalArrayField: FC<Omit<TableProps, "columns" | "dataSource" | "pagination" | "rowKey">> = props => {
     const field = useField();
     const fieldSchema = useFieldSchema();
+    const prefixCls = usePrefixCls("formily-array-field");
+    const [wrapSSR, hashId] = useStyles(prefixCls);
 
     if (!fieldSchema) throw new Error("can not found schema object");
 
@@ -53,34 +58,36 @@ const InternalArrayField: FC<Omit<TableProps, "columns" | "dataSource" | "pagina
 
     const dataSource = isArrayField(field) ? field.value : [];
     const columns = compileColumns(Array.isArray(items) ? items : [items]);
+
     const defaultProps: TableProps = { size: "small", bordered: true };
 
-    console.log(field);
-    return (
-        <ArrayBase onAdd={() => console.log(field.value)}>
-            <Table
-                {...defaultProps}
-                {...props}
-                columns={columns.map(({ schema, ...item }) => ({
-                    ...item,
-                    render: (_, record) => {
-                        // 让每一个单元格有一个 context
-                        const index = dataSource.indexOf(record);
-                        return (
-                            <ArrayBase.Item index={index} record={() => field.value?.[index]}>
-                                <RecursionField name={index} schema={schema} onlyRenderProperties />
-                            </ArrayBase.Item>
-                        );
-                    },
-                }))}
-                dataSource={[...dataSource]}
-                pagination={false}
-                rowKey={record => {
-                    return dataSource.indexOf(record);
-                }}
-            />
-            <RenderAddition schema={fieldSchema} />
-        </ArrayBase>
+    return wrapSSR(
+        <div className={cls(prefixCls, hashId)}>
+            <ArrayBase>
+                <Table
+                    {...defaultProps}
+                    {...props}
+                    columns={columns.map(({ schema, ...item }) => ({
+                        ...item,
+                        render: (_, record) => {
+                            // 让每一个单元格有一个 context
+                            const index = dataSource.indexOf(record);
+                            return (
+                                <ArrayBase.Item index={index} record={() => field.value?.[index]}>
+                                    <RecursionField name={index} schema={schema} onlyRenderProperties />
+                                </ArrayBase.Item>
+                            );
+                        },
+                    }))}
+                    dataSource={[...dataSource]}
+                    pagination={false}
+                    rowKey={record => {
+                        return dataSource.indexOf(record);
+                    }}
+                />
+                <RenderAddition schema={fieldSchema} />
+            </ArrayBase>
+        </div>,
     );
 };
 

@@ -1,11 +1,11 @@
 import { FC } from "react";
 import ArrayTableExample from "./ArrayTableExample";
-import ArrayTest from "./ArrayTest";
+import RecursionField from "./RecursionField";
 
 const CustomTable: FC = () => (
     <>
+        <RecursionField />
         <ArrayTableExample />
-        <ArrayTest />
     </>
 );
 

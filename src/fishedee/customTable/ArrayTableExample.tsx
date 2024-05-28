@@ -1,7 +1,8 @@
-import { Field, createForm } from "@formily/core";
+import { createForm } from "@formily/core";
 import { FC } from "react";
 import Wrapper from "../fieldAction/Wrapper";
 import SchemaField from "./SchemaField";
+import { FormConsumer } from "@formily/react";
 
 const form = createForm({
     initialValues: {
@@ -15,7 +16,7 @@ const form = createForm({
 
 const ArrayTableExample: FC = () => (
     <Wrapper form={form}>
-        <SchemaField scope={{ test: () => console.log(form.query("data.name").take()) }}>
+        <SchemaField>
             <SchemaField.Array name="data" x-component="ArrayField">
                 <SchemaField.Object>
                     <SchemaField.Void title="姓名" x-component="ArrayField.Column">
@@ -28,6 +29,11 @@ const ArrayTableExample: FC = () => (
                 <SchemaField.Void title="添加条目" x-component="ArrayField.Addition" />
             </SchemaField.Array>
         </SchemaField>
+        <code className="consumer">
+            <pre>
+                <FormConsumer>{form => JSON.stringify(form.values, null, 2)}</FormConsumer>
+            </pre>
+        </code>
     </Wrapper>
 );
 
