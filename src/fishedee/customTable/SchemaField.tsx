@@ -1,7 +1,10 @@
 import { FormItem, Input, NumberPicker } from "@formily/antd-v5";
-import { createSchemaField } from "@formily/react";
+import { createSchemaField, observer } from "@formily/react";
+import LabelRaw from "../coreReactive/Label";
 import ArrayComponent from "./component/ArrayComponent";
 import ArrayField from "./component/ArrayField";
+
+const Label = observer(LabelRaw);
 
 const SchemaField = createSchemaField({
     components: {
@@ -9,6 +12,7 @@ const SchemaField = createSchemaField({
         ArrayField,
         FormItem,
         Input,
+        Label,
         NumberPicker,
     },
 });

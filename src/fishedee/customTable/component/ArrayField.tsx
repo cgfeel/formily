@@ -1,24 +1,33 @@
 import { ArrayBase } from "@formily/antd-v5";
 import { usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
-import { isArrayField } from "@formily/core";
+import { ArrayField as ArrayFieldType, Field, isArrayField } from "@formily/core";
 import { RecursionField, Schema, observer, useField, useFieldSchema } from "@formily/react";
 import { Empty, Table, TableProps } from "antd";
 import cls from "classnames";
-import { FC, PropsWithChildren } from "react";
+import { FC, Fragment } from "react";
 import useStyles from "./style";
 
-const compileColumns = (schema: Schema[]) => {
+const defaultProps: TableProps = { bordered: true, size: "small" };
+
+const compileColumns = (schema: Schema[], arrayField: ArrayFieldType) => {
     const parseSource = (item: Schema): ColumnsType => {
         if (isSchema(item, "Column")) {
             const props = item["x-component-props"] || {};
             const dataIndex = props.dataIndex || Object.keys(item.properties || {})[0] || "";
+
+            const field = arrayField.query(arrayField.address.concat(dataIndex)).take();
+            const componentProps = Array.isArray(field?.component) ? field?.component[1] : undefined;
+            const defaultColumn = { align: "center", title: item.title || props.title };
+
             return dataIndex === ""
                 ? []
                 : [
                       {
+                          ...defaultColumn,
                           ...props,
+                          ...(componentProps || {}),
+                          display: field?.display || item["x-display"],
                           schema: item,
-                          title: props.title || item.title,
                           dataIndex,
                       },
                   ];
@@ -32,18 +41,38 @@ const compileColumns = (schema: Schema[]) => {
     };
 
     return schema.reduce<ColumnsType>((current, item) => {
-        return current.concat(parseSource(item));
+        return item === undefined ? current : current.concat(parseSource(item));
     }, []);
 };
+
+const compileTableSource = (dataSource: any[], source: ColumnsType) =>
+    source.reduce<ColumnItem[]>(
+        (current, { dataIndex, display, schema, ...item }) =>
+            display !== "visible"
+                ? current
+                : [
+                      ...current,
+                      {
+                          ...item,
+                          render: (_, record: any) => {
+                              const index = dataSource.indexOf(record);
+                              return (
+                                  <ArrayBase.Item index={index} record={() => dataSource[index]}>
+                                      <RecursionField name={index} schema={schema} onlyRenderProperties />
+                                  </ArrayBase.Item>
+                              );
+                          },
+                      },
+                  ],
+        [],
+    );
 
 const isAdditionComponent = (schema: Schema) => schema["x-component"].indexOf("Addition") > -1;
 
 const isSchema = (schema: Schema, ...components: string[]) =>
     components.filter(name => (schema["x-component"] || "").indexOf(name) > -1).length > 0;
 
-const Column: FC<PropsWithChildren<ColumnsType[number]>> = ({ children, ...props }) => (
-    <div data-test={props.key}>{children}</div>
-);
+const Column: FC<ColumnItem> = () => <Fragment />;
 
 const InternalArrayField: FC<Omit<TableProps, "columns" | "dataSource" | "pagination" | "rowKey">> = props => {
     const field = useField();
@@ -57,9 +86,8 @@ const InternalArrayField: FC<Omit<TableProps, "columns" | "dataSource" | "pagina
     if (items === undefined || !isArrayField(field)) return <Empty />;
 
     const dataSource = isArrayField(field) ? field.value : [];
-    const columns = compileColumns(Array.isArray(items) ? items : [items]);
-
-    const defaultProps: TableProps = { size: "small", bordered: true };
+    const source = compileColumns(Array.isArray(items) ? items : [items], field);
+    const columns = compileTableSource(dataSource, source);
 
     return wrapSSR(
         <div className={cls(prefixCls, hashId)}>
@@ -67,24 +95,16 @@ const InternalArrayField: FC<Omit<TableProps, "columns" | "dataSource" | "pagina
                 <Table
                     {...defaultProps}
                     {...props}
-                    columns={columns.map(({ schema, ...item }) => ({
-                        ...item,
-                        render: (_, record) => {
-                            // 让每一个单元格有一个 context
-                            const index = dataSource.indexOf(record);
-                            return (
-                                <ArrayBase.Item index={index} record={() => field.value?.[index]}>
-                                    <RecursionField name={index} schema={schema} onlyRenderProperties />
-                                </ArrayBase.Item>
-                            );
-                        },
-                    }))}
+                    columns={columns}
                     dataSource={[...dataSource]}
                     pagination={false}
                     rowKey={record => {
                         return dataSource.indexOf(record);
                     }}
                 />
+                {source.map(({ dataIndex, schema }) => {
+                    return <RecursionField key={dataIndex} name={dataIndex} schema={schema} onlyRenderSelf />;
+                })}
                 <RenderAddition schema={fieldSchema} />
             </ArrayBase>
         </div>,
@@ -106,7 +126,13 @@ interface RenderProps {
     schema: Schema;
 }
 
-type ColumnItem = Exclude<TableProps["columns"], undefined>[number] & { schema: Schema };
-type ColumnsType = ColumnItem[];
+type ColumnItem = Exclude<TableProps["columns"], undefined>[number];
+type ColumnItemType = ColumnItem & {
+    dataIndex: string;
+    schema: Schema;
+    display?: Field["display"];
+};
+
+type ColumnsType = ColumnItemType[];
 
 export default ArrayField;

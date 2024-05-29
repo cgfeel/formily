@@ -231,7 +231,7 @@ const items: TabsProps["items"] = [
     },
     {
         key: "custom-schema",
-        label: "4: 复现字段模型",
+        label: "4: 复现 Schema",
         children: (
             <Suspense fallback={<>loading...</>}>
                 <CustomJsonSchema />

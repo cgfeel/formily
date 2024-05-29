@@ -46,7 +46,7 @@ const RecursionField: FC = () => (
         form={form}
         header={
             <h2>
-                <code>RecursionField</code> 的 <code>name</code> 属性
+                Core.6.4: <code>RecursionField</code> 的 <code>name</code> 属性
             </h2>
         }>
         <SchemaField>
