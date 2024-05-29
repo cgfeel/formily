@@ -264,7 +264,7 @@ const items: TabsProps["items"] = [
     },
     {
         key: "custom-table",
-        label: "6: 自定义表格组件",
+        label: "6: 字段特性",
         children: (
             <Suspense fallback={<>loading...</>}>
                 <CustomTable />

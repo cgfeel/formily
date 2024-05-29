@@ -1,8 +1,8 @@
 import { createForm } from "@formily/core";
+import { FormConsumer, RecursionField, useField, useFieldSchema } from "@formily/react";
 import { FC } from "react";
 import Wrapper from "../fieldAction/Wrapper";
 import SchemaField from "./SchemaField";
-import { FormConsumer, RecursionField, useField, useFieldSchema } from "@formily/react";
 
 const form = createForm({
     initialValues: {
@@ -35,6 +35,10 @@ const Other: FC = () => (
                         了解更透彻
                     </li>
                     <li>6.2: 字段名是唯一的，重复声明相同的字段名后面的会覆盖前面的字段</li>
+                    <li>
+                        6.3: 设置字段的 <code>basePath</code> 作为父级标签，尝用于 <code>RecursionField</code> 中用于{" "}
+                        <code>ArrayField</code>、<code>ObjectField</code> 迭代
+                    </li>
                 </ul>
             </div>
         }
