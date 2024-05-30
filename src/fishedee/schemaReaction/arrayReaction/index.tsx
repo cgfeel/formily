@@ -7,7 +7,10 @@ import SchemaField from "./SchemaField";
 const form = createForm();
 
 const ArrayReaction: FC = () => (
-    <Wrapper form={form}>
+    <Wrapper
+        footer={<p>演示了：①列表添加和列表总数联动，②子集表单和父级节点联动</p>}
+        form={form}
+        header={<h2>React.5.4.2 子集联动</h2>}>
         <SchemaField>
             <SchemaField.Array name="array" title="最多添加 3 项" x-component="ArrayCards">
                 <SchemaField.Object
