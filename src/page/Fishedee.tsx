@@ -21,6 +21,7 @@ const InitialValue = lazy(() => import("../fishedee/initialvalue"));
 const Linkage = lazy(() => import("./LinkAges"));
 const Pattern = lazy(() => import("../fishedee/pattern"));
 const ReactField = lazy(() => import("../fishedee/reactField"));
+const ReactFaq = lazy(() => import("../fishedee/reactFaq"));
 const ReactiveOther = lazy(() => import("../fishedee/reactiveOther"));
 const SchemaField = lazy(() => import("../fishedee/schemaField"));
 const SchemaReaction = lazy(() => import("../fishedee/schemaReaction"));
@@ -268,6 +269,15 @@ const items: TabsProps["items"] = [
         children: (
             <Suspense fallback={<>loading...</>}>
                 <CustomTable />
+            </Suspense>
+        ),
+    },
+    {
+        key: "react-faq",
+        label: "7: 其他",
+        children: (
+            <Suspense fallback={<>loading...</>}>
+                <ReactFaq />
             </Suspense>
         ),
     },

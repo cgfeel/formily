@@ -100,7 +100,7 @@ const ArrayTableExample: FC = () => (
                     </li>
                     <li>
                         由于每次增删改都是一个 <code>proxy</code>，所以更新 <code>Table</code> 的{" "}
-                        <code>dataSource</code> 得靠背一个新对象
+                        <code>dataSource</code> 得拷贝一个新对象
                     </li>
                 </ul>
             </div>

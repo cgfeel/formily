@@ -1,18 +1,21 @@
 import { createForm } from "@formily/core";
 import { FC } from "react";
-import Panel from "../Panel";
+import Panel, { PanelProps } from "../Panel";
 import { fetchAddress } from "../action/asyncLoader";
 import SchemaField from "./SchemaField";
 
 const form = createForm();
 
-const SelectScope: FC = () => (
+const SelectScope: FC<Pick<PanelProps, "footer" | "header">> = ({ footer, header }) => (
     <Panel
+        footer={footer}
         form={form}
         header={
-            <h2>
-                通过 <code>scope</code> 初始只加载一次
-            </h2>
+            header || (
+                <h2>
+                    通过 <code>scope</code> 初始只加载一次
+                </h2>
+            )
         }>
         <SchemaField scope={{ fetchAddress: fetchAddress("scope loader") }}>
             <SchemaField.String

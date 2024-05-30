@@ -1,17 +1,18 @@
-import { GeneralField } from "@formily/core";
+import { GeneralField, isField } from "@formily/core";
 import { action } from "@formily/reactive";
 import { fetchData } from "../server";
 
 export const fetchAddress = (name: string) => (field: GeneralField) => {
-    console.log(name);
+    // console.log(name);
+    if (!isField(field)) return;
     if (name === '') {
-        if ('dataSource' in field) field.dataSource = [];
+        field.dataSource = [];
         return;
     }
 
-    if ('loading' in field) field.loading = true;
+    field.loading = true;
     fetchData(name, action.bound!(data => {
-        if ('dataSource' in field) field.dataSource = data;
-        if ('loading' in field) field.loading = false;
+        field.dataSource = data;
+        field.loading = false;
     }))
 }
