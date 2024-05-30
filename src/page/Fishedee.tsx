@@ -281,6 +281,11 @@ const items: TabsProps["items"] = [
             </Suspense>
         ),
     },
+    {
+        disabled: true,
+        key: "antd-v5",
+        label: "Antd-v5",
+    },
 ];
 
 const Fishedee: FC = () => <Tabs defaultActiveKey="observer-count" tabPosition="left" items={items} />;
