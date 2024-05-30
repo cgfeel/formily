@@ -274,7 +274,7 @@ const items: TabsProps["items"] = [
     },
     {
         key: "react-faq",
-        label: "7: 其他",
+        label: "7: 字段操作和响应",
         children: (
             <Suspense fallback={<>loading...</>}>
                 <ReactFaq />

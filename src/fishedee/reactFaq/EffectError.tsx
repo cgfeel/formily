@@ -30,7 +30,7 @@ const EffectError: FC = () => {
         <Wrapper
             footer={
                 <p>
-                    可能文档写的很早，目前 <code>formily</code> 没有这个问题
+                    可能文档写的很早，目前 <code>formily</code> 生命周期响应函数中遇到未知异常会抛出来
                 </p>
             }
             form={form}

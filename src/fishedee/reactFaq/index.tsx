@@ -3,14 +3,16 @@ import { FC } from "react";
 import ClearFormGraph from "../../components/controlled/schemaControlled/ClearFormGraph";
 import Select from "../../components/select";
 import SelectScope from "../../components/select/contrast/SelectScope";
+import Custom from "../../page/Custom";
 import EffectError from "./EffectError";
 import FieldOnChange from "./FieldOnChange";
+import ReactCom from "./ReactCom";
 import FieldState from "./fieldState";
 
 const items: TabsProps["items"] = [
     {
         key: "field",
-        label: "7.1-7.3: 字段和生命周期",
+        label: "7.1-7.3: 字段操作",
         children: (
             <>
                 <FieldOnChange />
@@ -55,10 +57,20 @@ const items: TabsProps["items"] = [
     },
     {
         key: "field-change",
-        label: "7.5: Field 状态设置和响应",
+        label: "7.5-7.7: Field 响应和 React 整合",
         children: (
             <>
                 <FieldState />
+                <ReactCom />
+            </>
+        ),
+    },
+    {
+        key: "react-component",
+        label: "附赠：实现自定义组件",
+        children: (
+            <>
+                <Custom />
             </>
         ),
     },

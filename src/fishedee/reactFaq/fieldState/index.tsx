@@ -1,9 +1,9 @@
 import { createForm, onFieldValueChange, onFormInit } from "@formily/core";
+import { FormConsumer } from "@formily/react";
 import { FC } from "react";
 import Wrapper from "../../fieldAction/Wrapper";
 import SchemaField from "../SchemaField";
 import SubItemSchema from "./SubItemSchema";
-import { FormConsumer } from "@formily/react";
 
 const form = createForm<FormType>({
     values: {},
@@ -35,13 +35,11 @@ const FieldState: FC = () => (
     <Wrapper
         footer={
             <div>
-                <p>
-                    放心使用这两个 <code>API</code>，文档中使用存在以下问题：
-                </p>
+                <p>文档中使用存在以下问题：</p>
                 <ul>
                     <li>
-                        在 <code>form.effect</code> 外部使用 <code>form</code> 的方法，这样不能确保已挂载，这里我修改在{" "}
-                        <code>onFormInit</code> 中设置表单数据
+                        在 <code>form.effect</code> 外部使用 <code>form</code>{" "}
+                        生命周期的方法，这样不能确保已挂载，演示中我修改在 <code>onFormInit</code> 中设置表单数据
                     </li>
                     <li>
                         在字段初始化之前是不能通过 <code>setValue</code>{" "}
@@ -67,6 +65,10 @@ const FieldState: FC = () => (
                             <li>在生命周期回调函数内部异步获取数据，请参考当前章节 7.4 的演示</li>
                         </ul>
                     </li>
+                    <li>
+                        线上文档 7.6 通过 <code>setTimeout</code> 等待字段挂载后使用 <code>form.query</code>
+                        ，正确的方式应该在 <code>onFieldInit</code> 中响应字段挂载
+                    </li>
                 </ul>
                 <p>
                     总结：请在 <code>form.effect</code> 正确的生命周期监听回调中操作表单，如果是 <code>Field</code>{" "}
@@ -77,7 +79,7 @@ const FieldState: FC = () => (
         form={form}
         header={
             <h2>
-                React.7.5 正确使用 <code>setFieldState</code> 和 <code>onFieldValueChange</code>
+                React.7.5-7.6: <code>Field</code> 状态设置和响应
             </h2>
         }>
         <SchemaField>
