@@ -1,4 +1,4 @@
-import { createForm, onFieldChange, onFieldReact } from "@formily/core";
+import { createForm, isField, onFieldChange, onFieldReact } from "@formily/core";
 import { FC } from "react";
 import SchemaField from "./SchemaField";
 import Pannel from "./Pannel";
@@ -7,12 +7,10 @@ const form = createForm({
     effects: () => {
         // 主动联动模式：路径，依赖项，操作
         onFieldChange("hideFirstColumn", ["value"], field => {
-            field.query("table_list.column5").take(target => {
-                // 在这里找不到`field`的`value`，而它的类型`GeneralField`为`type`，不能通过`declare`扩展类型
-                if ("value" in field) {
+            isField(field) &&
+                field.query("table_list.column5").take(target => {
                     target.visible = !field.value;
-                }
-            });
+                });
         });
         // 被动联动模式：路径，操作，被动模式没有依赖项
         onFieldReact("table_list.*.a2", field => {
