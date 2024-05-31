@@ -1493,3 +1493,16 @@
 -   不提供 `propsRecursion` 过滤 `schema` 只能过滤下一级字段，对于更深层次的字段不能过滤
 
 > 注 ①： `ObjectField` 下所有子集都是 `properties`
+
+---- 分割线 ----
+
+## 作业练习
+
+### `fishedee` 总结的 `Formily`
+
+包含有 4 篇文档：
+
+-   `Formily` 的 `Reactive` 的经验汇总 [[查看](https://blog.fishedee.com/2021/07/13/Formily%E7%9A%84Reactive%E7%9A%84%E7%BB%8F%E9%AA%8C%E6%B1%87%E6%80%BB)]
+-   `Formily` 的 `core` 的经验汇总 [[查看](https://blog.fishedee.com/2021/07/14/Formily%E7%9A%84core%E7%9A%84%E7%BB%8F%E9%AA%8C%E6%B1%87%E6%80%BB)]
+-   `Formily` 的 `React` 库经验汇总 [[查看](https://blog.fishedee.com/2021/07/21/Formily%E7%9A%84React%E5%BA%93%E7%BB%8F%E9%AA%8C%E6%B1%87%E6%80%BB)]
+-   `Formily` 的 `Antd` 经验汇总 [[查看](https://fishedee.com/2021/07/25/Formily%E7%9A%84Antd%E7%BB%8F%E9%AA%8C%E6%B1%87%E6%80%BB)]
