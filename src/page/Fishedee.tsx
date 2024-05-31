@@ -1,6 +1,10 @@
 import { Alert, Tabs, TabsProps } from "antd";
 import { FC, Suspense, lazy } from "react";
 
+const AntdArray = lazy(() => import("../fishedee/antdArray"));
+const AntdBase = lazy(() => import("../fishedee/antdBase"));
+const AntdLayout = lazy(() => import("../fishedee/antdLayout"));
+const AntdReact = lazy(() => import("../fishedee/antdReact"));
 const ChildrenRender = lazy(() => import("../fishedee/reactField/childrenRender"));
 const Controlled = lazy(() => import("../fishedee/controlled"));
 const CoreForm = lazy(() => import("../fishedee/coreForm"));
@@ -18,6 +22,7 @@ const FieldEffectHooks = lazy(() => import("../core/fieldEffectHooks"));
 const FormEffectHooks = lazy(() => import("../core/formEffectHooks"));
 const FormPath = lazy(() => import("../core/formPath"));
 const InitialValue = lazy(() => import("../fishedee/initialvalue"));
+const Layout = lazy(() => import("../page/Layout"));
 const Linkage = lazy(() => import("./LinkAges"));
 const Pattern = lazy(() => import("../fishedee/pattern"));
 const ReactField = lazy(() => import("../fishedee/reactField"));
@@ -285,6 +290,52 @@ const items: TabsProps["items"] = [
         disabled: true,
         key: "antd-v5",
         label: "Antd-v5",
+    },
+    {
+        key: "antd-base",
+        label: "1: 基础组件",
+        children: (
+            <Suspense fallback={<>loading...</>}>
+                <AntdBase />
+            </Suspense>
+        ),
+    },
+    {
+        key: "antd-react",
+        label: "2: 表单展现形式",
+        children: (
+            <Suspense fallback={<>loading...</>}>
+                <AntdReact />
+            </Suspense>
+        ),
+    },
+    {
+        key: "form-layout-1",
+        label: "3: 表单布局-1",
+        children: (
+            <Suspense fallback={<>loading...</>}>
+                <Alert message="文档示例来自官方文档，推荐直接查看官方示例" type="warning" />
+                <Layout />
+            </Suspense>
+        ),
+    },
+    {
+        key: "form-layout-2",
+        label: "3: 布局补充-2",
+        children: (
+            <Suspense fallback={<>loading...</>}>
+                <AntdLayout />
+            </Suspense>
+        ),
+    },
+    {
+        key: "antd-array",
+        label: "4: 数组组件",
+        children: (
+            <Suspense fallback={<>loading...</>}>
+                <AntdArray />
+            </Suspense>
+        ),
     },
 ];
 

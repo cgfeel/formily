@@ -1,16 +1,16 @@
 import { createForm } from "@formily/core";
 import { FormConsumer } from "@formily/react";
 import { FC } from "react";
-import Wrapper from "../../fieldAction/Wrapper";
+import Wrapper, { WrapperProps } from "../../fieldAction/Wrapper";
 import SchemaField from "./SchemaField";
 
 const form = createForm();
 
-const ArrayReaction: FC = () => (
+const ArrayReaction: FC<Pick<WrapperProps, "footer" | "header">> = ({ footer, header }) => (
     <Wrapper
-        footer={<p>演示了：①列表添加和列表总数联动，②子集表单和父级节点联动</p>}
+        footer={footer || <p>演示了：①列表添加和列表总数联动，②子集表单和父级节点联动</p>}
         form={form}
-        header={<h2>React.5.4.2 子集联动</h2>}>
+        header={header || <h2>React.5.4.2 子集联动</h2>}>
         <SchemaField>
             <SchemaField.Array name="array" title="最多添加 3 项" x-component="ArrayCards">
                 <SchemaField.Object
