@@ -1506,3 +1506,13 @@
 -   `Formily` 的 `core` 的经验汇总 [[查看](https://blog.fishedee.com/2021/07/14/Formily%E7%9A%84core%E7%9A%84%E7%BB%8F%E9%AA%8C%E6%B1%87%E6%80%BB)]
 -   `Formily` 的 `React` 库经验汇总 [[查看](https://blog.fishedee.com/2021/07/21/Formily%E7%9A%84React%E5%BA%93%E7%BB%8F%E9%AA%8C%E6%B1%87%E6%80%BB)]
 -   `Formily` 的 `Antd` 经验汇总 [[查看](https://fishedee.com/2021/07/25/Formily%E7%9A%84Antd%E7%BB%8F%E9%AA%8C%E6%B1%87%E6%80%BB)]
+
+> 如果是没有接触过 `Formily` 的新手，建议从上面官方文档示例开始看；对于这几篇文档提到的 `Formily` 知识点有限，且存在有错误，我会在演示中纠正部分错误；而对于已经了解 `Formily`，这几篇文档可以作为补充练习来看
+
+这里我将 4 篇文章比较精彩的部分罗列出来，其他诸如来自官方文档的例子，没必要重复总结
+
+#### 一步步复现 `Formily`
+
+包含以下章节：
+
+-   core.0: 仅用 `@formily/reactive` 实现表单逻辑 [[查看](tree/main/src/fishedee/coreReactive)]
