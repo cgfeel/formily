@@ -1543,6 +1543,8 @@
 
 原文章：手把手教你写一个条件组合组件 [[查看](https://juejin.cn/post/7005869798483558431)]，将其用 `Formily` 复现
 
+目录：https://github.com/cgfeel/formily/tree/main/src/components/objectBase
+
 优点：
 
 1. 简洁，就 2 文件
