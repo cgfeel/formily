@@ -34,7 +34,7 @@ const ChildrenRender: FC = () => (
         form={form}
         header={
             <h2>
-                通过 <code>props</code> 传递 <code>ArrayField</code> 的 <code>item</code>
+                React.1: 通过 <code>props</code> 传递 <code>ArrayField</code> 的 <code>item</code>
             </h2>
         }>
         <ObjectField name="person" title="个人信息" decorator={[VoidComponent]}>

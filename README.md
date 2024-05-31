@@ -19,7 +19,7 @@
 所有示例根据自己理解添加了说明、并根据自己的理解补充示例；在文档最后补充两个作业：
 
 -   一个第三方文档 fishedee 的 `formily` 总结做一套练习
--   补充一个作业自增对象
+-   补充一个掘金练习：自增对象
 
 ## 工程文件
 
@@ -1515,4 +1515,18 @@
 
 包含以下章节：
 
--   core.0: 仅用 `@formily/reactive` 实现表单逻辑 [[查看](https://github.com/cgfeel/formily/tree/main/src/fishedee/coreReactive)]
+-   `core`.0: 仅用 `@formily/reactive` 实现表单逻辑 [[查看](https://github.com/cgfeel/formily/tree/main/src/fishedee/coreReactive)]
+-   `core`.10: 为之前的 `reactive` 表单增加 `core` [[查看](https://github.com/cgfeel/formily/tree/main/src/fishedee/coreForm)]
+-   `React`.3: 复现 `Field` [[查看](https://github.com/cgfeel/formily/tree/main/src/fishedee/customField)]
+-   `React`.4: 复现 `Schema` [[查看](https://github.com/cgfeel/formily/tree/main/src/fishedee/customSchema)]
+
+原理直接本地运行查看演示备注，除此之外还可以看看字段和模型的实践
+
+#### 字段和模型的实践
+
+-   `React`.1: `Field` 的 `React` 实现 [[查看](https://github.com/cgfeel/formily/tree/main/src/fishedee/reactField)]
+-   `React`.2: 字段模型 `SchemaField` 实现 [[查看](https://github.com/cgfeel/formily/tree/main/src/fishedee/schemaField)]
+-   `React`.6: 字段特性 [[查看](https://github.com/cgfeel/formily/tree/main/src/fishedee/customTable)]
+-   掘金练习：自增对象 [[查看](https://github.com/cgfeel/formily/tree/main/src/components/objectBase)]
+
+#### 其他推荐演示
