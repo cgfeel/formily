@@ -45,7 +45,11 @@ const FieldOnChange: FC = () => {
                 </div>
             }
             form={form}
-            header={<h2>React.7.1: value与onChange的隐式传递</h2>}>
+            header={
+                <h2>
+                    React.7.1: <code>value</code> 与 <code>onChange</code> 的隐式传递
+                </h2>
+            }>
             <SchemaField>
                 <SchemaField.Void
                     name="void1"

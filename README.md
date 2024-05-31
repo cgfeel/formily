@@ -1530,3 +1530,20 @@
 -   掘金练习：自增对象 [[查看](https://github.com/cgfeel/formily/tree/main/src/components/objectBase)]
 
 #### 其他推荐演示
+
+-   `Reactive`.5：多计数器 [[查看](https://github.com/cgfeel/formily/tree/main/src/fishedee/count)]
+-   `Core`.1.1：字段值的获取与更新 [[查看](https://github.com/cgfeel/formily/tree/main/src/fishedee/fieldAction)]
+-   `Core`.2 展示状态 [[查看](https://github.com/cgfeel/formily/tree/main/src/fishedee/display)]
+-   `Core`.3 校验和反馈 [[查看](https://github.com/cgfeel/formily/tree/main/src/fishedee/validateInput)]
+-   `React`.7.1: `value` 与 `onChange` 的隐式传递 [[查看](https://github.com/cgfeel/formily/tree/main/src/fishedee/reactFaq)]
+
+---- 分割线 ----
+
+### 掘金练习题：自增对象
+
+原文章：手把手教你写一个条件组合组件 [[查看](https://juejin.cn/post/7005869798483558431)]，将其用 `Formily` 复现
+
+优点：
+
+1. 简洁，就 2 文件
+2. 一套模型，不用修改模型代码1 个字母，就可拓展 N 个逻辑渲染，如下图
