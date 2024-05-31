@@ -1547,3 +1547,5 @@
 
 1. 简洁，就 2 文件
 2. 一套模型，不用修改模型代码1 个字母，就可拓展 N 个逻辑渲染，如下图
+
+<img width="733" alt="企业微信截图_bdbe233d-180d-4246-8fab-7c2efd0598f1" src="https://github.com/cgfeel/formily/assets/578141/76cecadc-02e3-44d3-b203-fd8c3021cdaa">
