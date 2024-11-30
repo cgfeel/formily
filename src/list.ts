@@ -96,6 +96,10 @@ export const router = {
         name: "作业：自定义递增组件",
         path: lazy(() => import("./page/ObjectBase")),
     },
+    "/select-section": {
+        name: "字节面试题：部门员工选择",
+        path: lazy(() => import("./page/SelectSection")),
+    },
 } as const;
 
 export type RouterKey = keyof typeof router;
