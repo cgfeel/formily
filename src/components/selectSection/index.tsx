@@ -25,9 +25,9 @@ const SelectSectionExample: FC = () => {
                         <SchemaField.Boolean
                             name="tool"
                             x-component="Checkbox"
-                            x-data="90"
-                            x-decorator="ToolBar"
                             x-content="全选"
+                            x-data={90}
+                            x-decorator="ToolBar"
                         />
                         <SchemaField.Array
                             name="collapse"
@@ -58,7 +58,12 @@ const SelectSectionExample: FC = () => {
                         x-component-props={{
                             title: "已选中的人",
                         }}>
-                        <SchemaField.String name="search-select" />
+                        <SchemaField.String
+                            name="search-select"
+                            x-component="Input"
+                            x-decorator="ToolBar"
+                            x-component-props={{ suffix: <SearchOutlined /> }}
+                        />
                         <SchemaField.Array name="collapse">
                             <SchemaField.String name="section" />
                             <SchemaField.String name="user" />

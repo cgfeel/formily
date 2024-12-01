@@ -38,7 +38,7 @@ const InternalFormCollapse: FC<IFormCollapseProps> = () => {
                             filterProperties={schema => isSectionComponent(schema)}
                             mapProperties={schema => ({
                                 ...schema,
-                                ["x-content"]: key,
+                                "x-content": key,
                             })}
                             onlyRenderProperties
                         />
@@ -54,7 +54,7 @@ const InternalFormCollapse: FC<IFormCollapseProps> = () => {
                             filterProperties={schema => isUserComponent(schema)}
                             mapProperties={schema => ({
                                 ...schema,
-                                ["x-data"]: { group: panels[key], section: key },
+                                "x-data": { group: panels[key], section: key },
                             })}
                         />
                     )}

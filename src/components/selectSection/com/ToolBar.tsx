@@ -5,7 +5,8 @@ const ToolBar: FC<PropsWithChildren> = ({ children }) => {
     const field = useField();
     return (
         <>
-            {children}({field.data})
+            {children}
+            {field.data && <>({field.data})</>}
         </>
     );
 };

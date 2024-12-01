@@ -5,7 +5,7 @@ import { FC } from "react";
 const { Text } = Typography;
 const Face: FC<UserItemType> = ({ name, section }) => (
     <Space>
-        <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=levi" style={{ backgroundColor: "#d0e7c5" }} />
+        <Avatar src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${name}`} style={{ backgroundColor: "#d0e7c5" }} />
         <Text>{name}</Text>
         <Text>{section}</Text>
     </Space>
