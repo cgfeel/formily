@@ -24,20 +24,15 @@ const SelectSectionExample: FC = () => {
                         />
                         <SchemaField.Boolean
                             name="tool"
-                            x-component="Checkbox.Group"
+                            x-component="Checkbox"
                             x-data="90"
                             x-decorator="ToolBar"
-                            enum={[
-                                {
-                                    label: "全选",
-                                    value: true,
-                                },
-                            ]}
+                            x-content="全选"
                         />
                         <SchemaField.Array
                             name="collapse"
                             x-component="SelectCollapse"
-                            x-value={["技术", "Austin", "Michael"]}
+                            x-value={{}}
                             enum={[
                                 { name: "Levi", section: "技术" },
                                 { name: "Adam", section: "产品" },
@@ -48,8 +43,12 @@ const SelectSectionExample: FC = () => {
                                 { name: "Nicholas", section: "UI" },
                                 { name: "Peter", section: "产品" },
                             ]}>
-                            <SchemaField.String name="section" x-component="Checkbox.Group" x-component-props={} />
-                            <SchemaField.String name="user" />
+                            <SchemaField.Void>
+                                <SchemaField.String name="section" x-component="Checkbox" x-decorator="PanelStop" />
+                                <SchemaField.Void x-component="UserGroup">
+                                    <SchemaField.Object name="user-item" x-component="UserCheckBox" />
+                                </SchemaField.Void>
+                            </SchemaField.Void>
                         </SchemaField.Array>
                     </SchemaField.Void>
                     <SchemaField.Void

@@ -1,70 +1,77 @@
 import { FormCollapse, IFormCollapseProps } from "@formily/antd-v5";
-import { ExpressionScope, ISchema, RecursionField, Schema, observer, useFieldSchema } from "@formily/react";
-import { Checkbox, Collapse, CollapseProps } from "antd";
+import { usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
+import { ISchema, RecursionField, observer, useFieldSchema } from "@formily/react";
+import { Collapse, CollapseProps } from "antd";
 import { FC } from "react";
+import useCollapseStyle from "../styles/collapse";
 
 const { CollapsePanel, createFormCollapse } = FormCollapse;
 
-const isCheckboxComponent = (schema: ISchema) => schema["x-component"] === "Checkbox";
+const isSectionComponent = (schema: ISchema) => schema["x-component"] === "Checkbox";
+const isUserComponent = (schema: ISchema) => schema["x-component"] === "UserGroup";
 
-const usePanels = (schema: Schema) => {
+const usePanels = (schema: ISchema) => {
     const list = (schema.enum || []) as UserItem[]; // formily 不做泛型也不做推断，只能断言
-
     return list.reduce<Record<string, string[]>>(
         (current, { name, section }) => ({ ...current, [section]: (current[section] || []).concat(name) }),
         {},
     );
 };
 
-const items: CollapseProps["items"] = [
-    {
-        key: "1",
-        label: "This is panel header 1",
-        children: <>test</>,
-    },
-    {
-        key: "2",
-        label: (
-            <>
-                <Checkbox onClick={event => event.stopPropagation()} />
-                This is panel header 2
-            </>
-        ),
-        children: <>test</>,
-    },
-    {
-        key: "3",
-        label: "This is panel header 3",
-        children: <>test</>,
-    },
-];
-
 const InternalFormCollapse: FC<IFormCollapseProps> = () => {
     const schema = useFieldSchema();
     const panels = usePanels(schema);
 
+    const prefixCls = usePrefixCls("collapse");
+    const [wrapSSR, hashId] = useCollapseStyle(prefixCls);
+
     const items = Array.isArray(schema.items) ? schema.items[0] : schema.items;
-    const collapseItems: CollapseProps["items"] = Object.keys(panels).map(key => ({
-        key,
-        label: (
-            <>
-                {items && (
-                    <ExpressionScope value={{ $section: key }}>
+    const collapseItems: CollapseProps["items"] = Object.keys(panels).map(key => {
+        return {
+            key,
+            label: (
+                <>
+                    {items && (
                         <RecursionField
                             name={key}
                             schema={items}
-                            filterProperties={schema => isCheckboxComponent(schema)}
+                            filterProperties={schema => isSectionComponent(schema)}
+                            mapProperties={schema => ({
+                                ...schema,
+                                ["x-content"]: key,
+                            })}
                             onlyRenderProperties
                         />
-                    </ExpressionScope>
-                )}
-                {key}
-            </>
-        ),
-        children: <>test</>,
-    }));
+                    )}
+                </>
+            ),
+            children: (
+                <>
+                    {items && (
+                        <RecursionField
+                            name={`${key}-group`}
+                            schema={items}
+                            filterProperties={schema => isUserComponent(schema)}
+                            mapProperties={schema => ({
+                                ...schema,
+                                ["x-data"]: { group: panels[key], section: key },
+                            })}
+                        />
+                    )}
+                </>
+            ),
+        };
+    });
 
-    return <Collapse items={collapseItems} bordered={false} defaultActiveKey={["技术"]} expandIconPosition="end" />;
+    return wrapSSR(
+        <Collapse
+            className={hashId}
+            items={collapseItems}
+            bordered={false}
+            defaultActiveKey={["技术"]}
+            expandIconPosition="end"
+        />,
+    );
 };
 
 export const SelectCollapse = Object.assign(observer(InternalFormCollapse), {
