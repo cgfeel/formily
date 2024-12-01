@@ -1,11 +1,61 @@
 import { SearchOutlined } from "@ant-design/icons";
-import { createForm } from "@formily/core";
+import {
+    createForm,
+    isArrayField,
+    isField,
+    onFieldChange,
+    onFieldInit,
+    onFieldMount,
+    onFieldReact,
+    onFieldValueChange,
+} from "@formily/core";
 import { FC, useMemo } from "react";
 import Panel from "./Panel";
 import SchemaField from "./SchemaField";
+import { UserItem } from "./com/SelectCollapse";
 
 const SelectSectionExample: FC = () => {
-    const form = useMemo(() => createForm(), []);
+    const form = useMemo(
+        () =>
+            createForm({
+                initialValues: {
+                    collapse: [{ name: "", section: "技术" }],
+                },
+                effects() {
+                    onFieldInit("collapse", field => {
+                        const data = (isArrayField(field) ? field.value : []) as UserItem[];
+                        field.setData({ list: data.map(({ name, section }) => name || section) });
+                    });
+                    onFieldValueChange("collapse.*", field => {
+                        console.log(field.path.toString());
+                    });
+                    /*onFieldInit("collapse.*.section", field => {
+                        if (isField(field)) {
+                            const { parent } = field;
+                            const data = (isArrayField(parent) ? parent.value : []) as UserItem[];
+
+                            const [, path] = field.path.toArr();
+                            data.forEach(
+                                ({ name, section }) =>
+                                    name === "" &&
+                                    section === path &&
+                                    field.setComponentProps({ defaultChecked: true }),
+                            );
+                        }
+                    });*/
+                    onFieldInit("collapse.*", field => {
+                        if (isField(field)) {
+                            const [, path] = field.path.toArr();
+                            const { list = [] } = form.query("collapse").take()?.data || {};
+                            if (list.indexOf(path) > -1) {
+                                field.setComponentProps({ defaultChecked: true });
+                            }
+                        }
+                    });
+                },
+            }),
+        [],
+    );
     return (
         <Panel form={form}>
             <SchemaField>
@@ -32,7 +82,6 @@ const SelectSectionExample: FC = () => {
                         <SchemaField.Array
                             name="collapse"
                             x-component="SelectCollapse"
-                            x-value={{}}
                             enum={[
                                 { name: "Levi", section: "技术" },
                                 { name: "Adam", section: "产品" },
@@ -63,6 +112,18 @@ const SelectSectionExample: FC = () => {
                             x-component="Input"
                             x-decorator="ToolBar"
                             x-component-props={{ suffix: <SearchOutlined /> }}
+                        />
+                        <SchemaField.Object
+                            name="user-item-1"
+                            x-component="UserCheckBox"
+                            x-data={{ name: "", section: "技术" }}
+                            x-read-pretty
+                        />
+                        <SchemaField.Object
+                            name="user-item-2"
+                            x-component="UserCheckBox"
+                            x-data={{ name: "levi", section: "技术" }}
+                            x-read-pretty
                         />
                         <SchemaField.Array name="collapse">
                             <SchemaField.String name="section" />

@@ -1,4 +1,5 @@
-import { connect, mapReadPretty, useField } from "@formily/react";
+import { isField } from "@formily/core";
+import { connect, mapReadPretty, observer, useField } from "@formily/react";
 import { Avatar, Checkbox, Space, Typography } from "antd";
 import { FC } from "react";
 
@@ -11,17 +12,23 @@ const Face: FC<UserItemType> = ({ name, section }) => (
     </Space>
 );
 
+const UserReadPretty: FC = () => {
+    const field = useField();
+    const { name = "", section } = field.data as UserItemType;
+    return name === "" ? <div>{section}</div> : <Face name={name} section={section} />;
+};
+
 const UserCheckBox: FC = () => {
     const field = useField();
     const { name, section } = field.data as UserItemType;
     return (
-        <Checkbox>
+        <Checkbox onChange={({ target }) => isField(field) && field.setValue(target.checked)}>
             <Face name={name} section={section} />
         </Checkbox>
     );
 };
 
-export default connect(UserCheckBox, mapReadPretty(UserCheckBox, { readPretty: true }));
+export default connect(observer(UserCheckBox), mapReadPretty(UserReadPretty));
 
 type UserItemType = {
     name: string;

@@ -1,6 +1,7 @@
 import { FormCollapse, IFormCollapseProps } from "@formily/antd-v5";
 import { usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
-import { ISchema, RecursionField, observer, useFieldSchema } from "@formily/react";
+import { isArrayField } from "@formily/core";
+import { ISchema, RecursionField, observer, useField, useFieldSchema } from "@formily/react";
 import { Collapse, CollapseProps } from "antd";
 import { FC } from "react";
 import useCollapseStyle from "../styles/collapse";
@@ -19,13 +20,16 @@ const usePanels = (schema: ISchema) => {
 };
 
 const InternalFormCollapse: FC<IFormCollapseProps> = () => {
+    const field = useField();
     const schema = useFieldSchema();
     const panels = usePanels(schema);
 
     const prefixCls = usePrefixCls("collapse");
     const [wrapSSR, hashId] = useCollapseStyle(prefixCls);
 
+    const value = (isArrayField(field) ? field.value : []) as UserItem[]; // field 的值存在多个可能，这里通过断言固定一个类型
     const items = Array.isArray(schema.items) ? schema.items[0] : schema.items;
+
     const collapseItems: CollapseProps["items"] = Object.keys(panels).map(key => {
         return {
             key,
@@ -68,7 +72,7 @@ const InternalFormCollapse: FC<IFormCollapseProps> = () => {
             className={hashId}
             items={collapseItems}
             bordered={false}
-            defaultActiveKey={["技术"]}
+            defaultActiveKey={value.filter(({ name }) => name === "").map(({ section }) => section)}
             expandIconPosition="end"
         />,
     );
@@ -81,7 +85,7 @@ export const SelectCollapse = Object.assign(observer(InternalFormCollapse), {
 
 export default SelectCollapse;
 
-type UserItem = {
+export type UserItem = {
     name: string;
     section: string;
 };
