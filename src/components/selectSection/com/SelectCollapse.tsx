@@ -38,6 +38,7 @@ const InternalFormCollapse: FC<IFormCollapseProps> = () => {
                     {items && (
                         <RecursionField
                             name={key}
+                            basePath={field.address}
                             schema={items}
                             filterProperties={schema => isSectionComponent(schema)}
                             mapProperties={schema => ({
@@ -54,6 +55,7 @@ const InternalFormCollapse: FC<IFormCollapseProps> = () => {
                     {items && (
                         <RecursionField
                             name={`${key}-group`}
+                            basePath={field.address}
                             schema={items}
                             filterProperties={schema => isUserComponent(schema)}
                             mapProperties={schema => ({

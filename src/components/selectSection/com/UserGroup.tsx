@@ -19,6 +19,7 @@ const UserGroup: FC = () => {
                         <Col key={name} span={24}>
                             <RecursionField
                                 name={name}
+                                basePath={field.address}
                                 key={name}
                                 schema={{ ...schema, "x-data": { section, name } }}
                             />

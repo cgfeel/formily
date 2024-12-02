@@ -8,25 +8,30 @@ import {
     onFieldMount,
     onFieldReact,
     onFieldValueChange,
+    onFormReact,
+    onFormValuesChange,
 } from "@formily/core";
 import { FC, useMemo } from "react";
 import Panel from "./Panel";
 import SchemaField from "./SchemaField";
 import { UserItem } from "./com/SelectCollapse";
+import { FormConsumer } from "@formily/react";
 
 const SelectSectionExample: FC = () => {
     const form = useMemo(
         () =>
             createForm({
                 initialValues: {
+                    "search-user": "test",
                     collapse: [{ name: "", section: "技术" }],
                 },
                 effects() {
+                    onFormValuesChange(() => console.log("aaa"));
                     onFieldInit("collapse", field => {
                         const data = (isArrayField(field) ? field.value : []) as UserItem[];
                         field.setData({ list: data.map(({ name, section }) => name || section) });
                     });
-                    onFieldValueChange("collapse.*", field => {
+                    onFieldChange("collapse.*", field => {
                         console.log(field.path.toString());
                     });
                     /*onFieldInit("collapse.*.section", field => {
@@ -132,6 +137,11 @@ const SelectSectionExample: FC = () => {
                     </SchemaField.Void>
                 </SchemaField.Void>
             </SchemaField>
+            <code className="consumer">
+                <pre>
+                    <FormConsumer>{form => JSON.stringify(form.values, null, 2)}</FormConsumer>
+                </pre>
+            </code>
         </Panel>
     );
 };

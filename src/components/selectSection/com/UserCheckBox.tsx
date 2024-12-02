@@ -28,7 +28,9 @@ const UserCheckBox: FC = () => {
     );
 };
 
-export default connect(observer(UserCheckBox), mapReadPretty(UserReadPretty));
+export default observer(UserCheckBox);
+
+// export default connect(observer(UserCheckBox), mapReadPretty(UserReadPretty));
 
 type UserItemType = {
     name: string;
