@@ -139,7 +139,7 @@ const SelectSectionExample: FC = () => {
             </SchemaField>
             <code className="consumer">
                 <pre>
-                    <FormConsumer>{form => JSON.stringify(form.values, null, 2)}</FormConsumer>
+                    <FormConsumer>{form => JSON.stringify(form.values, null, 4)}</FormConsumer>
                 </pre>
             </code>
         </Panel>
