@@ -28,41 +28,40 @@ const InternalFormCollapse: FC<IFormCollapseProps> = () => {
     const [wrapSSR, hashId] = useCollapseStyle(prefixCls);
 
     const value = (isArrayField(field) ? field.value : []) as UserItem[]; // field 的值存在多个可能，这里通过断言固定一个类型
-    const items = Array.isArray(schema.items) ? schema.items[0] : schema.items;
+    // const items = Array.isArray(schema.items) ? schema.items[0] : schema.items;
 
     const collapseItems: CollapseProps["items"] = Object.keys(panels).map(key => {
         return {
             key,
             label: (
                 <>
-                    {items && (
-                        <RecursionField
-                            name={key}
-                            basePath={field.address}
-                            schema={items}
-                            filterProperties={schema => isSectionComponent(schema)}
-                            mapProperties={schema => ({
-                                ...schema,
-                                "x-content": key,
-                            })}
-                            onlyRenderProperties
-                        />
+                    {schema.reduceProperties((addition, schema) =>
+                        !isSectionComponent(schema) ? (
+                            addition
+                        ) : (
+                            <RecursionField
+                                name={key}
+                                basePath={field.address}
+                                schema={{ ...schema, "x-content": key }}
+                                onlyRenderProperties
+                            />
+                        ),
                     )}
                 </>
             ),
             children: (
                 <>
-                    {items && (
-                        <RecursionField
-                            name={`${key}-group`}
-                            basePath={field.address}
-                            schema={items}
-                            filterProperties={schema => isUserComponent(schema)}
-                            mapProperties={schema => ({
-                                ...schema,
-                                "x-data": { group: panels[key], section: key },
-                            })}
-                        />
+                    {schema.reduceProperties((addition, schema, name) =>
+                        !isUserComponent(schema) ? (
+                            addition
+                        ) : (
+                            <RecursionField
+                                name={name}
+                                basePath={field.address}
+                                schema={{ ...schema, "x-data": { group: panels[key], section: key } }}
+                                onlyRenderProperties
+                            />
+                        ),
                     )}
                 </>
             ),

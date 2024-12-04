@@ -21,15 +21,15 @@ const SelectSectionExample: FC = () => {
     const form = useMemo(
         () =>
             createForm({
-                initialValues: {
+                /*initialValues: {
                     "search-user": "test",
                     collapse: [{ name: "", section: "技术" }],
-                },
+                },*/
                 effects() {
                     onFormValuesChange(() => console.log("aaa"));
                     onFieldInit("collapse", field => {
-                        const data = (isArrayField(field) ? field.value : []) as UserItem[];
-                        field.setData({ list: data.map(({ name, section }) => name || section) });
+                        // const data = (isArrayField(field) ? field.value : []) as UserItem[];
+                        // field.setData({ list: data.map(({ name, section }) => name || section) });
                     });
                     onFieldChange("collapse.*", field => {
                         console.log(field.path.toString());
@@ -49,13 +49,13 @@ const SelectSectionExample: FC = () => {
                         }
                     });*/
                     onFieldInit("collapse.*", field => {
-                        if (isField(field)) {
+                        /*if (isField(field)) {
                             const [, path] = field.path.toArr();
                             const { list = [] } = form.query("collapse").take()?.data || {};
                             if (list.indexOf(path) > -1) {
                                 field.setComponentProps({ defaultChecked: true });
                             }
-                        }
+                        }*/
                     });
                 },
             }),
@@ -84,7 +84,7 @@ const SelectSectionExample: FC = () => {
                             x-data={90}
                             x-decorator="ToolBar"
                         />
-                        <SchemaField.Array
+                        <SchemaField.Object
                             name="collapse"
                             x-component="SelectCollapse"
                             enum={[
@@ -97,13 +97,11 @@ const SelectSectionExample: FC = () => {
                                 { name: "Nicholas", section: "UI" },
                                 { name: "Peter", section: "产品" },
                             ]}>
-                            <SchemaField.Void>
-                                <SchemaField.String name="section" x-component="Checkbox" x-decorator="PanelStop" />
-                                <SchemaField.Void x-component="UserGroup">
-                                    <SchemaField.Object name="user-item" x-component="UserCheckBox" />
-                                </SchemaField.Void>
+                            <SchemaField.String name="section" x-component="Checkbox" x-decorator="PanelStop" />
+                            <SchemaField.Void x-component="UserGroup">
+                                <SchemaField.Object name="user-item" x-component="UserCheckBox" />
                             </SchemaField.Void>
-                        </SchemaField.Array>
+                        </SchemaField.Object>
                     </SchemaField.Void>
                     <SchemaField.Void
                         x-component="Card"
@@ -139,7 +137,7 @@ const SelectSectionExample: FC = () => {
             </SchemaField>
             <code className="consumer">
                 <pre>
-                    <FormConsumer>{form => JSON.stringify(form.values, null, 4)}</FormConsumer>
+                    <FormConsumer>{form => JSON.stringify(form.values, null, 2)}</FormConsumer>
                 </pre>
             </code>
         </Panel>
