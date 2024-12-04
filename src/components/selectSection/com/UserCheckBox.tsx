@@ -20,7 +20,14 @@ const UserReadPretty: FC = () => {
 
 const UserCheckBox: FC = () => {
     const field = useField();
+
+    if (!field.data) {
+        console.log("undefined", field.data);
+
+        return null;
+    }
     const { name, section } = field.data as UserItemType;
+
     return (
         <Checkbox onChange={({ target }) => isField(field) && field.setValue(target.checked)}>
             <Face name={name} section={section} />
