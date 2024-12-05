@@ -97,7 +97,7 @@ const SelectSectionExample: FC = () => {
                                 { name: "Nicholas", section: "UI" },
                                 { name: "Peter", section: "产品" },
                             ]}>
-                            <SchemaField.String name="section" x-component="Checkbox" x-decorator="PanelStop" />
+                            <SchemaField.Object name="section" x-component="UserCheckBox" x-decorator="PanelStop" />
                             <SchemaField.Void x-component="UserGroup">
                                 <SchemaField.Object name="user-item" x-component="UserCheckBox" />
                             </SchemaField.Void>

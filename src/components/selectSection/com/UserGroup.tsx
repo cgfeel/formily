@@ -7,9 +7,6 @@ const isUserCheckBox = (schema: ISchema) => schema["x-component"] === "UserCheck
 const UserGroup: FC = () => {
     const field = useField();
     const schema = useFieldSchema();
-    console.log(field.data, schema["x-data"]);
-
-    return null;
 
     const { group, section } = field.data as GroupType; // formily 不提供泛型，也没有推断，只能断言
     return (

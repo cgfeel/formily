@@ -8,7 +8,10 @@ import useCollapseStyle from "../styles/collapse";
 
 const { CollapsePanel, createFormCollapse } = FormCollapse;
 
-const isSectionComponent = (schema: ISchema) => schema["x-component"] === "Checkbox";
+const isSectionComponent = (schema: ISchema) => {
+    console.log(schema["x-component"], schema["x-component"] === "UserCheckBox");
+    return schema["x-component"] === "UserCheckBox";
+};
 const isUserComponent = (schema: ISchema) => schema["x-component"] === "UserGroup";
 
 const usePanels = (schema: ISchema) => {
@@ -30,43 +33,40 @@ const InternalFormCollapse: FC<IFormCollapseProps> = () => {
     const value = (isArrayField(field) ? field.value : []) as UserItem[]; // field 的值存在多个可能，这里通过断言固定一个类型
     // const items = Array.isArray(schema.items) ? schema.items[0] : schema.items;
 
-    const collapseItems: CollapseProps["items"] = Object.keys(panels).map(key => {
-        return {
-            key,
-            label: (
-                <>
-                    {schema.reduceProperties((addition, schema) =>
-                        !isSectionComponent(schema) ? (
-                            addition
-                        ) : (
-                            <RecursionField
-                                name={key}
-                                basePath={field.address}
-                                schema={{ ...schema, "x-content": key }}
-                                onlyRenderProperties
-                            />
-                        ),
-                    )}
-                </>
-            ),
-            children: (
-                <>
-                    {schema.reduceProperties((addition, schema, name) =>
-                        !isUserComponent(schema) ? (
-                            addition
-                        ) : (
-                            <RecursionField
-                                name={name}
-                                basePath={field.address}
-                                schema={{ ...schema, "x-data": { group: panels[key], section: key } }}
-                                onlyRenderProperties
-                            />
-                        ),
-                    )}
-                </>
-            ),
-        };
-    });
+    const collapseItems: CollapseProps["items"] = Object.keys(panels).map(key => ({
+        key,
+        label: (
+            <>
+                {schema.reduceProperties((addition, schema) =>
+                    !isSectionComponent(schema) ? (
+                        222
+                    ) : (
+                        <RecursionField
+                            name={key}
+                            basePath={field.address}
+                            schema={{ ...schema, "x-data": { section: key } }}
+                            onlyRenderProperties
+                        />
+                    ),
+                )}
+            </>
+        ),
+        children: (
+            <>
+                {schema.reduceProperties((addition, schema, name) =>
+                    isUserComponent(schema) ? (
+                        addition
+                    ) : (
+                        <RecursionField
+                            name={name}
+                            basePath={field.address}
+                            schema={{ ...schema, "x-data": { group: panels[key], section: key } }}
+                        />
+                    ),
+                )}
+            </>
+        ),
+    }));
 
     return wrapSSR(
         <Collapse
