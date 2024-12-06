@@ -9,7 +9,7 @@ import useCollapseStyle from "../styles/collapse";
 const { CollapsePanel, createFormCollapse } = FormCollapse;
 
 const isSectionComponent = (schema: ISchema) => {
-    console.log(schema["x-component"], schema["x-component"] === "UserCheckBox");
+    // console.log(schema["x-component"], schema["x-component"] === "UserCheckBox");
     return schema["x-component"] === "UserCheckBox";
 };
 const isUserComponent = (schema: ISchema) => schema["x-component"] === "UserGroup";
@@ -37,8 +37,10 @@ const InternalFormCollapse: FC<IFormCollapseProps> = () => {
         key,
         label: (
             <>
-                {schema.reduceProperties((addition, schema) =>
-                    !isSectionComponent(schema) ? (
+                {schema.reduceProperties((addition, schema) => {
+                    const data = isSectionComponent(schema);
+                    console.log(data);
+                    return !data ? (
                         222
                     ) : (
                         <RecursionField
@@ -47,8 +49,8 @@ const InternalFormCollapse: FC<IFormCollapseProps> = () => {
                             schema={{ ...schema, "x-data": { section: key } }}
                             onlyRenderProperties
                         />
-                    ),
-                )}
+                    );
+                })}
             </>
         ),
         children: (
