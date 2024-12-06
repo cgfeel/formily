@@ -38,9 +38,7 @@ const InternalFormCollapse: FC<IFormCollapseProps> = () => {
         label: (
             <>
                 {schema.reduceProperties((addition, schema) => {
-                    const data = isSectionComponent(schema);
-                    console.log(data);
-                    return !data ? (
+                    return !isSectionComponent(schema) ? (
                         222
                     ) : (
                         <RecursionField
