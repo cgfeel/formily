@@ -10,7 +10,7 @@ const { CollapsePanel, createFormCollapse } = FormCollapse;
 
 const isSectionComponent = (schema: ISchema) => {
     // console.log(schema["x-component"], schema["x-component"] === "UserCheckBox");
-    return schema["x-component"] === "UserCheckBox";
+    return schema["x-decorator"] === "PanelStop";
 };
 const isUserComponent = (schema: ISchema) => schema["x-component"] === "UserGroup";
 
@@ -53,7 +53,7 @@ const InternalFormCollapse: FC<IFormCollapseProps> = () => {
         ),
         children: (
             <>
-                {schema.reduceProperties((addition, schema, name) =>
+                {/*schema.reduceProperties((addition, schema, name) =>
                     isUserComponent(schema) ? (
                         addition
                     ) : (
@@ -63,7 +63,8 @@ const InternalFormCollapse: FC<IFormCollapseProps> = () => {
                             schema={{ ...schema, "x-data": { group: panels[key], section: key } }}
                         />
                     ),
-                )}
+                )*/}
+                test
             </>
         ),
     }));
