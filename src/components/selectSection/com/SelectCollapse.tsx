@@ -32,12 +32,19 @@ const InternalFormCollapse: FC<IFormCollapseProps> = () => {
 
     const value = (isArrayField(field) ? field.value : []) as UserItem[]; // field 的值存在多个可能，这里通过断言固定一个类型
     // const items = Array.isArray(schema.items) ? schema.items[0] : schema.items;
+    console.log(schema.properties);
 
     const collapseItems: CollapseProps["items"] = Object.keys(panels).map(key => ({
         key,
         label: (
             <>
-                {schema.reduceProperties((addition, schema) => {
+                <RecursionField
+                    name={key}
+                    basePath={field.address}
+                    schema={{ ...schema, "x-data": { section: key } }}
+                    onlyRenderProperties
+                />
+                {/*schema.reduceProperties((addition, schema) => {
                     return !isSectionComponent(schema) ? (
                         222
                     ) : (
@@ -48,7 +55,7 @@ const InternalFormCollapse: FC<IFormCollapseProps> = () => {
                             onlyRenderProperties
                         />
                     );
-                })}
+                })*/}
             </>
         ),
         children: (
