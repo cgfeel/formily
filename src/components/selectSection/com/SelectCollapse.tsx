@@ -41,7 +41,9 @@ const InternalFormCollapse: FC<IFormCollapseProps> = () => {
                 <RecursionField
                     name={key}
                     basePath={field.address}
-                    schema={{ ...schema, "x-data": { section: key } }}
+                    schema={schema}
+                    filterProperties={schema => isSectionComponent(schema)}
+                    mapProperties={schema => ({ ...schema, "x-data": { section: key } })}
                     onlyRenderProperties
                 />
                 {/*schema.reduceProperties((addition, schema) => {
