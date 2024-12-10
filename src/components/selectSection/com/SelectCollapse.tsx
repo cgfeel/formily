@@ -31,8 +31,8 @@ const InternalFormCollapse: FC<IFormCollapseProps> = () => {
     const [wrapSSR, hashId] = useCollapseStyle(prefixCls);
 
     const value = (isArrayField(field) ? field.value : []) as UserItem[]; // field 的值存在多个可能，这里通过断言固定一个类型
-    // const items = Array.isArray(schema.items) ? schema.items[0] : schema.items;
-    console.log(schema.properties);
+    const items = Array.isArray(schema.items) ? schema.items[0] : schema.items;
+    console.log(items);
 
     const collapseItems: CollapseProps["items"] = Object.keys(panels).map(key => ({
         key,
@@ -43,21 +43,9 @@ const InternalFormCollapse: FC<IFormCollapseProps> = () => {
                     basePath={field.address}
                     schema={schema}
                     filterProperties={schema => isSectionComponent(schema)}
-                    mapProperties={schema => ({ ...schema, "x-data": { section: key } })}
+                    mapProperties={schema => ({ ...schema, "x-content": 2222 })}
                     onlyRenderProperties
                 />
-                {/*schema.reduceProperties((addition, schema) => {
-                    return !isSectionComponent(schema) ? (
-                        222
-                    ) : (
-                        <RecursionField
-                            name={key}
-                            basePath={field.address}
-                            schema={{ ...schema, "x-data": { section: key } }}
-                            onlyRenderProperties
-                        />
-                    );
-                })*/}
             </>
         ),
         children: (
