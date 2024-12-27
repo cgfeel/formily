@@ -84,7 +84,7 @@ const SelectSectionExample: FC = () => {
                             x-data={90}
                             x-decorator="ToolBar"
                         />
-                        <SchemaField.Object
+                        <SchemaField.Array
                             name="collapse"
                             x-component="SelectCollapse"
                             enum={[
@@ -97,11 +97,13 @@ const SelectSectionExample: FC = () => {
                                 { name: "Nicholas", section: "UI" },
                                 { name: "Peter", section: "产品" },
                             ]}>
-                            <SchemaField.Object name="section" x-component="Checkbox" x-decorator="PanelStop" />
-                            <SchemaField.Void x-component="UserGroup">
-                                <SchemaField.Object name="user-item" x-component="UserCheckBox" />
-                            </SchemaField.Void>
-                        </SchemaField.Object>
+                            <SchemaField.Object>
+                                <SchemaField.String name="section" x-component="Checkbox" x-decorator="PanelStop" />
+                                <SchemaField.Void x-component="UserGroup">
+                                    <SchemaField.String name="user-item" x-component="UserCheckBox" />
+                                </SchemaField.Void>
+                            </SchemaField.Object>
+                        </SchemaField.Array>
                     </SchemaField.Void>
                     <SchemaField.Void
                         x-component="Card"
