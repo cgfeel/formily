@@ -1,15 +1,11 @@
 import { FormProvider, IProviderProps } from "@formily/react";
 import { Card } from "antd";
-import { createStyles, css } from "antd-style";
 import { FC, PropsWithChildren, ReactNode } from "react";
 import useStylish from "../commonStylish";
-
-const useStyles = createStyles(css`
-    width: 86%;
-`);
+import { usePanelStyles } from "./hooks/useStyle";
 
 const Panel: FC<PropsWithChildren<PanelProps>> = ({ children, footer, form, header }) => {
-    const { styles } = useStyles();
+    const { styles } = usePanelStyles();
     const stylish = useStylish();
 
     return (

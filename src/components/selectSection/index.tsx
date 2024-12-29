@@ -16,47 +16,16 @@ import Panel from "./Panel";
 import SchemaField from "./SchemaField";
 import { UserItem } from "./com/SelectCollapse";
 import { FormConsumer } from "@formily/react";
+import UserCheckBox from "./com/UserCheckBox";
+import { debounce, asyncDataSource, useFakeService } from "./hooks/useFakeService";
 
 const SelectSectionExample: FC = () => {
+    const [request] = useFakeService(3000);
     const form = useMemo(
         () =>
             createForm({
-                /*initialValues: {
-                    "search-user": "test",
-                    collapse: [{ name: "", section: "技术" }],
-                },*/
-                effects() {
-                    onFormValuesChange(() => console.log("aaa"));
-                    onFieldInit("collapse", field => {
-                        // const data = (isArrayField(field) ? field.value : []) as UserItem[];
-                        // field.setData({ list: data.map(({ name, section }) => name || section) });
-                    });
-                    onFieldChange("collapse.*", field => {
-                        console.log(field.path.toString());
-                    });
-                    /*onFieldInit("collapse.*.section", field => {
-                        if (isField(field)) {
-                            const { parent } = field;
-                            const data = (isArrayField(parent) ? parent.value : []) as UserItem[];
-
-                            const [, path] = field.path.toArr();
-                            data.forEach(
-                                ({ name, section }) =>
-                                    name === "" &&
-                                    section === path &&
-                                    field.setComponentProps({ defaultChecked: true }),
-                            );
-                        }
-                    });*/
-                    onFieldInit("collapse.*", field => {
-                        /*if (isField(field)) {
-                            const [, path] = field.path.toArr();
-                            const { list = [] } = form.query("collapse").take()?.data || {};
-                            if (list.indexOf(path) > -1) {
-                                field.setComponentProps({ defaultChecked: true });
-                            }
-                        }*/
-                    });
+                effects: () => {
+                    asyncDataSource("collapse", request);
                 },
             }),
         [],
@@ -76,34 +45,63 @@ const SelectSectionExample: FC = () => {
                             x-component="Input"
                             x-decorator="CardHeader"
                             x-component-props={{ suffix: <SearchOutlined /> }}
+                            x-reactions={{
+                                dependencies: [".collapse"],
+                                fulfill: {
+                                    state: {
+                                        value: "{{ ($deps[0]||[]).length}}",
+                                    },
+                                },
+                            }}
                         />
                         <SchemaField.Boolean
                             name="tool"
                             x-component="Checkbox"
                             x-content="全选"
-                            x-data={90}
+                            x-data={`90/100`}
                             x-decorator="ToolBar"
+                            x-reactions={{
+                                dependencies: [".collapse", ".collapse#enum"],
+                                fulfill: {
+                                    state: {
+                                        data: "{{ ($deps[0]||[]).length + '/' + ($deps[1]||[]).length }}",
+                                    },
+                                },
+                            }}
                         />
-                        <SchemaField.Array
-                            name="collapse"
-                            x-component="SelectCollapse"
-                            enum={[
-                                { name: "Levi", section: "技术" },
-                                { name: "Adam", section: "产品" },
-                                { name: "Austin", section: "UI" },
-                                { name: "David", section: "技术" },
-                                { name: "John", section: "HR" },
-                                { name: "Michael", section: "财务" },
-                                { name: "Nicholas", section: "UI" },
-                                { name: "Peter", section: "产品" },
-                            ]}>
-                            <SchemaField.Object>
-                                <SchemaField.String name="section" x-component="Checkbox" x-decorator="PanelStop" />
-                                <SchemaField.Void x-component="UserGroup">
-                                    <SchemaField.String name="user-item" x-component="UserCheckBox" />
-                                </SchemaField.Void>
-                            </SchemaField.Object>
-                        </SchemaField.Array>
+                        <SchemaField.Void x-component="ScrollWapper">
+                            <SchemaField.Array
+                                enum={
+                                    [
+                                        /*{ name: "Levi", section: "技术" },
+                                    { name: "Adam", section: "产品" },
+                                    { name: "Austin", section: "UI" },
+                                    { name: "David", section: "技术" },
+                                    { name: "John", section: "HR" },
+                                    { name: "Michael", section: "财务" },
+                                    { name: "Nicholas", section: "UI" },
+                                    { name: "Peter", section: "产品" },*/
+                                    ]
+                                }
+                                name="collapse"
+                                x-component="SelectCollapse"
+                                x-component-props={{
+                                    size: "small",
+                                }}>
+                                <SchemaField.Object>
+                                    <SchemaField.Boolean
+                                        x-component="SelectCollapse.UserCheckBox"
+                                        x-decorator="SelectCollapse.PanelDecorator"
+                                    />
+                                    <SchemaField.Void x-component="UserGroup">
+                                        <SchemaField.String
+                                            x-component="SelectCollapse.UserCheckBox"
+                                            x-content={<UserCheckBox.Face />}
+                                        />
+                                    </SchemaField.Void>
+                                </SchemaField.Object>
+                            </SchemaField.Array>
+                        </SchemaField.Void>
                     </SchemaField.Void>
                     <SchemaField.Void
                         x-component="Card"
@@ -118,7 +116,7 @@ const SelectSectionExample: FC = () => {
                             x-decorator="ToolBar"
                             x-component-props={{ suffix: <SearchOutlined /> }}
                         />
-                        <SchemaField.Object
+                        {/* <SchemaField.Object
                             name="user-item-1"
                             x-component="UserCheckBox"
                             x-data={{ name: "", section: "技术" }}
@@ -129,11 +127,13 @@ const SelectSectionExample: FC = () => {
                             x-component="UserCheckBox"
                             x-data={{ name: "levi", section: "技术" }}
                             x-read-pretty
-                        />
-                        <SchemaField.Array name="collapse">
-                            <SchemaField.String name="section" />
-                            <SchemaField.String name="user" />
-                        </SchemaField.Array>
+                        /> */}
+                        <SchemaField.Void x-component="ScrollWapper">
+                            <SchemaField.Array name="collapse">
+                                <SchemaField.String name="section" />
+                                <SchemaField.String name="user" />
+                            </SchemaField.Array>
+                        </SchemaField.Void>
                     </SchemaField.Void>
                 </SchemaField.Void>
             </SchemaField>

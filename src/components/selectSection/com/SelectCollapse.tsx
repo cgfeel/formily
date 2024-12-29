@@ -1,84 +1,134 @@
-import { FormCollapse, IFormCollapseProps } from "@formily/antd-v5";
+import { FormCollapse } from "@formily/antd-v5";
 import { usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
-import { isArrayField } from "@formily/core";
-import { ISchema, RecursionField, observer, useField, useFieldSchema } from "@formily/react";
+import {
+    createEffectHook,
+    Form,
+    isArrayField,
+    onFieldChange,
+    onFieldReact,
+    onFieldValueChange,
+    onFormValuesChange,
+} from "@formily/core";
+import { RecursionField, Schema, observer, useField, useFieldSchema, useFormEffects } from "@formily/react";
 import { Collapse, CollapseProps } from "antd";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import useCollapseStyle from "../styles/collapse";
+import {
+    useCollapseField,
+    useListValue,
+    usePanels,
+    useSectionGroup,
+    useSelectSchema,
+} from "../hooks/useSelectCollapse";
+import classNames from "classnames";
+import UserCheckBox from "./UserCheckBox";
+import PanelDecorator from "./PanelDecorator";
 
 const { CollapsePanel, createFormCollapse } = FormCollapse;
 
-const isSectionComponent = (schema: ISchema) => {
-    // console.log(schema["x-component"], schema["x-component"] === "UserCheckBox");
-    return schema["x-decorator"] === "PanelStop";
-};
-const isUserComponent = (schema: ISchema) => schema["x-component"] === "UserGroup";
+const onSelectUserEvent = createEffectHook<(payload: PayloadType, form: Form) => ListenerType>(
+    "select-user-event",
+    (payload, form) => listener => listener(payload, form),
+);
 
-const usePanels = (schema: ISchema) => {
-    const list = (schema.enum || []) as UserItem[]; // formily 不做泛型也不做推断，只能断言
-    return list.reduce<Record<string, string[]>>(
-        (current, { name, section }) => ({ ...current, [section]: (current[section] || []).concat(name) }),
-        {},
-    );
-};
-
-const InternalFormCollapse: FC<IFormCollapseProps> = () => {
-    const field = useField();
-    const schema = useFieldSchema();
-    const panels = usePanels(schema);
+const InternalFormCollapse: FC<Omit<CollapseProps, "items">> = ({
+    className,
+    bordered = false,
+    expandIconPosition = "end",
+}) => {
+    const [field, fieldValue] = useCollapseField();
+    const schema = useSelectSchema();
+    const panels = useListValue(schema.enum || []);
+    const values = useListValue(fieldValue);
 
     const prefixCls = usePrefixCls("collapse");
     const [wrapSSR, hashId] = useCollapseStyle(prefixCls);
 
-    const value = (isArrayField(field) ? field.value : []) as UserItem[]; // field 的值存在多个可能，这里通过断言固定一个类型
-    const items = Array.isArray(schema.items) ? schema.items[0] : schema.items;
-    console.log(items);
+    useFormEffects(() => {
+        onSelectUserEvent(({ group, section, checked = false }) => {
+            if (isArrayField(field)) {
+                const currentValue = field.value;
+                console.log(currentValue);
 
-    const collapseItems: CollapseProps["items"] = Object.keys(panels).map(key => ({
-        key,
-        label: (
-            <>
+                // 添加也是先删后加
+                const data = currentValue.filter(item => item.section !== section || group.indexOf(item.name) < 0);
+                field.setValue(data.concat(!checked ? [] : group.map(name => ({ name, section }))));
+            }
+        });
+    });
+
+    isArrayField(field) && console.log(field.loading);
+
+    /*useFormEffects(() => {
+        onFormValuesChange(() => {
+            console.log("qqqqq");
+        });
+        onFieldChange("collapse", () => {
+            console.log("ssssssss");
+        });
+    });*/
+
+    /*const value = isArrayField(field) ? field.value : {};
+    useEffect(() => {
+        console.log("aaaaa---111");
+    }, [value]);*/
+
+    // isArrayField(field) && onChange && onChange(field.value);
+
+    // console.log(onChange);
+
+    // console.log(field);
+
+    // const value = (isArrayField(field) ? field.value : []) as UserItem[]; // field 的值存在多个可能，这里通过断言固定一个类型
+    // const items = Array.isArray(schema.items) ? schema.items[0] : schema.items;
+
+    const [section, group] = useSectionGroup(schema);
+    if (group === undefined && section === undefined) {
+        return <></>;
+    }
+
+    const collapseItems: CollapseProps["items"] = Object.keys(panels).map((key, i) => {
+        const data = {
+            values: values[key] === undefined ? [] : Array.from(values[key]),
+            group: Array.from(panels[key]),
+            section: key,
+        };
+        return {
+            key,
+            label: (
                 <RecursionField
-                    name={key}
+                    name={`section-${i}`}
                     basePath={field.address}
-                    schema={schema}
-                    filterProperties={schema => isSectionComponent(schema)}
-                    mapProperties={schema => ({ ...schema, "x-content": 2222 })}
-                    onlyRenderProperties
+                    schema={{ ...section, "x-data": data }}
+                    onlyRenderSelf
                 />
-            </>
-        ),
-        children: (
-            <>
-                {/*schema.reduceProperties((addition, schema, name) =>
-                    isUserComponent(schema) ? (
-                        addition
-                    ) : (
-                        <RecursionField
-                            name={name}
-                            basePath={field.address}
-                            schema={{ ...schema, "x-data": { group: panels[key], section: key } }}
-                        />
-                    ),
-                )*/}
-                test
-            </>
-        ),
-    }));
+            ),
+            children: (
+                <RecursionField
+                    name={`group-${i}`}
+                    basePath={field.address}
+                    schema={{ ...group, "x-data": data }}
+                    onlyRenderSelf
+                />
+            ),
+        };
+    });
 
     return wrapSSR(
         <Collapse
-            className={hashId}
+            bordered={bordered}
+            className={classNames([hashId, className])}
+            expandIconPosition={expandIconPosition}
             items={collapseItems}
-            bordered={false}
-            defaultActiveKey={value.filter(({ name }) => name === "").map(({ section }) => section)}
-            expandIconPosition="end"
+            // defaultActiveKey={value.filter(({ name }) => name === "").map(({ section }) => section)}
         />,
     );
 };
 
 export const SelectCollapse = Object.assign(observer(InternalFormCollapse), {
     CollapsePanel,
+    PanelDecorator,
+    UserCheckBox,
     createFormCollapse,
 });
 
@@ -87,4 +137,12 @@ export default SelectCollapse;
 export type UserItem = {
     name: string;
     section: string;
+};
+
+type ListenerType = (listener: (pay: PayloadType, form: Form) => void) => void;
+
+type PayloadType = {
+    group: string[];
+    section: string;
+    checked?: boolean;
 };
