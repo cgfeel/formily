@@ -49,12 +49,12 @@ export const useCollapseField = () => {
 
     const value = (isArray ? field.value || [] : []) as SectionItem[];
     const dataSource = (isArray ? field.dataSource || [] : []) as SectionItem[];
-    const data = field.data || {};
+    const activeKey = (field.data || []) as string [];
     
     return {
         dataSource: [...dataSource],
-        search: String(data.search || ""),
         value: [...value],
+        activeKey,
         field
     } as const;
 };

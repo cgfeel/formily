@@ -40,6 +40,7 @@ const InternalUserCheckBox: FC<PropsWithChildren> = ({ children }) => {
     // const { name = "", section } = field.data;
 
     //  onChange={({ target }) => isField(field) && field.setValue(target.checked ? { name, section } : {})}
+    console.log(search, section, section.toLowerCase().indexOf(search));
     return (
         <Checkbox
             checked={group.length === values.length}
@@ -58,7 +59,12 @@ const InternalUserCheckBox: FC<PropsWithChildren> = ({ children }) => {
                 // isArrayField(parent) && parent.push(target.checked ? { name, section } : {});
             }}
             disabled={empty}>
-            <span className={classNames({ searchChecked: search !== "" && (name === search || section === search) })}>
+            <span
+                className={classNames({
+                    searchChecked:
+                        search !== "" &&
+                        (name.toLowerCase().indexOf(search) > -1 || section.toLowerCase().indexOf(search) > -1),
+                })}>
                 {children || name || section}
             </span>
         </Checkbox>

@@ -53,7 +53,7 @@ const RenderProperty: FC<RenderPropertyProps> = ({ address, name, schema, match 
 );
 
 // 将 activeKey 下放到叶子节点，避免 react 的 state 更新导致整个 ArrayField 重复渲染
-const CollapseControl: FC<CollapseControlProps> = ({ activeKey, search, ...props }) => {
+const CollapseControl: FC<CollapseControlProps> = ({ activeKey, search, onChange, ...props }) => {
     const [active, setActive] = useState<string[]>([]);
 
     useEffect(() => {
@@ -67,14 +67,22 @@ const CollapseControl: FC<CollapseControlProps> = ({ activeKey, search, ...props
         if (search !== "") {
             const index = (props.items || [])
                 .map(item => String(item.key || ""))
-                .filter(section => section !== "" && section !== search);
+                .filter(section => section !== "" && section.toLowerCase().indexOf(search) === -1);
 
             setActive(index);
         }
     }, [props.items, search]);
 
     return (
-        <Collapse {...props} activeKey={active} onChange={value => setActive(Array.isArray(value) ? value : [value])} />
+        <Collapse
+            {...props}
+            activeKey={active}
+            onChange={value => {
+                const keys = Array.isArray(value) ? value : [value];
+                setActive(keys);
+                onChange(keys);
+            }}
+        />
     );
 };
 
@@ -83,16 +91,21 @@ const InternalFormCollapse: FC<FormCollapseProps> = ({
     className,
     bordered = false,
     expandIconPosition = "end",
+    search: searchRaw = "",
     ...props
 }) => {
-    const { dataSource, field, search, value: fieldValue } = useCollapseField();
+    const { activeKey, dataSource, field, value: fieldValue } = useCollapseField();
     const schema = useSelectSchema();
 
     const panels = useListValue(schema.enum || dataSource || []);
     const values = useListValue(fieldValue);
 
+    const search = searchRaw.toLocaleLowerCase();
     const searchList = Object.keys(panels).filter(
-        section => search === "" || section === search || panels[section].has(search),
+        section =>
+            search === "" ||
+            section.toLowerCase().indexOf(search) > -1 ||
+            Array.from(panels[section]).join("").toLowerCase().indexOf(search) > -1,
     );
 
     const prefixCls = usePrefixCls("collapse");
@@ -102,10 +115,13 @@ const InternalFormCollapse: FC<FormCollapseProps> = ({
         onSelectUserEvent(({ group, section, checked = false }) => {
             if (isArrayField(field)) {
                 const currentValue = field.value;
+                const dataRaw = field.data;
 
                 // 添加也是先删后加
                 const data = currentValue.filter(item => item.section !== section || group.indexOf(item.name) < 0);
+                field.setState(dataRaw);
                 field.setValue(data.concat(!checked ? [] : group.map(name => ({ name, section }))));
+                field.setState(dataRaw);
             }
         });
     });
@@ -171,11 +187,13 @@ const InternalFormCollapse: FC<FormCollapseProps> = ({
     return wrapSSR(
         <CollapseControl
             {...props}
+            activeKey={activeKey}
             bordered={bordered}
             className={classNames([hashId, className])}
             expandIconPosition={expandIconPosition}
             items={collapseItems}
             search={search}
+            onChange={activeKey => field.setData(activeKey)}
             // defaultActiveKey={value.filter(({ name }) => name === "").map(({ section }) => section)}
         />,
     );
@@ -210,11 +228,16 @@ export type UserItem = {
     section: string;
 };
 
-interface CollapseControlProps extends CollapseProps {
+interface CollapseControlProps extends Omit<CollapseProps, "activeKey" | "onChange"> {
+    activeKey: string[];
     search: string;
+    onChange: (value: string[]) => void;
 }
 
-interface FormCollapseProps extends Omit<CollapseProps, "items" | "onChange"> {}
+interface FormCollapseProps extends Omit<CollapseControlProps, "activeKey" | "items" | "onChange" | "search"> {
+    data?: string[];
+    search?: string;
+}
 
 interface RenderPropertyProps {
     address: FormPath;

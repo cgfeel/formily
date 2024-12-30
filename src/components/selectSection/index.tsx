@@ -32,9 +32,14 @@ const SelectSectionExample: FC = () => {
                         const collapse = field.query(".collapse").take();
                         if (isArrayField(collapse)) {
                             collapse.value = field.value ? collapse.dataSource || [] : [];
-                            console.log(field.value, collapse.value);
                         }
                     });
+                    /*onFieldValueChange("search-user", field => {
+                        const collapse = field.query(".collapse").take();
+                        if (isArrayField(collapse)) {
+                            console.log(collapse.getState());
+                        }
+                    });*/
                 },
             }),
         [],
@@ -89,14 +94,13 @@ const SelectSectionExample: FC = () => {
                                 name="collapse"
                                 x-component="SelectCollapse"
                                 x-component-props={{
-                                    activeKey: [],
                                     size: "small",
                                 }}
                                 x-reactions={{
                                     dependencies: [".search-user"],
                                     fulfill: {
                                         state: {
-                                            data: { search: "{{ $deps[0] || '' }}" },
+                                            componentProps: { search: "{{ $deps[0] }}" },
                                         },
                                     },
                                 }}>
