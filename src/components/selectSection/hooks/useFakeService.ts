@@ -1,3 +1,4 @@
+import { action } from "@formily/reactive";
 import { FormPathPattern, isField, onFieldInit, onFieldReact } from "@formily/core";
 import { useCallback } from "react";
 
@@ -12,10 +13,15 @@ const data = [
     { name: "Peter", section: "产品" },
 ]
 
-export const asyncDataSource = (pattern: FormPathPattern, service: (callback: FakeCallBackType) => void) => {
+export const asyncDataSource = (pattern: FormPathPattern, service: () => Promise<SectionItem[]>) => {
     onFieldInit(pattern, field => {
         if (isField(field)) {
             field.loading = true;
+            service().then(action.bound!(data => {
+                // console.log(field.address.toString(), data);
+                field.dataSource = data;
+                field.loading = false;
+            }));
         }
     });
 };
@@ -30,15 +36,17 @@ export const useFakeService = (delay: number) => {
 
 export const debounce = <T extends Function, D extends any = any>(func: T, delay: number = 500) => {
     let timer: ReturnType<typeof setTimeout> | null = null;
-    return function (this: ThisParameterType<T>|Window, ...args: D[]) {
+    function action(this: ThisParameterType<T>, ...args: D[]): void {
         if (timer !== null) {
             clearTimeout(timer);
         }
         timer = setTimeout(() => {
-            func.apply(this, args);
+            func.hasOwnProperty('prototype') ? func.apply(this, args) : func(args);
             timer = null;
         }, delay);
     }
+
+    return action;
 };
 
 export const throttle = <T extends Function, D extends any = any>(func: T, interval: number = 500) => {

@@ -7,7 +7,7 @@ export const usePanelStyles = createStyles(css`
 export const useScrollWapperStyle = createStyles(
     ({ css }, { maxWidth, minWidth, minHeight = 400, maxHeight = 400 }: ScrollWapperStyleProps) => css`
         max-height: ${maxHeight ? `${maxHeight}px` : "auto"};
-        max-width: ${maxWidth ? `${maxWidth}px` : "auto"};
+        max-width: ${maxWidth ? `${maxWidth}px` : "none"};
         min-height: ${minHeight ? `${minHeight}px` : "auto"};
         min-width: ${minWidth ? `${minWidth}px` : "auto"};
         overflow: auto;

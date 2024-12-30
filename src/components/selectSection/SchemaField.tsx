@@ -3,9 +3,8 @@ import { createSchemaField } from "@formily/react";
 import { Card, Input } from "antd";
 import { FC, PropsWithChildren } from "react";
 import SelectCollapse from "./com/SelectCollapse";
-import ToolBar from "./com/ToolBar";
+import CheckedAll from "./com/CheckedAll";
 import UserCheckBox from "./com/UserCheckBox";
-import UserGroup from "./com/UserGroup";
 import useCollapseStyle from "./styles/collapse";
 import ScrollWapper from "./com/ScrollWrapper";
 
@@ -23,14 +22,13 @@ const SchemaField = createSchemaField({
         Card,
         CardHeader,
         Checkbox,
+        CheckedAll,
         FormGrid,
         FormItem,
         GridColumn,
         Input,
         ScrollWapper,
         SelectCollapse,
-        ToolBar,
-        UserGroup,
         UserCheckBox,
     },
 });

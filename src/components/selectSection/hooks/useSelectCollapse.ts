@@ -2,27 +2,14 @@ import { isArrayField } from "@formily/core";
 import { Schema, useField, useFieldSchema } from "@formily/react";
 import { SectionItem } from "./useFakeService";
 
-const isUserGroup = (schema: Schema) => schema["x-component"] === "UserGroup";
+const isUserGroup = (schema: Schema) => schema["x-component"] === "SelectCollapse.UserGroup";
 
-export const usePanels = (schema: SelectSchema<SectionItem>) => {
-    const list = schema.enum || [];
-    return list.reduce<Record<string, Set<string>>>(
-        (current, { name, section }) => {
-            const item = current[section] || new Set();
-            const value = name.trim();
+export const isEmpty = (schema: Schema) => schema['x-component'] === "SelectCollapse.SelectEmpty";
 
-            item.add(value);
-            return {
-                ...current,
-                [section]: item
-            };
-        },
-        {},
-    );
-};
+export const isSkeleton = (schema: Schema) => schema['x-component'] === "SelectCollapse.SelectSkeleton";
 
 export const useListValue = (list: readonly SectionItem[]) => {
-    return list.reduce<Record<string, Set<string>>>(
+    return list.reduce<CollapseItem>(
         (current, { name, section }) => {
             const item = current[section] || new Set();
             const value = name.trim();
@@ -58,17 +45,26 @@ export const useSelectSchema = <T extends unknown = SectionItem>() => {
 
 export const useCollapseField = () => {
     const field = useField();
-    const value = (isArrayField(field) ? field.value || [] : []) as SectionItem[];
+    const isArray = isArrayField(field);
+
+    const value = (isArray ? field.value || [] : []) as SectionItem[];
+    const dataSource = (isArray ? field.dataSource || [] : []) as SectionItem[];
+    const data = field.data || {};
     
-    return [field, [...value]] as const;
+    return {
+        dataSource: [...dataSource],
+        search: String(data.search || ""),
+        value: [...value],
+        field
+    } as const;
 };
 
 export const useSchemaData = () => {
     const schema = useFieldSchema();
     const data = (schema['x-data'] || {}) as UserData;
 
-    const { empty = false, group = [], name = "", section = "", values = [] } = data;
-    return [schema, { empty, group, name, section, values }] as const;
+    const { empty = false, group = [], name = "", search = "", section = "", values = [] } = data;
+    return [schema, { empty, group, name, search, section, values }] as const;
 };
 
 export const useUserField = () => {
@@ -79,9 +75,12 @@ export const useUserField = () => {
     return [field, { empty, group, name, section, values }] as const;
 };
 
+export type CollapseItem = Record<string, Set<string>>;
+
 export type UserData = Partial<Record<"name" | "section", string> & {
     empty: boolean;
     group: string[];
+    search: string;
     values: string[];
 }>;
 

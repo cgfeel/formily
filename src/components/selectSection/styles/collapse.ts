@@ -12,6 +12,9 @@ const genCollapseStyle: GenerateStyle = token => {
             },
             '&-group': {
                 display: 'inline'
+            },
+            [`& .searchChecked`]: {
+                backgroundColor: "#ff0"
             }
         }
     };

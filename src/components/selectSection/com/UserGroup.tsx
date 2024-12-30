@@ -22,7 +22,7 @@ const UserItem: FC<UserItemProps> = ({ basePath, data, schema }) => (
 
 const UserGroup: FC = () => {
     const field = useField();
-    const [schema, { group, section, values }] = useSchemaData();
+    const [schema, { group, search, section, values }] = useSchemaData();
     // const schema = useFieldSchema();
 
     //  (isUserCheckBox(schema) ? <RecursionField name={key} basePath={field.address} schema={schema} mapProperties={schema => ({ ...schema, 'x-data': { name } })} /> : addition)
@@ -32,7 +32,7 @@ const UserGroup: FC = () => {
             {group.map((name, i) => (
                 <UserItem
                     basePath={field.address}
-                    data={{ group: [name], name, section, values: values.indexOf(name) < 0 ? [] : [name] }}
+                    data={{ group: [name], name, search, section, values: values.indexOf(name) < 0 ? [] : [name] }}
                     key={`${name}-${i}`}
                     schema={schema}
                 />

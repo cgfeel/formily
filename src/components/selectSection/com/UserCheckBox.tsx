@@ -3,18 +3,19 @@ import { connect, mapReadPretty, observer, useField, useFieldSchema, useFormEffe
 import { Avatar, Checkbox, Space, Typography } from "antd";
 import { FC, PropsWithChildren } from "react";
 import { useSchemaData, useUserField } from "../hooks/useSelectCollapse";
+import classNames from "classnames";
 
 const { Text } = Typography;
 
 const Face: FC = () => {
-    const [, { name }] = useSchemaData();
+    const [, { name, search }] = useSchemaData();
     return (
         <Space>
             <Avatar
                 src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${name}`}
                 style={{ backgroundColor: "#d0e7c5" }}
             />
-            <Text>{name}</Text>
+            <Text className={classNames({ searchChecked: name === search })}>{name}</Text>
         </Space>
     );
 };
@@ -27,7 +28,7 @@ const UserReadPretty: FC = () => {
 
 const InternalUserCheckBox: FC<PropsWithChildren> = ({ children }) => {
     const field = useField();
-    const [, { empty, group, name, section, values }] = useSchemaData();
+    const [, { empty, group, name, search, section, values }] = useSchemaData();
 
     // console.log(field.form.getValuesIn('.'));
 
@@ -57,7 +58,9 @@ const InternalUserCheckBox: FC<PropsWithChildren> = ({ children }) => {
                 // isArrayField(parent) && parent.push(target.checked ? { name, section } : {});
             }}
             disabled={empty}>
-            {children || name || section}
+            <span className={classNames({ searchChecked: search !== "" && (name === search || section === search) })}>
+                {children || name || section}
+            </span>
         </Checkbox>
     );
 };

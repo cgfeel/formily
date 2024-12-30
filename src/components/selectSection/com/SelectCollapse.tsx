@@ -3,6 +3,7 @@ import { usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
 import {
     createEffectHook,
     Form,
+    FormPath,
     isArrayField,
     onFieldChange,
     onFieldReact,
@@ -11,18 +12,23 @@ import {
 } from "@formily/core";
 import { RecursionField, Schema, observer, useField, useFieldSchema, useFormEffects } from "@formily/react";
 import { Collapse, CollapseProps } from "antd";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import useCollapseStyle from "../styles/collapse";
 import {
+    CollapseItem,
+    isEmpty,
+    isSkeleton,
     useCollapseField,
     useListValue,
-    usePanels,
     useSectionGroup,
     useSelectSchema,
 } from "../hooks/useSelectCollapse";
 import classNames from "classnames";
 import UserCheckBox from "./UserCheckBox";
 import PanelDecorator from "./PanelDecorator";
+import SelectSkeleton from "./SelectSkeleton";
+import UserGroup from "./UserGroup";
+import SelectEmpty from "./SelectEmpty";
 
 const { CollapsePanel, createFormCollapse } = FormCollapse;
 
@@ -31,15 +37,63 @@ const onSelectUserEvent = createEffectHook<(payload: PayloadType, form: Form) =>
     (payload, form) => listener => listener(payload, form),
 );
 
-const InternalFormCollapse: FC<Omit<CollapseProps, "items">> = ({
+// 作为 empty、loading 的 property 渲染组价
+const RenderProperty: FC<RenderPropertyProps> = ({ address, name, schema, match }) => (
+    <>
+        {schema.reduceProperties(
+            (addition, schema) =>
+                match(schema) ? (
+                    <RecursionField basePath={address} name={name} schema={schema} onlyRenderSelf />
+                ) : (
+                    addition
+                ),
+            null,
+        )}
+    </>
+);
+
+// 将 activeKey 下放到叶子节点，避免 react 的 state 更新导致整个 ArrayField 重复渲染
+const CollapseControl: FC<CollapseControlProps> = ({ activeKey, search, ...props }) => {
+    const [active, setActive] = useState<string[]>([]);
+
+    useEffect(() => {
+        if (search === "") {
+            const index = (Array.isArray(activeKey) ? activeKey : [activeKey || ""]).map(key => String(key));
+            setActive(index.concat());
+        }
+    }, [activeKey, search]);
+
+    useEffect(() => {
+        if (search !== "") {
+            const index = (props.items || [])
+                .map(item => String(item.key || ""))
+                .filter(section => section !== "" && section !== search);
+
+            setActive(index);
+        }
+    }, [props.items, search]);
+
+    return (
+        <Collapse {...props} activeKey={active} onChange={value => setActive(Array.isArray(value) ? value : [value])} />
+    );
+};
+
+// ArrayField Comonent
+const InternalFormCollapse: FC<FormCollapseProps> = ({
     className,
     bordered = false,
     expandIconPosition = "end",
+    ...props
 }) => {
-    const [field, fieldValue] = useCollapseField();
+    const { dataSource, field, search, value: fieldValue } = useCollapseField();
     const schema = useSelectSchema();
-    const panels = useListValue(schema.enum || []);
+
+    const panels = useListValue(schema.enum || dataSource || []);
     const values = useListValue(fieldValue);
+
+    const searchList = Object.keys(panels).filter(
+        section => search === "" || section === search || panels[section].has(search),
+    );
 
     const prefixCls = usePrefixCls("collapse");
     const [wrapSSR, hashId] = useCollapseStyle(prefixCls);
@@ -48,7 +102,6 @@ const InternalFormCollapse: FC<Omit<CollapseProps, "items">> = ({
         onSelectUserEvent(({ group, section, checked = false }) => {
             if (isArrayField(field)) {
                 const currentValue = field.value;
-                console.log(currentValue);
 
                 // 添加也是先删后加
                 const data = currentValue.filter(item => item.section !== section || group.indexOf(item.name) < 0);
@@ -57,7 +110,7 @@ const InternalFormCollapse: FC<Omit<CollapseProps, "items">> = ({
         });
     });
 
-    isArrayField(field) && console.log(field.loading);
+    // isArrayField(field) && console.log(schema);
 
     /*useFormEffects(() => {
         onFormValuesChange(() => {
@@ -83,15 +136,16 @@ const InternalFormCollapse: FC<Omit<CollapseProps, "items">> = ({
     // const items = Array.isArray(schema.items) ? schema.items[0] : schema.items;
 
     const [section, group] = useSectionGroup(schema);
-    if (group === undefined && section === undefined) {
-        return <></>;
+    if (searchList.length === 0 || (group === undefined && section === undefined)) {
+        return <RenderProperty name="empty" address={field.address} schema={schema} match={isEmpty} />;
     }
 
-    const collapseItems: CollapseProps["items"] = Object.keys(panels).map((key, i) => {
+    const collapseItems: CollapseProps["items"] = searchList.map((key, i) => {
         const data = {
             values: values[key] === undefined ? [] : Array.from(values[key]),
             group: Array.from(panels[key]),
             section: key,
+            search,
         };
         return {
             key,
@@ -115,20 +169,37 @@ const InternalFormCollapse: FC<Omit<CollapseProps, "items">> = ({
     });
 
     return wrapSSR(
-        <Collapse
+        <CollapseControl
+            {...props}
             bordered={bordered}
             className={classNames([hashId, className])}
             expandIconPosition={expandIconPosition}
             items={collapseItems}
+            search={search}
             // defaultActiveKey={value.filter(({ name }) => name === "").map(({ section }) => section)}
         />,
     );
 };
 
-export const SelectCollapse = Object.assign(observer(InternalFormCollapse), {
+// 仅用于判断加载状态
+const SectionFormCollapse: FC<FormCollapseProps> = props => {
+    const field = useField();
+    const schema = useFieldSchema();
+
+    return !isArrayField(field) || !field.loading ? (
+        <InternalFormCollapse {...props} />
+    ) : (
+        <RenderProperty address={field.address} name="loading" schema={schema} match={isSkeleton} />
+    );
+};
+
+export const SelectCollapse = Object.assign(observer(SectionFormCollapse), {
     CollapsePanel,
     PanelDecorator,
+    SelectEmpty,
+    SelectSkeleton,
     UserCheckBox,
+    UserGroup,
     createFormCollapse,
 });
 
@@ -138,6 +209,19 @@ export type UserItem = {
     name: string;
     section: string;
 };
+
+interface CollapseControlProps extends CollapseProps {
+    search: string;
+}
+
+interface FormCollapseProps extends Omit<CollapseProps, "items" | "onChange"> {}
+
+interface RenderPropertyProps {
+    address: FormPath;
+    name: string;
+    schema: Schema;
+    match: (schema: Schema) => Boolean;
+}
 
 type ListenerType = (listener: (pay: PayloadType, form: Form) => void) => void;
 
