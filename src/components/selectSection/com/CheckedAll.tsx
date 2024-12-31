@@ -1,6 +1,6 @@
 import { isField } from "@formily/core";
 import { observer, useField } from "@formily/react";
-import { Checkbox, CheckboxProps } from "antd";
+import { Button, Checkbox, CheckboxProps, Flex } from "antd";
 import { FC, PropsWithChildren } from "react";
 
 const InternalCheckedAll: FC<Omit<CheckboxProps, "checked" | "indeterminate" | "onChange">> = props => {
@@ -21,8 +21,13 @@ const InternalCheckedAll: FC<Omit<CheckboxProps, "checked" | "indeterminate" | "
     );
 };
 
-const ToolBar: FC<PropsWithChildren> = ({ children }) => {
-    return <div>{children}</div>;
+const ToolBar: FC<PropsWithChildren<ToolBarProps>> = ({ children, onExpand }) => {
+    return (
+        <Flex justify="space-between">
+            <div>{children}</div>
+            <Button></Button>
+        </Flex>
+    );
 };
 
 const CheckedAll = Object.assign(observer(InternalCheckedAll), {
@@ -30,3 +35,7 @@ const CheckedAll = Object.assign(observer(InternalCheckedAll), {
 });
 
 export default CheckedAll;
+
+interface ToolBarProps {
+    onExpand: (show: boolean) => void;
+}

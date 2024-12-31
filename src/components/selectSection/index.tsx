@@ -34,6 +34,9 @@ const SelectSectionExample: FC = () => {
                             collapse.value = field.value ? collapse.dataSource || [] : [];
                         }
                     });
+                    onFieldValueChange("collapse", field => {
+                        console.log("vvvvv", field.componentProps);
+                    });
                     /*onFieldValueChange("search-user", field => {
                         const collapse = field.query(".collapse").take();
                         if (isArrayField(collapse)) {

@@ -37,6 +37,11 @@ const onSelectUserEvent = createEffectHook<(payload: PayloadType, form: Form) =>
     (payload, form) => listener => listener(payload, form),
 );
 
+const onExpandCollapse = createEffectHook<(payload: PayloadType, form: Form) => ListenerType>(
+    "expand-collapse",
+    (payload, form) => listener => listener(payload, form),
+);
+
 // 作为 empty、loading 的 property 渲染组价
 const RenderProperty: FC<RenderPropertyProps> = ({ address, name, schema, match }) => (
     <>
@@ -89,6 +94,7 @@ const CollapseControl: FC<CollapseControlProps> = ({ activeKey, search, onChange
 // ArrayField Comonent
 const InternalFormCollapse: FC<FormCollapseProps> = ({
     className,
+    // activeKey: activeRaw,
     bordered = false,
     expandIconPosition = "end",
     search: searchRaw = "",
@@ -96,6 +102,10 @@ const InternalFormCollapse: FC<FormCollapseProps> = ({
 }) => {
     const { activeKey, dataSource, field, value: fieldValue } = useCollapseField();
     const schema = useSelectSchema();
+
+    /*const activeKey = (Array.isArray(activeRaw) ? activeRaw : [activeRaw || ""])
+        .map(item => String(item))
+        .filter(i => i !== "");*/
 
     const panels = useListValue(schema.enum || dataSource || []);
     const values = useListValue(fieldValue);
@@ -123,6 +133,9 @@ const InternalFormCollapse: FC<FormCollapseProps> = ({
                 field.setValue(data.concat(!checked ? [] : group.map(name => ({ name, section }))));
                 field.setState(dataRaw);
             }
+        });
+        onExpandCollapse(() => {
+            console.log("aaaaa---v1111");
         });
     });
 
@@ -184,6 +197,8 @@ const InternalFormCollapse: FC<FormCollapseProps> = ({
         };
     });
 
+    // console.log("aaaa", field.componentProps);
+
     return wrapSSR(
         <CollapseControl
             {...props}
@@ -193,7 +208,12 @@ const InternalFormCollapse: FC<FormCollapseProps> = ({
             expandIconPosition={expandIconPosition}
             items={collapseItems}
             search={search}
-            onChange={activeKey => field.setData(activeKey)}
+            onChange={activeKey => {
+                // onChange && onChange(activeKey);
+                // console.log(field);
+                field.setData(activeKey);
+                // field.componentProps.activeKey = activeKey;
+            }}
             // defaultActiveKey={value.filter(({ name }) => name === "").map(({ section }) => section)}
         />,
     );
@@ -234,7 +254,7 @@ interface CollapseControlProps extends Omit<CollapseProps, "activeKey" | "onChan
     onChange: (value: string[]) => void;
 }
 
-interface FormCollapseProps extends Omit<CollapseControlProps, "activeKey" | "items" | "onChange" | "search"> {
+interface FormCollapseProps extends Omit<CollapseProps, "items" | "onChange" | "search"> {
     data?: string[];
     search?: string;
 }
