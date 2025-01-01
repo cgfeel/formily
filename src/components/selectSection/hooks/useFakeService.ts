@@ -2,7 +2,7 @@ import { action } from "@formily/reactive";
 import { FormPathPattern, isField, onFieldInit, onFieldReact } from "@formily/core";
 import { useCallback } from "react";
 
-const data = [
+const data: SectionItem[] = [
     { name: "Levi", section: "技术" },
     { name: "Adam", section: "产品" },
     { name: "Austin", section: "UI" },
@@ -17,9 +17,8 @@ export const asyncDataSource = (pattern: FormPathPattern, service: () => Promise
     onFieldInit(pattern, field => {
         if (isField(field)) {
             field.loading = true;
-            service().then(action.bound!(data => {
-                // console.log(field.address.toString(), data);
-                field.dataSource = data;
+            service().then(action.bound!((data: SectionItem[]) => {
+                field.dataSource = data.map(item => ({ ...item, mail: `${item.name.toLowerCase()}@mail.com` }));
                 field.loading = false;
             }));
         }
@@ -60,6 +59,8 @@ export const throttle = <T extends Function, D extends any = any>(func: T, inter
     }
 };
 
-export type SectionItem = Record<"name"|"section", string>;
+export type SectionItem = Record<"name" | "section", string> & {
+    mail?: string;
+};
 
 type FakeCallBackType = (data: SectionItem[]) => void;

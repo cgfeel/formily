@@ -1,7 +1,8 @@
+import { ContainerOutlined, DatabaseOutlined } from "@ant-design/icons";
 import { isField } from "@formily/core";
 import { observer, useField } from "@formily/react";
 import { Button, Checkbox, CheckboxProps, Flex } from "antd";
-import { FC, PropsWithChildren } from "react";
+import { FC, PropsWithChildren, useCallback, useEffect, useMemo, useState } from "react";
 
 const InternalCheckedAll: FC<Omit<CheckboxProps, "checked" | "indeterminate" | "onChange">> = props => {
     const field = useField();
@@ -21,21 +22,36 @@ const InternalCheckedAll: FC<Omit<CheckboxProps, "checked" | "indeterminate" | "
     );
 };
 
-const ToolBar: FC<PropsWithChildren<ToolBarProps>> = ({ children, onExpand }) => {
+const ToolBar: FC<PropsWithChildren<ToolBarProps>> = ({ children, onExpand, expand = true }) => {
+    const field = useField();
+    const { total = 0 } = field.data || {};
+    const disabled = total === 0;
+
     return (
         <Flex justify="space-between">
             <div>{children}</div>
-            <Button></Button>
+            <Button disabled={disabled} size="small" type="link" onClick={() => onExpand && onExpand(expand)}>
+                {disabled || expand ? (
+                    <>
+                        <ContainerOutlined /> 展开
+                    </>
+                ) : (
+                    <>
+                        <DatabaseOutlined /> 收起
+                    </>
+                )}
+            </Button>
         </Flex>
     );
 };
 
 const CheckedAll = Object.assign(observer(InternalCheckedAll), {
-    ToolBar,
+    ToolBar: observer(ToolBar),
 });
 
 export default CheckedAll;
 
 interface ToolBarProps {
-    onExpand: (show: boolean) => void;
+    expand?: boolean;
+    onExpand?: (show: boolean) => void;
 }

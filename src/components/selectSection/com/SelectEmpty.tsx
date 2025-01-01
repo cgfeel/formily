@@ -1,4 +1,4 @@
-import { Empty } from "antd";
+import { Empty, EmptyProps } from "antd";
 import { createStyles, css } from "antd-style";
 import { FC } from "react";
 
@@ -8,11 +8,11 @@ const useStyle = createStyles(css`
     width: 100%;
 `);
 
-const SelectEmpty: FC = () => {
+const SelectEmpty: FC<EmptyProps> = ({ description = "暂无数据", ...props }) => {
     const { styles } = useStyle();
     return (
         <div className={styles}>
-            <Empty description="暂无数据" />
+            <Empty {...props} description={description} />
         </div>
     );
 };

@@ -11,7 +11,12 @@ const UserItem: FC<UserItemProps> = ({ basePath, data, schema }) => (
         {schema.reduceProperties(
             (addition, schema) =>
                 isUserCheckBox(schema) ? (
-                    <RecursionField name={data.name} basePath={basePath} schema={{ ...schema, "x-data": data }} />
+                    <RecursionField
+                        name={data.name}
+                        basePath={basePath}
+                        schema={{ ...schema, "x-data": data }}
+                        mapProperties={schema => ({ ...schema, "x-data": data })}
+                    />
                 ) : (
                     addition
                 ),
@@ -22,45 +27,20 @@ const UserItem: FC<UserItemProps> = ({ basePath, data, schema }) => (
 
 const UserGroup: FC = () => {
     const field = useField();
-    const [schema, { group, search, section, values }] = useSchemaData();
-    // const schema = useFieldSchema();
-
-    //  (isUserCheckBox(schema) ? <RecursionField name={key} basePath={field.address} schema={schema} mapProperties={schema => ({ ...schema, 'x-data': { name } })} /> : addition)
+    const [schema, { group, readPretty, section, values }] = useSchemaData();
 
     return (
         <Row gutter={[0, 16]}>
             {group.map((name, i) => (
                 <UserItem
                     basePath={field.address}
-                    data={{ group: [name], name, search, section, values: values.indexOf(name) < 0 ? [] : [name] }}
+                    data={{ group: [name], name, readPretty, section, values: values.indexOf(name) < 0 ? [] : [name] }}
                     key={`${name}-${i}`}
                     schema={schema}
                 />
             ))}
         </Row>
     );
-
-    /*const { group, section } = field.data as GroupType; // formily 不提供泛型，也没有推断，只能断言
-    return (
-        <Row>
-            {schema.reduceProperties((_, schema) =>
-                !isUserCheckBox(schema) ? (
-                    <Col>section is empty.</Col>
-                ) : (
-                    group.map(name => (
-                        <Col key={name} span={24}>
-                            <RecursionField
-                                name={name}
-                                basePath={field.address}
-                                key={name}
-                                schema={{ ...schema, "x-data": { section, name } }}
-                            />
-                        </Col>
-                    ))
-                ),
-            )}
-        </Row>
-    );*/
 };
 
 export default observer(UserGroup);
@@ -70,8 +50,3 @@ interface UserItemProps {
     data: UserData;
     schema: Schema;
 }
-
-type GroupType = {
-    group: string[];
-    section: string;
-};

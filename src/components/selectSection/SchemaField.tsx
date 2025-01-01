@@ -1,5 +1,5 @@
 import { Checkbox, FormGrid, FormItem } from "@formily/antd-v5";
-import { createSchemaField } from "@formily/react";
+import { createSchemaField, RecordScope, useExpressionScope } from "@formily/react";
 import { Card, Input } from "antd";
 import { FC, PropsWithChildren } from "react";
 import SelectCollapse from "./com/SelectCollapse";
@@ -7,6 +7,8 @@ import CheckedAll from "./com/CheckedAll";
 import UserCheckBox from "./com/UserCheckBox";
 import useCollapseStyle from "./styles/collapse";
 import ScrollWapper from "./com/ScrollWrapper";
+import { SectionItem } from "./hooks/useFakeService";
+import UserMapRecord from "./com/UserMapRecord";
 
 const { GridColumn } = FormGrid;
 const CardHeader: FC = ({ children }: PropsWithChildren) => (
@@ -30,6 +32,7 @@ const SchemaField = createSchemaField({
         ScrollWapper,
         SelectCollapse,
         UserCheckBox,
+        UserMapRecord,
     },
 });
 
