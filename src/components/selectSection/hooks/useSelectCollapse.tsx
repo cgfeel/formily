@@ -3,20 +3,22 @@ import { RecursionField, Schema, useExpressionScope, useField, useFieldSchema } 
 import { CollapseProps, Typography } from "antd";
 import { useMemo } from "react";
 import { SectionItem } from "./useFakeService";
+import { SizeType } from "antd/es/config-provider/SizeContext";
 
 const { Text } = Typography;
 
+const isRemove = (schema: Schema) => schema["x-component"] === "SelectCollapse.UserCheckBox.Remove";
 const isUserGroup = (schema: Schema) => schema["x-component"] === "SelectCollapse.UserGroup";
 
 export const isEmpty = (schema: Schema) => schema["x-component"] === "SelectCollapse.SelectEmpty";
 
 export const isSkeleton = (schema: Schema) => schema["x-component"] === "SelectCollapse.SelectSkeleton";
 
-export const useCollapseItems = (searchKey: string) => {
+export const useCollapseItems = (searchKey: string, panelsIsValue?: boolean) => {
     const { activeKey, dataSource, field, value: fieldValue } = useCollapseField();
     const schema = useSelectSchema();
 
-    const [panels] = useListValue(schema.enum || dataSource || []);
+    const [panels] = useListValue(panelsIsValue ? fieldValue : schema.enum || dataSource || []);
     const [values] = useListValue(fieldValue);
 
     const { items: schemaItems, ["x-pattern"]: pattern } = schema;
@@ -46,6 +48,8 @@ export const useCollapseItems = (searchKey: string) => {
     }, [schemaItems]);
 
     const empty = searchList.length === 0 || (group === undefined && section === undefined);
+    const remove = schema.reduceProperties((addition, schema) => (isRemove(schema) ? schema : addition), null);
+
     const collapseItems: CollapseProps["items"] = useMemo(() => {
         const sectionList = empty ? [] : searchList;
         return sectionList.map((key, i) => {
@@ -56,7 +60,22 @@ export const useCollapseItems = (searchKey: string) => {
                 values: values[key] === undefined ? [] : Array.from(values[key]),
             };
             return {
-                key,
+                children: (
+                    <RecursionField
+                        name={`group-${i}`}
+                        basePath={address}
+                        schema={{ ...group, "x-data": data }}
+                        onlyRenderSelf
+                    />
+                ),
+                extra: !remove ? null : (
+                    <RecursionField
+                        name={`remove-section-${i}`}
+                        basePath={address}
+                        schema={{ ...remove, "x-data": data }}
+                        onlyRenderSelf
+                    />
+                ),
                 label: (
                     <>
                         <RecursionField
@@ -68,19 +87,12 @@ export const useCollapseItems = (searchKey: string) => {
                         <Text type="secondary">({panels[key].size})</Text>
                     </>
                 ),
-                children: (
-                    <RecursionField
-                        name={`group-${i}`}
-                        basePath={address}
-                        schema={{ ...group, "x-data": data }}
-                        onlyRenderSelf
-                    />
-                ),
+                key,
             };
         });
-    }, [address, empty, group, panels, pattern, searchList, section, values]);
+    }, [address, empty, group, panels, pattern, remove, searchList, section, values]);
 
-    return { activeKey, collapseItems, empty, field, panels, schema, search } as const;
+    return { activeKey, collapseItems, empty, field, panels, remove, schema, search } as const;
 };
 
 export const useListValue = (list: readonly SectionItem[]) => {
@@ -134,10 +146,10 @@ export const useCollapseField = () => {
 export const useCollapseScope = () => {
     const {
         $lookup: { userMap = {} },
-        $record: { search = "" },
+        $record: { remove = null, search = "", size = "small" },
     } = (useExpressionScope() || {}) as CollapseScopeType;
 
-    return { search, userMap };
+    return { remove, search, size, userMap };
 };
 
 export const useSchemaData = () => {
@@ -172,7 +184,9 @@ type CollapseScopeType = {
         userMap?: Record<string, SectionItem>;
     };
     $record: {
+        remove?: Schema | null;
         search?: string;
+        size?: SizeType;
     };
 };
 

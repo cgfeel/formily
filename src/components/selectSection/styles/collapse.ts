@@ -7,11 +7,14 @@ const genCollapseStyle: GenerateStyle = token => {
             [`&${componentCls}-borderless > ${componentCls}-item > ${componentCls}-content`]: {
                 backgroundColor: colorBgBase,
                 [`& > ${componentCls}-content-box`]: {
-                    paddingTop: 16
+                    paddingTop: 12
                 }
             },
             '&-group': {
                 display: 'inline'
+            },
+            [`& .readPretty`]: {
+                marginRight: 8
             },
             [`& .searchChecked`]: {
                 backgroundColor: "#ff0"

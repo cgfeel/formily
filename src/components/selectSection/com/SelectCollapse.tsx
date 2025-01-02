@@ -39,7 +39,7 @@ import PanelDecorator from "./PanelDecorator";
 import SelectSkeleton from "./SelectSkeleton";
 import UserGroup from "./UserGroup";
 import SelectEmpty from "./SelectEmpty";
-import { onExpandCollapse, onSelectUserEvent } from "../event";
+import { createExpandCoolapse } from "../event";
 
 const { CollapsePanel, createFormCollapse } = FormCollapse;
 
@@ -62,6 +62,7 @@ const RenderProperty: FC<RenderPropertyProps> = ({ address, name, schema, match 
 const CollapseControl = forwardRef<CollapseControlInstance, CollapseControlProps>(
     ({ activeKey, search, onChange, ...props }, ref) => {
         const [active, setActive] = useState<string[]>([]);
+        const { items } = props;
 
         useEffect(() => {
             if (search === "") {
@@ -71,14 +72,15 @@ const CollapseControl = forwardRef<CollapseControlInstance, CollapseControlProps
         }, [activeKey, search]);
 
         useEffect(() => {
+            console.log(search);
             if (search !== "") {
-                const index = (props.items || [])
+                const index = (items || [])
                     .map(item => String(item.key || ""))
                     .filter(section => section !== "" && section.toLowerCase().indexOf(search) === -1);
 
                 setActive(index);
             }
-        }, [props.items, search]);
+        }, [items, search]);
 
         useImperativeHandle(ref, () => ({
             expand: keys => {
@@ -104,22 +106,27 @@ const CollapseControl = forwardRef<CollapseControlInstance, CollapseControlProps
 // ArrayField Comonent
 const InternalFormCollapse: FC<FormCollapseProps> = ({
     className,
+    panelsIsValue,
     bordered = false,
     expandIconPosition = "end",
     search: searchKey = "",
     ...props
 }) => {
-    const { activeKey, collapseItems, empty, field, panels, schema, search } = useCollapseItems(searchKey);
     const collapseRef = useRef<CollapseControlInstance>(null);
+    const { activeKey, collapseItems, empty, field, panels, remove, schema, search } = useCollapseItems(
+        searchKey,
+        panelsIsValue,
+    );
 
     const prefixCls = usePrefixCls("collapse");
     const [wrapSSR, hashId] = useCollapseStyle(prefixCls);
 
     useFormEffects(() => {
-        onExpandCollapse(({ expand, path }) => {
-            if (field.path.entire === path) {
-                collapseRef.current?.expand(expand ? Object.keys(panels) : []);
-            }
+        const { entire } = field.path;
+        const { onExpandCollapse, onSelectUserEvent } = createExpandCoolapse(String(entire));
+
+        onExpandCollapse(({ expand }) => {
+            collapseRef.current?.expand(expand ? Object.keys(panels) : []);
         });
         onSelectUserEvent(({ group, section, checked = false }) => {
             if (isArrayField(field)) {
@@ -136,7 +143,7 @@ const InternalFormCollapse: FC<FormCollapseProps> = ({
         <RenderProperty name="empty" address={field.address} schema={schema} match={isEmpty} />
     ) : (
         wrapSSR(
-            <RecordScope getRecord={() => ({ search })} getIndex={() => 2}>
+            <RecordScope getRecord={() => ({ remove, search, size: props.size })} getIndex={() => 2}>
                 <CollapseControl
                     {...props}
                     activeKey={activeKey}
@@ -197,6 +204,7 @@ interface CollapseControlProps extends Omit<CollapseProps, "activeKey" | "onChan
 
 interface FormCollapseProps extends Omit<CollapseProps, "activeKey" | "items" | "onChange" | "search"> {
     data?: string[];
+    panelsIsValue?: boolean;
     search?: string;
 }
 

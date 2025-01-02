@@ -32,7 +32,6 @@ const SelectSectionExample: FC = () => {
                     onExpandHandle((expand, form) => {
                         form.query("tool-all").take(field => (field.decoratorProps.expand = expand));
                     });
-
                     onFieldValueChange("tool-all", field => {
                         const collapse = field.query(".collapse").take();
                         if (isArrayField(collapse)) {
@@ -120,10 +119,7 @@ const SelectSectionExample: FC = () => {
                                         },
                                     }}>
                                     <SchemaField.Object>
-                                        <SchemaField.Void
-                                            x-component="SelectCollapse.UserCheckBox"
-                                            x-decorator="SelectCollapse.PanelDecorator"
-                                        />
+                                        <SchemaField.Void x-component="SelectCollapse.UserCheckBox" />
                                         <SchemaField.Void x-component="SelectCollapse.UserGroup">
                                             <SchemaField.Void x-component="SelectCollapse.UserCheckBox">
                                                 <SchemaField.Void x-component="SelectCollapse.UserCheckBox.Face" />
@@ -153,6 +149,7 @@ const SelectSectionExample: FC = () => {
                                     x-component="SelectCollapse"
                                     x-component-props={{
                                         expandIconPosition: "start",
+                                        panelsIsValue: true,
                                         size: "small",
                                     }}
                                     x-reactions={{
@@ -160,7 +157,7 @@ const SelectSectionExample: FC = () => {
                                         fulfill: {
                                             state: {
                                                 componentProps: { search: "{{ $deps[0] }}" },
-                                                dataSource: "{{ $deps[1]||[] }}",
+                                                value: "{{ $deps[1] }}",
                                             },
                                         },
                                     }}
@@ -176,7 +173,12 @@ const SelectSectionExample: FC = () => {
                                             </SchemaField.Void>
                                         </SchemaField.Void>
                                     </SchemaField.Object>
-                                    <SchemaField.Void x-component="SelectCollapse.SelectSkeleton" />
+                                    <SchemaField.Void
+                                        x-component="SelectCollapse.UserCheckBox.Remove"
+                                        x-component-props={{
+                                            type: "select-user-collapse",
+                                        }}
+                                    />
                                     <SchemaField.Void
                                         x-component="SelectCollapse.SelectEmpty"
                                         x-component-props={{ description: "请左侧选择员工" }}
