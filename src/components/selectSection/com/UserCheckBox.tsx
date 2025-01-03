@@ -21,8 +21,8 @@ const Face: FC = () => {
     const field = useField();
     const [, data] = useSchemaData();
 
-    const { remove, search, userMap } = useCollapseScope();
-    const { name, readPretty } = data;
+    const { readPretty, remove, search, userMap } = useCollapseScope();
+    const { name } = data;
 
     return (
         <Space>
@@ -57,8 +57,8 @@ const Face: FC = () => {
 const InternalUserCheckBox: FC<PropsWithChildren> = ({ children }) => {
     const field = useField();
 
-    const [, { empty, group, name, readPretty, section, values }] = useSchemaData();
-    const { search } = useCollapseScope();
+    const [, { empty, group, name, section, values }] = useSchemaData();
+    const { readPretty, search } = useCollapseScope();
 
     return readPretty ? (
         <UserReadPretty name={name} readPretty={true} search={search} section={section}>
@@ -76,6 +76,7 @@ const InternalUserCheckBox: FC<PropsWithChildren> = ({ children }) => {
                     section,
                 });
             }}
+            onClick={event => event.stopPropagation()}
             disabled={empty}>
             <UserReadPretty name={name} search={search} section={section}>
                 {children}

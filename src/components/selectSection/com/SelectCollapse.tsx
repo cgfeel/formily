@@ -21,7 +21,7 @@ import {
     useFormEffects,
 } from "@formily/react";
 import { Collapse, CollapseProps } from "antd";
-import { FC, forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { FC, forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import useCollapseStyle from "../styles/collapse";
 import {
     CollapseItem,
@@ -61,8 +61,16 @@ const RenderProperty: FC<RenderPropertyProps> = ({ address, name, schema, match 
 // 主要用于计算 activeKey
 const CollapseControl = forwardRef<CollapseControlInstance, CollapseControlProps>(
     ({ activeKey, search, onChange, ...props }, ref) => {
+        const { items, readPretty } = props;
+
         const [active, setActive] = useState<string[]>([]);
-        const { items } = props;
+        const [readKeys, setReadKeys] = useState<string[]>([]);
+        const [searchKeys, setSearchKeys] = useState<string[]>([]);
+
+        const expandKey = useMemo(
+            () => (search !== "" ? searchKeys : readPretty ? readKeys : active),
+            [active, readKeys, readPretty, search, searchKeys],
+        );
 
         useEffect(() => {
             if (search === "") {
@@ -72,7 +80,6 @@ const CollapseControl = forwardRef<CollapseControlInstance, CollapseControlProps
         }, [activeKey, search]);
 
         useEffect(() => {
-            console.log(search);
             if (search !== "") {
                 const index = (items || [])
                     .map(item => String(item.key || ""))
@@ -113,7 +120,7 @@ const InternalFormCollapse: FC<FormCollapseProps> = ({
     ...props
 }) => {
     const collapseRef = useRef<CollapseControlInstance>(null);
-    const { activeKey, collapseItems, empty, field, panels, remove, schema, search } = useCollapseItems(
+    const { activeKey, collapseItems, empty, field, panels, readPretty, remove, schema, search } = useCollapseItems(
         searchKey,
         panelsIsValue,
     );
@@ -143,7 +150,7 @@ const InternalFormCollapse: FC<FormCollapseProps> = ({
         <RenderProperty name="empty" address={field.address} schema={schema} match={isEmpty} />
     ) : (
         wrapSSR(
-            <RecordScope getRecord={() => ({ remove, search, size: props.size })} getIndex={() => 2}>
+            <RecordScope getRecord={() => ({ readPretty, remove, search, size: props.size })} getIndex={() => 2}>
                 <CollapseControl
                     {...props}
                     activeKey={activeKey}
@@ -151,6 +158,7 @@ const InternalFormCollapse: FC<FormCollapseProps> = ({
                     className={classNames([hashId, className])}
                     expandIconPosition={expandIconPosition}
                     items={collapseItems}
+                    readPretty={readPretty}
                     ref={collapseRef}
                     search={search}
                     onChange={activeKey => {
@@ -198,6 +206,7 @@ interface CollapseControlInstance {
 
 interface CollapseControlProps extends Omit<CollapseProps, "activeKey" | "onChange"> {
     activeKey: string[];
+    readPretty: boolean;
     search: string;
     onChange: (value: string[]) => void;
 }

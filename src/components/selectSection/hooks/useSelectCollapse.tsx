@@ -1,7 +1,7 @@
-import { isArrayField } from "@formily/core";
+import { GeneralField, isArrayField } from "@formily/core";
 import { RecursionField, Schema, useExpressionScope, useField, useFieldSchema } from "@formily/react";
 import { CollapseProps, Typography } from "antd";
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { SectionItem } from "./useFakeService";
 import { SizeType } from "antd/es/config-provider/SizeContext";
 
@@ -11,8 +11,41 @@ const isRemove = (schema: Schema) => schema["x-component"] === "SelectCollapse.U
 const isUserGroup = (schema: Schema) => schema["x-component"] === "SelectCollapse.UserGroup";
 
 export const isEmpty = (schema: Schema) => schema["x-component"] === "SelectCollapse.SelectEmpty";
-
 export const isSkeleton = (schema: Schema) => schema["x-component"] === "SelectCollapse.SelectSkeleton";
+
+export const useActiveKey = (field: GeneralField, readPretty: boolean, search: string, panels: CollapseItem) => {
+    const [defaultKey, setDefaultKey] = useState<string[] | null>(null);
+    const [searchKey, setSearchKey] = useState<string[]>([]);
+
+    const value = isArrayField(field) ? field.value : [];
+    const data = field.data;
+
+    const activeKey = useMemo(() => (search === "" ? defaultKey || [] : searchKey), [defaultKey, search, searchKey]);
+    const setActiveKey = useCallback(() => {}, [search]);
+
+    useEffect(() => {
+        if (search === "") {
+            const items = readPretty ? value : data;
+            if (defaultKey === null) {
+                const index = (Array.isArray(items) ? items : [items || ""]).map(key => String(key));
+                setDefaultKey(index.filter(item => !!item));
+            } else if (defaultKey !== null && readPretty) {
+                //
+            }
+        }
+    }, [data, defaultKey, readPretty, search, value]);
+
+    useEffect(() => {
+        if (search !== "") {
+            const index = Object.keys(panels).filter(key => panels[key].has(search));
+            setSearchKey(index);
+        } else {
+            setSearchKey(list => (list.length === 0 ? list : []));
+        }
+    }, [panels, search]);
+
+    return [activeKey];
+};
 
 export const useCollapseItems = (searchKey: string, panelsIsValue?: boolean) => {
     const { activeKey, dataSource, field, value: fieldValue } = useCollapseField();
@@ -22,6 +55,7 @@ export const useCollapseItems = (searchKey: string, panelsIsValue?: boolean) => 
     const [values] = useListValue(fieldValue);
 
     const { items: schemaItems, ["x-pattern"]: pattern } = schema;
+    const readPretty = pattern === "readPretty";
     const { address } = field;
 
     const search = searchKey.toLocaleLowerCase();
@@ -50,12 +84,11 @@ export const useCollapseItems = (searchKey: string, panelsIsValue?: boolean) => 
     const empty = searchList.length === 0 || (group === undefined && section === undefined);
     const remove = schema.reduceProperties((addition, schema) => (isRemove(schema) ? schema : addition), null);
 
-    const collapseItems: CollapseProps["items"] = useMemo(() => {
+    const collapseItems: ItemType[] = useMemo(() => {
         const sectionList = empty ? [] : searchList;
         return sectionList.map((key, i) => {
             const data = {
                 group: Array.from(panels[key]),
-                readPretty: pattern === "readPretty",
                 section: key,
                 values: values[key] === undefined ? [] : Array.from(values[key]),
             };
@@ -90,9 +123,9 @@ export const useCollapseItems = (searchKey: string, panelsIsValue?: boolean) => 
                 key,
             };
         });
-    }, [address, empty, group, panels, pattern, remove, searchList, section, values]);
+    }, [address, empty, group, panels, remove, searchList, section, values]);
 
-    return { activeKey, collapseItems, empty, field, panels, remove, schema, search } as const;
+    return { activeKey, collapseItems, empty, field, panels, readPretty, remove, schema, search } as const;
 };
 
 export const useListValue = (list: readonly SectionItem[]) => {
@@ -146,10 +179,10 @@ export const useCollapseField = () => {
 export const useCollapseScope = () => {
     const {
         $lookup: { userMap = {} },
-        $record: { remove = null, search = "", size = "small" },
+        $record: { readPretty = false, remove = null, search = "", size = "small" },
     } = (useExpressionScope() || {}) as CollapseScopeType;
 
-    return { remove, search, size, userMap };
+    return { readPretty, remove, search, size, userMap } as const;
 };
 
 export const useSchemaData = () => {
@@ -184,11 +217,14 @@ type CollapseScopeType = {
         userMap?: Record<string, SectionItem>;
     };
     $record: {
+        readPretty: boolean;
         remove?: Schema | null;
         search?: string;
         size?: SizeType;
     };
 };
+
+type ItemType = Exclude<CollapseProps["items"], undefined>[number];
 
 type SelectSchema<T> = Omit<Schema<any, any, any, any, any, any, any, any, any>, "enum"> & {
     enum?: T[];

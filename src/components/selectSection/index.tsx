@@ -119,7 +119,10 @@ const SelectSectionExample: FC = () => {
                                         },
                                     }}>
                                     <SchemaField.Object>
-                                        <SchemaField.Void x-component="SelectCollapse.UserCheckBox" />
+                                        <SchemaField.Void
+                                            x-component="SelectCollapse.UserCheckBox"
+                                            x-decorator="SelectCollapse.PanelDecorator"
+                                        />
                                         <SchemaField.Void x-component="SelectCollapse.UserGroup">
                                             <SchemaField.Void x-component="SelectCollapse.UserCheckBox">
                                                 <SchemaField.Void x-component="SelectCollapse.UserCheckBox.Face" />
@@ -163,10 +166,7 @@ const SelectSectionExample: FC = () => {
                                     }}
                                     x-pattern="readPretty">
                                     <SchemaField.Object>
-                                        <SchemaField.Void
-                                            x-component="SelectCollapse.UserCheckBox"
-                                            x-decorator="SelectCollapse.PanelDecorator"
-                                        />
+                                        <SchemaField.Void x-component="SelectCollapse.UserCheckBox" />
                                         <SchemaField.Void x-component="SelectCollapse.UserGroup">
                                             <SchemaField.Void x-component="SelectCollapse.UserCheckBox">
                                                 <SchemaField.Void x-component="SelectCollapse.UserCheckBox.Face" />

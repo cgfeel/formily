@@ -1,7 +1,7 @@
 import { ISchema, observer, RecordScope, RecursionField, Schema, useField, useFieldSchema } from "@formily/react";
 import { Col, Row } from "antd";
 import { FC } from "react";
-import { UserData, useSchemaData, useUserField } from "../hooks/useSelectCollapse";
+import { useCollapseScope, UserData, useSchemaData, useUserField } from "../hooks/useSelectCollapse";
 import { Field } from "@formily/core";
 
 const isUserCheckBox = (schema: ISchema) => schema["x-component"] === "SelectCollapse.UserCheckBox";
@@ -27,7 +27,9 @@ const UserItem: FC<UserItemProps> = ({ basePath, data, schema }) => (
 
 const UserGroup: FC = () => {
     const field = useField();
-    const [schema, { group, readPretty, section, values }] = useSchemaData();
+
+    const [schema, { group, section, values }] = useSchemaData();
+    const { readPretty } = useCollapseScope();
 
     return (
         <Row gutter={[0, 16]}>
