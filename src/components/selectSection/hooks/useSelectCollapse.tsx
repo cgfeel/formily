@@ -124,13 +124,12 @@ export const useActiveKey = (search: string, panels: CollapseItem, initData: Act
                           ? current
                           : {
                                 ...current,
-                                [section]: total !== 1,
+                                [section]: total > 1,
                             };
                   }, {}),
         );
     }, [search]);
 
-    // 优先
     return { activeKey, list, chooseKey, initKey, updateKey } as const;
 };
 
@@ -160,6 +159,8 @@ export const useCollapseItems = () => {
         [schema],
     );
 
+    // !readPretty && console.log(values);
+
     const collapseItems: ItemType[] = useMemo(() => {
         const { empty, group, section } = getSectionSchema(schema);
         const sectionList = empty ? [] : Object.keys(searchList);
@@ -167,7 +168,7 @@ export const useCollapseItems = () => {
             const data = {
                 group: Array.from(searchList[key]),
                 section: key,
-                values: values[key] === undefined ? [] : Array.from(values[key]),
+                // values: values[key] === undefined ? [] : Array.from(values[key]),
             };
             return {
                 children: (
@@ -200,18 +201,18 @@ export const useCollapseItems = () => {
                 key,
             };
         });
-    }, [address, remove, searchList, values]);
+    }, [address, remove, searchList]);
 
-    return { collapseItems, field, readPretty, remove, schema, searchList } as const;
+    return { collapseItems, field, readPretty, remove, schema, searchList, values } as const;
 };
 
 export const useCollapseScope = () => {
     const {
         $lookup: { userMap = {} },
-        $record: { readPretty = false, remove = null, search = "", size = "small" },
+        $record: { readPretty = false, remove = null, search = "", size = "small", values = {} },
     } = (useExpressionScope() || {}) as CollapseScopeType;
 
-    return { readPretty, remove, search, size, userMap } as const;
+    return { values, readPretty, remove, search, size, userMap } as const;
 };
 
 export const useListValue = (list: readonly SectionItem[]) => {
@@ -237,8 +238,8 @@ export const useSchemaData = () => {
     const schema = useFieldSchema();
     const data = (schema["x-data"] || {}) as UserData;
 
-    const { empty = false, group = [], name = "", readPretty = false, section = "", values = [] } = data;
-    return [schema, { empty, group, name, readPretty, section, values }] as const;
+    const { empty = false, group = [], name = "", readPretty = false, section = "" } = data;
+    return [schema, { empty, group, name, readPretty, section }] as const;
 };
 
 export const useSectionGroup = <T extends unknown = SectionItem>({ items: schemaItems }: SelectSchema<T>) => {
@@ -259,14 +260,6 @@ export const useSelectSchema = <T extends unknown = SectionItem>() => {
     return useFieldSchema() as SelectSchema<T>;
 };
 
-export const useUserField = () => {
-    const field = useField();
-    const data = (field.data || {}) as UserData;
-
-    const { empty = false, group = [], name = "", section = "", values = [] } = data;
-    return [field, { empty, group, name, section, values }] as const;
-};
-
 export type ActiveKeyItem = Partial<Record<string, boolean>>;
 
 export type CollapseItem = Record<string, Set<string>>;
@@ -276,7 +269,6 @@ export type UserData = Partial<
         empty: boolean;
         group: string[];
         readPretty: boolean;
-        values: string[];
     }
 >;
 
@@ -289,6 +281,7 @@ type CollapseScopeType = {
         remove?: Schema | null;
         search?: string;
         size?: SizeType;
+        values: CollapseItem;
     };
 };
 

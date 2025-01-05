@@ -11,7 +11,7 @@ import {
 } from "@formily/react";
 import { Avatar, Button, Checkbox, Col, Flex, Row, Space, Typography } from "antd";
 import { FC, PropsWithChildren } from "react";
-import { useCollapseScope, useSchemaData, useUserField } from "../hooks/useSelectCollapse";
+import { useCollapseScope, useSchemaData } from "../hooks/useSelectCollapse";
 import classNames from "classnames";
 import { CloseOutlined } from "@ant-design/icons";
 
@@ -56,9 +56,10 @@ const Face: FC = () => {
 
 const InternalUserCheckBox: FC<PropsWithChildren> = ({ children }) => {
     const field = useField();
+    const [, { group, empty, name, section }] = useSchemaData();
 
-    const [, { empty, group, name, section, values }] = useSchemaData();
-    const { readPretty, search } = useCollapseScope();
+    const { readPretty, search, values } = useCollapseScope();
+    const record = Array.from(values[section] || new Set()).filter(rkey => name === "" || name === rkey);
 
     return readPretty ? (
         <UserReadPretty name={name} readPretty={true} search={search} section={section}>
@@ -66,8 +67,8 @@ const InternalUserCheckBox: FC<PropsWithChildren> = ({ children }) => {
         </UserReadPretty>
     ) : (
         <Checkbox
-            checked={group.length === values.length}
-            indeterminate={values.length > 0 && group.length > values.length}
+            checked={group.length === record.length}
+            indeterminate={record.length > 0 && group.length > record.length}
             onChange={({ target }) => {
                 const entire = String(field.path.entire).split(".").shift();
                 field.form.notify(`select-user-${entire}`, {

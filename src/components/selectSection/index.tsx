@@ -29,8 +29,10 @@ const SelectSectionExample: FC = () => {
                     asyncDataSource("collapse", async () => {
                         return new Promise<SectionItem[]>(resolve => request(resolve));
                     });
-                    onExpandHandle((expand, form) => {
-                        form.query("tool-all").take(field => (field.decoratorProps.expand = expand));
+                    onExpandHandle(({ expand, path }, form) => {
+                        if (path === "collapse") {
+                            form.query("tool-all").take(field => (field.decoratorProps.expand = expand));
+                        }
                     });
                     onFieldValueChange("tool-all", field => {
                         const collapse = field.query(".collapse").take();
@@ -89,7 +91,7 @@ const SelectSectionExample: FC = () => {
                                 x-content="全选"
                                 x-decorator="CheckedAll.ToolBar"
                                 x-decorator-props={{
-                                    onExpand: expand => form.notify("expand-collapse", { expand, path: "collapse" }),
+                                    onExpand: expand => form.notify("expand-collapse", expand),
                                 }}
                                 x-reactions={{
                                     dependencies: [".collapse", ".collapse#dataSource"],

@@ -105,11 +105,14 @@ const CollapseControl = forwardRef<CollapseControlInstance, PropsWithChildren<Co
         );
 
         useEffect(() => {
-            if (readPretty) chooseKey(Object.keys(searchList));
-        }, [readPretty, searchList, chooseKey]);
+            if (readPretty && search === "") chooseKey(Object.keys(searchList));
+        }, [readPretty, search, searchList, chooseKey]);
 
         useEffect(() => {
-            field.form.notify("expand-handle", activeKey.length !== (listMap?.length || 0));
+            field.form.notify("expand-handle", {
+                expand: activeKey.length !== (listMap?.length || 0),
+                path: field.path.entire,
+            });
         }, [activeKey, listMap]);
 
         useImperativeHandle(
@@ -145,7 +148,7 @@ const InternalFormCollapse: FC<FormCollapseProps> = ({
     ...props
 }) => {
     const collapseRef = useRef<CollapseControlInstance>(null);
-    const { collapseItems, field, readPretty, remove, schema, searchList } = useCollapseItems();
+    const { collapseItems, field, readPretty, remove, schema, searchList, values } = useCollapseItems();
 
     const search = searchKey.toLowerCase();
     const { address, data } = field;
@@ -173,7 +176,7 @@ const InternalFormCollapse: FC<FormCollapseProps> = ({
         const { entire } = field.path;
         const { onExpandCollapse, onSelectUserEvent } = createExpandCoolapse(String(entire));
 
-        onExpandCollapse(({ expand }) => {
+        onExpandCollapse(expand => {
             collapseRef.current?.expand(expand);
         });
         onSelectUserEvent(({ group, section, checked = false }) => {
@@ -190,7 +193,9 @@ const InternalFormCollapse: FC<FormCollapseProps> = ({
     return collapseItems.length === 0
         ? empty
         : wrapSSR(
-              <RecordScope getRecord={() => ({ readPretty, remove, search, size: props.size })} getIndex={() => 2}>
+              <RecordScope
+                  getRecord={() => ({ readPretty, remove, search, values, size: props.size })}
+                  getIndex={() => 2}>
                   <CollapseControl
                       {...props}
                       bordered={bordered}

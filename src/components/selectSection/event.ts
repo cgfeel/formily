@@ -1,7 +1,7 @@
 import { createEffectHook, Form } from "@formily/core";
 
 export const createExpandCoolapse = (type: string) => {
-    const onExpandCollapse = createEffectHook<(payload: ExpandPayloadType, form: Form) => ListenerType<ExpandPayloadType>>(
+    const onExpandCollapse = createEffectHook<(payload: boolean, form: Form) => ListenerType<boolean>>(
         `expand-${type}`,
         (payload, form) => listener => listener(payload, form),
     );
@@ -14,7 +14,7 @@ export const createExpandCoolapse = (type: string) => {
     return { onExpandCollapse, onSelectUserEvent };
 };
 
-export const onExpandHandle = createEffectHook<(payload: boolean, form: Form) => ListenerType<boolean>>(
+export const onExpandHandle = createEffectHook<(payload: ExpandPayloadType, form: Form) => ListenerType<ExpandPayloadType>>(
     "expand-handle",
     (payload, form) => listener => listener(payload, form),
 );
