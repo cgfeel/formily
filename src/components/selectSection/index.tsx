@@ -103,7 +103,21 @@ const SelectSectionExample: FC = () => {
                                     },
                                 }}
                             />
-                            <SchemaField.Void x-component="ScrollWapper">
+                            <SchemaField.Void
+                                title="最近的选择"
+                                x-component="RecentRhoices"
+                                x-component-props={{ type: "select-user-collapse" }}
+                                x-decorator="TipTitle"
+                                x-reactions={{
+                                    dependencies: [".collapse"],
+                                    fulfill: {
+                                        state: {
+                                            data: "{{ $deps[0]||[] }}",
+                                        },
+                                    },
+                                }}
+                            />
+                            <SchemaField.Void title="部门和同事" x-component="ScrollWapper" x-decorator="TipTitle">
                                 <SchemaField.Array
                                     name="collapse"
                                     x-component="SelectCollapse"
@@ -144,7 +158,19 @@ const SelectSectionExample: FC = () => {
                             <SchemaField.String
                                 name="search-select"
                                 x-component="Input"
-                                x-component-props={{ suffix: <SearchOutlined /> }}
+                                x-component-props={{
+                                    allowClear: true,
+                                    placeholder: "输入部门或员工名称进行筛选",
+                                    suffix: <SearchOutlined />,
+                                }}
+                                x-reactions={{
+                                    dependencies: [".collapse"],
+                                    fulfill: {
+                                        state: {
+                                            disabled: "{{ ($deps[0] || []).length === 0 }}",
+                                        },
+                                    },
+                                }}
                             />
                             <SchemaField.Void x-component="ScrollWapper">
                                 <SchemaField.Array

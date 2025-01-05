@@ -59,7 +59,6 @@ export const useActiveKey = (search: string, panels: CollapseItem, initData: Act
     const chooseKey = useCallback(
         (value: string[]) => {
             const newData = reduceKeys(value);
-            console.log("choose", value, newData);
             setKeys(items =>
                 items === null
                     ? newData

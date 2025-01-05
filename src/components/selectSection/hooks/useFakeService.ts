@@ -3,14 +3,17 @@ import { FormPathPattern, isField, onFieldInit, onFieldReact } from "@formily/co
 import { useCallback } from "react";
 
 const data: SectionItem[] = [
-    { name: "Levi", section: "技术" },
+    { name: "Levi", section: "技术-前端" },
     { name: "Adam", section: "产品" },
     { name: "Austin", section: "UI" },
-    { name: "David", section: "技术" },
+    { name: "David", section: "技术-前端" },
     { name: "John", section: "HR" },
     { name: "Michael", section: "财务" },
     { name: "Nicholas", section: "UI" },
     { name: "Peter", section: "产品" },
+    { name: "Smith", section: "能效" },
+    { name: "Jones", section: "UX" },
+    { name: "Williams", section: "财务" },
 ]
 
 export const asyncDataSource = (pattern: FormPathPattern, service: () => Promise<SectionItem[]>) => {
