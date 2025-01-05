@@ -27,20 +27,30 @@ const UserItem: FC<UserItemProps> = ({ basePath, data, schema }) => (
 
 const UserGroup: FC = () => {
     const field = useField();
+    const { readPretty, search } = useCollapseScope();
 
     const [schema, { group, section, values }] = useSchemaData();
-    const { readPretty } = useCollapseScope();
+    // const sectionName = section.toLowerCase();
 
     return (
         <Row gutter={[0, 16]}>
-            {group.map((name, i) => (
-                <UserItem
-                    basePath={field.address}
-                    data={{ group: [name], name, readPretty, section, values: values.indexOf(name) < 0 ? [] : [name] }}
-                    key={`${name}-${i}`}
-                    schema={schema}
-                />
-            ))}
+            {group.map(
+                (name, i) =>
+                    (search === "" || name.toLowerCase().indexOf(search) > -1) && (
+                        <UserItem
+                            basePath={field.address}
+                            data={{
+                                group: [name],
+                                name,
+                                readPretty,
+                                section,
+                                values: values.indexOf(name) < 0 ? [] : [name],
+                            }}
+                            key={`${name}-${i}`}
+                            schema={schema}
+                        />
+                    ),
+            )}
         </Row>
     );
 };

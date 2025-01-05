@@ -13,8 +13,11 @@ const genCollapseStyle: GenerateStyle = token => {
             '&-group': {
                 display: 'inline'
             },
-            [`& .readPretty`]: {
-                marginRight: 8
+            [`${componentCls}-header-text`]: {
+                [`& > .readPretty`]: {
+                    display: 'inline',
+                    marginRight: 8,
+                },
             },
             [`& .searchChecked`]: {
                 backgroundColor: "#ff0"

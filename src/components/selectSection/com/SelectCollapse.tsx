@@ -4,6 +4,7 @@ import {
     createEffectHook,
     Form,
     FormPath,
+    GeneralField,
     isArrayField,
     onFieldChange,
     onFieldReact,
@@ -21,12 +22,24 @@ import {
     useFormEffects,
 } from "@formily/react";
 import { Collapse, CollapseProps } from "antd";
-import { FC, forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
+import {
+    FC,
+    forwardRef,
+    PropsWithChildren,
+    useCallback,
+    useEffect,
+    useImperativeHandle,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import useCollapseStyle from "../styles/collapse";
 import {
+    ActiveKeyItem,
     CollapseItem,
     isEmpty,
     isSkeleton,
+    useActiveKey,
     useCollapseField,
     useCollapseItems,
     useListValue,
@@ -59,52 +72,65 @@ const RenderProperty: FC<RenderPropertyProps> = ({ address, name, schema, match 
 );
 
 // 主要用于计算 activeKey
-const CollapseControl = forwardRef<CollapseControlInstance, CollapseControlProps>(
-    ({ activeKey, search, onChange, ...props }, ref) => {
-        const { items, readPretty } = props;
+const CollapseControl = forwardRef<CollapseControlInstance, PropsWithChildren<CollapseControlProps>>(
+    ({ children, field, initData, items, readPretty, search, searchList, ...props }, ref) => {
+        const { activeKey, list, chooseKey, updateKey } = useActiveKey(search, searchList, initData);
+        const searchMap = useMemo(
+            () =>
+                Object.keys(searchList).reduce<Partial<Record<string, string[]>>>((current, lkey) => {
+                    const item = current[lkey] || [];
+                    return {
+                        ...current,
+                        [lkey.toLowerCase()]: item.concat(lkey),
+                    };
+                }, {}),
+            [searchList],
+        );
 
-        const [active, setActive] = useState<string[]>([]);
-        const [readKeys, setReadKeys] = useState<string[]>([]);
-        const [searchKeys, setSearchKeys] = useState<string[]>([]);
+        const listMap = useMemo(
+            () =>
+                items?.filter(({ key }) => {
+                    if (key === undefined) return false;
+                    if (search === "") return list[String(key)] !== undefined;
 
-        const expandKey = useMemo(
-            () => (search !== "" ? searchKeys : readPretty ? readKeys : active),
-            [active, readKeys, readPretty, search, searchKeys],
+                    const kname = String(key).toLowerCase();
+                    const index = Object.keys(searchMap).reduce<string[]>(
+                        (current, mkey) => current.concat(mkey.indexOf(kname) === -1 ? [] : searchMap[mkey] || []),
+                        [],
+                    );
+                    const filterData = index.filter(sname => list[sname] !== undefined);
+                    return filterData.length > 0;
+                }),
+            [items, list, search, searchMap],
         );
 
         useEffect(() => {
-            if (search === "") {
-                const index = (Array.isArray(activeKey) ? activeKey : [activeKey || ""]).map(key => String(key));
-                setActive(index.concat());
-            }
-        }, [activeKey, search]);
+            if (readPretty) chooseKey(Object.keys(searchList));
+        }, [readPretty, searchList, chooseKey]);
 
         useEffect(() => {
-            if (search !== "") {
-                const index = (items || [])
-                    .map(item => String(item.key || ""))
-                    .filter(section => section !== "" && section.toLowerCase().indexOf(search) === -1);
+            field.form.notify("expand-handle", activeKey.length !== (listMap?.length || 0));
+        }, [activeKey, listMap]);
 
-                setActive(index);
-            }
-        }, [items, search]);
+        useImperativeHandle(
+            ref,
+            () => ({
+                expand: show => {
+                    const keys = show ? listMap?.map(({ key }) => String(key)) || [] : [];
+                    updateKey(keys);
+                },
+            }),
+            [listMap],
+        );
 
-        useImperativeHandle(ref, () => ({
-            expand: keys => {
-                setActive(keys);
-                onChange(keys);
-            },
-        }));
-
-        return (
+        return (listMap || []).length === 0 ? (
+            <>{children}</>
+        ) : (
             <Collapse
                 {...props}
-                activeKey={active}
-                onChange={value => {
-                    const keys = Array.isArray(value) ? value : [value];
-                    setActive(keys);
-                    onChange(keys);
-                }}
+                activeKey={activeKey}
+                items={listMap}
+                onChange={value => updateKey(Array.isArray(value) ? value : [value])}
             />
         );
     },
@@ -113,27 +139,42 @@ const CollapseControl = forwardRef<CollapseControlInstance, CollapseControlProps
 // ArrayField Comonent
 const InternalFormCollapse: FC<FormCollapseProps> = ({
     className,
-    panelsIsValue,
     bordered = false,
     expandIconPosition = "end",
     search: searchKey = "",
     ...props
 }) => {
     const collapseRef = useRef<CollapseControlInstance>(null);
-    const { activeKey, collapseItems, empty, field, panels, readPretty, remove, schema, search } = useCollapseItems(
-        searchKey,
-        panelsIsValue,
-    );
+    const { collapseItems, field, readPretty, remove, schema, searchList } = useCollapseItems();
+
+    const search = searchKey.toLowerCase();
+    const { address, data } = field;
 
     const prefixCls = usePrefixCls("collapse");
     const [wrapSSR, hashId] = useCollapseStyle(prefixCls);
+
+    const empty = useMemo(
+        () => <RenderProperty name="empty" address={address} schema={schema} match={isEmpty} />,
+        [address, schema],
+    );
+
+    const initData = useMemo(() => {
+        if (!readPretty) {
+            const initData = (Array.isArray(data) ? data : [data]).filter(i => i).map(item => String(item));
+            return Object.keys(searchList).reduce<ActiveKeyItem>(
+                (current, key) => ({ ...current, [key]: initData.indexOf(key) > -1 }),
+                {},
+            );
+        }
+        return null;
+    }, [data, searchList]);
 
     useFormEffects(() => {
         const { entire } = field.path;
         const { onExpandCollapse, onSelectUserEvent } = createExpandCoolapse(String(entire));
 
         onExpandCollapse(({ expand }) => {
-            collapseRef.current?.expand(expand ? Object.keys(panels) : []);
+            collapseRef.current?.expand(expand);
         });
         onSelectUserEvent(({ group, section, checked = false }) => {
             if (isArrayField(field)) {
@@ -146,29 +187,26 @@ const InternalFormCollapse: FC<FormCollapseProps> = ({
         });
     });
 
-    return empty ? (
-        <RenderProperty name="empty" address={field.address} schema={schema} match={isEmpty} />
-    ) : (
-        wrapSSR(
-            <RecordScope getRecord={() => ({ readPretty, remove, search, size: props.size })} getIndex={() => 2}>
-                <CollapseControl
-                    {...props}
-                    activeKey={activeKey}
-                    bordered={bordered}
-                    className={classNames([hashId, className])}
-                    expandIconPosition={expandIconPosition}
-                    items={collapseItems}
-                    readPretty={readPretty}
-                    ref={collapseRef}
-                    search={search}
-                    onChange={activeKey => {
-                        field.setData(activeKey);
-                        field.form.notify("expand-handle", activeKey.length !== Object.keys(panels).length);
-                    }}
-                />
-            </RecordScope>,
-        )
-    );
+    return collapseItems.length === 0
+        ? empty
+        : wrapSSR(
+              <RecordScope getRecord={() => ({ readPretty, remove, search, size: props.size })} getIndex={() => 2}>
+                  <CollapseControl
+                      {...props}
+                      bordered={bordered}
+                      className={classNames([hashId, className])}
+                      expandIconPosition={expandIconPosition}
+                      field={field}
+                      initData={initData}
+                      items={collapseItems}
+                      readPretty={readPretty}
+                      ref={collapseRef}
+                      search={search}
+                      searchList={searchList}>
+                      {empty}
+                  </CollapseControl>
+              </RecordScope>,
+          );
 };
 
 // 仅用于判断加载状态
@@ -201,19 +239,19 @@ export type UserItem = {
 };
 
 interface CollapseControlInstance {
-    expand: (keys: string[]) => void;
+    expand: (show: boolean) => void;
 }
 
 interface CollapseControlProps extends Omit<CollapseProps, "activeKey" | "onChange"> {
-    activeKey: string[];
+    field: GeneralField;
+    initData: ActiveKeyItem | null;
     readPretty: boolean;
     search: string;
-    onChange: (value: string[]) => void;
+    searchList: CollapseItem;
 }
 
 interface FormCollapseProps extends Omit<CollapseProps, "activeKey" | "items" | "onChange" | "search"> {
     data?: string[];
-    panelsIsValue?: boolean;
     search?: string;
 }
 

@@ -25,7 +25,7 @@ const Face: FC = () => {
     const { name } = data;
 
     return (
-        <Space>
+        <Space style={{ width: "100%" }}>
             <Avatar
                 src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${name}`}
                 style={{ backgroundColor: "#d0e7c5" }}
@@ -115,7 +115,7 @@ const UserReadPretty: FC<PropsWithChildren<UserReadPrettyProps>> = ({
     search,
     section,
 }) => (
-    <span
+    <div
         className={classNames({
             searchChecked:
                 search !== "" &&
@@ -123,7 +123,7 @@ const UserReadPretty: FC<PropsWithChildren<UserReadPrettyProps>> = ({
             readPretty,
         })}>
         {children || name || section}
-    </span>
+    </div>
 );
 
 const UserCheckBox = Object.assign(observer(InternalUserCheckBox), {

@@ -152,7 +152,6 @@ const SelectSectionExample: FC = () => {
                                     x-component="SelectCollapse"
                                     x-component-props={{
                                         expandIconPosition: "start",
-                                        panelsIsValue: true,
                                         size: "small",
                                     }}
                                     x-reactions={{
