@@ -1,52 +1,27 @@
 import { FormCollapse } from "@formily/antd-v5";
 import { usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
-import {
-    createEffectHook,
-    Form,
-    FormPath,
-    GeneralField,
-    isArrayField,
-    onFieldChange,
-    onFieldReact,
-    onFieldValueChange,
-    onFormValuesChange,
-} from "@formily/core";
+import { FormPath, GeneralField, isArrayField } from "@formily/core";
 import {
     RecordScope,
     RecursionField,
     Schema,
     observer,
-    useExpressionScope,
     useField,
     useFieldSchema,
     useFormEffects,
 } from "@formily/react";
 import { Collapse, CollapseProps } from "antd";
-import {
-    FC,
-    forwardRef,
-    PropsWithChildren,
-    useCallback,
-    useEffect,
-    useImperativeHandle,
-    useMemo,
-    useRef,
-    useState,
-} from "react";
-import useCollapseStyle from "../styles/collapse";
+import classNames from "classnames";
+import { FC, forwardRef, PropsWithChildren, useEffect, useImperativeHandle, useMemo, useRef } from "react";
 import {
     ActiveKeyItem,
     CollapseItem,
     isEmpty,
     isSkeleton,
     useActiveKey,
-    useCollapseField,
     useCollapseItems,
-    useListValue,
-    useSectionGroup,
-    useSelectSchema,
 } from "../hooks/useSelectCollapse";
-import classNames from "classnames";
+import useCollapseStyle from "../styles/collapse";
 import UserCheckBox from "./UserCheckBox";
 import PanelDecorator from "./PanelDecorator";
 import SelectSkeleton from "./SelectSkeleton";
@@ -190,6 +165,7 @@ const InternalFormCollapse: FC<FormCollapseProps> = ({
         });
     });
 
+    isArrayField(field) && console.log(field.value, values);
     return collapseItems.length === 0
         ? empty
         : wrapSSR(

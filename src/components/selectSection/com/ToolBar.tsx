@@ -1,26 +1,7 @@
 import { ContainerOutlined, DatabaseOutlined } from "@ant-design/icons";
-import { isField } from "@formily/core";
 import { observer, useField } from "@formily/react";
-import { Button, Checkbox, CheckboxProps, Flex } from "antd";
-import { FC, PropsWithChildren, useCallback, useEffect, useMemo, useState } from "react";
-
-const InternalCheckedAll: FC<Omit<CheckboxProps, "checked" | "indeterminate" | "onChange">> = props => {
-    const field = useField();
-    const { checked = 0, total = 0 } = field.data || {};
-
-    return (
-        <Checkbox
-            {...props}
-            checked={total > 0 && checked === total}
-            disabled={total === 0 || props.disabled}
-            indeterminate={checked > 0 && checked < total}
-            onChange={({ target }) => isField(field) && field.setValue(target.checked)}>
-            {checked}
-            {"/"}
-            {total}
-        </Checkbox>
-    );
-};
+import { Button, Flex } from "antd";
+import { FC, PropsWithChildren } from "react";
 
 const ToolBar: FC<PropsWithChildren<ToolBarProps>> = ({ children, onExpand, expand = true }) => {
     const field = useField();
@@ -45,11 +26,7 @@ const ToolBar: FC<PropsWithChildren<ToolBarProps>> = ({ children, onExpand, expa
     );
 };
 
-const CheckedAll = Object.assign(observer(InternalCheckedAll), {
-    ToolBar: observer(ToolBar),
-});
-
-export default CheckedAll;
+export default observer(ToolBar);
 
 interface ToolBarProps {
     expand?: boolean;

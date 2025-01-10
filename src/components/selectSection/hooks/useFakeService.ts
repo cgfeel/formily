@@ -33,7 +33,7 @@ export const useFakeService = (delay: number) => {
         setTimeout(() => callback(data), delay);
     }, []);
 
-    return [request];
+    return [request] as const;
 };
 
 export const debounce = <T extends Function, D extends any = any>(func: T, delay: number = 500) => {

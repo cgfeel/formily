@@ -128,7 +128,7 @@ export const useActiveKey = (search: string, panels: CollapseItem, initData: Act
                             };
                   }, {}),
         );
-    }, [search]);
+    }, [panels, search]);
 
     return { activeKey, list, chooseKey, initKey, updateKey } as const;
 };
@@ -159,16 +159,14 @@ export const useCollapseItems = () => {
         [schema],
     );
 
-    // !readPretty && console.log(values);
-
     const collapseItems: ItemType[] = useMemo(() => {
         const { empty, group, section } = getSectionSchema(schema);
         const sectionList = empty ? [] : Object.keys(searchList);
+
         return sectionList.map((key, i) => {
             const data = {
                 group: Array.from(searchList[key]),
                 section: key,
-                // values: values[key] === undefined ? [] : Array.from(values[key]),
             };
             return {
                 children: (

@@ -18,31 +18,16 @@ import { UserItem } from "./com/SelectCollapse";
 import { FormConsumer, RecordScope } from "@formily/react";
 import UserCheckBox from "./com/UserCheckBox";
 import { debounce, asyncDataSource, useFakeService, SectionItem } from "./hooks/useFakeService";
-import { onExpandHandle } from "./event";
+import { createModalFormEffect, onExpandHandle } from "./event";
 
 const SelectSectionExample: FC = () => {
     const [request] = useFakeService(3000);
     const form = useMemo(
         () =>
             createForm({
-                effects: () => {
-                    asyncDataSource("collapse", async () => {
-                        return new Promise<SectionItem[]>(resolve => request(resolve));
-                    });
-                    onExpandHandle(({ expand, path }, form) => {
-                        if (path === "collapse") {
-                            form.query("tool-all").take(field => (field.decoratorProps.expand = expand));
-                        }
-                    });
-                    onFieldValueChange("tool-all", field => {
-                        const collapse = field.query(".collapse").take();
-                        if (isArrayField(collapse)) {
-                            collapse.value = field.value ? collapse.dataSource || [] : [];
-                        }
-                    });
-                },
+                effects: () => createModalFormEffect(request),
             }),
-        [],
+        [request],
     );
     return (
         <Panel form={form}>
@@ -87,22 +72,10 @@ const SelectSectionExample: FC = () => {
                             />
                             <SchemaField.Boolean
                                 name="tool-all"
-                                x-component="CheckedAll"
-                                x-content="全选"
-                                x-decorator="CheckedAll.ToolBar"
+                                x-component="Checkbox"
+                                x-decorator="ToolBar"
                                 x-decorator-props={{
                                     onExpand: expand => form.notify("expand-collapse", expand),
-                                }}
-                                x-reactions={{
-                                    dependencies: [".collapse", ".collapse#dataSource"],
-                                    fulfill: {
-                                        state: {
-                                            data: {
-                                                checked: "{{ ($deps[0]||[]).length }}",
-                                                total: "{{ ($deps[1]||[]).length }}",
-                                            },
-                                        },
-                                    },
                                 }}
                             />
                             <SchemaField.Void

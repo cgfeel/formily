@@ -3,7 +3,7 @@ import { createSchemaField, RecordScope, useExpressionScope } from "@formily/rea
 import { Card, Input, Typography } from "antd";
 import { FC, PropsWithChildren } from "react";
 import SelectCollapse from "./com/SelectCollapse";
-import CheckedAll from "./com/CheckedAll";
+import ToolBar from "./com/ToolBar";
 import UserCheckBox from "./com/UserCheckBox";
 import useCollapseStyle from "./styles/collapse";
 import ScrollWapper from "./com/ScrollWrapper";
@@ -26,7 +26,6 @@ const SchemaField = createSchemaField({
         Card,
         CardHeader,
         Checkbox,
-        CheckedAll,
         FormGrid,
         FormItem,
         GridColumn,
@@ -35,6 +34,7 @@ const SchemaField = createSchemaField({
         ScrollWapper,
         SelectCollapse,
         TipTitle,
+        ToolBar,
         UserCheckBox,
         UserMapRecord,
     },
