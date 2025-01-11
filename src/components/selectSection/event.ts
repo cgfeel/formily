@@ -19,6 +19,9 @@ export const createModalFormEffect = (request: ReturnType<typeof useFakeService>
     asyncDataSource("collapse", async () => {
         return new Promise<SectionItem[]>(resolve => request(resolve));
     });
+    asyncDataSource("section", async () => {
+        return new Promise<SectionItem[]>(resolve => request(resolve));
+    });
     onExpandHandle(({ expand, path }, form) => {
         if (path === "collapse") {
             form.query("tool-all").take(field => (field.decoratorProps.expand = expand));

@@ -33,20 +33,20 @@ const SelectSectionExample: FC = () => {
         <Panel form={form}>
             <SchemaField>
                 <SchemaField.Void
-                    x-component="FormGrid"
-                    x-component-props={{
-                        columnGap: 0,
-                        maxColumns: 3,
+                    x-component="UserMapRecord"
+                    x-reactions={{
+                        dependencies: [".collapse#dataSource"],
+                        fulfill: {
+                            state: {
+                                componentProps: { record: "{{ $deps[0] }}" },
+                            },
+                        },
                     }}>
                     <SchemaField.Void
-                        x-component="UserMapRecord"
-                        x-reactions={{
-                            dependencies: [".collapse#dataSource"],
-                            fulfill: {
-                                state: {
-                                    componentProps: { record: "{{ $deps[0] }}" },
-                                },
-                            },
+                        x-component="FormGrid"
+                        x-component-props={{
+                            columnGap: 0,
+                            maxColumns: 3,
                         }}>
                         <SchemaField.Void
                             x-component="Card"
@@ -186,6 +186,53 @@ const SelectSectionExample: FC = () => {
                                 </SchemaField.Array>
                             </SchemaField.Void>
                         </SchemaField.Void>
+                    </SchemaField.Void>
+                    <SchemaField.Void
+                        x-component="FormGrid"
+                        x-component-props={{
+                            columnGap: 0,
+                            maxColumns: 3,
+                        }}>
+                        <SchemaField.Void
+                            x-component="Card"
+                            x-decorator="GridColumn"
+                            x-decorator-props={{ gridSpan: 2 }}>
+                            <SchemaField.String name="search_test" x-component="Input" />
+                            <SchemaField.Array
+                                name="section"
+                                title="部门和员工"
+                                x-component="SectionCollapse"
+                                x-decorator="TipTitle"
+                                x-reactions={{
+                                    dependencies: [".search_test"],
+                                    fulfill: {
+                                        state: {
+                                            value: "{{[$deps[0]]}}",
+                                        },
+                                    },
+                                }}>
+                                <SchemaField.Void x-component="SectionCollapse.CollapseItem">
+                                    <SchemaField.Void
+                                        x-component="SectionCollapse.UserCheckBox"
+                                        x-decorator="SelectCollapse.PanelDecorator"
+                                    />
+                                    {/* <SchemaField.Void x-component="SelectCollapse.UserGroup">
+                            <SchemaField.Void x-component="SelectCollapse.UserCheckBox">
+                                <SchemaField.Void x-component="SelectCollapse.UserCheckBox.Face" />
+                            </SchemaField.Void>
+                        </SchemaField.Void>
+                        <SchemaField.Void x-component="SelectCollapse.SelectSkeleton" />
+                        <SchemaField.Void x-component="SelectCollapse.SelectEmpty" /> */}
+                                </SchemaField.Void>
+                            </SchemaField.Array>
+                        </SchemaField.Void>
+                        <SchemaField.Void
+                            x-component="Card"
+                            x-decorator="GridColumn"
+                            x-decorator-props={{ gridSpan: 1 }}
+                            x-component-props={{
+                                title: "已选中的人",
+                            }}></SchemaField.Void>
                     </SchemaField.Void>
                 </SchemaField.Void>
             </SchemaField>

@@ -232,6 +232,38 @@ export const useListValue = (list: readonly SectionItem[]) => {
     return [data];
 };
 
+export const useListValueRecord = (list: SectionItem[]) => {
+    const [data, setData] = useState<CollapseItem>({});
+    const sort = useCallback(
+        (list: string[]) => {
+            const record = list.reduce<CollapseItem>(
+                (current, key) => (data[key] === undefined ? current : { ...current, [key]: data[key] }),
+                {},
+            );
+            setData(record);
+        },
+        [data],
+    );
+
+    useEffect(() => {
+        const reduceList = () =>
+            list.reduce<CollapseItem>((current, { name, section }) => {
+                const item = current[section] || new Set();
+                const value = name.trim();
+
+                item.add(value);
+                return {
+                    ...current,
+                    [section]: item,
+                };
+            }, {});
+
+        setData(data => (list.length === 0 && Object.keys(data).length === 0 ? data : reduceList()));
+    }, [list]);
+
+    return [data, sort] as const;
+};
+
 export const useSchemaData = () => {
     const schema = useFieldSchema();
     const data = (schema["x-data"] || {}) as UserData;

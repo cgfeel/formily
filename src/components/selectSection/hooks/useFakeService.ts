@@ -23,6 +23,7 @@ export const asyncDataSource = (pattern: FormPathPattern, service: () => Promise
             service().then(action.bound!((data: SectionItem[]) => {
                 field.dataSource = data.map(item => ({ ...item, mail: `${item.name.toLowerCase()}@mail.com` }));
                 field.loading = false;
+                field.setValue([]);
             }));
         }
     });

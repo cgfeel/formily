@@ -165,7 +165,6 @@ const InternalFormCollapse: FC<FormCollapseProps> = ({
         });
     });
 
-    isArrayField(field) && console.log(field.value, values);
     return collapseItems.length === 0
         ? empty
         : wrapSSR(

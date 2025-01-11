@@ -10,6 +10,7 @@ import ScrollWapper from "./com/ScrollWrapper";
 import RecentRhoices from "./com/RecentChoices";
 import UserMapRecord from "./com/UserMapRecord";
 import TipTitle from "./com/TipTitle";
+import SectionCollapse from "./components/SectionCollapse";
 
 const { GridColumn } = FormGrid;
 
@@ -32,6 +33,7 @@ const SchemaField = createSchemaField({
         Input,
         RecentRhoices,
         ScrollWapper,
+        SectionCollapse,
         SelectCollapse,
         TipTitle,
         ToolBar,
