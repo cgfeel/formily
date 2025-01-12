@@ -1,9 +1,10 @@
 import { GeneralField, isArrayField } from "@formily/core";
 import { RecursionField, Schema, SchemaItems, useExpressionScope, useField, useFieldSchema } from "@formily/react";
 import { CollapseProps, Typography } from "antd";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { SectionItem } from "./useFakeService";
 import { SizeType } from "antd/es/config-provider/SizeContext";
+import { PayloadType } from "../event";
 
 const { Text } = Typography;
 
@@ -204,6 +205,15 @@ export const useCollapseItems = () => {
     return { collapseItems, field, readPretty, remove, schema, searchList, values } as const;
 };
 
+export const useSectionScope = () => {
+    const { $lookup, $record, $records: records } = useExpressionScope() as SectionScopeType;
+    const { group, values, section } = $record || {};
+    const { $lookup: parent, pattern, schema, search, selectHandle } = $lookup || {};
+    const { userMap } = parent || {};
+
+    return { group, pattern, records, schema, search, section, userMap, values, selectHandle } as const;
+};
+
 export const useCollapseScope = () => {
     const {
         $lookup: { userMap = {} },
@@ -294,6 +304,24 @@ export type ActiveKeyItem = Partial<Record<string, boolean>>;
 
 export type CollapseItem = Record<string, Set<string>>;
 
+export type CollapseSchema = Partial<Record<"checkbox" | "group" | "sort" | "remove", ReactNode>>;
+
+export type LookupType = {
+    $lookup: {
+        userMap?: Record<string, SectionItem>;
+    };
+    activeKeys: string[];
+    pattern: SelectSchema<SectionItem>["x-pattern"];
+    schema: CollapseSchema;
+    search: string;
+    selectHandle: (data: PayloadType) => void;
+};
+
+export type SelectSchema<T> = Omit<Schema<any, any, any, any, any, any, any, any, any>, "enum" | "x-pattern"> & {
+    enum?: T[];
+    ["x-pattern"]: "disabled" | "editable" | "readOnly" | "readPretty";
+};
+
 export type UserData = Partial<
     Record<"name" | "section", string> & {
         empty: boolean;
@@ -317,6 +345,12 @@ type CollapseScopeType = {
 
 type ItemType = Exclude<CollapseProps["items"], undefined>[number];
 
-type SelectSchema<T> = Omit<Schema<any, any, any, any, any, any, any, any, any>, "enum"> & {
-    enum?: T[];
+type SectionScopeType = {
+    $lookup?: LookupType;
+    $record?: {
+        group: Set<string>;
+        section: string;
+        values: Set<string>;
+    };
+    $records?: string[];
 };

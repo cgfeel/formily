@@ -27,6 +27,15 @@ export const createModalFormEffect = (request: ReturnType<typeof useFakeService>
             form.query("tool-all").take(field => (field.decoratorProps.expand = expand));
         }
     });
+    onSelectUserEvent(({ checked, group, section, path = "section" }, form) => {
+        const field = form.query(path).take();
+        if (isArrayField(field)) {
+            const currentValue = field.value;
+            const data = currentValue.filter(item => item.section !== section || group.indexOf(item.name) < 0);
+
+            field.setValue(data.concat(!checked ? [] : group.map(name => ({ name, section }))));
+        }
+    });
     onFieldValueChange("tool-all", field => {
         const collapse = field.query(".collapse").take();
         if (isArrayField(collapse)) {
@@ -51,10 +60,22 @@ export const createModalFormEffect = (request: ReturnType<typeof useFakeService>
     });
 };
 
+export const onSelectUserEvent = createEffectHook<(payload: PayloadType, form: Form) => ListenerType<PayloadType>>(
+    "select-user",
+    (payload, form) => listener => listener(payload, form)
+);
+
 export const onExpandHandle = createEffectHook<(payload: ExpandPayloadType, form: Form) => ListenerType<ExpandPayloadType>>(
     "expand-handle",
     (payload, form) => listener => listener(payload, form),
 );
+
+export type PayloadType = {
+    group: string[];
+    section: string;
+    checked?: boolean;
+    path?: string;
+};
 
 type ExpandPayloadType = {
     expand: boolean;
@@ -62,9 +83,3 @@ type ExpandPayloadType = {
 };
 
 type ListenerType<T extends unknown> = (listener: (payload: T, form: Form) => void) => void;
-
-type PayloadType = {
-    group: string[];
-    section: string;
-    checked?: boolean;
-};
