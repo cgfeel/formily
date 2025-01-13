@@ -19,6 +19,7 @@ import {
     LookupType,
     useCollapseField,
     useListValue,
+    useSectionKey,
     useSelectSchema,
 } from "../hooks/useSelectCollapse";
 import CollapseItem, { RemoveUser, SortHandle } from "./CollapseItem";
@@ -82,31 +83,35 @@ const useSortCollapse = (field: GeneralField, pattern: FieldPatternTypes, dataSo
 const CollapseWrapper: FC<PropsWithChildren<SectionCollapseProps & { field: GeneralField }>> = ({
     children,
     field,
-    activeKey = [],
+    target,
     search = "",
 }) => {
     const schema = useSelectSchema();
     const items = getItem(schema);
 
-    const groupSchema = items?.reduceProperties<CollapseSchema, CollapseSchema>((addition, schema, key) => {
-        let name: keyof typeof fieldRange | undefined;
-        let field: ReactNode | undefined;
+    const groupSchema = useMemo(
+        () =>
+            items?.reduceProperties<CollapseSchema, CollapseSchema>((addition, schema, key) => {
+                let name: keyof typeof fieldRange | undefined;
+                let field: ReactNode | undefined;
 
-        for (name in fieldRange) {
-            if (name && isFieldSchema(schema, fieldRange[name])) {
-                field = <RecursionField name={key} schema={schema} />;
-                break;
-            }
-        }
+                for (name in fieldRange) {
+                    if (name && isFieldSchema(schema, fieldRange[name])) {
+                        field = <RecursionField name={key} schema={schema} />;
+                        break;
+                    }
+                }
 
-        return field === undefined || name === undefined ? addition : { ...addition, [name]: field };
-    }, {});
+                return field === undefined || name === undefined ? addition : { ...addition, [name]: field };
+            }, {}),
+        [items],
+    );
 
     const selectHandle: LookupType["selectHandle"] = useCallback(
         update => {
-            field.form.notify("select-user", { ...update, path: field.path.entire });
+            field.form.notify("select-user", { ...update, path: target || field.path.entire });
         },
-        [field],
+        [field, target],
     );
 
     return (
@@ -114,7 +119,6 @@ const CollapseWrapper: FC<PropsWithChildren<SectionCollapseProps & { field: Gene
             getRecord={() => ({
                 schema: groupSchema || {},
                 pattern: schema["x-pattern"],
-                activeKey,
                 search,
                 selectHandle,
             })}>
@@ -123,8 +127,9 @@ const CollapseWrapper: FC<PropsWithChildren<SectionCollapseProps & { field: Gene
     );
 };
 
-const InternalCollapse: FC = () => {
+const InternalSection: FC<Pick<SectionCollapseProps, "activeKey">> = ({ activeKey = [] }) => {
     const { dataSource, field, value: fieldValue } = useCollapseField();
+    const [activeIndex, updateActive] = useSectionKey(activeKey);
 
     const schema = useSelectSchema();
     const items = getItem(schema);
@@ -157,7 +162,13 @@ const InternalCollapse: FC = () => {
             {list.map((section, index) => (
                 <SortableItem key={`item-${index}`} lockAxis="y" index={index}>
                     <RecordScope
-                        getRecord={() => ({ group: panels[section], values: values[section] || new Set(), section })}>
+                        getRecord={() => ({
+                            group: panels[section],
+                            values: values[section] || new Set(),
+                            section,
+                            activeIndex,
+                            updateActive,
+                        })}>
                         {SectionItem}
                     </RecordScope>
                 </SortableItem>
@@ -176,13 +187,13 @@ const RenderProperty: FC<RenderPropertyProps> = ({ match, schema }) => (
     </>
 );
 
-const SectionCollapseGroup: FC<SectionCollapseProps> = props => {
+const SectionCollapseGroup: FC<SectionCollapseProps> = ({ activeKey, ...props }) => {
     const field = useField();
     const schema = useFieldSchema();
 
     return !isArrayField(field) || !field.loading ? (
         <CollapseWrapper {...props} field={field}>
-            <InternalCollapse />
+            <InternalSection activeKey={activeKey} />
         </CollapseWrapper>
     ) : (
         <RenderProperty match="SectionCollapse.SelectSkeleton" schema={schema} />
@@ -244,6 +255,7 @@ interface RenderPropertyProps {
 interface SectionCollapseProps {
     activeKey?: string[];
     search?: string;
+    target?: string;
 }
 
 interface SortableProps extends HTMLAttributes<HTMLDivElement> {

@@ -1,24 +1,11 @@
 import { SearchOutlined } from "@ant-design/icons";
-import {
-    createForm,
-    isArrayField,
-    isField,
-    onFieldChange,
-    onFieldInit,
-    onFieldMount,
-    onFieldReact,
-    onFieldValueChange,
-    onFormReact,
-    onFormValuesChange,
-} from "@formily/core";
+import { createForm } from "@formily/core";
 import { FC, useMemo } from "react";
 import Panel from "./Panel";
 import SchemaField from "./SchemaField";
-import { UserItem } from "./com/SelectCollapse";
-import { FormConsumer, RecordScope } from "@formily/react";
-import UserCheckBox from "./com/UserCheckBox";
-import { debounce, asyncDataSource, useFakeService, SectionItem } from "./hooks/useFakeService";
-import { createModalFormEffect, onExpandHandle } from "./event";
+import { FormConsumer } from "@formily/react";
+import { useFakeService } from "./hooks/useFakeService";
+import { createModalFormEffect } from "./event";
 
 const SelectSectionExample: FC = () => {
     const [request] = useFakeService(3000);
@@ -197,7 +184,16 @@ const SelectSectionExample: FC = () => {
                             x-component="Card"
                             x-decorator="GridColumn"
                             x-decorator-props={{ gridSpan: 2 }}>
-                            <SchemaField.String name="search_test" x-component="Input" />
+                            <SchemaField.String
+                                name="search-list"
+                                x-component="Input"
+                                x-decorator="CardHeader"
+                                x-component-props={{
+                                    allowClear: true,
+                                    placeholder: "输入部门或员工名称进行筛选",
+                                    suffix: <SearchOutlined />,
+                                }}
+                            />
                             <SchemaField.Void
                                 title="最近的选择"
                                 x-component="RecentRhoices"
@@ -213,17 +209,7 @@ const SelectSectionExample: FC = () => {
                                 }}
                             />
                             <SchemaField.Void title="部门和同事" x-component="ScrollWapper" x-decorator="TipTitle">
-                                <SchemaField.Array
-                                    name="section"
-                                    x-component="SectionCollapse"
-                                    x-reactions={{
-                                        dependencies: [".search_test"],
-                                        fulfill: {
-                                            state: {
-                                                value: "{{[$deps[0]]}}",
-                                            },
-                                        },
-                                    }}>
+                                <SchemaField.Array name="section" x-component="SectionCollapse">
                                     <SchemaField.Void x-component="SectionCollapse.CollapseItem">
                                         <SchemaField.Void
                                             name="section-name"

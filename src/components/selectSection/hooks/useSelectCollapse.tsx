@@ -134,6 +134,28 @@ export const useActiveKey = (search: string, panels: CollapseItem, initData: Act
     return { activeKey, list, chooseKey, initKey, updateKey } as const;
 };
 
+export const useSectionKey = (keys: string[]) => {
+    const [activeIndex, setActiveIndex] = useState(keys.reverse());
+    const updateActive = useCallback((key: string, expand: boolean = true) => {
+        // 1. 存在数据：删除或调整顺序；2.没有更新：调整顺序
+        setActiveIndex(keys => {
+            const index = keys.filter(name => name !== key);
+            const addition = expand ? [key] : [];
+
+            return addition.concat(index);
+        });
+    }, []);
+
+    useEffect(() => {
+        setActiveIndex(index => {
+            const current = index.sort().join("");
+            return current === keys.sort().join("") ? index : keys;
+        });
+    }, [keys]);
+
+    return [activeIndex, updateActive] as const;
+};
+
 export const useCollapseField = () => {
     const field = useField();
     const isArray = isArrayField(field);
@@ -207,11 +229,23 @@ export const useCollapseItems = () => {
 
 export const useSectionScope = () => {
     const { $lookup, $record, $records: records } = useExpressionScope() as SectionScopeType;
-    const { group, values, section } = $record || {};
+    const { activeIndex, group, values, section, updateActive } = $record || {};
     const { $lookup: parent, pattern, schema, search, selectHandle } = $lookup || {};
     const { userMap } = parent || {};
 
-    return { group, pattern, records, schema, search, section, userMap, values, selectHandle } as const;
+    return {
+        activeIndex,
+        group,
+        pattern,
+        records,
+        schema,
+        search,
+        section,
+        userMap,
+        values,
+        updateActive,
+        selectHandle,
+    } as const;
 };
 
 export const useCollapseScope = () => {
@@ -336,10 +370,10 @@ type CollapseScopeType = {
     };
     $record: {
         readPretty: boolean;
+        values: CollapseItem;
         remove?: Schema | null;
         search?: string;
         size?: SizeType;
-        values: CollapseItem;
     };
 };
 
@@ -348,9 +382,11 @@ type ItemType = Exclude<CollapseProps["items"], undefined>[number];
 type SectionScopeType = {
     $lookup?: LookupType;
     $record?: {
+        activeIndex: string[];
         group: Set<string>;
         section: string;
         values: Set<string>;
+        updateActive: (key: string, expand?: boolean) => void;
     };
     $records?: string[];
 };
