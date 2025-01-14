@@ -2,7 +2,7 @@ import { CloseOutlined, MenuOutlined } from "@ant-design/icons";
 import { SortableHandle } from "@formily/antd-v5/lib/__builtins__";
 import { observer, useField } from "@formily/react";
 import { Button, ButtonProps, Collapse, CollapseProps } from "antd";
-import { FC, useMemo, useState } from "react";
+import { FC, useCallback, useMemo, useState } from "react";
 import { useSectionScope } from "../hooks/useSelectCollapse";
 
 const InternalCollapse: FC<CollapseItemProps & ScopeProps<"group" | "search" | "section">> = ({
@@ -49,6 +49,19 @@ const InternalCollapse: FC<CollapseItemProps & ScopeProps<"group" | "search" | "
         [group, schema, section],
     );
 
+    const expandActive = useCallback(
+        (keys: string[]) => {
+            if (accordion && section && updateActive) {
+                updateActive(section, keys.length > 0);
+            }
+            if (!accordion) {
+                const key = !search ? "active" : "searchkey";
+                setExpand(info => ({ ...info, [key]: keys.length > 0 }));
+            }
+        },
+        [accordion, search, section, setExpand, updateActive],
+    );
+
     return useMemo(
         () => (
             <Collapse
@@ -58,17 +71,26 @@ const InternalCollapse: FC<CollapseItemProps & ScopeProps<"group" | "search" | "
                 expandIconPosition={expandIconPosition}
                 items={items}
                 size={size}
-                onChange={keys => (accordion ? setExpand : updateActive)}
+                onChange={keys => expandActive(Array.isArray(keys) ? keys : [keys])}
             />
         ),
-        [accordion, activeKey, bordered, expandIconPosition, items, props, section, size],
+        [activeKey, bordered, expandIconPosition, items, props, section, size, expandActive],
     );
 };
 
 const CollapseItem: FC<CollapseItemProps> = props => {
     const { group, search, section } = useSectionScope();
+    const show = useMemo(() => {
+        if (search) {
+            return (
+                (section?.toLowerCase() || "").indexOf(search) > 0 ||
+                Array.from(group || new Set()).some(name => String(name).toLowerCase().indexOf(search) >= 0)
+            );
+        }
+        return true;
+    }, [group, search, section]);
 
-    return <InternalCollapse {...props} group={group} search={search} section={section} />;
+    return !show ? null : <InternalCollapse {...props} group={group} search={search} section={section} />;
 };
 
 const ExtraRender: FC<ScopeProps<"schema">> = ({ schema = {} }) => (

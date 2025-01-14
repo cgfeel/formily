@@ -119,7 +119,7 @@ const CollapseWrapper: FC<PropsWithChildren<SectionCollapseProps & { field: Gene
             getRecord={() => ({
                 schema: groupSchema || {},
                 pattern: schema["x-pattern"],
-                search,
+                search: search.toLowerCase(),
                 selectHandle,
             })}>
             {children}
