@@ -2,7 +2,7 @@ import { CloseOutlined, MenuOutlined } from "@ant-design/icons";
 import { SortableHandle } from "@formily/antd-v5/lib/__builtins__";
 import { observer, useField } from "@formily/react";
 import { Button, ButtonProps, Collapse, CollapseProps } from "antd";
-import { FC, useCallback, useMemo, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useSectionScope } from "../hooks/useSelectCollapse";
 
 const InternalCollapse: FC<CollapseItemProps & ScopeProps<"group" | "search" | "section">> = ({
@@ -61,6 +61,12 @@ const InternalCollapse: FC<CollapseItemProps & ScopeProps<"group" | "search" | "
         },
         [accordion, search, section, setExpand, updateActive],
     );
+
+    useEffect(() => {
+        return () => {
+            setExpand(({ active }) => ({ searchkey: null, active }));
+        };
+    }, [search]);
 
     return useMemo(
         () => (

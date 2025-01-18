@@ -82,7 +82,10 @@ const UserFace: FC = () => {
             />
             <Row gutter={[8, 8]}>
                 <Col flex="none">
-                    <Text className={classNames({ searchChecked: name === search })}>{name}</Text>
+                    <Text
+                        className={classNames({ searchChecked: !!search && name.toLowerCase().indexOf(search) > -1 })}>
+                        {name}
+                    </Text>
                 </Col>
                 <Col flex="auto">{userMap[name] && <Text type="secondary">({userMap[name].mail})</Text>}</Col>
             </Row>
@@ -91,10 +94,16 @@ const UserFace: FC = () => {
 };
 
 const UserPanel: FC = () => {
-    const { group, section } = useSectionScope();
+    const { group, search, section } = useSectionScope();
     return (
         <>
-            {section} <Text type="secondary">({group?.size || 0})</Text>
+            <Text
+                className={classNames({
+                    searchChecked: !!search && !!section && section.toLowerCase().indexOf(search) > -1,
+                })}>
+                {section}
+            </Text>{" "}
+            <Text type="secondary">({group?.size || 0})</Text>
         </>
     );
 };

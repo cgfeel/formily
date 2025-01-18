@@ -209,7 +209,13 @@ const SelectSectionExample: FC = () => {
                                 }}
                             />
                             <SchemaField.Void title="部门和同事" x-component="ScrollWapper" x-decorator="TipTitle">
-                                <SchemaField.Array name="section" x-component="SectionCollapse">
+                                <SchemaField.Array
+                                    name="section"
+                                    x-component="SectionCollapse"
+                                    x-reactions={{
+                                        dependencies: [".search-list"],
+                                        fulfill: { state: { componentProps: { search: "{{ $deps[0] }}" } } },
+                                    }}>
                                     <SchemaField.Void x-component="SectionCollapse.CollapseItem">
                                         <SchemaField.Void
                                             name="section-name"
