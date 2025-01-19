@@ -2,25 +2,22 @@ import { CloseOutlined, MenuOutlined } from "@ant-design/icons";
 import { SortableHandle } from "@formily/antd-v5/lib/__builtins__";
 import { observer, useField } from "@formily/react";
 import { Button, ButtonProps, Collapse, CollapseProps } from "antd";
-import { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { Dispatch, FC, SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
 import { useSectionScope } from "../hooks/useSelectCollapse";
 
-const InternalCollapse: FC<CollapseItemProps & ScopeProps<"group" | "search" | "section">> = ({
+const InternalCollapse: FC<InternalCollapseProps> = ({
     bordered = false,
     expandIconPosition = "start",
     size = "small",
+    expand,
     accordion,
     group,
     search,
     section,
+    setExpand,
     ...props
 }) => {
     const { activeIndex = [], schema, updateActive } = useSectionScope();
-    const [expand, setExpand] = useState<Record<"active" | "searchkey", boolean | null>>({
-        active: null,
-        searchkey: null,
-    });
-
     const activeKey = useMemo(() => {
         const { active, searchkey } = expand;
         const current = search ? searchkey : active;
@@ -51,12 +48,16 @@ const InternalCollapse: FC<CollapseItemProps & ScopeProps<"group" | "search" | "
 
     const expandActive = useCallback(
         (keys: string[]) => {
+            console.log(accordion);
             if (accordion && section && updateActive) {
                 updateActive(section, keys.length > 0);
             }
             if (!accordion) {
                 const key = !search ? "active" : "searchkey";
-                setExpand(info => ({ ...info, [key]: keys.length > 0 }));
+                setExpand(info => {
+                    console.log({ ...info, [key]: keys.length > 0 });
+                    return { ...info, [key]: keys.length > 0 };
+                });
             }
         },
         [accordion, search, section, setExpand, updateActive],
@@ -86,6 +87,11 @@ const InternalCollapse: FC<CollapseItemProps & ScopeProps<"group" | "search" | "
 
 const CollapseItem: FC<CollapseItemProps> = props => {
     const { group, search, section } = useSectionScope();
+    const [expand, setExpand] = useState<ExpendType>({
+        active: null,
+        searchkey: null,
+    });
+
     const show = useMemo(() => {
         if (search) {
             return (
@@ -96,7 +102,16 @@ const CollapseItem: FC<CollapseItemProps> = props => {
         return true;
     }, [group, search, section]);
 
-    return !show ? null : <InternalCollapse {...props} group={group} search={search} section={section} />;
+    return !show ? null : (
+        <InternalCollapse
+            {...props}
+            expand={expand}
+            group={group}
+            search={search}
+            section={section}
+            setExpand={setExpand}
+        />
+    );
 };
 
 const ExtraRender: FC<ScopeProps<"schema">> = ({ schema = {} }) => (
@@ -144,6 +159,13 @@ export { RemoveUser, SortHandle };
 export default observer(CollapseItem);
 
 interface CollapseItemProps extends Omit<CollapseProps, "activeKey" | "children" | "items"> {}
+
+interface InternalCollapseProps extends CollapseItemProps, ScopeProps<"group" | "search" | "section"> {
+    expand: ExpendType;
+    setExpand: Dispatch<SetStateAction<ExpendType>>;
+}
+
+type ExpendType = Record<"active" | "searchkey", boolean | null>;
 
 type ScopeProps<T extends keyof ScopeType> = Pick<ScopeType, T>;
 
