@@ -67,7 +67,7 @@ const InternalCollapse: FC<InternalCollapseProps> = ({
         return () => {
             setExpand(({ active }) => ({ searchkey: null, active }));
         };
-    }, [search]);
+    }, [search, setExpand]);
 
     return useMemo(
         () => (
@@ -95,8 +95,8 @@ const CollapseItem: FC<CollapseItemProps> = props => {
     const show = useMemo(() => {
         if (search) {
             return (
-                (section?.toLowerCase() || "").indexOf(search) > 0 ||
-                Array.from(group || new Set()).some(name => String(name).toLowerCase().indexOf(search) >= 0)
+                (section?.toLowerCase() || "").indexOf(search) > -1 ||
+                Array.from(group || new Set()).some(name => String(name).toLowerCase().indexOf(search) > -1)
             );
         }
         return true;
