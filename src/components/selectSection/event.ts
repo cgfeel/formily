@@ -1,4 +1,4 @@
-import { createEffectHook, Form, isArrayField, onFieldReact, onFieldValueChange } from "@formily/core";
+import { createEffectHook, Form, isArrayField, isField, onFieldReact, onFieldValueChange } from "@formily/core";
 import { asyncDataSource, SectionItem, useFakeService } from "./hooks/useFakeService";
 
 export const createExpandCoolapse = (type: string) => {
@@ -57,6 +57,13 @@ export const createModalFormEffect = (request: ReturnType<typeof useFakeService>
                 };
             });
         }
+    });
+    onFieldValueChange("pick", field => {
+        field.query('.section').take(target => {
+            if (isField(target)) {
+                target.value = !field.value ? [] : target.dataSource || [];
+            }
+        });
     });
 };
 

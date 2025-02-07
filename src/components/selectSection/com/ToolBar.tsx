@@ -5,8 +5,7 @@ import { FC, PropsWithChildren } from "react";
 
 const ToolBar: FC<PropsWithChildren<ToolBarProps>> = ({ children, onExpand, expand = true }) => {
     const field = useField();
-    const { total = 0 } = field.data || {};
-    const disabled = total === 0;
+    const disabled = !!field.componentProps.disabled;
 
     return (
         <Flex justify="space-between">

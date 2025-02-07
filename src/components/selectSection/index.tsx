@@ -198,9 +198,35 @@ const SelectSectionExample: FC = () => {
                                 name="pick"
                                 x-component="Checkbox"
                                 x-decorator="ToolBar"
+                                x-data={false}
                                 x-decorator-props={{
                                     onExpand: expand => form.notify("expand-collapse", expand),
                                 }}
+                                x-reactions={[
+                                    {
+                                        dependencies: [".section#dataSource"],
+                                        fulfill: {
+                                            state: {
+                                                dataSource: "{{ $deps[0]?.length || 0 }}",
+                                                componentProps: { disabled: "{{ !$self.dataSource }}" },
+                                            },
+                                        },
+                                    },
+                                    {
+                                        dependencies: [".section#value"],
+                                        fulfill: {
+                                            state: {
+                                                componentProps: {
+                                                    checked:
+                                                        "{{ $self.dataSource > 0 && $deps[0]?.length === $self.dataSource }}",
+                                                    indeterminate:
+                                                        "{{ !!$deps[0]?.length && $deps[0].length < $self.dataSource }}",
+                                                },
+                                                content: "{{ `全选 (${$deps[0]?.length || 0}/${$self.dataSource})` }}",
+                                            },
+                                        },
+                                    },
+                                ]}
                             />
                             <SchemaField.Void
                                 title="最近的选择"
