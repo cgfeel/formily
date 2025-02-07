@@ -194,6 +194,14 @@ const SelectSectionExample: FC = () => {
                                     suffix: <SearchOutlined />,
                                 }}
                             />
+                            <SchemaField.Boolean
+                                name="pick"
+                                x-component="Checkbox"
+                                x-decorator="ToolBar"
+                                x-decorator-props={{
+                                    onExpand: expand => form.notify("expand-collapse", expand),
+                                }}
+                            />
                             <SchemaField.Void
                                 title="最近的选择"
                                 x-component="RecentRhoices"
