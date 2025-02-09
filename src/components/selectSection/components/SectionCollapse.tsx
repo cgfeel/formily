@@ -203,6 +203,8 @@ const SectionCollapseGroup: FC<SectionCollapseProps> = ({ activeKey, ...props })
 const Sortable = forwardRef<HTMLDivElement, PropsWithChildren<SortableProps> & { list?: boolean }>(
     ({ children, className, list, ...props }, ref) => {
         const prefixCls = usePrefixCls("section-collapse");
+
+        console.log("a===props", props);
         return (
             <div
                 {...props}

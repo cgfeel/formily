@@ -16,10 +16,10 @@ export const createExpandCoolapse = (type: string) => {
 };
 
 export const createModalFormEffect = (request: ReturnType<typeof useFakeService>[0]) => {
-    asyncDataSource("collapse", async () => {
+    asyncDataSource("user-map.collapse", async () => {
         return new Promise<SectionItem[]>(resolve => request(resolve));
     });
-    asyncDataSource("section", async () => {
+    asyncDataSource("user-map", async () => {
         return new Promise<SectionItem[]>(resolve => request(resolve));
     });
     onExpandHandle(({ expand, path }, form) => {

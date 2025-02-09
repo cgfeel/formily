@@ -19,17 +19,7 @@ const SelectSectionExample: FC = () => {
     return (
         <Panel form={form}>
             <SchemaField>
-                <SchemaField.Void
-                    name="user-map"
-                    x-component="UserMapRecord"
-                    x-reactions={{
-                        dependencies: [".collapse#dataSource"],
-                        fulfill: {
-                            state: {
-                                componentProps: { record: "{{ $deps[0] }}" },
-                            },
-                        },
-                    }}>
+                <SchemaField.Object enum={[]} name="user-map" x-component="UserMapRecord">
                     <SchemaField.Void
                         x-component="FormGrid"
                         x-component-props={{
@@ -247,10 +237,24 @@ const SelectSectionExample: FC = () => {
                                 <SchemaField.Array
                                     name="section"
                                     x-component="SectionCollapse"
-                                    x-reactions={{
-                                        dependencies: [".search-list"],
-                                        fulfill: { state: { componentProps: { search: "{{ $deps[0] }}" } } },
-                                    }}>
+                                    x-reactions={[
+                                        {
+                                            dependencies: ["user-map#loading"],
+                                            fulfill: {
+                                                state: {
+                                                    loading: "{{ !!$deps[0] }}",
+                                                },
+                                            },
+                                        },
+                                        {
+                                            dependencies: [".search-list"],
+                                            fulfill: {
+                                                state: {
+                                                    componentProps: { search: "{{ $deps[0] }}" },
+                                                },
+                                            },
+                                        },
+                                    ]}>
                                     <SchemaField.Void x-component="SectionCollapse.CollapseItem">
                                         <SchemaField.Void
                                             name="section-name"
@@ -282,7 +286,7 @@ const SelectSectionExample: FC = () => {
                                 title: "已选中的人",
                             }}></SchemaField.Void>
                     </SchemaField.Void>
-                </SchemaField.Void>
+                </SchemaField.Object>
             </SchemaField>
             <code className="consumer">
                 <pre>
