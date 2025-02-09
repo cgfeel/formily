@@ -20,6 +20,7 @@ const SelectSectionExample: FC = () => {
         <Panel form={form}>
             <SchemaField>
                 <SchemaField.Void
+                    name="user-map"
                     x-component="UserMapRecord"
                     x-reactions={{
                         dependencies: [".collapse#dataSource"],
