@@ -10,6 +10,7 @@ import RecentRhoices from "./com/RecentChoices";
 import UserMapRecord from "./com/UserMapRecord";
 import TipTitle from "./com/TipTitle";
 import SectionCollapse from "./components/SectionCollapse";
+import { filterSection } from "./event";
 
 const { GridColumn } = FormGrid;
 
@@ -38,6 +39,9 @@ const SchemaField = createSchemaField({
         ToolBar,
         UserCheckBox,
         UserMapRecord,
+    },
+    scope: {
+        filterSection,
     },
 });
 

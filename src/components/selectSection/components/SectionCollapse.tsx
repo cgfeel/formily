@@ -131,10 +131,12 @@ const InternalSection: FC<Pick<SectionCollapseProps, "activeKey">> = ({ activeKe
     const { dataSource, field, value: fieldValue } = useCollapseField();
     const [activeIndex, updateActive] = useSectionKey(activeKey);
 
+    console.log("a==dataSource", dataSource);
+
     const schema = useSelectSchema();
     const items = getItem(schema);
 
-    const [panels] = useListValue(schema.enum || dataSource || []);
+    const [panels] = useListValue([]);
     const [values] = useListValue(fieldValue);
 
     const SectionItem = useMemo(
@@ -191,6 +193,8 @@ const SectionCollapseGroup: FC<SectionCollapseProps> = ({ activeKey, ...props })
     const field = useField();
     const schema = useFieldSchema();
 
+    console.log("start");
+
     return !isArrayField(field) || !field.loading ? (
         <CollapseWrapper {...props} field={field}>
             <InternalSection activeKey={activeKey} />
@@ -204,7 +208,6 @@ const Sortable = forwardRef<HTMLDivElement, PropsWithChildren<SortableProps> & {
     ({ children, className, list, ...props }, ref) => {
         const prefixCls = usePrefixCls("section-collapse");
 
-        console.log("a===props", props);
         return (
             <div
                 {...props}

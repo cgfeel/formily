@@ -14,8 +14,6 @@ const transformItem = (item: FieldDataSource[number]): SectionItem => {
 const UserMapRecord: FC<PropsWithChildren<UserMapRecordProps>> = ({ children, index }) => {
     const field = useField();
 
-    isField(field) && console.log("a===", field.loading);
-
     const record = !isField(field) ? [] : field.dataSource;
     const userMap = record.reduce<Record<string, SectionItem>>((current, item) => {
         const record = transformItem(item);

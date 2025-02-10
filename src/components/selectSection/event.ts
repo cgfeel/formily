@@ -1,4 +1,4 @@
-import { createEffectHook, Form, isArrayField, isField, onFieldReact, onFieldValueChange } from "@formily/core";
+import { ArrayField, createEffectHook, Form, isArrayField, isField, onFieldReact, onFieldValueChange } from "@formily/core";
 import { asyncDataSource, SectionItem, useFakeService } from "./hooks/useFakeService";
 
 export const createExpandCoolapse = (type: string) => {
@@ -65,6 +65,20 @@ export const createModalFormEffect = (request: ReturnType<typeof useFakeService>
             }
         });
     });
+};
+
+export const filterSection = (field: ArrayField, search?: string) => {
+    console.log('a===', search);
+    const data = field.dataSource || [];
+    // field.loading = true;
+    field.dataSource = [
+        ...data, 
+        {
+        expand: [],
+        items: [],
+        time: Date.now()
+    }]
+    // field.loading = false;
 };
 
 export const onSelectUserEvent = createEffectHook<(payload: PayloadType, form: Form) => ListenerType<PayloadType>>(

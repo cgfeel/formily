@@ -178,11 +178,19 @@ const SelectSectionExample: FC = () => {
                             <SchemaField.String
                                 name="search-list"
                                 x-component="Input"
-                                x-decorator="CardHeader"
                                 x-component-props={{
                                     allowClear: true,
                                     placeholder: "输入部门或员工名称进行筛选",
                                     suffix: <SearchOutlined />,
+                                }}
+                                x-decorator="CardHeader"
+                                x-reactions={{
+                                    dependencies: ["user-map#dataSource"],
+                                    fulfill: {
+                                        state: {
+                                            disabled: "{{ !$deps[0]?.length }}",
+                                        },
+                                    },
                                 }}
                             />
                             <SchemaField.Boolean
@@ -249,9 +257,10 @@ const SelectSectionExample: FC = () => {
                                         {
                                             dependencies: [".search-list"],
                                             fulfill: {
-                                                state: {
-                                                    componentProps: { search: "{{ $deps[0] }}" },
-                                                },
+                                                /*state: {
+                                                    dataSource: "{{ filterSection($deps[0]) }}",
+                                                },*/
+                                                run: "filterSection($self, $deps[0])",
                                             },
                                         },
                                     ]}>
