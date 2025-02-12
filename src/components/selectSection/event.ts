@@ -67,9 +67,9 @@ export const createModalFormEffect = (request: ReturnType<typeof useFakeService>
     });
 };
 
-export const filterSection = (field: ArrayField, search?: string) => {
-    console.log('a===', search);
-    const data = field.dataSource || [];
+export const filterSection = (search?: string, record?: Object) => {
+    console.log('a----filter', search, { ...record });
+    /*const data = field.dataSource || [];
     // field.loading = true;
     field.dataSource = [
         ...data, 
@@ -78,7 +78,13 @@ export const filterSection = (field: ArrayField, search?: string) => {
         items: [],
         time: Date.now()
     }]
-    // field.loading = false;
+    // field.loading = false;*/
+    return [
+        {
+        expand: [],
+        items: [],
+        time: Date.now()
+    }];
 };
 
 export const onSelectUserEvent = createEffectHook<(payload: PayloadType, form: Form) => ListenerType<PayloadType>>(

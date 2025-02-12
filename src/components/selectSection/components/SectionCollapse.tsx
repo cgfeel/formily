@@ -131,7 +131,7 @@ const InternalSection: FC<Pick<SectionCollapseProps, "activeKey">> = ({ activeKe
     const { dataSource, field, value: fieldValue } = useCollapseField();
     const [activeIndex, updateActive] = useSectionKey(activeKey);
 
-    console.log("a==dataSource", dataSource);
+    console.log("a--dataSource", dataSource);
 
     const schema = useSelectSchema();
     const items = getItem(schema);
@@ -193,9 +193,13 @@ const SectionCollapseGroup: FC<SectionCollapseProps> = ({ activeKey, ...props })
     const field = useField();
     const schema = useFieldSchema();
 
-    console.log("start");
+    if (!isArrayField(field) || (!field.loading && !field.dataSource)) {
+        return <RenderProperty match="SectionCollapse.SelectEmpty" schema={schema} />;
+    }
 
-    return !isArrayField(field) || !field.loading ? (
+    console.log("a--start", field.dataSource);
+
+    return !field.loading ? (
         <CollapseWrapper {...props} field={field}>
             <InternalSection activeKey={activeKey} />
         </CollapseWrapper>

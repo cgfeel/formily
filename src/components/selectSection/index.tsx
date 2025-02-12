@@ -257,10 +257,10 @@ const SelectSectionExample: FC = () => {
                                         {
                                             dependencies: [".search-list"],
                                             fulfill: {
-                                                /*state: {
-                                                    dataSource: "{{ filterSection($deps[0]) }}",
-                                                },*/
-                                                run: "filterSection($self, $deps[0])",
+                                                state: {
+                                                    dataSource: "{{ filterSection($deps[0], $record) }}",
+                                                },
+                                                // run: "filterSection($self, $deps[0])",
                                             },
                                         },
                                     ]}>
