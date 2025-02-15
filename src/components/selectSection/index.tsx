@@ -245,22 +245,24 @@ const SelectSectionExample: FC = () => {
                                 <SchemaField.Array
                                     name="section"
                                     x-component="SectionCollapse"
-                                    x-reactions={[
-                                        {
-                                            dependencies: ["user-map#loading"],
-                                            fulfill: {
-                                                state: {
-                                                    loading: "{{ !!$deps[0] }}",
-                                                },
-                                            },
+                                    x-data={{
+                                        list: {
+                                            expand: [],
+                                            items: "{{ $self.dataSource || [] }}",
                                         },
+                                        userMap: "{{ reduceUserMap($self.dataSource || []) }}",
+                                    }}
+                                    x-reactions={[
                                         {
                                             dependencies: [".search-list"],
                                             fulfill: {
                                                 state: {
-                                                    dataSource: "{{ filterSection($deps[0], $record) }}",
+                                                    data: "{{ !!$deps[0] ? { ...$self.data, search: { expand: [], items: $deps[0] } } : { list: $self.data.list, userMap: $self.data.userMap } }}",
+                                                    /*data: {
+                                                        search: "{{ !!$deps[0] ? { expand: [], items: $deps[0] } : undefined }}",
+                                                    },*/
+                                                    // "data.search": "{{ { expand: [], items: $deps[0] } }}",
                                                 },
-                                                // run: "filterSection($self, $deps[0])",
                                             },
                                         },
                                     ]}>

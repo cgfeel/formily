@@ -25,7 +25,7 @@ import {
 import CollapseItem, { RemoveUser, SortHandle } from "./CollapseItem";
 import UserCheckBox, { UserFace, UserPanel } from "./UserCheckBox";
 import UserGroup from "./UserGroup";
-import { FieldPatternTypes, GeneralField, isArrayField } from "@formily/core";
+import { FieldPatternTypes, GeneralField, isArrayField, isField } from "@formily/core";
 import { SectionItem } from "../hooks/useFakeService";
 
 const fieldRange = {
@@ -192,12 +192,14 @@ const RenderProperty: FC<RenderPropertyProps> = ({ match, schema }) => (
 const SectionCollapseGroup: FC<SectionCollapseProps> = ({ activeKey, ...props }) => {
     const field = useField();
     const schema = useFieldSchema();
+    const data = field.data || {};
+
+    console.log("a--start", data.search?.items, data);
 
     if (!isArrayField(field) || (!field.loading && !field.dataSource)) {
+        console.log("a--start-end", field);
         return <RenderProperty match="SectionCollapse.SelectEmpty" schema={schema} />;
     }
-
-    console.log("a--start", field.dataSource);
 
     return !field.loading ? (
         <CollapseWrapper {...props} field={field}>
@@ -207,6 +209,16 @@ const SectionCollapseGroup: FC<SectionCollapseProps> = ({ activeKey, ...props })
         <RenderProperty match="SectionCollapse.SelectSkeleton" schema={schema} />
     );
 };
+
+/*const SectionCollapseGroup: FC = () => {
+    const field = useField();
+    const schema = useFieldSchema();
+    const data = field.data;
+
+    console.log("a----start", data);
+    return <></>;
+    // return !isField(field) ? <></> : <input value={field.value} onChange={e => field.setValue(e.target.value)} />;
+};*/
 
 const Sortable = forwardRef<HTMLDivElement, PropsWithChildren<SortableProps> & { list?: boolean }>(
     ({ children, className, list, ...props }, ref) => {

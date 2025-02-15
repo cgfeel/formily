@@ -22,6 +22,9 @@ export const createModalFormEffect = (request: ReturnType<typeof useFakeService>
     asyncDataSource("user-map", async () => {
         return new Promise<SectionItem[]>(resolve => request(resolve));
     });
+    asyncDataSource("user-map.section", async () => {
+        return new Promise<SectionItem[]>(resolve => request(resolve));
+    });
     onExpandHandle(({ expand, path }, form) => {
         if (path === "collapse") {
             form.query("tool-all").take(field => (field.decoratorProps.expand = expand));
@@ -67,24 +70,9 @@ export const createModalFormEffect = (request: ReturnType<typeof useFakeService>
     });
 };
 
-export const filterSection = (search?: string, record?: Object) => {
-    console.log('a----filter', search, { ...record });
-    /*const data = field.dataSource || [];
-    // field.loading = true;
-    field.dataSource = [
-        ...data, 
-        {
-        expand: [],
-        items: [],
-        time: Date.now()
-    }]
-    // field.loading = false;*/
-    return [
-        {
-        expand: [],
-        items: [],
-        time: Date.now()
-    }];
+export const filterSection = <T extends SectionDataType = SectionDataType>({ list, userMap }: T, search?: string): T => {
+    // const data: SectionType = { expand: [search||''], items: [{ name: "", section: "", mail: "" }] };
+    return { list, userMap };
 };
 
 export const onSelectUserEvent = createEffectHook<(payload: PayloadType, form: Form) => ListenerType<PayloadType>>(
@@ -96,6 +84,8 @@ export const onExpandHandle = createEffectHook<(payload: ExpandPayloadType, form
     "expand-handle",
     (payload, form) => listener => listener(payload, form),
 );
+
+export const reduceUserMap = (records: SectionItem[]) => records.reduce<Record<string, SectionItem>>((current, item) => ({ ...current, [item.name]: item }), {});
 
 export type PayloadType = {
     group: string[];
@@ -110,3 +100,14 @@ type ExpandPayloadType = {
 };
 
 type ListenerType<T extends unknown> = (listener: (payload: T, form: Form) => void) => void;
+
+type SectionDataType = {
+    list: SectionType;
+    userMap: Record<string, SectionItem>;
+    search?: SectionType;
+};
+
+type SectionType = {
+    expand: string[];
+    items: SectionItem[];
+}
