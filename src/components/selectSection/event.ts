@@ -70,9 +70,28 @@ export const createModalFormEffect = (request: ReturnType<typeof useFakeService>
     });
 };
 
-export const filterSection = <T extends SectionDataType = SectionDataType>({ list, userMap }: T, search?: string): T => {
-    // const data: SectionType = { expand: [search||''], items: [{ name: "", section: "", mail: "" }] };
-    return { list, userMap };
+export const filterSection = <T extends SectionDataType = SectionDataType>(record: T, search: string = ''): T => {
+    const searchKey = search.toLowerCase();
+    const { list } = record;
+    const { items = [] } = list || {};
+
+    return {
+        ...record,
+        search: searchKey === '' ? undefined : items.reduce<SectionType>(({ expand, items }, newItem) => {
+            const name = newItem.name.toLowerCase();
+            const section = newItem.section.toLowerCase();
+            const pickName = name.indexOf(searchKey) > -1;
+
+            return {
+                expand: !pickName ? expand : expand.add(newItem.section),
+                items: (pickName || section.indexOf(searchKey) > -1) ? items.concat(newItem) : items
+            }
+        }, {
+            expand: new Set,
+            items: []
+        }),
+        searchKey: search || undefined
+    };
 };
 
 export const onSelectUserEvent = createEffectHook<(payload: PayloadType, form: Form) => ListenerType<PayloadType>>(
@@ -94,20 +113,21 @@ export type PayloadType = {
     path?: string;
 };
 
+export type SectionDataType = {
+    list?: SectionType;
+    search?: SectionType;
+    searchKey?: string;
+    userMap?: Record<string, SectionItem>;
+};
+
+export type SectionType = {
+    expand: Set<string>;
+    items: SectionItem[];
+}
+
 type ExpandPayloadType = {
     expand: boolean;
     path: string;
 };
 
 type ListenerType<T extends unknown> = (listener: (payload: T, form: Form) => void) => void;
-
-type SectionDataType = {
-    list: SectionType;
-    userMap: Record<string, SectionItem>;
-    search?: SectionType;
-};
-
-type SectionType = {
-    expand: string[];
-    items: SectionItem[];
-}

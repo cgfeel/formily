@@ -1,10 +1,10 @@
 import { GeneralField, isArrayField } from "@formily/core";
-import { RecursionField, Schema, SchemaItems, useExpressionScope, useField, useFieldSchema } from "@formily/react";
+import { RecursionField, Schema, useExpressionScope, useField, useFieldSchema } from "@formily/react";
 import { CollapseProps, Typography } from "antd";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { SectionItem } from "./useFakeService";
 import { SizeType } from "antd/es/config-provider/SizeContext";
-import { PayloadType } from "../event";
+import { PayloadType, SectionDataType, SectionType } from "../event";
 
 const { Text } = Typography;
 
@@ -227,6 +227,84 @@ export const useCollapseItems = () => {
     return { collapseItems, field, readPretty, remove, schema, searchList, values } as const;
 };
 
+export const useSectionRecord = (data: SectionDataType = {}, field: GeneralField) => {
+    const record = useMemo(() => {
+        const { list, search, searchKey } = data || {};
+        const info = searchKey ? search : list;
+
+        return info || { expand: new Set<string>(), items: [] };
+    }, [data]);
+
+    // 删除：dataSource 默认列表，value 字段值，如果有搜索连同一块删除
+    const deleteSection = useCallback(
+        (section: string) => {
+            const keys = ["list", "search"] as const;
+            const filter = (items: SectionItem[]) => items.filter(item => item.section !== section);
+
+            const record = keys.reduce<Partial<Record<"list" | "search", SectionType | undefined>>>((current, key) => {
+                const info = data[key];
+                if (info) info.expand.delete(section);
+
+                const newItems =
+                    info === undefined
+                        ? info
+                        : {
+                              ...info,
+                              items: filter(info.items),
+                          };
+
+                return {
+                    ...current,
+                    [key]: newItems === undefined || newItems.items.length === 0 ? undefined : newItems,
+                };
+            }, {});
+
+            if (isArrayField(field)) {
+                field.value = filter(field.value);
+            }
+
+            console.log("a---record", record);
+
+            field.data = {
+                ...data,
+                ...record,
+            };
+        },
+        [data, field],
+    );
+
+    // 展开、收起：有搜索的情况优先设置搜索，否则设置默认列表
+    const updateActive: CollapseLookupType["updateActive"] = useCallback(
+        (key, expand = true) => {
+            const name = data.searchKey ? "search" : "list";
+            record.expand[expand ? "add" : "delete"](key);
+
+            field.data = {
+                ...data,
+                [name]: record,
+            };
+        },
+        [data, field, record],
+    );
+
+    return { record, deleteSection, updateActive } as const;
+};
+
+export const useGroupScope = () => {
+    const { $lookup, $record } = useExpressionScope() as GroupScopeType;
+    const { expand, group, section } = $record || {};
+    const { schema, deleteSection, selectHandle, updateActive } = $lookup || {};
+
+    return {
+        expand,
+        group,
+        schema,
+        section,
+        deleteSection,
+        updateActive,
+    } as const;
+};
+
 export const useSectionScope = () => {
     const { $lookup, $record, $records: records } = useExpressionScope() as SectionScopeType;
     const { activeIndex, group, values, section, updateActive } = $record || {};
@@ -338,6 +416,13 @@ export type ActiveKeyItem = Partial<Record<string, boolean>>;
 
 export type CollapseItem = Record<string, Set<string>>;
 
+export type CollapseLookupType = {
+    schema: CollapseSchema;
+    deleteSection: (section: string) => void;
+    selectHandle: (data: PayloadType) => void;
+    updateActive: (key: string, expand?: boolean) => void;
+};
+
 export type CollapseSchema = Partial<Record<"checkbox" | "group" | "sort" | "remove", ReactNode>>;
 
 export type LookupType = {
@@ -387,6 +472,16 @@ type SectionScopeType = {
         section: string;
         values: Set<string>;
         updateActive: (key: string, expand?: boolean) => void;
+    };
+    $records?: string[];
+};
+
+type GroupScopeType = {
+    $lookup?: CollapseLookupType;
+    $record?: {
+        expand: boolean;
+        group: Set<string>;
+        section: string;
     };
     $records?: string[];
 };

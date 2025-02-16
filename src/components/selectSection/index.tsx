@@ -247,7 +247,7 @@ const SelectSectionExample: FC = () => {
                                     x-component="SectionCollapse"
                                     x-data={{
                                         list: {
-                                            expand: [],
+                                            expand: new Set(),
                                             items: "{{ $self.dataSource || [] }}",
                                         },
                                         userMap: "{{ reduceUserMap($self.dataSource || []) }}",
@@ -257,11 +257,7 @@ const SelectSectionExample: FC = () => {
                                             dependencies: [".search-list"],
                                             fulfill: {
                                                 state: {
-                                                    data: "{{ !!$deps[0] ? { ...$self.data, search: { expand: [], items: $deps[0] } } : { list: $self.data.list, userMap: $self.data.userMap } }}",
-                                                    /*data: {
-                                                        search: "{{ !!$deps[0] ? { expand: [], items: $deps[0] } : undefined }}",
-                                                    },*/
-                                                    // "data.search": "{{ { expand: [], items: $deps[0] } }}",
+                                                    data: "{{ filterSection($self.data, $deps[0]) }}",
                                                 },
                                             },
                                         },
