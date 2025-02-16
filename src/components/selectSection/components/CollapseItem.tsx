@@ -38,20 +38,17 @@ const CollapseItem: FC<CollapseItemProps> = ({
         [section, updateActive],
     );
 
-    return useMemo(
-        () => (
-            <Collapse
-                {...props}
-                accordion={accordion}
-                activeKey={expand && section ? [section] : []}
-                bordered={bordered}
-                expandIconPosition={expandIconPosition}
-                items={items}
-                size={size}
-                onChange={keys => expandActive(Array.isArray(keys) ? keys : [keys])}
-            />
-        ),
-        [accordion, bordered, expand, expandIconPosition, items, props, section, size, expandActive],
+    return (
+        <Collapse
+            {...props}
+            accordion={accordion}
+            activeKey={expand && section ? [section] : []}
+            bordered={bordered}
+            expandIconPosition={expandIconPosition}
+            items={items}
+            size={size}
+            onChange={keys => expandActive(Array.isArray(keys) ? keys : [keys])}
+        />
     );
 };
 
