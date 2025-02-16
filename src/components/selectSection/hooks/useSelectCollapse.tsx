@@ -228,42 +228,43 @@ export const useCollapseItems = () => {
 };
 
 export const useSectionRecord = (data: SectionDataType = {}, field: GeneralField) => {
+    const defaultItem = { expand: new Set<string>(), items: [] };
     const record = useMemo(() => {
         const { list, search, searchKey } = data || {};
         const info = searchKey ? search : list;
 
-        return info || { expand: new Set<string>(), items: [] };
+        return info || defaultItem;
     }, [data]);
 
     // 删除：dataSource 默认列表，value 字段值，如果有搜索连同一块删除
-    const deleteSection = useCallback(
-        (section: string) => {
+    const deleteSection: CollapseLookupType["deleteSection"] = useCallback(
+        group => {
             const keys = ["list", "search"] as const;
-            const filter = (items: SectionItem[]) => items.filter(item => item.section !== section);
+            const filter = (items: SectionItem[]) => items.filter(({ name }) => !group.indexOf(name));
 
             const record = keys.reduce<Partial<Record<"list" | "search", SectionType | undefined>>>((current, key) => {
                 const info = data[key];
-                if (info) info.expand.delete(section);
+                const sections = new Set();
 
-                const newItems =
-                    info === undefined
-                        ? info
-                        : {
-                              ...info,
-                              items: filter(info.items),
-                          };
+                const defaultData = key === "search" ? undefined : defaultItem;
+                const items = info === undefined ? [] : filter(info.items);
 
+                items.forEach(({ section }) => sections.add(section));
                 return {
                     ...current,
-                    [key]: newItems === undefined || newItems.items.length === 0 ? undefined : newItems,
+                    [key]:
+                        items.length === 0
+                            ? defaultData
+                            : {
+                                  expand: info === undefined ? new Set() : info.expand.intersection(sections),
+                                  items: items,
+                              },
                 };
             }, {});
 
             if (isArrayField(field)) {
                 field.value = filter(field.value);
             }
-
-            console.log("a---record", record);
 
             field.data = {
                 ...data,
@@ -335,7 +336,7 @@ export const useCollapseScope = () => {
     return { values, readPretty, remove, search, size, userMap } as const;
 };
 
-export const useListValue = (list: readonly SectionItem[]) => {
+export const useListValue = (list: SectionItem[]) => {
     const data = useMemo(
         () =>
             list.reduce<CollapseItem>((current, { name, section }) => {
@@ -418,7 +419,7 @@ export type CollapseItem = Record<string, Set<string>>;
 
 export type CollapseLookupType = {
     schema: CollapseSchema;
-    deleteSection: (section: string) => void;
+    deleteSection: (section: string[]) => void;
     selectHandle: (data: PayloadType) => void;
     updateActive: (key: string, expand?: boolean) => void;
 };

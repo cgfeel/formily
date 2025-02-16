@@ -1,9 +1,9 @@
 import { CloseOutlined, MenuOutlined } from "@ant-design/icons";
 import { SortableHandle } from "@formily/antd-v5/lib/__builtins__";
-import { observer } from "@formily/react";
+import { observer, useExpressionScope } from "@formily/react";
 import { Button, ButtonProps, Collapse, CollapseProps } from "antd";
 import { FC, useCallback, useMemo } from "react";
-import { useGroupScope, useSectionScope } from "../hooks/useSelectCollapse";
+import { useGroupScope } from "../hooks/useSelectCollapse";
 
 const CollapseItem: FC<CollapseItemProps> = ({
     accordion,
@@ -66,7 +66,8 @@ const GroupRender: FC<ScopeProps<"group" | "schema">> = ({ group = new Set(), sc
 );
 
 const RemoveUser: FC<ButtonProps> = ({ size = "small", type = "link", ...props }) => {
-    const { section, deleteSection } = useGroupScope();
+    const { group, section, deleteSection } = useGroupScope();
+    const { $record, $records } = useExpressionScope();
     return (
         <Button
             {...props}
@@ -74,7 +75,8 @@ const RemoveUser: FC<ButtonProps> = ({ size = "small", type = "link", ...props }
             type={type}
             onClick={event => {
                 event.stopPropagation();
-                section && deleteSection && deleteSection(section);
+                console.log("a---del-1", $record.expand, $records, group);
+                // section && deleteSection && deleteSection(section);
             }}>
             <CloseOutlined />
         </Button>
@@ -97,4 +99,4 @@ interface CollapseItemProps extends Omit<CollapseProps, "activeKey" | "children"
 
 type ScopeProps<T extends keyof ScopeType> = Pick<ScopeType, T>;
 
-type ScopeType = ReturnType<typeof useSectionScope>;
+type ScopeType = ReturnType<typeof useGroupScope>;

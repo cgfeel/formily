@@ -24,11 +24,11 @@ const UserGroup: FC = () => {
         <Row gutter={[0, 16]}>
             {list.map((name, i) => (
                 <Col key={`${name}-${i}`} span={24}>
-                    <InternalGroup schema={schema}>
-                        <RecordsScope getRecords={() => [name]}>
+                    <RecordsScope getRecords={() => [name]}>
+                        <InternalGroup schema={schema}>
                             {schema.checkbox === undefined ? name : schema.checkbox}
-                        </RecordsScope>
-                    </InternalGroup>
+                        </InternalGroup>
+                    </RecordsScope>
                 </Col>
             ))}
         </Row>

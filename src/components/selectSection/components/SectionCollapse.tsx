@@ -16,7 +16,7 @@ import {
 import CollapseItem, { RemoveUser, SortHandle } from "./CollapseItem";
 import UserCheckBox, { UserFace, UserPanel } from "./UserCheckBox";
 import UserGroup from "./UserGroup";
-import { ArrayField, FieldPatternTypes, GeneralField, isArrayField, isField } from "@formily/core";
+import { ArrayField, FieldPatternTypes, GeneralField, isArrayField } from "@formily/core";
 import { SectionItem } from "../hooks/useFakeService";
 import { SectionDataType, SectionType } from "../event";
 
