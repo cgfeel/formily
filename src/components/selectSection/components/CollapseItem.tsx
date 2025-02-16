@@ -66,8 +66,9 @@ const GroupRender: FC<ScopeProps<"group" | "schema">> = ({ group = new Set(), sc
 );
 
 const RemoveUser: FC<ButtonProps> = ({ size = "small", type = "link", ...props }) => {
-    const { group, section, deleteSection } = useGroupScope();
-    const { $record, $records } = useExpressionScope();
+    const { group, deleteSection } = useGroupScope();
+    const { $records } = useExpressionScope();
+
     return (
         <Button
             {...props}
@@ -75,8 +76,7 @@ const RemoveUser: FC<ButtonProps> = ({ size = "small", type = "link", ...props }
             type={type}
             onClick={event => {
                 event.stopPropagation();
-                console.log("a---del-1", $record.expand, $records, group);
-                // section && deleteSection && deleteSection(section);
+                deleteSection && deleteSection($records || (group ? Array.from(group) : []));
             }}>
             <CloseOutlined />
         </Button>

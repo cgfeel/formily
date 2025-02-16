@@ -240,24 +240,27 @@ export const useSectionRecord = (data: SectionDataType = {}, field: GeneralField
     const deleteSection: CollapseLookupType["deleteSection"] = useCallback(
         group => {
             const keys = ["list", "search"] as const;
-            const filter = (items: SectionItem[]) => items.filter(({ name }) => !group.indexOf(name));
+            const filter = (items: SectionItem[]) => items.filter(({ name }) => group.indexOf(name) === -1);
 
             const record = keys.reduce<Partial<Record<"list" | "search", SectionType | undefined>>>((current, key) => {
                 const info = data[key];
-                const sections = new Set();
+                const expand = new Set();
 
                 const defaultData = key === "search" ? undefined : defaultItem;
                 const items = info === undefined ? [] : filter(info.items);
 
-                items.forEach(({ section }) => sections.add(section));
+                if (info !== undefined) {
+                    items.forEach(({ section }) => info.expand.has(section) && expand.add(section));
+                }
+
                 return {
                     ...current,
                     [key]:
                         items.length === 0
                             ? defaultData
                             : {
-                                  expand: info === undefined ? new Set() : info.expand.intersection(sections),
                                   items: items,
+                                  expand,
                               },
                 };
             }, {});

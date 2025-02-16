@@ -120,7 +120,6 @@ const CollapseWrapper: FC<PropsWithChildren<CollapseWrapperProps>> = ({
 };
 
 const InternalSection: FC<PropsWithChildren<InternalSectionProps>> = ({ children, empty, field, record, userMap }) => {
-    console.log("a----record-data", record);
     const [dataIndex] = useListValue(record.items);
     const [values] = useListValue(field.value);
 
