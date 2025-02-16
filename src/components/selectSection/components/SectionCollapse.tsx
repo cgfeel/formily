@@ -1,7 +1,17 @@
 import { SortableContainer, SortableElement, usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
 import { observer, RecordScope, RecursionField, Schema, useField, useFieldSchema } from "@formily/react";
 import classNames from "classnames";
-import { FC, forwardRef, HTMLAttributes, PropsWithChildren, ReactNode, useCallback, useMemo } from "react";
+import {
+    FC,
+    forwardRef,
+    HTMLAttributes,
+    PropsWithChildren,
+    ReactNode,
+    useCallback,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
 import PanelDecorator from "../com/PanelDecorator";
 import SelectEmpty from "../com/SelectEmpty";
 import SelectSkeleton from "../com/SelectSkeleton";
@@ -16,8 +26,7 @@ import {
 import CollapseItem, { RemoveUser, SortHandle } from "./CollapseItem";
 import UserCheckBox, { UserFace, UserPanel } from "./UserCheckBox";
 import UserGroup from "./UserGroup";
-import { ArrayField, FieldPatternTypes, GeneralField, isArrayField } from "@formily/core";
-import { SectionItem } from "../hooks/useFakeService";
+import { ArrayField, FieldPatternTypes, isArrayField } from "@formily/core";
 import { SectionDataType, SectionType } from "../event";
 
 const fieldRange = {
@@ -30,44 +39,18 @@ const fieldRange = {
 const getItem = (schema: Schema) => (Array.isArray(schema.items) ? schema.items[0] : schema.items);
 const isFieldSchema = (schema: Schema, component: string) => schema["x-component"] === component;
 
-const useSortCollapse = (field: GeneralField, dataSource: CollapseItemType, userMap: SectionDataType["userMap"]) => {
-    const updateHandle = useCallback(
-        (data: SectionItem[]) => {
-            if (isArrayField(field)) {
-                // const readPretty = pattern === "readPretty";
-                field.dataSource = data;
-                /*if (!readPretty) {
-                    field.dataSource = data;
-                }
+const useSortCollapse = (dataSource: CollapseItemType) => {
+    const [index, setIndex] = useState(Object.keys(dataSource));
 
-                const dataSource = readPretty ? data : field.value;
-                field.setValue([...dataSource]);*/
-            }
-        },
-        [field],
-    );
+    useEffect(() => {
+        const keys = Object.keys(dataSource);
+        setIndex(index => {
+            const data = index.filter(key => keys.indexOf(key) > -1);
+            return data.length === index.length ? index : data;
+        });
+    }, [dataSource]);
 
-    const sortHandle = useCallback(
-        (index: string[]) => {
-            if (userMap) {
-                const uplist = index.reduce<SectionItem[]>((current, section) => {
-                    const list = dataSource[section] || new Set();
-                    list.forEach(name => {
-                        const item = userMap[name];
-                        if (item) current.push(item);
-                    });
-
-                    return current;
-                }, []);
-                updateHandle(uplist);
-            } else {
-                updateHandle([]);
-            }
-        },
-        [dataSource, userMap, updateHandle],
-    );
-
-    return [sortHandle];
+    return [index, setIndex] as const;
 };
 
 const CollapseWrapper: FC<PropsWithChildren<CollapseWrapperProps>> = ({
@@ -119,12 +102,15 @@ const CollapseWrapper: FC<PropsWithChildren<CollapseWrapperProps>> = ({
     );
 };
 
+// 待废弃：userMap
 const InternalSection: FC<PropsWithChildren<InternalSectionProps>> = ({ children, empty, field, record, userMap }) => {
     const [dataIndex] = useListValue(record.items);
     const [values] = useListValue(field.value);
 
-    const [sortHandle] = useSortCollapse(field, dataIndex, userMap);
-    const index = Object.keys(dataIndex);
+    const [index, sortIndex] = useSortCollapse(dataIndex);
+    // const index = Object.keys(dataIndex);
+
+    console.log("a--index", index);
 
     return index.length === 0 ? (
         <>{empty}</>
@@ -132,10 +118,11 @@ const InternalSection: FC<PropsWithChildren<InternalSectionProps>> = ({ children
         <SortableList
             list={index}
             onSortEnd={({ oldIndex, newIndex }) => {
-                const current = index.splice(oldIndex, 1)[0];
+                const indexItems = [...index];
+                const current = indexItems.splice(oldIndex, 1)[0];
 
-                index.splice(newIndex, 0, current);
-                sortHandle(index);
+                indexItems.splice(newIndex, 0, current);
+                sortIndex(indexItems);
             }}>
             {index.map((section, index) => (
                 <SortableItem key={`item-${index}`} lockAxis="y" index={index}>
