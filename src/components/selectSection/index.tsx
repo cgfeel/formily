@@ -16,10 +16,11 @@ const SelectSectionExample: FC = () => {
       }),
     [request],
   );
+
   return (
     <Panel form={form}>
       <SchemaField>
-        <SchemaField.Object enum={[]} name="user-map" x-component="UserMapRecord">
+        <SchemaField.Object enum={[]} name="user-map" x-component="UserMapRecord" x-component-props={{ index: 1 }}>
           <SchemaField.Void
             x-component="FormGrid"
             x-component-props={{
@@ -240,11 +241,27 @@ const SelectSectionExample: FC = () => {
                   x-data={{
                     list: {
                       expand: new Set(),
-                      items: "{{ $self.dataSource || [] }}",
+                      items: [],
                     },
-                    userMap: "{{ reduceUserMap($self.dataSource || []) }}",
+                    userMap: {},
                   }}
                   x-reactions={[
+                    {
+                      dependencies: ["....#loading", "....#dataSource"],
+                      fulfill: {
+                        // run: "console.log('a---deps', $deps[1])",
+                        state: {
+                          loading: "{{ $deps[0] ?? false }}",
+                          data: {
+                            list: {
+                              expand: new Set(),
+                              items: "{{ $deps[1] || [] }}",
+                            },
+                            userMap: "{{ reduceUserMap($deps[1] || []) }}",
+                          },
+                        },
+                      },
+                    },
                     {
                       dependencies: [".search-list"],
                       fulfill: {

@@ -1,4 +1,4 @@
-import { ArrayField, createEffectHook, Form, isArrayField, isField, onFieldReact, onFieldValueChange } from "@formily/core";
+import { createEffectHook, Form, isArrayField, isField, onFieldReact, onFieldValueChange } from "@formily/core";
 import { asyncDataSource, SectionItem, useFakeService } from "./hooks/useFakeService";
 
 export const createExpandCoolapse = (type: string) => {
@@ -22,9 +22,9 @@ export const createModalFormEffect = (request: ReturnType<typeof useFakeService>
     asyncDataSource("user-map", async () => {
         return new Promise<SectionItem[]>(resolve => request(resolve));
     });
-    asyncDataSource("user-map.section", async () => {
-        return new Promise<SectionItem[]>(resolve => request(resolve));
-    });
+    // asyncDataSource("user-map.section", async () => {
+    //     return new Promise<SectionItem[]>(resolve => request(resolve));
+    // });
     onExpandHandle(({ expand, path }, form) => {
         if (path === "collapse") {
             form.query("tool-all").take(field => (field.decoratorProps.expand = expand));
@@ -70,30 +70,6 @@ export const createModalFormEffect = (request: ReturnType<typeof useFakeService>
     });
 };
 
-export const filterSection = <T extends SectionDataType = SectionDataType>(record: T, search: string = ''): T => {
-    const searchKey = search.toLowerCase();
-    const { list } = record;
-    const { items = [] } = list || {};
-
-    return {
-        ...record,
-        search: searchKey === '' ? undefined : items.reduce<SectionType>(({ expand, items }, newItem) => {
-            const name = newItem.name.toLowerCase();
-            const section = newItem.section.toLowerCase();
-            const pickName = name.indexOf(searchKey) > -1;
-
-            return {
-                expand: !pickName ? expand : expand.add(newItem.section),
-                items: (pickName || section.indexOf(searchKey) > -1) ? items.concat(newItem) : items
-            }
-        }, {
-            expand: new Set,
-            items: []
-        }),
-        searchKey: search || undefined
-    };
-};
-
 export const onSelectUserEvent = createEffectHook<(payload: PayloadType, form: Form) => ListenerType<PayloadType>>(
     "select-user",
     (payload, form) => listener => listener(payload, form)
@@ -103,8 +79,6 @@ export const onExpandHandle = createEffectHook<(payload: ExpandPayloadType, form
     "expand-handle",
     (payload, form) => listener => listener(payload, form),
 );
-
-export const reduceUserMap = (records: SectionItem[]) => records.reduce<Record<string, SectionItem>>((current, item) => ({ ...current, [item.name]: item }), {});
 
 export type PayloadType = {
     group: string[];
