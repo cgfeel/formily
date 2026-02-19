@@ -12,7 +12,7 @@ import TipTitle from "./com/TipTitle";
 import SectionCollapse from "./components/SectionCollapse";
 import { SectionDataType, SectionType } from "./event";
 import InputTest from "./components/Input";
-import { SectionItem } from "./hooks/useFakeService";
+// import { SectionItem } from "./hooks/useFakeService";
 
 const { GridColumn } = FormGrid;
 
@@ -73,8 +73,6 @@ const SchemaField = createSchemaField({
         searchKey: search || undefined,
       };
     },
-    reduceUserMap: (records: SectionItem[]) =>
-      records.reduce<Record<string, SectionItem>>((current, item) => ({ ...current, [item.name]: item }), {}),
   },
 });
 

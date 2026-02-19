@@ -91,7 +91,6 @@ export type SectionDataType = {
     list?: SectionType;
     search?: SectionType;
     searchKey?: string;
-    userMap?: Record<string, SectionItem>;
 };
 
 export type SectionType = {

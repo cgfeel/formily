@@ -27,7 +27,8 @@ import CollapseItem, { RemoveUser, SortHandle } from "./CollapseItem";
 import UserCheckBox, { UserFace, UserPanel } from "./UserCheckBox";
 import UserGroup from "./UserGroup";
 import { ArrayField, FieldPatternTypes, isArrayField } from "@formily/core";
-import { SectionDataType, SectionType } from "../event";
+import { SectionType } from "../event";
+import { objectKeys } from "../utils/fields";
 
 const fieldRange = {
   checkbox: "SectionCollapse.UserCheckBox",
@@ -62,23 +63,13 @@ const CollapseWrapper: FC<PropsWithChildren<CollapseWrapperProps>> = ({
   updateActive,
   search = "",
 }) => {
-  const groupSchema = useMemo(
-    () =>
-      items?.reduceProperties<CollapseSchema, CollapseSchema>((addition, schema, key) => {
-        let name: keyof typeof fieldRange | undefined;
-        let field: ReactNode | undefined;
-
-        for (name in fieldRange) {
-          if (name && isFieldSchema(schema, fieldRange[name])) {
-            field = <RecursionField name={key} schema={schema} />;
-            break;
-          }
-        }
-
-        return field === undefined || name === undefined ? addition : { ...addition, [name]: field };
-      }, {}),
-    [items],
-  );
+  const groupSchema = useMemo(() => {
+    const fieldKeys = objectKeys(fieldRange);
+    return items?.reduceProperties<CollapseSchema, CollapseSchema>((addition, schema, key) => {
+      const name = fieldKeys.find(itemKey => isFieldSchema(schema, fieldRange[itemKey]));
+      return name === undefined ? addition : { ...addition, [name]: <RecursionField name={key} schema={schema} /> };
+    }, {});
+  }, [items]);
 
   const selectHandle: LookupType["selectHandle"] = useCallback(
     update => {
@@ -103,7 +94,7 @@ const CollapseWrapper: FC<PropsWithChildren<CollapseWrapperProps>> = ({
 };
 
 // 待废弃：userMap
-const InternalSection: FC<PropsWithChildren<InternalSectionProps>> = ({ children, empty, field, record, userMap }) => {
+const InternalSection: FC<PropsWithChildren<InternalSectionProps>> = ({ children, empty, field, record }) => {
   const [dataIndex] = useListValue(record.items);
   const [values] = useListValue(field.value);
 
@@ -130,7 +121,7 @@ const InternalSection: FC<PropsWithChildren<InternalSectionProps>> = ({ children
             getRecord={() => ({
               expand: record.expand.has(section),
               group: dataIndex[section],
-              values: values[section] || new Set(),
+              values: values[section] ?? new Set(),
               section,
               // activeIndex,
               // updateActive,
@@ -159,12 +150,12 @@ const SectionCollapseGroup: FC = () => {
 
   const { data } = field;
 
-  const { record, deleteSection, updateActive } = useSectionRecord(data, field);
+  const { record, deleteSection, updateActive } = useSectionRecord(field);
   const items = getItem(schema);
 
   // const dataSource = isArrayField(field) ? field.dataSource : [];
 
-  console.log("a--start", field, field.pattern, data);
+  //   console.log("a--start", field, field.pattern, data);
 
   const empty = useMemo(() => <RenderProperty match="SectionCollapse.SelectEmpty" schema={schema} />, [schema]);
 
@@ -185,7 +176,7 @@ const SectionCollapseGroup: FC = () => {
       search={data?.searchKey}
       deleteSection={deleteSection}
       updateActive={updateActive}>
-      <InternalSection field={field} empty={empty} record={record} userMap={data?.userMap}>
+      <InternalSection field={field} empty={empty} record={record}>
         {SectionItem}
       </InternalSection>
     </CollapseWrapper>
@@ -258,7 +249,7 @@ interface CollapseWrapperProps extends Pick<CollapseLookupType, "deleteSection" 
   search?: string;
 }
 
-interface InternalSectionProps extends Pick<SectionDataType, "userMap"> {
+interface InternalSectionProps {
   empty: ReactNode;
   field: ArrayField;
   record: SectionType;

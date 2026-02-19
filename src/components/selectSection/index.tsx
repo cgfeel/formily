@@ -6,6 +6,7 @@ import SchemaField from "./SchemaField";
 import { FormConsumer } from "@formily/react";
 import { useFakeService } from "./hooks/useFakeService";
 import { createModalFormEffect } from "./event";
+import { defaultItem } from "./hooks/useSelectCollapse";
 
 const SelectSectionExample: FC = () => {
   const [request] = useFakeService(3000);
@@ -20,7 +21,7 @@ const SelectSectionExample: FC = () => {
   return (
     <Panel form={form}>
       <SchemaField>
-        <SchemaField.Object enum={[]} name="user-map" x-component="UserMapRecord" x-component-props={{ index: 1 }}>
+        <SchemaField.Object enum={[]} name="user-map" x-component="UserMapRecord">
           <SchemaField.Void
             x-component="FormGrid"
             x-component-props={{
@@ -198,23 +199,17 @@ const SelectSectionExample: FC = () => {
                 }}
                 x-reactions={[
                   {
-                    dependencies: [".section#dataSource"],
+                    dependencies: ["...#dataSource", ".section#value"],
                     fulfill: {
-                      state: {
-                        dataSource: "{{ $deps[0]?.length || 0 }}",
-                        componentProps: { disabled: "{{ !$self.dataSource }}" },
-                      },
-                    },
-                  },
-                  {
-                    dependencies: [".section#value"],
-                    fulfill: {
+                      // run: "console.log('a---test', $deps)",
                       state: {
                         componentProps: {
-                          checked: "{{ $self.dataSource > 0 && $deps[0]?.length === $self.dataSource }}",
-                          indeterminate: "{{ !!$deps[0]?.length && $deps[0].length < $self.dataSource }}",
+                          checked: "{{ !!$deps[0]?.length && $deps[1]?.length === $deps[0]?.length }}",
+                          disabled: "{{ !$deps[0]?.length }}",
+                          indeterminate:
+                            "{{ !!$deps[0]?.length && !!$deps[1]?.length && $deps[1].length < $deps[0]?.length }}",
                         },
-                        content: "{{ `全选 (${$deps[0]?.length || 0}/${$self.dataSource})` }}",
+                        content: "{{ `全选 (${$deps[1]?.length || 0}/${$deps[0]?.length})` }}",
                       },
                     },
                   },
@@ -239,11 +234,7 @@ const SelectSectionExample: FC = () => {
                   name="section"
                   x-component="SectionCollapse"
                   x-data={{
-                    list: {
-                      expand: new Set(),
-                      items: [],
-                    },
-                    userMap: {},
+                    list: { ...defaultItem },
                   }}
                   x-reactions={[
                     {
@@ -252,13 +243,7 @@ const SelectSectionExample: FC = () => {
                         // run: "console.log('a---deps', $deps[1])",
                         state: {
                           loading: "{{ $deps[0] ?? false }}",
-                          data: {
-                            list: {
-                              expand: new Set(),
-                              items: "{{ $deps[1] || [] }}",
-                            },
-                            userMap: "{{ reduceUserMap($deps[1] || []) }}",
-                          },
+                          "data.list.items": "{{ $deps[1] || [] }}",
                         },
                       },
                     },

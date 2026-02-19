@@ -32,9 +32,9 @@ const UserMapRecord: FC<PropsWithChildren<UserMapRecordProps>> = ({ children, in
   console.log("a----usermap", userMap);
 
   return index === undefined ? (
-    <RecordScope getRecord={() => ({ userMap, test: "111" })}>{children}</RecordScope>
+    <RecordScope getRecord={() => ({ userMap })}>{children}</RecordScope>
   ) : (
-    <RecordScope getRecord={() => ({ userMap, test: "222" })} getIndex={() => index}>
+    <RecordScope getRecord={() => ({ userMap })} getIndex={() => index}>
       {children}
     </RecordScope>
   );
