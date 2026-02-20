@@ -29,8 +29,6 @@ const UserMapRecord: FC<PropsWithChildren<UserMapRecordProps>> = ({ children, in
         };
   }, {});
 
-  console.log("a----usermap", userMap);
-
   return index === undefined ? (
     <RecordScope getRecord={() => ({ userMap })}>{children}</RecordScope>
   ) : (

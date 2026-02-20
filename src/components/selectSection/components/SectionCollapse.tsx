@@ -27,7 +27,7 @@ import CollapseItem, { RemoveUser, SortHandle } from "./CollapseItem";
 import UserCheckBox, { UserFace, UserPanel } from "./UserCheckBox";
 import UserGroup from "./UserGroup";
 import { ArrayField, FieldPatternTypes, isArrayField } from "@formily/core";
-import { SectionType } from "../event";
+import { SectionDataType, SectionType } from "../event";
 import { objectKeys } from "../utils/fields";
 
 const fieldRange = {
@@ -56,6 +56,7 @@ const useSortCollapse = (dataSource: CollapseItemType) => {
 
 const CollapseWrapper: FC<PropsWithChildren<CollapseWrapperProps>> = ({
   children,
+  data,
   field,
   items,
   pattern,
@@ -73,16 +74,17 @@ const CollapseWrapper: FC<PropsWithChildren<CollapseWrapperProps>> = ({
 
   const selectHandle: LookupType["selectHandle"] = useCallback(
     update => {
+      //   field.data;
       // field.form.notify("select-user", { ...update, path: target || field.path.entire });
     },
-    [field],
+    [data, field],
   );
 
   return (
     <RecordScope
       getRecord={() => ({
-        schema: groupSchema || {},
         pattern: pattern,
+        schema: groupSchema ?? {},
         search: search.toLowerCase(),
         deleteSection,
         selectHandle,
@@ -148,9 +150,7 @@ const SectionCollapseGroup: FC = () => {
   const field = useField();
   const schema = useFieldSchema();
 
-  const { data } = field;
-
-  const { record, deleteSection, updateActive } = useSectionRecord(field);
+  const { data, record, deleteSection, updateActive } = useSectionRecord(field);
   const items = getItem(schema);
 
   // const dataSource = isArrayField(field) ? field.dataSource : [];
@@ -170,10 +170,11 @@ const SectionCollapseGroup: FC = () => {
 
   return !field.loading ? (
     <CollapseWrapper
+      data={data}
       field={field}
       items={items}
       pattern={field.pattern}
-      search={data?.searchKey}
+      search={data.searchKey}
       deleteSection={deleteSection}
       updateActive={updateActive}>
       <InternalSection field={field} empty={empty} record={record}>
@@ -243,6 +244,7 @@ export const SectionCollapse = Object.assign(observer(SectionCollapseGroup), {
 export default SectionCollapse;
 
 interface CollapseWrapperProps extends Pick<CollapseLookupType, "deleteSection" | "updateActive"> {
+  data: SectionDataType;
   field: ArrayField;
   pattern: FieldPatternTypes;
   items?: Schema;

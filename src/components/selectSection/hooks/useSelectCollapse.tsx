@@ -227,9 +227,8 @@ export const useCollapseItems = () => {
 export const useSectionRecord = (field: GeneralField) => {
   const fieldData = (field.data ?? {}) as SectionDataType;
   const record = useMemo(() => {
-    const { list, search, searchKey } = fieldData || {};
+    const { list, search, searchKey } = fieldData;
     const info = searchKey ? search : list;
-
     return info ?? { ...defaultItem };
   }, [fieldData]);
 
@@ -288,24 +287,32 @@ export const useSectionRecord = (field: GeneralField) => {
     [fieldData, field, record],
   );
 
-  return Object.freeze({ record, deleteSection, updateActive });
+  return Object.freeze({ data: fieldData, record, deleteSection, updateActive });
 };
 
 export const useGroupScope = () => {
-  const { $lookup, $record } = useExpressionScope() as GroupScopeType;
-  const { expand, group, section } = $record || {};
-  const { schema, deleteSection, selectHandle, updateActive } = $lookup || {};
+  const { $lookup, $record, $records: records } = useExpressionScope() as GroupScopeType;
+  const { expand, group, section, values } = $record ?? {};
+  const { $lookup: parent, pattern, schema, search, deleteSection, selectHandle, updateActive } = $lookup ?? {};
+  const { userMap } = parent || {};
 
-  return {
+  return Object.freeze({
     expand,
     group,
+    pattern,
+    records,
     schema,
+    search,
     section,
+    userMap,
+    values,
     deleteSection,
+    selectHandle,
     updateActive,
-  } as const;
+  });
 };
 
+// redel
 export const useSectionScope = () => {
   const { $lookup, $record, $records: records } = useExpressionScope() as SectionScopeType;
   const { activeIndex, group, values, section, updateActive } = $record || {};
@@ -418,7 +425,12 @@ export type ActiveKeyItem = Partial<Record<string, boolean>>;
 export type CollapseItem = Record<string, Set<string>>;
 
 export type CollapseLookupType = {
+  $lookup: {
+    userMap?: Record<string, SectionItem>;
+  };
+  pattern: SelectSchema<SectionItem>["x-pattern"];
   schema: CollapseSchema;
+  search: string;
   deleteSection: (section: string[]) => void;
   selectHandle: (data: PayloadType) => void;
   updateActive: (key: string, expand?: boolean) => void;
@@ -483,6 +495,7 @@ type GroupScopeType = {
     expand: boolean;
     group: Set<string>;
     section: string;
+    values: Set<string>;
   };
   $records?: string[];
 };
