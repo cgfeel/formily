@@ -28,7 +28,10 @@ const SelectSectionExample: FC = () => {
               columnGap: 0,
               maxColumns: 3,
             }}>
-            <SchemaField.Void x-component="Card" x-decorator="GridColumn" x-decorator-props={{ gridSpan: 2 }}>
+            <SchemaField.Void
+              x-component="Card"
+              x-decorator="GridColumn"
+              x-decorator-props={{ gridSpan: 2 }}>
               <SchemaField.String
                 name="search-user"
                 x-component="Input"
@@ -58,7 +61,7 @@ const SelectSectionExample: FC = () => {
               <SchemaField.Void
                 title="最近的选择"
                 x-component="RecentRhoices"
-                x-component-props={{ type: "select-user-collapse" }}
+                x-component-props={{ eventName: "select-user-collapse" }}
                 x-decorator="TipTitle"
                 x-reactions={{
                   dependencies: [".collapse"],
@@ -69,7 +72,10 @@ const SelectSectionExample: FC = () => {
                   },
                 }}
               />
-              <SchemaField.Void title="部门和同事" x-component="ScrollWapper" x-decorator="TipTitle">
+              <SchemaField.Void
+                title="部门和同事"
+                x-component="ScrollWapper"
+                x-decorator="TipTitle">
                 <SchemaField.Array
                   name="collapse"
                   x-component="SelectCollapse"
@@ -170,7 +176,10 @@ const SelectSectionExample: FC = () => {
               columnGap: 0,
               maxColumns: 3,
             }}>
-            <SchemaField.Void x-component="Card" x-decorator="GridColumn" x-decorator-props={{ gridSpan: 2 }}>
+            <SchemaField.Void
+              x-component="Card"
+              x-decorator="GridColumn"
+              x-decorator-props={{ gridSpan: 2 }}>
               <SchemaField.String
                 name="search-list"
                 x-component="Input"
@@ -204,7 +213,8 @@ const SelectSectionExample: FC = () => {
                       // run: "console.log('a---test', $deps)",
                       state: {
                         componentProps: {
-                          checked: "{{ !!$deps[0]?.length && $deps[1]?.length === $deps[0]?.length }}",
+                          checked:
+                            "{{ !!$deps[0]?.length && $deps[1]?.length === $deps[0]?.length }}",
                           disabled: "{{ !$deps[0]?.length }}",
                           indeterminate:
                             "{{ !!$deps[0]?.length && !!$deps[1]?.length && $deps[1].length < $deps[0]?.length }}",
@@ -218,18 +228,21 @@ const SelectSectionExample: FC = () => {
               <SchemaField.Void
                 title="最近的选择"
                 x-component="RecentRhoices"
-                x-component-props={{ type: "select-user" }}
+                x-component-props={{ eventName: "select-user" }}
                 x-decorator="TipTitle"
                 x-reactions={{
                   dependencies: [".section"],
                   fulfill: {
                     state: {
-                      data: "{{ $deps[0]||[] }}",
+                      data: "{{ $deps[0] ?? [] }}",
                     },
                   },
                 }}
               />
-              <SchemaField.Void title="部门和同事" x-component="ScrollWapper" x-decorator="TipTitle">
+              <SchemaField.Void
+                title="部门和同事"
+                x-component="ScrollWapper"
+                x-decorator="TipTitle">
                 <SchemaField.Array
                   name="section"
                   x-component="SectionCollapse"
@@ -260,9 +273,16 @@ const SelectSectionExample: FC = () => {
                     <SchemaField.Void
                       name="section-name"
                       x-component="SectionCollapse.UserCheckBox"
+                      x-component-props={{ eventName: "select-user" }}
                       x-decorator="SectionCollapse.PanelDecorator">
-                      <SchemaField.Void x-component="SectionCollapse.UserPanel" x-hidden="{{!$section}}" />
-                      <SchemaField.Void x-component="SectionCollapse.UserFace" x-hidden="{{$section}}" />
+                      <SchemaField.Void
+                        x-component="SectionCollapse.UserPanel"
+                        x-hidden="{{!$section}}"
+                      />
+                      <SchemaField.Void
+                        x-component="SectionCollapse.UserFace"
+                        x-hidden="{{$section}}"
+                      />
                     </SchemaField.Void>
                     <SchemaField.Void name="group" x-component="SectionCollapse.UserGroup" />
                     <SchemaField.Void name="sort" x-component="SectionCollapse.SortHandle" />

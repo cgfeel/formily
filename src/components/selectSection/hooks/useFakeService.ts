@@ -1,6 +1,14 @@
 import { action } from "@formily/reactive";
-import { FormPathPattern, isField, onFieldInit, onFieldReact } from "@formily/core";
+import { FormPathPattern, isField, onFieldInit } from "@formily/core";
 import { useCallback } from "react";
+import z from "zod";
+
+const getSectionScmema = (name: string) => z.string({ error: `${name} 必须为字符类型` }).refine(value => value.trim() !== '', { error: `${name} 不能为空字符` })
+const sectionItem = z.object({
+    name: getSectionScmema('员工'),
+    section: getSectionScmema('部门'),
+    mail: z.string().optional()
+})
 
 const data: SectionItem[] = [
     { name: "Levi", section: "技术-前端" },
@@ -27,6 +35,8 @@ export const asyncDataSource = (pattern: FormPathPattern, service: () => Promise
         }
     });
 };
+
+export const isSectionItem = (value: unknown): value is SectionItem => sectionItem.safeParse(value).success
 
 export const useFakeService = (delay: number) => {
     const request = useCallback((callback: FakeCallBackType) => {
@@ -62,8 +72,6 @@ export const throttle = <T extends Function, D extends any = any>(func: T, inter
     }
 };
 
-export type SectionItem = Record<"name" | "section", string> & {
-    mail?: string;
-};
+export type SectionItem = z.infer<typeof sectionItem>;
 
 type FakeCallBackType = (data: SectionItem[]) => void;

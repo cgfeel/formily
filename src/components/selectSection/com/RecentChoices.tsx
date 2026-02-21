@@ -5,114 +5,116 @@ import { SectionItem } from "../hooks/useFakeService";
 import { usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
 import useStyle from "../styles/SelectFace";
 import classNames from "classnames";
-import { CheckOutlined } from "@ant-design/icons";
+import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 
 const { Text } = Typography;
 
 const UserItem: FC<UserItemProps> = ({ checked, mail, name, section, onCancel }) => {
-    const tips = [section, name, mail];
-    return (
-        <li className={classNames({ checked })}>
-            <Tooltip title={tips.filter(i => i).join("-")}>
-                <Space direction="vertical" size={0} onClick={() => onCancel(!checked)}>
-                    <div className="face">
-                        <Avatar src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${name}`} />
-                        <span className="choices">
-                            <CheckOutlined />
-                        </span>
-                    </div>
-                    <Text className="tips-text" ellipsis={true}>
-                        {name}
-                    </Text>
-                </Space>
-            </Tooltip>
-        </li>
-    );
+  const tips = [section, name, mail];
+  return (
+    <li className={classNames({ checked })}>
+      <Tooltip title={tips.filter(i => i).join("-")}>
+        <Space direction="vertical" size={0} onClick={() => onCancel(!checked)}>
+          <div className="face">
+            <Avatar src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${name}`} />
+            <span className="choices choices-check">
+              <CheckOutlined />
+            </span>
+            <span className="choices choices-close">
+              <CloseOutlined />
+            </span>
+          </div>
+          <Text className="tips-text" ellipsis={true}>
+            {name}
+          </Text>
+        </Space>
+      </Tooltip>
+    </li>
+  );
 };
 
-const RecentChoices: FC<RecentChoicesType> = ({ className, type, limit = 20 }) => {
-    const recordRef = useRef<UserState[]>([]);
-    const field = useField();
+const RecentChoices: FC<RecentChoicesType> = ({ className, eventName, limit = 20 }) => {
+  const recordRef = useRef<UserState[]>([]);
+  const field = useField();
 
-    const { $record = {} } = useExpressionScope();
-    const { userMap = {} } = $record;
-    const { data = [] } = field;
+  const { $record = {} } = useExpressionScope();
+  const { userMap = {} } = $record;
+  const { data = [] } = field;
 
-    const prefixCls = usePrefixCls("recent-choices");
-    const [wrapSSR, hashId] = useStyle(prefixCls);
+  const prefixCls = usePrefixCls("recent-choices");
+  const [wrapSSR, hashId] = useStyle(prefixCls);
 
-    const record = useMemo(() => {
-        const update = [...(Array.isArray(data) ? data : [data])].reverse();
-        const items = recordRef.current.reduce<Record<string, UserState>>((current, item) => {
-            const { name, section } = item;
-            return {
-                ...current,
-                [`${section}-${name}`]: { ...item, checked: false },
-            };
-        }, {});
+  const record = useMemo(() => {
+    const update = [...(Array.isArray(data) ? data : [data])].reverse();
+    const items = recordRef.current.reduce<Record<string, UserState>>((current, item) => {
+      const { name, section } = item;
+      return {
+        ...current,
+        [`${section}-${name}`]: { ...item, checked: false },
+      };
+    }, {});
 
-        const newItems: UserState[] = [];
-        update.forEach(row => {
-            const newData = row || {};
-            const { name = "", section = "" } = newData;
+    const newItems: UserState[] = [];
+    update.forEach(row => {
+      const newData = row || {};
+      const { name = "", section = "" } = newData;
 
-            const point = name && section ? `${section}-${name}` : "";
-            if (point === "") return;
+      const point = name && section ? `${section}-${name}` : "";
+      if (point === "") return;
 
-            const target = { ...newData, checked: true };
-            if (items[point] !== undefined) {
-                items[point] = target;
-            } else {
-                newItems.push(target);
-            }
-        });
+      const target = { ...newData, checked: true };
+      if (items[point] !== undefined) {
+        items[point] = target;
+      } else {
+        newItems.push(target);
+      }
+    });
 
-        recordRef.current = newItems.concat(Object.values(items)).splice(0, limit);
-        return recordRef.current;
-    }, [data, limit]);
+    recordRef.current = newItems.concat(Object.values(items)).splice(0, limit);
+    return recordRef.current;
+  }, [data, limit]);
 
-    return wrapSSR(
-        <div className={classNames([hashId, prefixCls, className])}>
-            {record.length === 0 ? (
-                <Flex align="center" justify="center">
-                    <Text type="secondary">请先选择部门或员工</Text>
-                </Flex>
-            ) : (
-                <ul>
-                    {record.map((user, i) => {
-                        const { name, section } = user;
-                        return (
-                            <UserItem
-                                {...user}
-                                key={`${name}-${i}`}
-                                mail={userMap[name]?.mail || ""}
-                                onCancel={checked =>
-                                    type &&
-                                    field.form.notify(type, {
-                                        group: [name],
-                                        checked,
-                                        section,
-                                    })
-                                }
-                            />
-                        );
-                    })}
-                </ul>
-            )}
-        </div>,
-    );
+  return wrapSSR(
+    <div className={classNames([hashId, prefixCls, className])}>
+      {record.length === 0 ? (
+        <Flex align="center" justify="center">
+          <Text type="secondary">请先选择部门或员工</Text>
+        </Flex>
+      ) : (
+        <ul>
+          {record.map((user, i) => {
+            const { name, section } = user;
+            return (
+              <UserItem
+                {...user}
+                key={`${name}-${i}`}
+                mail={userMap[name]?.mail || ""}
+                onCancel={checked => {
+                  if (eventName)
+                    field.form.notify(eventName, {
+                      group: [user],
+                      checked,
+                    });
+                }}
+              />
+            );
+          })}
+        </ul>
+      )}
+    </div>,
+  );
 };
 
 export default observer(RecentChoices);
 
 interface RecentChoicesType {
-    className?: string;
-    limit?: number;
-    type?: string;
+  className?: string;
+  eventName?: string;
+  limit?: number;
 }
 
 interface UserItemProps extends UserState {
-    onCancel: (checked: boolean) => void;
+  onCancel: (checked: boolean) => void;
 }
 
 type UserState = SectionItem & { checked?: boolean };

@@ -28,7 +28,8 @@ import UserCheckBox, { UserFace, UserPanel } from "./UserCheckBox";
 import UserGroup from "./UserGroup";
 import { ArrayField, FieldPatternTypes, isArrayField } from "@formily/core";
 import { SectionDataType, SectionType } from "../event";
-import { objectKeys } from "../utils/fields";
+import { isDefined, objectKeys } from "../utils/fields";
+import { isSectionItem, SectionItem } from "../hooks/useFakeService";
 
 const fieldRange = {
   checkbox: "SectionCollapse.UserCheckBox",
@@ -73,9 +74,19 @@ const CollapseWrapper: FC<PropsWithChildren<CollapseWrapperProps>> = ({
   }, [items]);
 
   const selectHandle: LookupType["selectHandle"] = useCallback(
-    update => {
-      //   field.data;
-      // field.form.notify("select-user", { ...update, path: target || field.path.entire });
+    ({ checked, group }) => {
+      const { items } = data.list ?? {};
+      if (items) {
+        const currentItems = field.value.filter(isSectionItem).filter(({ name }) => !group.includes(name));
+        const dataItems = items.reduce<Record<string, SectionItem>>(
+          (current, item) => ({ ...current, [item.name]: item }),
+          {},
+        );
+
+        field.value = !checked
+          ? currentItems
+          : currentItems.concat(group.map(name => (name in dataItems ? dataItems[name] : undefined)).filter(isDefined));
+      }
     },
     [data, field],
   );
@@ -95,7 +106,6 @@ const CollapseWrapper: FC<PropsWithChildren<CollapseWrapperProps>> = ({
   );
 };
 
-// 待废弃：userMap
 const InternalSection: FC<PropsWithChildren<InternalSectionProps>> = ({ children, empty, field, record }) => {
   const [dataIndex] = useListValue(record.items);
   const [values] = useListValue(field.value);
@@ -152,10 +162,6 @@ const SectionCollapseGroup: FC = () => {
 
   const { data, record, deleteSection, updateActive } = useSectionRecord(field);
   const items = getItem(schema);
-
-  // const dataSource = isArrayField(field) ? field.dataSource : [];
-
-  //   console.log("a--start", field, field.pattern, data);
 
   const empty = useMemo(() => <RenderProperty match="SectionCollapse.SelectEmpty" schema={schema} />, [schema]);
 

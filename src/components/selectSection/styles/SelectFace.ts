@@ -44,11 +44,11 @@ export default genStyleHook("select-face", (token) => {
                             borderColor: colorSuccessActive,
                             color: colorText
                         },
-                        "& .face > .choices": {
+                        "& .face > .choices-check": {
                             opacity: 1
                         },
                         [`& > ${antCls}-space:hover`]: {
-                            "& .face > .choices": {
+                            "& .face > .choices-close": {
                                 opacity: .5
                             },
                             [`& ${antCls}-avatar`]: {
@@ -60,7 +60,7 @@ export default genStyleHook("select-face", (token) => {
                         maxWidth: width
                     },
                     [`& > ${antCls}-space:hover`]: {
-                        "& .face .choices": {
+                        "& .face .choices-check": {
                             opacity: .5
                         }
                     },

@@ -1,4 +1,4 @@
-import { ExpressionScope, observer } from "@formily/react";
+import { ExpressionScope, observer, useForm } from "@formily/react";
 import { Avatar, Checkbox, CheckboxProps, Col, Row, Space, Typography } from "antd";
 import classNames from "classnames";
 import { FC, PropsWithChildren, useMemo } from "react";
@@ -8,6 +8,7 @@ const { Text } = Typography;
 
 const InternalUser: FC<PropsWithChildren<InternalUserProps>> = ({
   children,
+  eventName,
   group,
   records,
   values,
@@ -15,6 +16,7 @@ const InternalUser: FC<PropsWithChildren<InternalUserProps>> = ({
   section = "",
   ...props
 }) => {
+  const form = useForm();
   const checked = useMemo(() => {
     if (!records?.length) {
       const size = group?.size ?? 0;
@@ -34,19 +36,19 @@ const InternalUser: FC<PropsWithChildren<InternalUserProps>> = ({
       {...props}
       checked={checked}
       indeterminate={indeterminate}
-      onChange={({ target }) =>
-        selectHandle?.({
-          checked: target.checked,
-          group: !records?.length ? Array.from(group ?? new Set()) : records,
-          section,
-        })
-      }>
+      onChange={({ target }) => {
+        if (eventName)
+          form.notify(eventName, {
+            checked: target.checked,
+            group: !records?.length ? Array.from(group ?? new Set()) : records,
+          });
+      }}>
       {children}
     </Checkbox>
   );
 };
 
-const UserCheckBox: FC<PropsWithChildren<CheckboxProps>> = ({ children, ...props }) => {
+const UserCheckBox: FC<PropsWithChildren<UserCheckProps>> = ({ children, ...props }) => {
   const { group, pattern, records, section, values, selectHandle } = useGroupScope();
   const $section = (records?.length ?? 0) === 0;
 
@@ -75,14 +77,22 @@ const UserFace: FC = () => {
 
   return name === undefined ? null : (
     <Space>
-      <Avatar src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${name}`} style={{ backgroundColor: "#d0e7c5" }} />
+      <Avatar
+        src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${name}`}
+        style={{ backgroundColor: "#d0e7c5" }}
+      />
       <Row gutter={[8, 8]}>
         <Col flex="none">
-          <Text className={classNames({ searchChecked: !!search && name.toLowerCase().indexOf(search) > -1 })}>
+          <Text
+            className={classNames({
+              searchChecked: !!search && name.toLowerCase().indexOf(search) > -1,
+            })}>
             {name}
           </Text>
         </Col>
-        <Col flex="auto">{userMap[name] && <Text type="secondary">({userMap[name].mail})</Text>}</Col>
+        <Col flex="auto">
+          {userMap[name] && <Text type="secondary">({userMap[name].mail})</Text>}
+        </Col>
       </Row>
     </Space>
   );
@@ -108,5 +118,12 @@ export { UserFace, UserPanel };
 export default observer(UserCheckBox);
 
 interface InternalUserProps
-  extends CheckboxProps,
-    Pick<ReturnType<typeof useGroupScope>, "group" | "records" | "section" | "selectHandle" | "values"> {}
+  extends UserCheckProps,
+    Pick<
+      ReturnType<typeof useGroupScope>,
+      "group" | "records" | "section" | "selectHandle" | "values"
+    > {}
+
+interface UserCheckProps extends CheckboxProps {
+  eventName?: string;
+}
