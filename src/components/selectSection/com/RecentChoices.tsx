@@ -92,8 +92,9 @@ const RecentChoices: FC<RecentChoicesType> = ({ className, eventName, limit = 20
                 onCancel={checked => {
                   if (eventName)
                     field.form.notify(eventName, {
-                      group: [user],
+                      group: [name],
                       checked,
+                      section,
                     });
                 }}
               />

@@ -12,7 +12,6 @@ const InternalUser: FC<PropsWithChildren<InternalUserProps>> = ({
   group,
   records,
   values,
-  selectHandle,
   section = "",
   ...props
 }) => {
@@ -41,6 +40,7 @@ const InternalUser: FC<PropsWithChildren<InternalUserProps>> = ({
           form.notify(eventName, {
             checked: target.checked,
             group: !records?.length ? Array.from(group ?? new Set()) : records,
+            section,
           });
       }}>
       {children}
@@ -49,7 +49,7 @@ const InternalUser: FC<PropsWithChildren<InternalUserProps>> = ({
 };
 
 const UserCheckBox: FC<PropsWithChildren<UserCheckProps>> = ({ children, ...props }) => {
-  const { group, pattern, records, section, values, selectHandle } = useGroupScope();
+  const { group, pattern, records, section, values } = useGroupScope();
   const $section = (records?.length ?? 0) === 0;
 
   return (
@@ -57,13 +57,7 @@ const UserCheckBox: FC<PropsWithChildren<UserCheckProps>> = ({ children, ...prop
       {pattern === "readPretty" ? (
         <>{children}</>
       ) : (
-        <InternalUser
-          {...props}
-          group={group}
-          records={records}
-          section={section}
-          values={values}
-          selectHandle={selectHandle}>
+        <InternalUser {...props} group={group} records={records} section={section} values={values}>
           {children}
         </InternalUser>
       )}
@@ -119,10 +113,7 @@ export default observer(UserCheckBox);
 
 interface InternalUserProps
   extends UserCheckProps,
-    Pick<
-      ReturnType<typeof useGroupScope>,
-      "group" | "records" | "section" | "selectHandle" | "values"
-    > {}
+    Pick<ReturnType<typeof useGroupScope>, "group" | "records" | "section" | "values"> {}
 
 interface UserCheckProps extends CheckboxProps {
   eventName?: string;

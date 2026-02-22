@@ -10,9 +10,8 @@ import RecentRhoices from "./com/RecentChoices";
 import UserMapRecord from "./com/UserMapRecord";
 import TipTitle from "./com/TipTitle";
 import SectionCollapse from "./components/SectionCollapse";
-import { SectionDataType, SectionType } from "./event";
+import { SectionType } from "./event";
 import InputTest from "./components/Input";
-// import { SectionItem } from "./hooks/useFakeService";
 
 const { GridColumn } = FormGrid;
 
@@ -44,34 +43,29 @@ const SchemaField = createSchemaField({
     InputTest,
   },
   scope: {
-    filterSection: <T extends SectionDataType = SectionDataType>(record: T, search: string = ""): T => {
-      const searchKey = search.toLowerCase();
-      const { list } = record;
-      const { items = [] } = list || {};
+    filterSection: (items: SectionType["items"], search?: string): SectionType | undefined => {
+      const searchKey = search?.toLowerCase();
+      return !searchKey
+        ? undefined
+        : items.reduce<SectionType>(
+            (current, newItem) => {
+              const name = newItem.name.toLowerCase();
+              const section = newItem.section.toLowerCase();
+              if (!name || !section) return current;
 
-      return {
-        ...record,
-        search:
-          searchKey === ""
-            ? undefined
-            : items.reduce<SectionType>(
-                ({ expand, items }, newItem) => {
-                  const name = newItem.name.toLowerCase();
-                  const section = newItem.section.toLowerCase();
-                  const pickName = name.indexOf(searchKey) > -1;
+              const { expand, items } = current;
+              const pickName = name.includes(searchKey);
 
-                  return {
-                    expand: !pickName ? expand : expand.add(newItem.section),
-                    items: pickName || section.indexOf(searchKey) > -1 ? items.concat(newItem) : items,
-                  };
-                },
-                {
-                  expand: new Set(),
-                  items: [],
-                },
-              ),
-        searchKey: search || undefined,
-      };
+              return {
+                expand: !pickName ? expand : expand.add(newItem.section),
+                items: pickName || section.includes(searchKey) ? items.concat(newItem) : items,
+              };
+            },
+            {
+              expand: new Set(),
+              items: [],
+            },
+          );
     },
   },
 });

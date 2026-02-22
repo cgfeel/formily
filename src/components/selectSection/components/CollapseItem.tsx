@@ -7,7 +7,7 @@ import { useGroupScope } from "../hooks/useSelectCollapse";
 
 const CollapseItem: FC<CollapseItemProps> = ({
   bordered = false,
-  expandIconPosition = "start",
+  expandIconPosition = "end",
   size = "small",
   ...props
 }) => {
@@ -57,7 +57,11 @@ const ExtraRender: FC<ScopeProps<"schema">> = ({ schema = {} }) => (
 );
 
 const GroupRender: FC<ScopeProps<"group" | "schema">> = ({ group = new Set(), schema = {} }) => (
-  <>{schema.group === undefined ? Array.from(group).map(name => <div key={name}>{name}</div>) : schema.group}</>
+  <>
+    {schema.group === undefined
+      ? Array.from(group).map(name => <div key={name}>{name}</div>)
+      : schema.group}
+  </>
 );
 
 const RemoveUser: FC<ButtonProps> = ({ size = "small", type = "link", ...props }) => {

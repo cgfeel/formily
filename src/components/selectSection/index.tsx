@@ -1,5 +1,5 @@
 import { SearchOutlined } from "@ant-design/icons";
-import { createForm } from "@formily/core";
+import { createForm, onFieldValueChange } from "@formily/core";
 import { FC, useMemo } from "react";
 import Panel from "./Panel";
 import SchemaField from "./SchemaField";
@@ -13,7 +13,12 @@ const SelectSectionExample: FC = () => {
   const form = useMemo(
     () =>
       createForm({
-        effects: () => createModalFormEffect(request),
+        effects: () => {
+          createModalFormEffect(request);
+          onFieldValueChange("user-map.search-list", field =>
+            field.setComponentProps({ suffix: !field.value ? <SearchOutlined /> : undefined }),
+          );
+        },
       }),
     [request],
   );
@@ -256,7 +261,11 @@ const SelectSectionExample: FC = () => {
                         // run: "console.log('a---deps', $deps[1])",
                         state: {
                           loading: "{{ $deps[0] ?? false }}",
-                          "data.list.items": "{{ $deps[1] || [] }}",
+                          data: {
+                            list: {
+                              items: "{{ $deps[1] ?? [] }}",
+                            },
+                          },
                         },
                       },
                     },
@@ -264,7 +273,10 @@ const SelectSectionExample: FC = () => {
                       dependencies: [".search-list"],
                       fulfill: {
                         state: {
-                          data: "{{ filterSection($self.data, $deps[0]) }}",
+                          data: {
+                            search: "{{ filterSection($self.data.list.items, $deps[0]) }}",
+                            searchKey: "{{ $deps[0] ?? undefined }}",
+                          },
                         },
                       },
                     },

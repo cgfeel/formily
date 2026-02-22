@@ -1,5 +1,16 @@
-import { SortableContainer, SortableElement, usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
-import { observer, RecordScope, RecursionField, Schema, useField, useFieldSchema } from "@formily/react";
+import {
+  SortableContainer,
+  SortableElement,
+  usePrefixCls,
+} from "@formily/antd-v5/lib/__builtins__";
+import {
+  observer,
+  RecordScope,
+  RecursionField,
+  Schema,
+  useField,
+  useFieldSchema,
+} from "@formily/react";
 import classNames from "classnames";
 import {
   FC,
@@ -7,7 +18,6 @@ import {
   HTMLAttributes,
   PropsWithChildren,
   ReactNode,
-  useCallback,
   useEffect,
   useMemo,
   useState,
@@ -19,7 +29,6 @@ import {
   CollapseItem as CollapseItemType,
   CollapseLookupType,
   CollapseSchema,
-  LookupType,
   useListValue,
   useSectionRecord,
 } from "../hooks/useSelectCollapse";
@@ -27,16 +36,15 @@ import CollapseItem, { RemoveUser, SortHandle } from "./CollapseItem";
 import UserCheckBox, { UserFace, UserPanel } from "./UserCheckBox";
 import UserGroup from "./UserGroup";
 import { ArrayField, FieldPatternTypes, isArrayField } from "@formily/core";
-import { SectionDataType, SectionType } from "../event";
-import { isDefined, objectKeys } from "../utils/fields";
-import { isSectionItem, SectionItem } from "../hooks/useFakeService";
+import { SectionType } from "../event";
+import { objectKeys } from "../utils/fields";
 
-const fieldRange = {
+const fieldRange = Object.freeze({
   checkbox: "SectionCollapse.UserCheckBox",
   group: "SectionCollapse.UserGroup",
   remove: "SectionCollapse.Remove",
   sort: "SectionCollapse.SortHandle",
-} as const;
+});
 
 const getItem = (schema: Schema) => (Array.isArray(schema.items) ? schema.items[0] : schema.items);
 const isFieldSchema = (schema: Schema, component: string) => schema["x-component"] === component;
@@ -46,9 +54,10 @@ const useSortCollapse = (dataSource: CollapseItemType) => {
 
   useEffect(() => {
     const keys = Object.keys(dataSource);
-    setIndex(index => {
-      const data = index.filter(key => keys.indexOf(key) > -1);
-      return data.length === index.length ? index : data;
+    setIndex(currentIndex => {
+      const update =
+        keys.length !== currentIndex.length ? true : keys.some(key => !currentIndex.includes(key));
+      return update ? keys : currentIndex;
     });
   }, [dataSource]);
 
@@ -57,8 +66,6 @@ const useSortCollapse = (dataSource: CollapseItemType) => {
 
 const CollapseWrapper: FC<PropsWithChildren<CollapseWrapperProps>> = ({
   children,
-  data,
-  field,
   items,
   pattern,
   deleteSection,
@@ -69,27 +76,11 @@ const CollapseWrapper: FC<PropsWithChildren<CollapseWrapperProps>> = ({
     const fieldKeys = objectKeys(fieldRange);
     return items?.reduceProperties<CollapseSchema, CollapseSchema>((addition, schema, key) => {
       const name = fieldKeys.find(itemKey => isFieldSchema(schema, fieldRange[itemKey]));
-      return name === undefined ? addition : { ...addition, [name]: <RecursionField name={key} schema={schema} /> };
+      return name === undefined
+        ? addition
+        : { ...addition, [name]: <RecursionField name={key} schema={schema} /> };
     }, {});
   }, [items]);
-
-  const selectHandle: LookupType["selectHandle"] = useCallback(
-    ({ checked, group }) => {
-      const { items } = data.list ?? {};
-      if (items) {
-        const currentItems = field.value.filter(isSectionItem).filter(({ name }) => !group.includes(name));
-        const dataItems = items.reduce<Record<string, SectionItem>>(
-          (current, item) => ({ ...current, [item.name]: item }),
-          {},
-        );
-
-        field.value = !checked
-          ? currentItems
-          : currentItems.concat(group.map(name => (name in dataItems ? dataItems[name] : undefined)).filter(isDefined));
-      }
-    },
-    [data, field],
-  );
 
   return (
     <RecordScope
@@ -98,7 +89,6 @@ const CollapseWrapper: FC<PropsWithChildren<CollapseWrapperProps>> = ({
         schema: groupSchema ?? {},
         search: search.toLowerCase(),
         deleteSection,
-        selectHandle,
         updateActive,
       })}>
       {children}
@@ -106,14 +96,17 @@ const CollapseWrapper: FC<PropsWithChildren<CollapseWrapperProps>> = ({
   );
 };
 
-const InternalSection: FC<PropsWithChildren<InternalSectionProps>> = ({ children, empty, field, record }) => {
+const InternalSection: FC<PropsWithChildren<InternalSectionProps>> = ({
+  children,
+  empty,
+  field,
+  record,
+}) => {
   const [dataIndex] = useListValue(record.items);
   const [values] = useListValue(field.value);
 
   const [index, sortIndex] = useSortCollapse(dataIndex);
   // const index = Object.keys(dataIndex);
-
-  console.log("a--index", index);
 
   return index.length === 0 ? (
     <>{empty}</>
@@ -150,7 +143,11 @@ const RenderProperty: FC<RenderPropertyProps> = ({ match, schema }) => (
   <>
     {schema.reduceProperties(
       (addition, schema, key) =>
-        isFieldSchema(schema, match) ? <RecursionField name={key} schema={schema} onlyRenderSelf /> : addition,
+        isFieldSchema(schema, match) ? (
+          <RecursionField name={key} schema={schema} onlyRenderSelf />
+        ) : (
+          addition
+        ),
       null,
     )}
   </>
@@ -163,10 +160,16 @@ const SectionCollapseGroup: FC = () => {
   const { data, record, deleteSection, updateActive } = useSectionRecord(field);
   const items = getItem(schema);
 
-  const empty = useMemo(() => <RenderProperty match="SectionCollapse.SelectEmpty" schema={schema} />, [schema]);
+  console.log("a---data", data, record);
+
+  const empty = useMemo(
+    () => <RenderProperty match="SectionCollapse.SelectEmpty" schema={schema} />,
+    [schema],
+  );
 
   const SectionItem = useMemo(
-    () => (items === undefined ? null : <RecursionField name="items" schema={items} onlyRenderSelf />),
+    () =>
+      items === undefined ? null : <RecursionField name="items" schema={items} onlyRenderSelf />,
     [items],
   );
 
@@ -176,8 +179,6 @@ const SectionCollapseGroup: FC = () => {
 
   return !field.loading ? (
     <CollapseWrapper
-      data={data}
-      field={field}
       items={items}
       pattern={field.pattern}
       search={data.searchKey}
@@ -222,17 +223,21 @@ const Sortable = forwardRef<HTMLDivElement, PropsWithChildren<SortableProps> & {
   },
 );
 
-const SortableItem = SortableElement(({ children, ref, ...props }: PropsWithChildren<SortableProps>) => (
-  <Sortable {...props} ref={elem => ref && ref(elem)}>
-    {children}
-  </Sortable>
-));
+const SortableItem = SortableElement(
+  ({ children, ref, ...props }: PropsWithChildren<SortableProps>) => (
+    <Sortable {...props} ref={elem => ref && ref(elem)}>
+      {children}
+    </Sortable>
+  ),
+);
 
-const SortableList = SortableContainer(({ children, ...props }: PropsWithChildren<SortableProps>) => (
-  <Sortable {...props} list={true}>
-    {children}
-  </Sortable>
-));
+const SortableList = SortableContainer(
+  ({ children, ...props }: PropsWithChildren<SortableProps>) => (
+    <Sortable {...props} list={true}>
+      {children}
+    </Sortable>
+  ),
+);
 
 export const SectionCollapse = Object.assign(observer(SectionCollapseGroup), {
   Remove: observer(RemoveUser),
@@ -250,8 +255,6 @@ export const SectionCollapse = Object.assign(observer(SectionCollapseGroup), {
 export default SectionCollapse;
 
 interface CollapseWrapperProps extends Pick<CollapseLookupType, "deleteSection" | "updateActive"> {
-  data: SectionDataType;
-  field: ArrayField;
   pattern: FieldPatternTypes;
   items?: Schema;
   search?: string;

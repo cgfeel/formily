@@ -12,7 +12,7 @@ import {
   SectionItem,
   useFakeService,
 } from "./hooks/useFakeService";
-import { isKey } from "./utils/fields";
+import { isDefined, isKey } from "./utils/fields";
 
 export const createExpandCoolapse = (type: string) => {
   const onExpandCollapse = createEffectHook<
@@ -27,11 +27,13 @@ export const createExpandCoolapse = (type: string) => {
 };
 
 export const createModalFormEffect = (request: ReturnType<typeof useFakeService>[0]) => {
+  const result: { current: Promise<SectionItem[]> } = { current: Promise.resolve([]) };
   asyncDataSource("user-map.collapse", async () => {
     return new Promise<SectionItem[]>(resolve => request(resolve));
   });
   asyncDataSource("user-map", async () => {
-    return new Promise<SectionItem[]>(resolve => request(resolve));
+    result.current = new Promise<SectionItem[]>(resolve => request(resolve));
+    return result.current;
   });
   // asyncDataSource("user-map.section", async () => {
   //     return new Promise<SectionItem[]>(resolve => request(resolve));
@@ -41,21 +43,31 @@ export const createModalFormEffect = (request: ReturnType<typeof useFakeService>
       form.query("tool-all").take(field => (field.decoratorProps.expand = expand));
     }
   });
-  onSelectUserEvent(({ checked, group, path = "user-map.section" }, form) => {
+
+  onSelectUserEvent(({ checked, group, section, path = "user-map.section" }, form) => {
     const field = form.query(path).take();
-    const record = group
-      .filter(isSectionItem)
-      .reduce<
-        Record<string, SectionItem>
-      >((current, item) => (!item.name ? current : { ...current, [item.name]: item }), {});
-
     if (isArrayField(field)) {
-      const currentValue = field.value.filter(isSectionItem).filter(item => {
-        const { name = "", section = "" } = isKey(item.name, record) ? record[item.name] : {};
-        return item.section !== section || item.name !== name;
-      });
+      result.current.then(sectionItems => {
+        const record = sectionItems.reduce<Record<string, SectionItem>>(
+          (current, item) => (!item.name ? current : { ...current, [item.name]: item }),
+          {},
+        );
 
-      field.setValue(!checked ? currentValue : currentValue.concat(group));
+        const currentValue = field.value
+          .filter(isSectionItem)
+          .filter(item => item.section !== section || !group.includes(item.name));
+
+        field.setValue(
+          !checked
+            ? currentValue
+            : currentValue.concat(
+                group
+                  .filter(Boolean)
+                  .map(name => (isKey(name, record) ? record[name] : undefined))
+                  .filter(isDefined),
+              ),
+        );
+      });
     }
   });
 
@@ -91,7 +103,7 @@ export const createModalFormEffect = (request: ReturnType<typeof useFakeService>
 };
 
 export const onSelectUserEvent = createEffectHook<
-  (payload: SelectUserPayload, form: Form) => ListenerType<SelectUserPayload>
+  (payload: PayloadType, form: Form) => ListenerType<PayloadType>
 >("select-user", (payload, form) => listener => listener(payload, form));
 
 export const onExpandHandle = createEffectHook<
@@ -123,8 +135,9 @@ type ExpandPayloadType = {
 
 type ListenerType<T extends unknown> = (listener: (payload: T, form: Form) => void) => void;
 
-type SelectUserPayload = {
-  group: SectionItem[];
-  checked?: boolean;
-  path?: string;
-};
+// type SelectUserPayload = {
+//   group: string[];
+//   section: string;
+//   checked?: boolean;
+//   path?: string;
+// };

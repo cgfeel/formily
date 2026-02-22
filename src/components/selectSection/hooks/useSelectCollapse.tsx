@@ -1,5 +1,11 @@
 import { GeneralField, isArrayField } from "@formily/core";
-import { RecursionField, Schema, useExpressionScope, useField, useFieldSchema } from "@formily/react";
+import {
+  RecursionField,
+  Schema,
+  useExpressionScope,
+  useField,
+  useFieldSchema,
+} from "@formily/react";
 import { CollapseProps, Typography } from "antd";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { SectionItem } from "./useFakeService";
@@ -34,9 +40,14 @@ const getSectionSchema = (schema: Schema) => {
 export const defaultItem = { expand: new Set<string>(), items: [] };
 
 export const isEmpty = (schema: Schema) => schema["x-component"] === "SelectCollapse.SelectEmpty";
-export const isSkeleton = (schema: Schema) => schema["x-component"] === "SelectCollapse.SelectSkeleton";
+export const isSkeleton = (schema: Schema) =>
+  schema["x-component"] === "SelectCollapse.SelectSkeleton";
 
-export const useActiveKey = (search: string, panels: CollapseItem, initData: ActiveKeyItem | null = null) => {
+export const useActiveKey = (
+  search: string,
+  panels: CollapseItem,
+  initData: ActiveKeyItem | null = null,
+) => {
   const [defaultKey, setDefaultKey] = useState<ActiveKeyItem | null>(initData);
   const [searchKey, setSearchKey] = useState<ActiveKeyItem | null>(null);
 
@@ -88,7 +99,10 @@ export const useActiveKey = (search: string, panels: CollapseItem, initData: Act
       const newData = reduceKeys(value);
       setKeys(items => {
         if (items !== null) {
-          const record = Object.keys(items).reduce((current, key) => ({ ...current, [key]: false }), {});
+          const record = Object.keys(items).reduce(
+            (current, key) => ({ ...current, [key]: false }),
+            {},
+          );
           return {
             ...record,
             ...newData,
@@ -106,7 +120,8 @@ export const useActiveKey = (search: string, panels: CollapseItem, initData: Act
       items === null
         ? items
         : Object.keys(items).reduce(
-            (current, key) => (panels[key] === undefined ? current : { ...current, [key]: items[key] }),
+            (current, key) =>
+              panels[key] === undefined ? current : { ...current, [key]: items[key] },
             {},
           );
 
@@ -121,7 +136,8 @@ export const useActiveKey = (search: string, panels: CollapseItem, initData: Act
         ? null
         : Object.keys(panels).reduce((current, section) => {
             const snum = section.toLowerCase().indexOf(search) > -1 ? 1 : 0;
-            const unum = Array.from(panels[section]).join("").toLowerCase().indexOf(search) > -1 ? 2 : 0;
+            const unum =
+              Array.from(panels[section]).join("").toLowerCase().indexOf(search) > -1 ? 2 : 0;
             const total = snum + unum;
             return total === 0
               ? current
@@ -180,7 +196,8 @@ export const useCollapseItems = () => {
 
   const searchList = readPretty ? values : panels;
   const remove = useMemo(
-    () => schema.reduceProperties((addition, schema) => (isRemove(schema) ? schema : addition), null),
+    () =>
+      schema.reduceProperties((addition, schema) => (isRemove(schema) ? schema : addition), null),
     [schema],
   );
 
@@ -195,7 +212,12 @@ export const useCollapseItems = () => {
       };
       return {
         children: (
-          <RecursionField name={`group-${i}`} basePath={address} schema={{ ...group, "x-data": data }} onlyRenderSelf />
+          <RecursionField
+            name={`group-${i}`}
+            basePath={address}
+            schema={{ ...group, "x-data": data }}
+            onlyRenderSelf
+          />
         ),
         extra: !remove ? null : (
           <RecursionField
@@ -226,40 +248,44 @@ export const useCollapseItems = () => {
 
 export const useSectionRecord = (field: GeneralField) => {
   const fieldData = (field.data ?? {}) as SectionDataType;
+  const { list, search, searchKey } = fieldData;
   const record = useMemo(() => {
-    const { list, search, searchKey } = fieldData;
     const info = searchKey ? search : list;
     return info ?? { ...defaultItem };
-  }, [fieldData]);
+  }, [list, search, searchKey]);
 
   // 删除：dataSource 默认列表，value 字段值，如果有搜索连同一块删除
   const deleteSection: CollapseLookupType["deleteSection"] = useCallback(
     group => {
       const keys = ["list", "search"] as const;
-      const filter = (items: SectionItem[]) => items.filter(({ name }) => group.indexOf(name) === -1);
+      const filter = (items: SectionItem[]) =>
+        items.filter(({ name }) => group.indexOf(name) === -1);
 
-      const record = keys.reduce<Partial<Record<"list" | "search", SectionType>>>((current, key) => {
-        const info = fieldData[key];
-        const expand = new Set<string>();
+      const record = keys.reduce<Partial<Record<"list" | "search", SectionType>>>(
+        (current, key) => {
+          const info = fieldData[key];
+          const expand = new Set<string>();
 
-        const defaultData = key === "search" ? undefined : { ...defaultItem };
-        const items = info === undefined ? [] : filter(info.items);
+          const defaultData = key === "search" ? undefined : { ...defaultItem };
+          const items = info === undefined ? [] : filter(info.items);
 
-        if (info !== undefined) {
-          items.forEach(({ section }) => info.expand.has(section) && expand.add(section));
-        }
+          if (info !== undefined) {
+            items.forEach(({ section }) => info.expand.has(section) && expand.add(section));
+          }
 
-        return {
-          ...current,
-          [key]:
-            items.length === 0
-              ? defaultData
-              : {
-                  expand,
-                  items,
-                },
-        };
-      }, {});
+          return {
+            ...current,
+            [key]:
+              items.length === 0
+                ? defaultData
+                : {
+                    expand,
+                    items,
+                  },
+          };
+        },
+        {},
+      );
 
       if (isArrayField(field)) {
         field.value = filter(field.value);
@@ -293,7 +319,7 @@ export const useSectionRecord = (field: GeneralField) => {
 export const useGroupScope = () => {
   const { $lookup, $record, $records: records } = useExpressionScope() as GroupScopeType;
   const { expand, group, section, values } = $record ?? {};
-  const { $lookup: parent, pattern, schema, search, deleteSection, selectHandle, updateActive } = $lookup ?? {};
+  const { $lookup: parent, pattern, schema, search, deleteSection, updateActive } = $lookup ?? {};
   const { userMap } = parent || {};
 
   return Object.freeze({
@@ -307,7 +333,6 @@ export const useGroupScope = () => {
     userMap,
     values,
     deleteSection,
-    selectHandle,
     updateActive,
   });
 };
@@ -359,7 +384,7 @@ export const useListValue = (list: SectionItem[]) => {
     [list],
   );
 
-  return [data];
+  return Object.freeze([data]);
 };
 
 export const useListValueRecord = (list: SectionItem[]) => {
@@ -402,7 +427,9 @@ export const useSchemaData = () => {
   return [schema, { empty, group, name, readPretty, section }] as const;
 };
 
-export const useSectionGroup = <T extends unknown = SectionItem>({ items: schemaItems }: SelectSchema<T>) => {
+export const useSectionGroup = <T extends unknown = SectionItem>({
+  items: schemaItems,
+}: SelectSchema<T>) => {
   return useMemo(() => {
     const items = Array.isArray(schemaItems) ? schemaItems[0] : schemaItems;
     const list = items?.reduceProperties<Schema[], Schema[]>((buf, schema) => {
@@ -432,7 +459,6 @@ export type CollapseLookupType = {
   schema: CollapseSchema;
   search: string;
   deleteSection: (section: string[]) => void;
-  selectHandle: (data: PayloadType) => void;
   updateActive: (key: string, expand?: boolean) => void;
 };
 
@@ -449,7 +475,10 @@ export type LookupType = {
   selectHandle: (data: PayloadType) => void;
 };
 
-export type SelectSchema<T> = Omit<Schema<any, any, any, any, any, any, any, any, any>, "enum" | "x-pattern"> & {
+export type SelectSchema<T> = Omit<
+  Schema<any, any, any, any, any, any, any, any, any>,
+  "enum" | "x-pattern"
+> & {
   enum?: T[];
   ["x-pattern"]: "disabled" | "editable" | "readOnly" | "readPretty";
 };
