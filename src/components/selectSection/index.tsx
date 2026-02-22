@@ -203,33 +203,34 @@ const SelectSectionExample: FC = () => {
                   },
                 }}
               />
-              <SchemaField.Boolean
-                name="pick"
-                x-component="Checkbox"
-                x-decorator="ToolBar"
-                x-data={false}
-                x-decorator-props={{
+              <SchemaField.Void
+                x-component="ToolBar"
+                x-component-props={{
                   onExpand: expand => form.notify("expand-collapse", expand),
-                }}
-                x-reactions={[
-                  {
-                    dependencies: ["...#dataSource", ".section#value"],
-                    fulfill: {
-                      // run: "console.log('a---test', $deps)",
-                      state: {
-                        componentProps: {
-                          checked:
-                            "{{ !!$deps[0]?.length && $deps[1]?.length === $deps[0]?.length }}",
-                          disabled: "{{ !$deps[0]?.length }}",
-                          indeterminate:
-                            "{{ !!$deps[0]?.length && !!$deps[1]?.length && $deps[1].length < $deps[0]?.length }}",
+                }}>
+                <SchemaField.Boolean
+                  name="pick"
+                  x-component="Checkbox"
+                  x-reactions={[
+                    {
+                      dependencies: ["....#dataSource", "..section#value"],
+                      fulfill: {
+                        // run: "console.log('a---test', $deps)",
+                        state: {
+                          componentProps: {
+                            checked:
+                              "{{ !!$deps[0]?.length && $deps[1]?.length === $deps[0]?.length }}",
+                            disabled: "{{ !$deps[0]?.length }}",
+                            indeterminate:
+                              "{{ !!$deps[0]?.length && !!$deps[1]?.length && $deps[1].length < $deps[0]?.length }}",
+                          },
+                          content: "{{ `全选 (${$deps[1]?.length || 0}/${$deps[0]?.length})` }}",
                         },
-                        content: "{{ `全选 (${$deps[1]?.length || 0}/${$deps[0]?.length})` }}",
                       },
                     },
-                  },
-                ]}
-              />
+                  ]}
+                />
+              </SchemaField.Void>
               <SchemaField.Void
                 title="最近的选择"
                 x-component="RecentRhoices"
