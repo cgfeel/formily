@@ -1,4 +1,9 @@
-import { SearchOutlined } from "@ant-design/icons";
+import {
+  ContainerOutlined,
+  ControlOutlined,
+  DatabaseOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import { createForm, onFieldValueChange } from "@formily/core";
 import { FC, useMemo } from "react";
 import Panel from "./Panel";
@@ -55,14 +60,7 @@ const SelectSectionExample: FC = () => {
                   },
                 }}
               />
-              <SchemaField.Boolean
-                name="tool-all"
-                x-component="Checkbox"
-                x-decorator="ToolBar"
-                x-decorator-props={{
-                  onExpand: expand => form.notify("expand-collapse", expand),
-                }}
-              />
+              <SchemaField.Boolean name="tool-all" x-component="Checkbox" x-decorator="ToolBar" />
               <SchemaField.Void
                 title="最近的选择"
                 x-component="RecentRhoices"
@@ -203,11 +201,7 @@ const SelectSectionExample: FC = () => {
                   },
                 }}
               />
-              <SchemaField.Void
-                x-component="ToolBar"
-                x-component-props={{
-                  onExpand: expand => form.notify("expand-collapse", expand),
-                }}>
+              <SchemaField.Void name="toolbar" x-component="ToolBar">
                 <SchemaField.Boolean
                   name="pick"
                   x-component="Checkbox"
@@ -229,6 +223,55 @@ const SelectSectionExample: FC = () => {
                       },
                     },
                   ]}
+                />
+                <SchemaField.Number
+                  enum={[
+                    {
+                      label: (
+                        <>
+                          <ControlOutlined /> 手动选择
+                        </>
+                      ),
+                      value: 0,
+                    },
+                    {
+                      label: (
+                        <>
+                          <ContainerOutlined /> 全展开
+                        </>
+                      ),
+                      value: 1,
+                    },
+                    {
+                      label: (
+                        <>
+                          <DatabaseOutlined /> 全收起
+                        </>
+                      ),
+                      value: 2,
+                    },
+                  ]}
+                  name="expand"
+                  x-component="Select"
+                  x-reactions={[
+                    {
+                      dependencies: ["....#dataSource"],
+                      fulfill: {
+                        state: {
+                          componentProps: {
+                            disabled: "{{ !$deps[0]?.length }}",
+                          },
+                        },
+                      },
+                    },
+                    {
+                      effects: ["onFieldValueChange"],
+                      fulfill: {
+                        run: 'console.log("a----ddd", $self.value)',
+                      },
+                    },
+                  ]}
+                  x-value={0}
                 />
               </SchemaField.Void>
               <SchemaField.Void
@@ -278,6 +321,15 @@ const SelectSectionExample: FC = () => {
                             search: "{{ filterSection($self.data.list.items, $deps[0]) }}",
                             searchKey: "{{ $deps[0] ?? undefined }}",
                           },
+                        },
+                      },
+                    },
+                    {
+                      dependencies: ["..toolbar.pick"],
+                      fulfill: {
+                        // run: "console.log('a---path', $deps[0])",
+                        state: {
+                          value: "{{ $deps[0] ? $self.data.list.items : [] }}",
                         },
                       },
                     },

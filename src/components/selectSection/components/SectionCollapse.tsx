@@ -160,7 +160,7 @@ const SectionCollapseGroup: FC = () => {
   const { data, record, deleteSection, updateActive } = useSectionRecord(field);
   const items = getItem(schema);
 
-  console.log("a---data", data, record);
+  // console.log("a---data", data, record);
 
   const empty = useMemo(
     () => <RenderProperty match="SectionCollapse.SelectEmpty" schema={schema} />,
@@ -184,7 +184,7 @@ const SectionCollapseGroup: FC = () => {
       search={data.searchKey}
       deleteSection={deleteSection}
       updateActive={updateActive}>
-      <InternalSection field={field} empty={empty} record={record}>
+      <InternalSection empty={empty} field={field} record={record}>
         {SectionItem}
       </InternalSection>
     </CollapseWrapper>

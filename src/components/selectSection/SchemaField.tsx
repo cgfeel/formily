@@ -1,6 +1,6 @@
 import { Checkbox, FormGrid, FormItem } from "@formily/antd-v5";
-import { createSchemaField } from "@formily/react";
-import { Card, Input } from "antd";
+import { connect, createSchemaField, mapProps } from "@formily/react";
+import { Card, Input, Select } from "antd";
 import { FC, PropsWithChildren } from "react";
 import SelectCollapse from "./com/SelectCollapse";
 import ToolBar from "./com/ToolBar";
@@ -12,6 +12,8 @@ import TipTitle from "./com/TipTitle";
 import SectionCollapse from "./components/SectionCollapse";
 import { SectionType } from "./event";
 import InputTest from "./components/Input";
+import { LoadingOutlined } from "@ant-design/icons";
+import { isField } from "@formily/core";
 
 const { GridColumn } = FormGrid;
 
@@ -25,6 +27,18 @@ const CardHeader: FC = ({ children }: PropsWithChildren) => (
 
 const SchemaField = createSchemaField({
   components: {
+    Select: connect(
+      Select,
+      mapProps({ dataSource: "options", loading: true }, (props, field) =>
+        !isField(field)
+          ? props
+          : {
+              ...props,
+              suffixIcon:
+                field.loading || field.validating ? <LoadingOutlined /> : props.suffixIcon,
+            },
+      ),
+    ),
     Card,
     CardHeader,
     Checkbox,
@@ -35,7 +49,7 @@ const SchemaField = createSchemaField({
     RecentRhoices,
     ScrollWapper,
     SectionCollapse,
-    SelectCollapse,
+    SelectCollapse, // redel
     TipTitle,
     ToolBar,
     UserCheckBox,

@@ -14,6 +14,7 @@ import {
 } from "./hooks/useFakeService";
 import { isDefined, isKey } from "./utils/fields";
 
+// redel
 export const createExpandCoolapse = (type: string) => {
   const onExpandCollapse = createEffectHook<
     (payload: boolean, form: Form) => ListenerType<boolean>
@@ -38,11 +39,11 @@ export const createModalFormEffect = (request: ReturnType<typeof useFakeService>
   // asyncDataSource("user-map.section", async () => {
   //     return new Promise<SectionItem[]>(resolve => request(resolve));
   // });
-  onExpandHandle(({ expand, path }, form) => {
-    if (path === "collapse") {
-      form.query("tool-all").take(field => (field.decoratorProps.expand = expand));
-    }
-  });
+  // onExpandHandle(({ expand, path }, form) => {
+  //   if (path === "collapse") {
+  //     form.query("tool-all").take(field => (field.decoratorProps.expand = expand));
+  //   }
+  // });
 
   onSelectUserEvent(({ checked, group, section, path = "user-map.section" }, form) => {
     const field = form.query(path).take();
@@ -129,7 +130,7 @@ export type SectionType = {
 };
 
 type ExpandPayloadType = {
-  expand: boolean;
+  expand: number;
   path: string;
 };
 
