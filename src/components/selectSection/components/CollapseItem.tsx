@@ -1,17 +1,21 @@
 import { CloseOutlined, MenuOutlined } from "@ant-design/icons";
 import { SortableHandle } from "@formily/antd-v5/lib/__builtins__";
-import { observer, useExpressionScope } from "@formily/react";
+import { observer, useExpressionScope, useForm } from "@formily/react";
 import { Button, ButtonProps, Collapse, CollapseProps } from "antd";
 import { FC, useCallback, useMemo } from "react";
 import { useGroupScope } from "../hooks/useSelectCollapse";
+import { isField } from "@formily/core";
 
 const CollapseItem: FC<CollapseItemProps> = ({
+  target,
   bordered = false,
   expandIconPosition = "end",
   size = "small",
   ...props
 }) => {
   const { expand, group, schema, section, updateActive } = useGroupScope();
+  const form = useForm();
+
   const items = useMemo(
     () =>
       section === undefined
@@ -30,11 +34,17 @@ const CollapseItem: FC<CollapseItemProps> = ({
   const expandActive = useCallback(
     (keys: string[]) => {
       if (section && updateActive) {
+        if (target) {
+          // const a = form.query(target).take(field => {
+          //   if (isField(field)) field.value = 0;
+          // });
+        }
+
         const expand = keys.filter(Boolean).length > 0;
         updateActive(section, expand);
       }
     },
-    [section, updateActive],
+    [form, section, target, updateActive],
   );
 
   return (
@@ -94,7 +104,9 @@ export { RemoveUser, SortHandle };
 
 export default observer(CollapseItem);
 
-interface CollapseItemProps extends Omit<CollapseProps, "activeKey" | "children" | "items"> {}
+interface CollapseItemProps extends Omit<CollapseProps, "activeKey" | "children" | "items"> {
+  target?: string;
+}
 
 type ScopeProps<T extends keyof ScopeType> = Pick<ScopeType, T>;
 

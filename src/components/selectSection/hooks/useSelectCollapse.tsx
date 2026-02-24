@@ -302,7 +302,7 @@ export const useSectionRecord = (field: GeneralField) => {
   // 展开、收起：有搜索的情况优先设置搜索，否则设置默认列表
   const updateActive: CollapseLookupType["updateActive"] = useCallback(
     (key, expand = true) => {
-      const name = fieldData.searchKey ? "search" : "list";
+      const name = searchKey ? "search" : "list";
       record.expand[expand ? "add" : "delete"](key);
 
       field.data = {
@@ -310,7 +310,7 @@ export const useSectionRecord = (field: GeneralField) => {
         [name]: record,
       };
     },
-    [fieldData, field, record],
+    [fieldData, field, record, searchKey],
   );
 
   return Object.freeze({ data: fieldData, record, deleteSection, updateActive });
@@ -368,7 +368,7 @@ export const useCollapseScope = () => {
   return { values, readPretty, remove, search, size, userMap } as const;
 };
 
-export const useListValue = (list: SectionItem[]) => {
+export const useListValue = (list: SectionItem[] = []) => {
   const data = useMemo(
     () =>
       list.reduce<CollapseItem>((current, { name, section }) => {

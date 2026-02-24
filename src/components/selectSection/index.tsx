@@ -255,19 +255,13 @@ const SelectSectionExample: FC = () => {
                   x-component="Select"
                   x-reactions={[
                     {
-                      dependencies: ["....#dataSource"],
+                      dependencies: ["....#dataSource", "..search-list#value"],
                       fulfill: {
                         state: {
                           componentProps: {
-                            disabled: "{{ !$deps[0]?.length }}",
+                            disabled: "{{ !$deps[0]?.length || !!$deps[1] }}",
                           },
                         },
-                      },
-                    },
-                    {
-                      effects: ["onFieldValueChange"],
-                      fulfill: {
-                        run: 'console.log("a----ddd", $self.value)',
                       },
                     },
                   ]}
@@ -297,6 +291,7 @@ const SelectSectionExample: FC = () => {
                   x-component="SectionCollapse"
                   x-data={{
                     list: { ...defaultItem },
+                    search: { ...defaultItem },
                   }}
                   x-reactions={[
                     {
@@ -314,12 +309,28 @@ const SelectSectionExample: FC = () => {
                       },
                     },
                     {
-                      dependencies: [".search-list"],
+                      dependencies: [".search-list#value"],
+                      when: "{{ !!$deps[0] && $deps[0] !== $self.data.searchKey }}",
                       fulfill: {
+                        run: 'console.log("a----eee", $deps)',
                         state: {
                           data: {
-                            search: "{{ filterSection($self.data.list.items, $deps[0]) }}",
-                            searchKey: "{{ $deps[0] ?? undefined }}",
+                            search:
+                              "{{ filterSection($self.data.list.items, $deps[0], $deps[1]) }}",
+                            searchKey: "{{ $deps[0] }}",
+                          },
+                        },
+                      },
+                    },
+                    {
+                      dependencies: [".search-list#value", "..toolbar.expand#value"],
+                      when: "{{ !$deps[0] }}",
+                      fulfill: {
+                        run: 'console.log("a----ddd", $deps)',
+                        state: {
+                          data: {
+                            list: "{{ expandSection($self.data.list, $deps[1]) }}",
+                            searchKey: "",
                           },
                         },
                       },
@@ -334,7 +345,9 @@ const SelectSectionExample: FC = () => {
                       },
                     },
                   ]}>
-                  <SchemaField.Void x-component="SectionCollapse.CollapseItem">
+                  <SchemaField.Void
+                    x-component="SectionCollapse.CollapseItem"
+                    x-component-props={{ target: "user-map" }}>
                     <SchemaField.Void
                       name="section-name"
                       x-component="SectionCollapse.UserCheckBox"

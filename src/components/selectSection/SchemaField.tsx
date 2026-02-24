@@ -57,6 +57,16 @@ const SchemaField = createSchemaField({
     InputTest,
   },
   scope: {
+    expandSection: (list: SectionType, expandAction?: number) => {
+      const expand = new Set<string>();
+      if (expandAction === 1) {
+        list.items.forEach(({ section }) => {
+          if (!!section) expand.add(section);
+        });
+      }
+
+      return expandAction === 1 || expandAction === 2 ? { ...list, expand } : list;
+    },
     filterSection: (items: SectionType["items"], search?: string): SectionType | undefined => {
       const searchKey = search?.toLowerCase();
       return !searchKey
