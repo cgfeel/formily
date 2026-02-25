@@ -13,7 +13,7 @@ const CollapseItem: FC<CollapseItemProps> = ({
   size = "small",
   ...props
 }) => {
-  const { expand, group, schema, section, updateActive } = useGroupScope();
+  const { expand, group, schema, search, section, updateActive } = useGroupScope();
   const form = useForm();
 
   const items = useMemo(
@@ -34,17 +34,17 @@ const CollapseItem: FC<CollapseItemProps> = ({
   const expandActive = useCallback(
     (keys: string[]) => {
       if (section && updateActive) {
-        if (target) {
-          // const a = form.query(target).take(field => {
-          //   if (isField(field)) field.value = 0;
-          // });
+        if (target && !search) {
+          form.query(target).take(field => {
+            if (isField(field)) field.value = 0;
+          });
         }
 
         const expand = keys.filter(Boolean).length > 0;
         updateActive(section, expand);
       }
     },
-    [form, section, target, updateActive],
+    [form, search, section, target, updateActive],
   );
 
   return (

@@ -1,9 +1,22 @@
 import { GenerateStyle, genStyleHook } from "@formily/antd-v5/lib/__builtins__";
 
 const genToolbarStyle: GenerateStyle = token => {
-  const { antCls, componentCls } = token;
+  const {
+    antCls,
+    colorBorderSecondary,
+    colorFillQuaternary,
+    componentCls,
+    lineType,
+    lineWidth,
+    paddingSM,
+    paddingXXS,
+  } = token;
+
   return {
     [componentCls]: {
+      backgroundColor: colorFillQuaternary,
+      borderBottom: `${lineWidth}px ${lineType} ${colorBorderSecondary}`,
+      padding: `${paddingXXS}px ${paddingSM}px`,
       [`${antCls}-checkbox-wrapper`]: {
         alignItems: "center",
       },

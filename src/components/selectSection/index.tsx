@@ -31,158 +31,25 @@ const SelectSectionExample: FC = () => {
   return (
     <Panel form={form}>
       <SchemaField>
-        <SchemaField.Object enum={[]} name="user-map" x-component="UserMapRecord">
-          <SchemaField.Void
-            x-component="FormGrid"
-            x-component-props={{
-              columnGap: 0,
-              maxColumns: 3,
-            }}>
+        <SchemaField.Object
+          name="user-map"
+          x-component="UserMapRecord"
+          x-component-props={{
+            theme: {
+              components: {
+                Select: {
+                  selectorBg: "transparent",
+                },
+              },
+              token: { boxShadowTertiary: "none" },
+            },
+          }}>
+          <SchemaField.Void x-component="Row" x-component-props={{ className: "row-border" }}>
             <SchemaField.Void
               x-component="Card"
-              x-decorator="GridColumn"
-              x-decorator-props={{ gridSpan: 2 }}>
-              <SchemaField.String
-                name="search-user"
-                x-component="Input"
-                x-decorator="CardHeader"
-                x-component-props={{
-                  allowClear: true,
-                  placeholder: "输入部门或员工名称进行筛选",
-                  suffix: <SearchOutlined />,
-                }}
-                x-reactions={{
-                  dependencies: [".collapse#dataSource"],
-                  fulfill: {
-                    state: {
-                      disabled: "{{ ($deps[0]||[]).length === 0 }}",
-                    },
-                  },
-                }}
-              />
-              <SchemaField.Boolean name="tool-all" x-component="Checkbox" x-decorator="ToolBar" />
-              <SchemaField.Void
-                title="最近的选择"
-                x-component="RecentRhoices"
-                x-component-props={{ eventName: "select-user-collapse" }}
-                x-decorator="TipTitle"
-                x-reactions={{
-                  dependencies: [".collapse"],
-                  fulfill: {
-                    state: {
-                      data: "{{ $deps[0]||[] }}",
-                    },
-                  },
-                }}
-              />
-              <SchemaField.Void
-                title="部门和同事"
-                x-component="ScrollWapper"
-                x-decorator="TipTitle">
-                <SchemaField.Array
-                  name="collapse"
-                  x-component="SelectCollapse"
-                  x-component-props={{
-                    size: "small",
-                  }}
-                  x-reactions={{
-                    dependencies: [".search-user"],
-                    fulfill: {
-                      state: {
-                        componentProps: { search: "{{ $deps[0] }}" },
-                      },
-                    },
-                  }}>
-                  <SchemaField.Object>
-                    <SchemaField.Void
-                      x-component="SelectCollapse.UserCheckBox"
-                      x-decorator="SelectCollapse.PanelDecorator"
-                    />
-                    <SchemaField.Void x-component="SelectCollapse.UserGroup">
-                      <SchemaField.Void x-component="SelectCollapse.UserCheckBox">
-                        <SchemaField.Void x-component="SelectCollapse.UserCheckBox.Face" />
-                      </SchemaField.Void>
-                    </SchemaField.Void>
-                  </SchemaField.Object>
-                  <SchemaField.Void x-component="SelectCollapse.SelectSkeleton" />
-                  <SchemaField.Void x-component="SelectCollapse.SelectEmpty" />
-                </SchemaField.Array>
-              </SchemaField.Void>
-            </SchemaField.Void>
-            <SchemaField.Void
-              x-component="Card"
-              x-decorator="GridColumn"
-              x-decorator-props={{ gridSpan: 1 }}
-              x-component-props={{
-                title: "已选中的人",
-              }}>
-              <SchemaField.String
-                name="search-select"
-                x-component="Input"
-                x-component-props={{
-                  allowClear: true,
-                  placeholder: "输入部门或员工名称进行筛选",
-                  suffix: <SearchOutlined />,
-                }}
-                x-reactions={{
-                  dependencies: [".collapse"],
-                  fulfill: {
-                    state: {
-                      disabled: "{{ ($deps[0] || []).length === 0 }}",
-                    },
-                  },
-                }}
-              />
-              <SchemaField.Void x-component="ScrollWapper">
-                <SchemaField.Array
-                  name="collapse-selected"
-                  x-component="SelectCollapse"
-                  x-component-props={{
-                    expandIconPosition: "start",
-                    size: "small",
-                  }}
-                  x-reactions={{
-                    dependencies: [".search-select", ".collapse"],
-                    fulfill: {
-                      state: {
-                        componentProps: { search: "{{ $deps[0] }}" },
-                        value: "{{ $deps[1] }}",
-                      },
-                    },
-                  }}
-                  x-pattern="readPretty">
-                  <SchemaField.Object>
-                    <SchemaField.Void x-component="SelectCollapse.UserCheckBox" />
-                    <SchemaField.Void x-component="SelectCollapse.UserGroup">
-                      <SchemaField.Void x-component="SelectCollapse.UserCheckBox">
-                        <SchemaField.Void x-component="SelectCollapse.UserCheckBox.Face" />
-                      </SchemaField.Void>
-                    </SchemaField.Void>
-                  </SchemaField.Object>
-                  <SchemaField.Void
-                    x-component="SelectCollapse.UserCheckBox.Remove"
-                    x-component-props={{
-                      type: "select-user-collapse",
-                    }}
-                  />
-                  <SchemaField.Void
-                    x-component="SelectCollapse.SelectEmpty"
-                    x-component-props={{ description: "请左侧选择员工" }}
-                  />
-                </SchemaField.Array>
-              </SchemaField.Void>
-            </SchemaField.Void>
-          </SchemaField.Void>
-          <SchemaField.Void
-            x-component="FormGrid"
-            x-component-props={{
-              columnGap: 0,
-              maxColumns: 3,
-            }}>
-            <SchemaField.Void
-              x-component="Card"
-              x-decorator="GridColumn"
-              x-decorator-props={{ gridSpan: 2 }}>
+              x-component-props={{ bordered: false }}
+              x-decorator="Col"
+              x-decorator-props={{ span: 16 }}>
               <SchemaField.String
                 name="search-list"
                 x-component="Input"
@@ -347,7 +214,7 @@ const SelectSectionExample: FC = () => {
                   ]}>
                   <SchemaField.Void
                     x-component="SectionCollapse.CollapseItem"
-                    x-component-props={{ target: "user-map" }}>
+                    x-component-props={{ target: "user-map.expand" }}>
                     <SchemaField.Void
                       name="section-name"
                       x-component="SectionCollapse.UserCheckBox"
@@ -364,7 +231,6 @@ const SelectSectionExample: FC = () => {
                     </SchemaField.Void>
                     <SchemaField.Void name="group" x-component="SectionCollapse.UserGroup" />
                     <SchemaField.Void name="sort" x-component="SectionCollapse.SortHandle" />
-                    <SchemaField.Void name="remove" x-component="SectionCollapse.Remove" />
                   </SchemaField.Void>
                   <SchemaField.Void name="skeleton" x-component="SectionCollapse.SelectSkeleton" />
                   <SchemaField.Void name="empty" x-component="SectionCollapse.SelectEmpty" />
@@ -373,11 +239,126 @@ const SelectSectionExample: FC = () => {
             </SchemaField.Void>
             <SchemaField.Void
               x-component="Card"
-              x-decorator="GridColumn"
-              x-decorator-props={{ gridSpan: 1 }}
+              x-decorator="Col"
+              x-decorator-props={{ span: 8 }}
               x-component-props={{
+                bordered: false,
                 title: "已选中的人",
-              }}></SchemaField.Void>
+              }}
+              x-reactions={{
+                dependencies: ["user-map.section#value"],
+                when: "{{ !!$deps[0]?.length }}",
+                fulfill: {
+                  state: {
+                    componentProps: {
+                      title: "{{ `已选中的人 (${$deps[0]?.length ?? 0})` }}",
+                    },
+                  },
+                },
+                otherwise: {
+                  state: {
+                    componentProps: {
+                      title: "已选中的人",
+                    },
+                  },
+                },
+              }}>
+              <SchemaField.String
+                name="search-list"
+                x-component="Input"
+                x-component-props={{
+                  allowClear: true,
+                  placeholder: "输入部门或员工名称进行筛选",
+                  suffix: <SearchOutlined />,
+                }}
+                x-decorator="CardHeader"
+                x-reactions={{
+                  dependencies: ["user-map.section#value"],
+                  fulfill: {
+                    state: {
+                      disabled: "{{ !$deps[0]?.length }}",
+                    },
+                  },
+                }}
+              />
+              <SchemaField.Void
+                x-component="ScrollWapper"
+                x-decorator="TipTitle"
+                x-pattern="readPretty">
+                <SchemaField.Array
+                  name="section"
+                  x-component="SectionCollapse"
+                  x-data={{
+                    list: { ...defaultItem },
+                    search: { ...defaultItem },
+                  }}
+                  x-reactions={[
+                    {
+                      dependencies: ["user-map.section#value"],
+                      fulfill: {
+                        // run: "console.log('a---deps', $deps[1])",
+                        state: {
+                          data: {
+                            list: {
+                              items: "{{ $deps[0] ?? [] }}",
+                            },
+                          },
+                        },
+                      },
+                    },
+                    {
+                      dependencies: [".search-list#value"],
+                      when: "{{ !!$deps[0] && $deps[0] !== $self.data.searchKey }}",
+                      fulfill: {
+                        // run: 'console.log("a----eee", $deps)',
+                        state: {
+                          data: {
+                            search:
+                              "{{ filterSection($self.data.list.items, $deps[0], $deps[1]) }}",
+                            searchKey: "{{ $deps[0] }}",
+                          },
+                        },
+                      },
+                    },
+                    {
+                      dependencies: [".search-list#value"],
+                      when: "{{ !$deps[0] }}",
+                      fulfill: {
+                        // run: 'console.log("a----ddd", $deps)',
+                        state: {
+                          data: {
+                            list: "{{ expandSection($self.data.list, $deps[1]) }}",
+                            searchKey: "",
+                          },
+                        },
+                      },
+                    },
+                  ]}>
+                  <SchemaField.Void
+                    x-component="SectionCollapse.CollapseItem"
+                    x-component-props={{ target: "user-map.expand" }}>
+                    <SchemaField.Void
+                      name="section-name"
+                      x-component="SectionCollapse.UserCheckBox"
+                      x-component-props={{ eventName: "select-user" }}
+                      x-decorator="SectionCollapse.PanelDecorator">
+                      <SchemaField.Void
+                        x-component="SectionCollapse.UserPanel"
+                        x-hidden="{{!$section}}"
+                      />
+                      <SchemaField.Void
+                        x-component="SectionCollapse.UserFace"
+                        x-hidden="{{$section}}"
+                      />
+                    </SchemaField.Void>
+                    <SchemaField.Void name="group" x-component="SectionCollapse.UserGroup" />
+                    <SchemaField.Void name="remove" x-component="SectionCollapse.Remove" />
+                  </SchemaField.Void>
+                  <SchemaField.Void name="skeleton" x-component="SectionCollapse.SelectSkeleton" />
+                  <SchemaField.Void name="empty" x-component="SectionCollapse.SelectEmpty" />
+                </SchemaField.Array>
+              </SchemaField.Void>
+            </SchemaField.Void>
           </SchemaField.Void>
         </SchemaField.Object>
       </SchemaField>
