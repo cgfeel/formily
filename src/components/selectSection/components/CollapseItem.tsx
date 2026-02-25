@@ -1,7 +1,7 @@
 import { CloseOutlined, MenuOutlined } from "@ant-design/icons";
 import { SortableHandle } from "@formily/antd-v5/lib/__builtins__";
 import { observer, useExpressionScope, useForm } from "@formily/react";
-import { Button, ButtonProps, Collapse, CollapseProps } from "antd";
+import { Button, ButtonProps, Collapse, CollapseProps, Tooltip } from "antd";
 import { FC, useCallback, useMemo } from "react";
 import { useGroupScope } from "../hooks/useSelectCollapse";
 import { isField } from "@formily/core";
@@ -79,16 +79,18 @@ const RemoveUser: FC<ButtonProps> = ({ size = "small", type = "link", ...props }
   const { $records } = useExpressionScope();
 
   return (
-    <Button
-      {...props}
-      size={size}
-      type={type}
-      onClick={event => {
-        event.stopPropagation();
-        deleteSection && deleteSection($records || (group ? Array.from(group) : []));
-      }}>
-      <CloseOutlined />
-    </Button>
+    <Tooltip title="删除">
+      <Button
+        {...props}
+        size={size}
+        type={type}
+        onClick={event => {
+          event.stopPropagation();
+          deleteSection && deleteSection($records || (group ? Array.from(group) : []));
+        }}>
+        <CloseOutlined />
+      </Button>
+    </Tooltip>
   );
 };
 
@@ -97,7 +99,11 @@ const SectionRender: FC<ScopeProps<"schema" | "section">> = ({ schema = {}, sect
 );
 
 const SortHandle = SortableHandle((props: Parameters<ReturnType<typeof SortableHandle>>[0]) => {
-  return <MenuOutlined {...props} />;
+  return (
+    <Tooltip title="移动">
+      <MenuOutlined {...props} />
+    </Tooltip>
+  );
 });
 
 export { RemoveUser, SortHandle };

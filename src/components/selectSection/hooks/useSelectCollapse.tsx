@@ -277,7 +277,7 @@ export const useSectionRecord = (field: GeneralField) => {
             ...current,
             [key]:
               items.length === 0
-                ? defaultData
+                ? { ...defaultData }
                 : {
                     expand,
                     items,

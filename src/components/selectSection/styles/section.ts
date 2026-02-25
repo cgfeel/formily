@@ -5,11 +5,15 @@ const genSectionStyle: GenerateStyle = token => {
     antCls,
     borderRadiusLG,
     colorBorderSecondary,
+    colorText,
+    colorTextQuaternary,
     componentCls,
+    fontSize,
     lineType,
     lineWidth,
     paddingSM,
   } = token;
+
   return {
     [componentCls]: {
       [`${antCls}-card ${antCls}-card-body`]: {
@@ -17,14 +21,36 @@ const genSectionStyle: GenerateStyle = token => {
       },
       [`${antCls}-card ${antCls}-card-head`]: {
         minHeight: "auto",
-        padding: 0,
+        padding: `10px ${paddingSM}px`,
+        fontSize,
       },
       [`${antCls}-card-topbar`]: {
         borderBottom: `${lineWidth}px ${lineType} ${colorBorderSecondary}`,
         padding: paddingSM,
       },
+      [`${antCls}-input-suffix`]: {
+        color: colorTextQuaternary,
+      },
       [`${antCls}-section-collapse-item`]: {
         borderTop: `${lineWidth}px ${lineType} ${colorBorderSecondary}`,
+      },
+      [`${antCls}-skeleton`]: {
+        width: "100%",
+        [`${antCls}-skeleton-input`]: {
+          width: "100%",
+        },
+      },
+      ".group-item": {
+        position: "relative",
+        ".remove-item": {
+          padding: 0,
+          position: "absolute",
+          right: 0,
+          top: 0,
+        },
+      },
+      ".remove-item": {
+        color: colorText,
       },
       ".row-border": {
         border: `${lineWidth}px ${lineType} ${colorBorderSecondary}`,
@@ -41,6 +67,9 @@ const genSectionStyle: GenerateStyle = token => {
             zIndex: 1,
           },
         },
+      },
+      ".sort-handle": {
+        cursor: "all-scroll",
       },
     },
   };

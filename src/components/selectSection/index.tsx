@@ -230,7 +230,11 @@ const SelectSectionExample: FC = () => {
                       />
                     </SchemaField.Void>
                     <SchemaField.Void name="group" x-component="SectionCollapse.UserGroup" />
-                    <SchemaField.Void name="sort" x-component="SectionCollapse.SortHandle" />
+                    <SchemaField.Void
+                      name="sort"
+                      x-component="SectionCollapse.SortHandle"
+                      x-component-props={{ className: "sort-handle" }}
+                    />
                   </SchemaField.Void>
                   <SchemaField.Void name="skeleton" x-component="SectionCollapse.SelectSkeleton" />
                   <SchemaField.Void name="empty" x-component="SectionCollapse.SelectEmpty" />
@@ -283,6 +287,9 @@ const SelectSectionExample: FC = () => {
               />
               <SchemaField.Void
                 x-component="ScrollWapper"
+                x-component-props={{
+                  minHeight: 539,
+                }}
                 x-decorator="TipTitle"
                 x-pattern="readPretty">
                 <SchemaField.Array
@@ -352,7 +359,11 @@ const SelectSectionExample: FC = () => {
                       />
                     </SchemaField.Void>
                     <SchemaField.Void name="group" x-component="SectionCollapse.UserGroup" />
-                    <SchemaField.Void name="remove" x-component="SectionCollapse.Remove" />
+                    <SchemaField.Void
+                      name="remove"
+                      x-component="SectionCollapse.Remove"
+                      x-component-props={{ className: "remove-item" }}
+                    />
                   </SchemaField.Void>
                   <SchemaField.Void name="skeleton" x-component="SectionCollapse.SelectSkeleton" />
                   <SchemaField.Void name="empty" x-component="SectionCollapse.SelectEmpty" />

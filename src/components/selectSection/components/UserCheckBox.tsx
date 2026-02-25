@@ -66,7 +66,7 @@ const UserCheckBox: FC<PropsWithChildren<UserCheckProps>> = ({ children, ...prop
 };
 
 const UserFace: FC = () => {
-  const { records = [], userMap = {}, search } = useGroupScope();
+  const { pattern, records = [], userMap = {}, search } = useGroupScope();
   const name = records[0];
 
   return name === undefined ? null : (
@@ -75,19 +75,33 @@ const UserFace: FC = () => {
         src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${name}`}
         style={{ backgroundColor: "#d0e7c5" }}
       />
-      <Row gutter={[8, 8]}>
-        <Col flex="none">
-          <Text
-            className={classNames({
-              searchChecked: !!search && name.toLowerCase().indexOf(search) > -1,
-            })}>
-            {name}
-          </Text>
-        </Col>
-        <Col flex="auto">
-          {userMap[name] && <Text type="secondary">({userMap[name].mail})</Text>}
-        </Col>
-      </Row>
+      {pattern ? (
+        <Row>
+          <Col span={24}>
+            <Text
+              className={classNames({
+                searchChecked: !!search && name.toLowerCase().indexOf(search) > -1,
+              })}>
+              {name}
+            </Text>
+          </Col>
+          <Col span={24}>{userMap[name] && <Text type="secondary">{userMap[name].mail}</Text>}</Col>
+        </Row>
+      ) : (
+        <Row gutter={[8, 8]}>
+          <Col flex="none">
+            <Text
+              className={classNames({
+                searchChecked: !!search && name.toLowerCase().indexOf(search) > -1,
+              })}>
+              {name}
+            </Text>
+          </Col>
+          <Col flex="auto">
+            {userMap[name] && <Text type="secondary">({userMap[name].mail})</Text>}
+          </Col>
+        </Row>
+      )}
     </Space>
   );
 };

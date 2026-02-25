@@ -7,16 +7,17 @@ const InternalGroup: FC<PropsWithChildren<InternalGroupProps>> = ({ children, sc
   schema.remove === undefined ? (
     <>{children}</>
   ) : (
-    <Row gutter={[0, 0]}>
-      <Col flex="auto">{children}</Col>
-      <Col flex="30px">{schema.remove}</Col>
-    </Row>
+    <div className="group-item">
+      {children}
+      {schema.remove}
+    </div>
   );
 
 const UserGroup: FC = () => {
   const { group = new Set(), schema = {}, search = "" } = useGroupScope();
   const list = useMemo(
-    () => Array.from(group).filter(name => search === "" || name.toLowerCase().indexOf(search) > -1),
+    () =>
+      Array.from(group).filter(name => search === "" || name.toLowerCase().indexOf(search) > -1),
     [group, search],
   );
 
@@ -25,7 +26,9 @@ const UserGroup: FC = () => {
       {list.map((name, i) => (
         <Col key={`${name}-${i}`} span={24}>
           <RecordsScope getRecords={() => [name]}>
-            <InternalGroup schema={schema}>{schema.checkbox === undefined ? name : schema.checkbox}</InternalGroup>
+            <InternalGroup schema={schema}>
+              {schema.checkbox === undefined ? name : schema.checkbox}
+            </InternalGroup>
           </RecordsScope>
         </Col>
       ))}
