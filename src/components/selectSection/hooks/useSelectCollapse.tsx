@@ -263,21 +263,17 @@ export const useSectionRecord = (field: GeneralField) => {
 
       const record = keys.reduce<Partial<Record<"list" | "search", SectionType>>>(
         (current, key) => {
-          const info = fieldData[key];
+          const info = fieldData[key] ?? { ...defaultItem };
           const expand = new Set<string>();
 
-          const defaultData = key === "search" ? undefined : { ...defaultItem };
-          const items = info === undefined ? [] : filter(info.items);
-
-          if (info !== undefined) {
-            items.forEach(({ section }) => info.expand.has(section) && expand.add(section));
-          }
+          const items = filter(info.items);
+          items.forEach(({ section }) => info.expand.has(section) && expand.add(section));
 
           return {
             ...current,
             [key]:
               items.length === 0
-                ? { ...defaultData }
+                ? { ...defaultItem }
                 : {
                     expand,
                     items,

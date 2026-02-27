@@ -268,11 +268,11 @@ const SelectSectionExample: FC = () => {
                 },
               }}>
               <SchemaField.String
-                name="search-list"
+                name="search-section-list"
                 x-component="Input"
                 x-component-props={{
                   allowClear: true,
-                  placeholder: "输入部门或员工名称进行筛选",
+                  placeholder: "筛选已选择",
                   suffix: <SearchOutlined />,
                 }}
                 x-decorator="CardHeader"
@@ -314,7 +314,7 @@ const SelectSectionExample: FC = () => {
                       },
                     },
                     {
-                      dependencies: [".search-list#value"],
+                      dependencies: [".search-section-list#value"],
                       when: "{{ !!$deps[0] && $deps[0] !== $self.data.searchKey }}",
                       fulfill: {
                         // run: 'console.log("a----eee", $deps)',
@@ -328,10 +328,9 @@ const SelectSectionExample: FC = () => {
                       },
                     },
                     {
-                      dependencies: [".search-list#value"],
+                      dependencies: [".search-section-list#value"],
                       when: "{{ !$deps[0] }}",
                       fulfill: {
-                        // run: 'console.log("a----ddd", $deps)',
                         state: {
                           data: {
                             list: "{{ expandSection($self.data.list, $deps[1]) }}",
