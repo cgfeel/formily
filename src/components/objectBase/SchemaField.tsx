@@ -3,13 +3,13 @@ import { createSchemaField } from "@formily/react";
 import ObjectCollapse from "./component/ObjectCollapse";
 
 const SchemaField = createSchemaField({
-    components: {
-        FormItem,
-        Input,
-        ObjectCollapse,
-        Select,
-        Space,
-    },
+  components: {
+    FormItem,
+    Input,
+    ObjectCollapse,
+    Select,
+    Space,
+  },
 });
 
 export default SchemaField;

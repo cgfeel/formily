@@ -4,11 +4,11 @@ import RecursionField from "./RecursionField";
 import Other from "./Other";
 
 const CustomTable: FC = () => (
-    <>
-        <Other />
-        <RecursionField />
-        <ArrayTableExample />
-    </>
+  <>
+    <Other />
+    <RecursionField />
+    <ArrayTableExample />
+  </>
 );
 
 export default CustomTable;

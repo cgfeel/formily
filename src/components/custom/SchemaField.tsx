@@ -8,16 +8,16 @@ import ReactFormIte from "../react/components/FormItem";
 import ReactInput from "../react/components/Input";
 
 const SchemaField = createSchemaField({
-    components: {
-        Card,
-        FormItem,
-        IDUpload,
-        Input,
-        PriceInterval,
-        Radio,
-        ReactFormIte,
-        ReactInput,
-    },
+  components: {
+    Card,
+    FormItem,
+    IDUpload,
+    Input,
+    PriceInterval,
+    Radio,
+    ReactFormIte,
+    ReactInput,
+  },
 });
 
 export default SchemaField;

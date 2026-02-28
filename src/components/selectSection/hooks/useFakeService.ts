@@ -49,18 +49,21 @@ export const isSectionItem = (value: unknown): value is SectionItem =>
   sectionItem.safeParse(value).success;
 
 export const useFakeService = (delay: number) => {
-  const request = useCallback((callback: FakeCallBackType) => {
-    setTimeout(
-      () =>
-        callback(
-          data.map(item => ({
-            ...item,
-            mail: `${item.name.toLowerCase()}@mail.com`,
-          })),
-        ),
-      delay,
-    );
-  }, []);
+  const request = useCallback(
+    (callback: FakeCallBackType) => {
+      setTimeout(
+        () =>
+          callback(
+            data.map(item => ({
+              ...item,
+              mail: `${item.name.toLowerCase()}@mail.com`,
+            })),
+          ),
+        delay,
+      );
+    },
+    [delay],
+  );
 
   return [request] as const;
 };

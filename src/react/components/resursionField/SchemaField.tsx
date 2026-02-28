@@ -5,12 +5,12 @@ import ArrayItmes from "./ArrayItmes";
 import Custom from "./Custom";
 
 const SchemaField = createSchemaField({
-    components: {
-        ArrayItmes,
-        Custom,
-        FormItem,
-        Input,
-    },
+  components: {
+    ArrayItmes,
+    Custom,
+    FormItem,
+    Input,
+  },
 });
 
 export default SchemaField;

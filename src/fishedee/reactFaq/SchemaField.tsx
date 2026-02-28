@@ -7,17 +7,17 @@ import VoidComponent from "./component/VoidComponent";
 const VoidCom = observer(VoidComponent);
 
 const SchemaField = createSchemaField({
-    components: {
-        ArrayTable,
-        FormItem,
-        Input,
-        InputRaw,
-        NumberPicker,
-        Select,
-        SelectBtn,
-        VoidCom,
-        WraperInput,
-    },
+  components: {
+    ArrayTable,
+    FormItem,
+    Input,
+    InputRaw,
+    NumberPicker,
+    Select,
+    SelectBtn,
+    VoidCom,
+    WraperInput,
+  },
 });
 
 export default SchemaField;

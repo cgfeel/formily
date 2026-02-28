@@ -85,7 +85,8 @@ const SelectSectionExample: FC = () => {
                             indeterminate:
                               "{{ !!$deps[0]?.length && !!$deps[1]?.length && $deps[1].length < $deps[0]?.length }}",
                           },
-                          content: "{{ `全选 (${$deps[1]?.length || 0}/${$deps[0]?.length})` }}",
+                          content:
+                            "{{ '全选 (' + ($deps[1]?.length ?? 0) + '/' + ($deps[0]?.length ?? 0) + ')' }}",
                         },
                       },
                     },
@@ -255,7 +256,7 @@ const SelectSectionExample: FC = () => {
                 fulfill: {
                   state: {
                     componentProps: {
-                      title: "{{ `已选中的人 (${$deps[0]?.length ?? 0})` }}",
+                      title: "{{ '已选中的人 (' + ($deps[0]?.length ?? 0) + ')' }}",
                     },
                   },
                 },

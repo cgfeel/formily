@@ -1,0 +1,49 @@
+name: Formily CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  validate-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # 2. 设置 Node.js 环境（调整缓存为 npm）
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
+      # 3. 安装依赖
+      - name: Install dependencies
+        run: |
+          npm ci # 严格按package-lock.json安装，禁用版本更新
+          npm list # 可选：打印依赖列表，方便调试
+      # 4. Prettier 格式校验
+      - name: Run Prettier check
+        run: npm run format:check
+      # 5. TypeScript 类型检查
+      - name: Run TypeScript type check
+        run: npx tsc --noEmit
+      # 6. ESLint 代码质量检查
+      - name: Run ESLint Check
+        run: npm run lint
+      - name: Run test
+        run: npm run test:ci
+      # 8. 执行构建
+      - name: Build project
+        run: npm run build
+      # 9. 上传构建产物
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: core-build-output
+          path: build/
+          retention-days: 7

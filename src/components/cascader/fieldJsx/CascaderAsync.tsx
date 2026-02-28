@@ -7,21 +7,22 @@ import Panel from "../Panel";
 import Cascader from "../cascader";
 
 const form = createForm({
-    effects: () => {
-        onFieldReact("cascader", fetchAddress);
-    },
+  effects: () => {
+    onFieldReact("cascader", fetchAddress);
+  },
 });
 
 const CascaderAsync: FC = () => (
-    <Panel
-        form={form}
-        header={
-            <h2>
-                <code>Json Field</code> 异步数据源案例
-            </h2>
-        }>
-        <Field name="cascader" title="选择框" component={[Cascader]} decorator={[FormItem]} required />
-    </Panel>
+  <Panel
+    form={form}
+    header={
+      <h2>
+        <code>Json Field</code> 异步数据源案例
+      </h2>
+    }
+  >
+    <Field name="cascader" title="选择框" component={[Cascader]} decorator={[FormItem]} required />
+  </Panel>
 );
 
 export default CascaderAsync;

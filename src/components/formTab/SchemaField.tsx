@@ -3,11 +3,11 @@ import { createSchemaField } from "@formily/react";
 import FormTab from "./form-tab";
 
 const SchemaField = createSchemaField({
-    components: {
-        FormItem,
-        FormTab,
-        Input,
-    },
+  components: {
+    FormItem,
+    FormTab,
+    Input,
+  },
 });
 
 export default SchemaField;

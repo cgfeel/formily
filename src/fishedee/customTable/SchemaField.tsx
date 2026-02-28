@@ -7,14 +7,14 @@ import ArrayField from "./component/ArrayField";
 const Label = observer(LabelRaw);
 
 const SchemaField = createSchemaField({
-    components: {
-        ArrayComponent,
-        ArrayField,
-        FormItem,
-        Input,
-        Label,
-        NumberPicker,
-    },
+  components: {
+    ArrayComponent,
+    ArrayField,
+    FormItem,
+    Input,
+    Label,
+    NumberPicker,
+  },
 });
 
 export default SchemaField;

@@ -4,35 +4,35 @@ import PhoneMarkup from "./component/PhoneMarkup";
 import TabsPannel, { TabsPannelProps } from "./component/TabsPannel";
 
 const items: TabsPannelProps["items"] = [
-    {
-        children: <NormalMarkup />,
-        key: "1",
-        label: "账号登录",
-    },
-    {
-        children: <PhoneMarkup />,
-        key: "2",
-        label: "手机登录",
-    },
+  {
+    children: <NormalMarkup />,
+    key: "1",
+    label: "账号登录",
+  },
+  {
+    children: <PhoneMarkup />,
+    key: "2",
+    label: "手机登录",
+  },
 ];
 
 const MarkupSchema: FC = () => (
-    <TabsPannel
-        footer={
-            <p>
-                包含，验证模式：<code>createForm.validateFirst</code>、字段说明：
-                <code>SchemaField.String</code>
-                、关联反应：
-                <code>SchemaField.reactions</code>、创建自定义表单组件
-            </p>
-        }
-        header={
-            <h2>
-                通过<code>Markup Schema</code>创建登录
-            </h2>
-        }
-        items={items}
-    />
+  <TabsPannel
+    footer={
+      <p>
+        包含，验证模式：<code>createForm.validateFirst</code>、字段说明：
+        <code>SchemaField.String</code>
+        、关联反应：
+        <code>SchemaField.reactions</code>、创建自定义表单组件
+      </p>
+    }
+    header={
+      <h2>
+        通过<code>Markup Schema</code>创建登录
+      </h2>
+    }
+    items={items}
+  />
 );
 
 export default MarkupSchema;

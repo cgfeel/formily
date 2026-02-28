@@ -5,12 +5,12 @@ import NoAction from "../components/objectBase/NoAction";
 import NoOps from "../components/objectBase/NoOps";
 
 const ObjectBase: FC = () => (
-    <>
-        <ObjectBaseExample />
-        <NoOps />
-        <NoAction />
-        <Logic />
-    </>
+  <>
+    <ObjectBaseExample />
+    <NoOps />
+    <NoAction />
+    <Logic />
+  </>
 );
 
 export default ObjectBase;

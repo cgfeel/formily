@@ -22,15 +22,19 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "typescript": "^4.9.5",
     "web-vitals": "^2.1.4",
     "zod": "^4.3.6"
   },
   "scripts": {
-    "start": "EXTEND_ESLINT=true react-app-rewired start",
     "build": "react-app-rewired build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx}\"",
+    "lint": "eslint \"src/**/*.{ts,tsx,js,jsx}\"",
+    "lint:fix": "eslint \"src/**/*.{ts,tsx,js,jsx}\" --fix",
+    "start": "EXTEND_ESLINT=true react-app-rewired start",
+    "test": "react-scripts test --detectOpenHandles",
+    "test:ci": "react-scripts test --detectOpenHandles --watchAll=false --ci"
   },
   "jest": {
     "testMatch": [
@@ -91,6 +95,7 @@
     "pretty-format": "^29.7.0",
     "react-app-rewired": "^2.2.1",
     "ts-jest": "^29.1.2",
+    "typescript": "^5.9.3",
     "typescript-eslint": "^7.1.1"
   }
 }

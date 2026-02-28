@@ -6,20 +6,20 @@ import FormItem from "./FormItem";
 import Input from "./Input";
 
 const Connect: FC<ConnectProps> = ({ footer, form, header, ...props }) => (
-    <Wraper footer={footer} form={form} header={header}>
-        <Field
-            {...props}
-            name="name"
-            title="Name"
-            component={[Input, { placeholder: "Please Input" }]}
-            decorator={[FormItem]}
-            required
-        />
-    </Wraper>
+  <Wraper footer={footer} form={form} header={header}>
+    <Field
+      {...props}
+      name="name"
+      title="Name"
+      component={[Input, { placeholder: "Please Input" }]}
+      decorator={[FormItem]}
+      required
+    />
+  </Wraper>
 );
 
 export interface ConnectProps
-    extends Pick<WraperProps, "footer" | "form" | "header">,
-        Pick<IFieldProps, "initialValue" | "pattern"> {}
+  extends Pick<WraperProps, "footer" | "form" | "header">,
+    Pick<IFieldProps, "initialValue" | "pattern"> {}
 
 export default Connect;

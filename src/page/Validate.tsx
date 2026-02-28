@@ -20,64 +20,64 @@ import RuleJsonSchema from "../components/validate/rule/JsonSchema";
 import RuleMarkupSchema from "../components/validate/rule/MarkupSchema";
 
 const items: TabsProps["items"] = [
-    {
-        key: "rule",
-        label: "内置规则校验",
-        children: (
-            <>
-                <RuleMarkupSchema />
-                <RuleJsonSchema />
-                <RuleFieldJsx />
-            </>
-        ),
-    },
-    {
-        key: "format",
-        label: "内置格式校验",
-        children: (
-            <>
-                <FormatMarkupSchema />
-                <FormatJsonSchema />
-                <FormatFieldJsx />
-            </>
-        ),
-    },
-    {
-        key: "customRule",
-        label: "自定义规则校验",
-        children: (
-            <>
-                <CustomRuleMarkupSchema />
-                <CustomRuleJsonSchema />
-                <CustomRuleFieldJsx />
-            </>
-        ),
-    },
-    {
-        key: "customFormat",
-        label: "自定义格式校验",
-        children: (
-            <>
-                <CustomFormatMarkupSchema />
-                <CustomFormatJsonSchema />
-                <CustomFormatFieldJsx />
-            </>
-        ),
-    },
-    {
-        key: "others",
-        label: "异步、联动、定制文案",
-        children: (
-            <>
-                <PromiseMarkupSchema />
-                <PromiseJsonSchema />
-                <PromiseFieldJsx />
-                <ReactionMarkupSchema />
-                <ReactionJsonSchema />
-                <ReactionFieldJsx />
-            </>
-        ),
-    },
+  {
+    key: "rule",
+    label: "内置规则校验",
+    children: (
+      <>
+        <RuleMarkupSchema />
+        <RuleJsonSchema />
+        <RuleFieldJsx />
+      </>
+    ),
+  },
+  {
+    key: "format",
+    label: "内置格式校验",
+    children: (
+      <>
+        <FormatMarkupSchema />
+        <FormatJsonSchema />
+        <FormatFieldJsx />
+      </>
+    ),
+  },
+  {
+    key: "customRule",
+    label: "自定义规则校验",
+    children: (
+      <>
+        <CustomRuleMarkupSchema />
+        <CustomRuleJsonSchema />
+        <CustomRuleFieldJsx />
+      </>
+    ),
+  },
+  {
+    key: "customFormat",
+    label: "自定义格式校验",
+    children: (
+      <>
+        <CustomFormatMarkupSchema />
+        <CustomFormatJsonSchema />
+        <CustomFormatFieldJsx />
+      </>
+    ),
+  },
+  {
+    key: "others",
+    label: "异步、联动、定制文案",
+    children: (
+      <>
+        <PromiseMarkupSchema />
+        <PromiseJsonSchema />
+        <PromiseFieldJsx />
+        <ReactionMarkupSchema />
+        <ReactionJsonSchema />
+        <ReactionFieldJsx />
+      </>
+    ),
+  },
 ];
 
 const Validate: FC = () => <Tabs defaultActiveKey="rule" items={items} />;

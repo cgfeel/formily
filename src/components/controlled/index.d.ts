@@ -1,7 +1,7 @@
 type FormType = {
-    input: string;
+  input: string;
 };
 
 type FormControllType = {
-    type?: "schemaA" | "schemaB";
+  type?: "schemaA" | "schemaB";
 };

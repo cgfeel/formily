@@ -5,12 +5,12 @@ import Relative from "../components/Relative";
 import Subscript from "../components/Subscript";
 
 const DataPath: FC = () => (
-    <>
-        <Dot />
-        <Subscript />
-        <Deconstruct />
-        <Relative />
-    </>
+  <>
+    <Dot />
+    <Subscript />
+    <Deconstruct />
+    <Relative />
+  </>
 );
 
 export default DataPath;

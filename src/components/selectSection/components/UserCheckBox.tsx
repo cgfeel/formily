@@ -42,7 +42,8 @@ const InternalUser: FC<PropsWithChildren<InternalUserProps>> = ({
             group: !records?.length ? Array.from(group ?? new Set()) : records,
             section,
           });
-      }}>
+      }}
+    >
       {children}
     </Checkbox>
   );
@@ -81,7 +82,8 @@ const UserFace: FC = () => {
             <Text
               className={classNames({
                 searchChecked: !!search && name.toLowerCase().indexOf(search) > -1,
-              })}>
+              })}
+            >
               {name}
             </Text>
           </Col>
@@ -93,7 +95,8 @@ const UserFace: FC = () => {
             <Text
               className={classNames({
                 searchChecked: !!search && name.toLowerCase().indexOf(search) > -1,
-              })}>
+              })}
+            >
               {name}
             </Text>
           </Col>
@@ -113,7 +116,8 @@ const UserPanel: FC = () => {
       <Text
         className={classNames({
           searchChecked: !!search && !!section && section.toLowerCase().indexOf(search) > -1,
-        })}>
+        })}
+      >
         {section}
       </Text>{" "}
       <Text type="secondary">({group?.size || 0})</Text>

@@ -3,10 +3,10 @@ import { createSchemaField } from "@formily/react";
 import FormItem from "../formItem/form-item";
 
 const SchemaFiled = createSchemaField({
-    components: {
-        FormItem,
-        Select,
-    },
+  components: {
+    FormItem,
+    Select,
+  },
 });
 
 export default SchemaFiled;

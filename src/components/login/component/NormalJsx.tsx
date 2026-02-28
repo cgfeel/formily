@@ -6,7 +6,7 @@ import { FC } from "react";
 import FormCom from "./FormCom";
 
 const form = createForm({
-    validateFirst: true,
+  validateFirst: true,
 });
 
 /**
@@ -24,22 +24,22 @@ const form = createForm({
  *  - 缺点：`Markup Schema`是通过类似于指令集操作，丢失了组件的可读性
  */
 const NormalJsx: FC = () => (
-    <FormCom form={form}>
-        <Field
-            name="username"
-            title="用户名"
-            component={[Input, { prefix: <UserOutlined /> }]}
-            decorator={[FormItem]}
-            required
-        />
-        <Field
-            name="password"
-            title="密码"
-            component={[Password, { autoComplete: "off", prefix: <LockOutlined /> }]}
-            decorator={[FormItem]}
-            required
-        />
-    </FormCom>
+  <FormCom form={form}>
+    <Field
+      name="username"
+      title="用户名"
+      component={[Input, { prefix: <UserOutlined /> }]}
+      decorator={[FormItem]}
+      required
+    />
+    <Field
+      name="password"
+      title="密码"
+      component={[Password, { autoComplete: "off", prefix: <LockOutlined /> }]}
+      decorator={[FormItem]}
+      required
+    />
+  </FormCom>
 );
 
 export default NormalJsx;

@@ -30,50 +30,50 @@ import ReactSelfEffect from "../components/linkage/fieldReact/SelfEffect";
 import ReactSelfSchema from "../components/linkage/fieldReact/SelfSchema";
 
 const items: TabsProps["items"] = [
-    {
-        key: "field-change",
-        label: "主动模式",
-        children: (
-            <>
-                <ChangeOneEffect />
-                <ChangeOneSchema />
-                <ChangeManyEffect />
-                <ChangeManySchema />
-                <ChangeLinkEffect />
-                <ChangeLinkSchema />
-                <ChangeChainEffect />
-                <ChangeChainSchema />
-                <ChangeOnInputEffect />
-                <ChangeOnInputSchema />
-                <ChangeSelfEffect />
-                <ChangeSelfSchema />
-                <ChangeAsyncEffect />
-                <ChangeAsyncSchema />
-            </>
-        ),
-    },
-    {
-        key: "field-react",
-        label: "被动模式",
-        children: (
-            <>
-                <ReactOneEffect />
-                <ReactOneSchema />
-                <ReactManyEffect />
-                <ReactManySchema />
-                <ReactLinkEffect />
-                <ReactLinkSchema />
-                <ReactChainEffect />
-                <ReactChainSchema />
-                <ReactOnInputEffect />
-                <ReactOnInputSchema />
-                <ReactSelfEffect />
-                <ReactSelfSchema />
-                <ReactAsyncEffect />
-                <ReactAsyncSchema />
-            </>
-        ),
-    },
+  {
+    key: "field-change",
+    label: "主动模式",
+    children: (
+      <>
+        <ChangeOneEffect />
+        <ChangeOneSchema />
+        <ChangeManyEffect />
+        <ChangeManySchema />
+        <ChangeLinkEffect />
+        <ChangeLinkSchema />
+        <ChangeChainEffect />
+        <ChangeChainSchema />
+        <ChangeOnInputEffect />
+        <ChangeOnInputSchema />
+        <ChangeSelfEffect />
+        <ChangeSelfSchema />
+        <ChangeAsyncEffect />
+        <ChangeAsyncSchema />
+      </>
+    ),
+  },
+  {
+    key: "field-react",
+    label: "被动模式",
+    children: (
+      <>
+        <ReactOneEffect />
+        <ReactOneSchema />
+        <ReactManyEffect />
+        <ReactManySchema />
+        <ReactLinkEffect />
+        <ReactLinkSchema />
+        <ReactChainEffect />
+        <ReactChainSchema />
+        <ReactOnInputEffect />
+        <ReactOnInputSchema />
+        <ReactSelfEffect />
+        <ReactSelfSchema />
+        <ReactAsyncEffect />
+        <ReactAsyncSchema />
+      </>
+    ),
+  },
 ];
 
 const LinkAges: FC = () => <Tabs items={items} />;

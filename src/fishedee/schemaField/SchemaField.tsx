@@ -6,14 +6,14 @@ import VoidComponent from "../reactField/VoidComponent";
 import ArrayItems from "./ArrayItems";
 
 const SchemaField = createSchemaField({
-    components: {
-        ArrayItems,
-        FormItem,
-        FormLayout,
-        Input,
-        InputDigit,
-        VoidComponent,
-    },
+  components: {
+    ArrayItems,
+    FormItem,
+    FormLayout,
+    Input,
+    InputDigit,
+    VoidComponent,
+  },
 });
 
 export default SchemaField;

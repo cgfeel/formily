@@ -9,32 +9,32 @@ import ReadPretty from "../custom/ReadPretty";
 import DescItem from "../custom/descItem";
 
 const Header = styled.div`
-    width: 600px;
+  width: 600px;
 `;
 
 const Card = styled(CardRaw)`
-    width: 600px;
+  width: 600px;
 `;
 
 const Empty = observer<Omit<EmptyProps, "image">>(props => (
-    <EmptyRaw {...props} image={EmptyRaw.PRESENTED_IMAGE_SIMPLE} />
+  <EmptyRaw {...props} image={EmptyRaw.PRESENTED_IMAGE_SIMPLE} />
 ));
 
 const SchemaField = createSchemaField({
-    components: {
-        Card,
-        CodePretty,
-        DescItem,
-        Empty,
-        FieldInput,
-        FormItem,
-        Header,
-        Input,
-        NumberPicker,
-        ReadPretty,
-        Select,
-        Space,
-    },
+  components: {
+    Card,
+    CodePretty,
+    DescItem,
+    Empty,
+    FieldInput,
+    FormItem,
+    Header,
+    Input,
+    NumberPicker,
+    ReadPretty,
+    Select,
+    Space,
+  },
 });
 
 export default SchemaField;

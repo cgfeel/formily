@@ -1,5 +1,5 @@
 type ProjectsItem = {
-    count: number;
-    price: number;
-    total: number;
+  count: number;
+  price: number;
+  total: number;
 };

@@ -47,7 +47,10 @@ export const useListValue = (list: SectionItem[] = []) => {
 };
 
 export const useSectionRecord = (field: GeneralField) => {
-  const fieldData = (field.data ?? {}) as SectionDataType;
+  const fieldData = useMemo(() => {
+    return (field.data ?? {}) as SectionDataType;
+  }, [field.data]);
+
   const { list, search, searchKey } = fieldData;
   const record = useMemo(() => {
     const info = searchKey ? search : list;

@@ -90,7 +90,8 @@ const CollapseWrapper: FC<PropsWithChildren<CollapseWrapperProps>> = ({
         search: search.toLowerCase(),
         deleteSection,
         updateActive,
-      })}>
+      })}
+    >
       {children}
     </RecordScope>
   );
@@ -119,7 +120,8 @@ const InternalSection: FC<PropsWithChildren<InternalSectionProps>> = ({
 
         indexItems.splice(newIndex, 0, current);
         sortIndex(indexItems);
-      }}>
+      }}
+    >
       {index.map((section, index) => (
         <SortableItem key={`item-${index}`} lockAxis="y" index={index}>
           <RecordScope
@@ -130,7 +132,8 @@ const InternalSection: FC<PropsWithChildren<InternalSectionProps>> = ({
               section,
               // activeIndex,
               // updateActive,
-            })}>
+            })}
+          >
             {children}
           </RecordScope>
         </SortableItem>
@@ -183,7 +186,8 @@ const SectionCollapseGroup: FC = () => {
       pattern={field.pattern}
       search={data.searchKey}
       deleteSection={deleteSection}
-      updateActive={updateActive}>
+      updateActive={updateActive}
+    >
       <InternalSection empty={empty} field={field} record={record}>
         {SectionItem}
       </InternalSection>
@@ -216,7 +220,8 @@ const Sortable = forwardRef<HTMLDivElement, PropsWithChildren<SortableProps> & {
             [`${prefixCls}-item`]: !list,
           },
           className,
-        ])}>
+        ])}
+      >
         {children}
       </div>
     );

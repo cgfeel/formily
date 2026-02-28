@@ -12,86 +12,88 @@ const FormPath = lazy(() => import("../core/formPath"));
 const FormValidatorRegistry = lazy(() => import("../core/formValidatorRegistry"));
 
 const items: TabsProps["items"] = [
-    {
-        disabled: true,
-        key: "entry",
-        label: "Entry",
-    },
-    {
-        key: "createForm",
-        label: "createForm",
-        children: (
-            <Suspense fallback={<>loading...</>}>
-                <CreateForm />
-            </Suspense>
-        ),
-    },
-    {
-        key: "formEffectHooks",
-        label: "Form Effect Hooks",
-        children: (
-            <Suspense fallback={<>loading...</>}>
-                <FormEffectHooks />
-            </Suspense>
-        ),
-    },
-    {
-        key: "fieldEffectHooks",
-        label: "Field Effect Hooks",
-        children: (
-            <Suspense fallback={<>loading...</>}>
-                <FieldEffectHooks />
-            </Suspense>
-        ),
-    },
-    {
-        key: "formHooksAPI",
-        label: "Form Hooks API",
-        children: (
-            <Suspense fallback={<>loading...</>}>
-                <CreateEffectHook />
-                <CreateEffectContext />
-            </Suspense>
-        ),
-    },
-    {
-        key: "formCheckers",
-        label: "Form Checkers",
-        children: (
-            <Suspense fallback={<>loading...</>}>
-                <FormChecker />
-            </Suspense>
-        ),
-    },
-    {
-        key: "formPath",
-        label: "Form Path",
-        children: (
-            <Suspense fallback={<>loading...</>}>
-                <FormPath />
-            </Suspense>
-        ),
-    },
-    {
-        key: "formValidatorRegistry",
-        label: "Form Validator Registry",
-        children: (
-            <Suspense fallback={<>loading...</>}>
-                <FormValidatorRegistry />
-            </Suspense>
-        ),
-    },
-    {
-        key: "models",
-        label: "Models...",
-        children: (
-            <Suspense fallback={<>loading...</>}>
-                <Form />
-            </Suspense>
-        ),
-    },
+  {
+    disabled: true,
+    key: "entry",
+    label: "Entry",
+  },
+  {
+    key: "createForm",
+    label: "createForm",
+    children: (
+      <Suspense fallback={<>loading...</>}>
+        <CreateForm />
+      </Suspense>
+    ),
+  },
+  {
+    key: "formEffectHooks",
+    label: "Form Effect Hooks",
+    children: (
+      <Suspense fallback={<>loading...</>}>
+        <FormEffectHooks />
+      </Suspense>
+    ),
+  },
+  {
+    key: "fieldEffectHooks",
+    label: "Field Effect Hooks",
+    children: (
+      <Suspense fallback={<>loading...</>}>
+        <FieldEffectHooks />
+      </Suspense>
+    ),
+  },
+  {
+    key: "formHooksAPI",
+    label: "Form Hooks API",
+    children: (
+      <Suspense fallback={<>loading...</>}>
+        <CreateEffectHook />
+        <CreateEffectContext />
+      </Suspense>
+    ),
+  },
+  {
+    key: "formCheckers",
+    label: "Form Checkers",
+    children: (
+      <Suspense fallback={<>loading...</>}>
+        <FormChecker />
+      </Suspense>
+    ),
+  },
+  {
+    key: "formPath",
+    label: "Form Path",
+    children: (
+      <Suspense fallback={<>loading...</>}>
+        <FormPath />
+      </Suspense>
+    ),
+  },
+  {
+    key: "formValidatorRegistry",
+    label: "Form Validator Registry",
+    children: (
+      <Suspense fallback={<>loading...</>}>
+        <FormValidatorRegistry />
+      </Suspense>
+    ),
+  },
+  {
+    key: "models",
+    label: "Models...",
+    children: (
+      <Suspense fallback={<>loading...</>}>
+        <Form />
+      </Suspense>
+    ),
+  },
 ];
 
-const Core: FC = () => <Tabs defaultActiveKey="createForm" tabPosition="left" items={items} destroyInactiveTabPane />;
+const Core: FC = () => (
+  <Tabs defaultActiveKey="createForm" tabPosition="left" items={items} destroyInactiveTabPane />
+);
 
 export default Core;

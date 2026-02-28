@@ -9,16 +9,16 @@ import TabsJsonSchema from "../components/formTab/JsonSchema";
 import TabsMarkupSchema from "../components/formTab/MarkupSchema";
 
 const TabCollapse: FC = () => (
-    <>
-        <TabsMarkupSchema />
-        <TabsJsonSchema />
-        <CollapseMarkupSchema />
-        <CollapseJsonSchema />
-        <ArrayTabsMarkupSchema />
-        <ArrayTabsJsonSchema />
-        <ArrayCollapseMarkupSchema />
-        <ArrayCollapsJsonSchema />
-    </>
+  <>
+    <TabsMarkupSchema />
+    <TabsJsonSchema />
+    <CollapseMarkupSchema />
+    <CollapseJsonSchema />
+    <ArrayTabsMarkupSchema />
+    <ArrayTabsJsonSchema />
+    <ArrayCollapseMarkupSchema />
+    <ArrayCollapsJsonSchema />
+  </>
 );
 
 export default TabCollapse;

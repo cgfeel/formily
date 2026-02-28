@@ -3,27 +3,27 @@ import { FC, PropsWithChildren } from "react";
 import { RouterKey, router } from "../list";
 
 const BreadCrumb: FC<PropsWithChildren<BreadCrumbProps>> = ({ children, pathname }) => {
-    return (
-        <>
-            {pathname !== "/" && (
-                <Breadcrumb
-                    items={[
-                        {
-                            title: <a href="/">{router["/"].name}</a>,
-                        },
-                        {
-                            title: router[pathname].name,
-                        },
-                    ]}
-                />
-            )}
-            {children}
-        </>
-    );
+  return (
+    <>
+      {pathname !== "/" && (
+        <Breadcrumb
+          items={[
+            {
+              title: <a href="/">{router["/"].name}</a>,
+            },
+            {
+              title: router[pathname].name,
+            },
+          ]}
+        />
+      )}
+      {children}
+    </>
+  );
 };
 
 interface BreadCrumbProps {
-    pathname: RouterKey;
+  pathname: RouterKey;
 }
 
 export default BreadCrumb;

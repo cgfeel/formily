@@ -8,37 +8,37 @@ import FormButtonGroup from "../formButtonGroup/form-button-group";
 import FormLayout from "../formLayout/form-layout";
 
 const useStyles = createStyles(css`
-    width: 600px;
+  width: 600px;
 `);
 
 const Panel: FC<PropsWithChildren<PanelProps>> = ({ children, footer, form, header }) => {
-    const { styles } = useStyles();
-    const stylish = useStylish();
-    return (
-        <div className={stylish.wraper}>
-            {header}
-            <div className={stylish.pannel}>
-                <Card className={styles}>
-                    <FormProvider form={form}>
-                        <FormLayout labelCol={6}>
-                            {children}
-                            <FormButtonGroup.FormItem>
-                                <Submit onSubmit={console.log} onSubmitFailed={console.log}>
-                                    提交
-                                </Submit>
-                            </FormButtonGroup.FormItem>
-                        </FormLayout>
-                    </FormProvider>
-                </Card>
-            </div>
-            {footer}
-        </div>
-    );
+  const { styles } = useStyles();
+  const stylish = useStylish();
+  return (
+    <div className={stylish.wraper}>
+      {header}
+      <div className={stylish.pannel}>
+        <Card className={styles}>
+          <FormProvider form={form}>
+            <FormLayout labelCol={6}>
+              {children}
+              <FormButtonGroup.FormItem>
+                <Submit onSubmit={console.log} onSubmitFailed={console.log}>
+                  提交
+                </Submit>
+              </FormButtonGroup.FormItem>
+            </FormLayout>
+          </FormProvider>
+        </Card>
+      </div>
+      {footer}
+    </div>
+  );
 };
 
 export interface PanelProps extends IProviderProps {
-    footer?: ReactNode;
-    header?: ReactNode;
+  footer?: ReactNode;
+  header?: ReactNode;
 }
 
 export default Panel;
