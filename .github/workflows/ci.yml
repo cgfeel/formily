@@ -55,11 +55,13 @@ jobs:
       # 10. 上传静态文件为Pages工件
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
+        if: success()
         with:
           path: "build/"
       # 11. 部署到 GitHub Pages（官方套件，无需额外指定目录）
       - id: deploy
         name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
+        if: success()
         with:
           token: ${{ github.token }}
