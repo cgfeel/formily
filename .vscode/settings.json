@@ -1,0 +1,28 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // 忽略 CSS 中的 @theme 未知指令提示
+  "css.lint.unknownAtRules": "ignore",
+  // 若使用 SCSS/Sass，补充对应配置
+  "scss.lint.unknownAtRules": "ignore",
+  "tailwindCSS.classFunctions": ["tv"],
+  "tailwindCSS.experimental.classRegex": [["(`.*?`)", "(\".*?\")", "('.*?')"]]
+}
