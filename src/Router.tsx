@@ -23,7 +23,8 @@ const RouterApp: FC<RouterAppProps> = ({ name }) => {
 
 export default function Router() {
   const { pathname } = window.location;
-  const name = (pathname in router ? pathname : void 0) as RouterKey | undefined;
+  const path = `/${pathname.split("/").pop()}`;
+  const name = (path in router ? path : void 0) as RouterKey | undefined;
 
   return name === void 0 ? <>This page is 404.</> : <RouterApp name={name} />;
 }
