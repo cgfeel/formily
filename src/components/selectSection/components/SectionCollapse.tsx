@@ -22,9 +22,9 @@ import {
   useMemo,
   useState,
 } from "react";
-import PanelDecorator from "../com/PanelDecorator";
-import SelectEmpty from "../com/SelectEmpty";
-import SelectSkeleton from "../com/SelectSkeleton";
+import PanelDecorator from "./PanelDecorator";
+import SelectEmpty from "./SelectEmpty";
+import SelectSkeleton from "./SelectSkeleton";
 import {
   CollapseItem as CollapseItemType,
   CollapseLookupType,

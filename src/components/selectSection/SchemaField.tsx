@@ -2,16 +2,13 @@ import { FormItem } from "@formily/antd-v5";
 import { connect, createSchemaField, mapProps } from "@formily/react";
 import { Card, Checkbox, Col, Input, Row, Select } from "antd";
 import { FC, PropsWithChildren } from "react";
-import SelectCollapse from "./com/SelectCollapse";
-import ToolBar from "./com/ToolBar";
-import UserCheckBox from "./com/UserCheckBox";
-import ScrollWapper from "./com/ScrollWrapper";
-import RecentRhoices from "./com/RecentChoices";
-import UserMapRecord from "./com/UserMapRecord";
-import TipTitle from "./com/TipTitle";
+import ToolBar from "./components/ToolBar";
+import ScrollWapper from "./components/ScrollWrapper";
+import RecentRhoices from "./components/RecentChoices";
+import UserMapRecord from "./components/UserMapRecord";
+import TipTitle from "./components/TipTitle";
 import SectionCollapse from "./components/SectionCollapse";
 import { SectionType } from "./event";
-import InputTest from "./components/Input";
 import { LoadingOutlined } from "@ant-design/icons";
 import { isField } from "@formily/core";
 
@@ -65,12 +62,9 @@ const SchemaField = createSchemaField({
     Row,
     ScrollWapper,
     SectionCollapse,
-    SelectCollapse, // redel
     TipTitle,
     ToolBar,
-    UserCheckBox,
     UserMapRecord,
-    InputTest,
   },
   scope: {
     expandSection: (list: SectionType, expandAction?: number) => {

@@ -179,7 +179,7 @@ const SelectSectionExample: FC = () => {
                       dependencies: [".search-list#value"],
                       when: "{{ !!$deps[0] && $deps[0] !== $self.data.searchKey }}",
                       fulfill: {
-                        run: 'console.log("a----eee", $deps)',
+                        // run: 'console.log("a----eee", $deps)',
                         state: {
                           data: {
                             search:
@@ -193,7 +193,7 @@ const SelectSectionExample: FC = () => {
                       dependencies: [".search-list#value", "..toolbar.expand#value"],
                       when: "{{ !$deps[0] }}",
                       fulfill: {
-                        run: 'console.log("a----ddd", $deps)',
+                        // run: 'console.log("a----ddd", $deps)',
                         state: {
                           data: {
                             list: "{{ expandSection($self.data.list, $deps[1]) }}",
@@ -301,12 +301,13 @@ const SelectSectionExample: FC = () => {
                   }}
                   x-reactions={[
                     {
-                      dependencies: ["user-map.section#value"],
+                      dependencies: ["user-map.section#value", "user-map.section#data.list.expand"],
                       fulfill: {
-                        // run: "console.log('a---deps', $deps[1])",
+                        // run: "console.log('a---deps-map', $deps[0])",
                         state: {
                           data: {
                             list: {
+                              expand: "{{ $deps[1] }}",
                               items: "{{ $deps[0] ?? [] }}",
                             },
                           },

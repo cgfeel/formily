@@ -3,7 +3,7 @@ import { Avatar, Flex, Space, Tooltip, Typography } from "antd";
 import { FC, useMemo, useRef } from "react";
 import { SectionItem } from "../hooks/useFakeService";
 import { usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
-import useStyle from "../styles/SelectFace";
+import useStyle from "../styles/sectionFace";
 import classNames from "classnames";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 

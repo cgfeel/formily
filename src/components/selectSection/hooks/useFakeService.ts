@@ -65,35 +65,6 @@ export const useFakeService = (delay: number) => {
   return [request] as const;
 };
 
-export const debounce = <T extends Function, D extends any = any>(func: T, delay: number = 500) => {
-  let timer: ReturnType<typeof setTimeout> | null = null;
-  function action(this: ThisParameterType<T>, ...args: D[]): void {
-    if (timer !== null) {
-      clearTimeout(timer);
-    }
-    timer = setTimeout(() => {
-      func.hasOwnProperty("prototype") ? func.apply(this, args) : func(args);
-      timer = null;
-    }, delay);
-  }
-
-  return action;
-};
-
-export const throttle = <T extends Function, D extends any = any>(
-  func: T,
-  interval: number = 500,
-) => {
-  let lastTimer = Date.now();
-  return function (this: ThisParameterType<T> | Window, ...args: D[]) {
-    const now = Date.now();
-    if (now >= lastTimer + interval) {
-      lastTimer = now;
-      func.apply(this, args);
-    }
-  };
-};
-
 export type SectionItem = z.infer<typeof sectionItem>;
 
 type FakeCallBackType = (data: SectionItem[]) => void;
