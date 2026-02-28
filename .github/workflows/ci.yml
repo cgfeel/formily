@@ -4,6 +4,11 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+permissions:
+  contents: write
+  pull-requests: write
+  pages: write
+  id-token: write
 jobs:
   validate-and-build:
     runs-on: ubuntu-latest
@@ -47,3 +52,14 @@ jobs:
           name: core-build-output
           path: build/
           retention-days: 7
+      # 10. 上传静态文件为Pages工件
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "build/"
+      # 11. 部署到 GitHub Pages（官方套件，无需额外指定目录）
+      - id: deploy
+        name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+        with:
+          token: ${{ github.token }}
