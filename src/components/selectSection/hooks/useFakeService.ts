@@ -5,8 +5,8 @@ import z from "zod";
 
 const getSectionScmema = (name: string) =>
   z
-    .string({ error: `${name} 必须为字符类型` })
-    .refine(value => value.trim() !== "", { error: `${name} 不能为空字符` });
+    .string({ message: `${name} 必须为字符类型` })
+    .refine(value => value.trim() !== "", { message: `${name} 不能为空字符` });
 
 const sectionItem = z.object({
   name: getSectionScmema("员工"),
