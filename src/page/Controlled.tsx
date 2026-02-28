@@ -8,15 +8,15 @@ import CustomIndex from "../components/controlled/schemaControlled/custom";
 import ValueControlled from "../components/controlled/valueControlled";
 
 const Controlled: FC = () => (
-    <>
-        <ValueControlled />
-        <ObserverControlled />
-        <FormControlled />
-        <ClearFormGraph />
-        <CustomIndex />
-        <FieldControlled />
-        <WithoutObserver />
-    </>
+  <>
+    <ValueControlled />
+    <ObserverControlled />
+    <FormControlled />
+    <ClearFormGraph />
+    <CustomIndex />
+    <FieldControlled />
+    <WithoutObserver />
+  </>
 );
 
 export default Controlled;

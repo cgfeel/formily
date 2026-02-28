@@ -5,7 +5,7 @@ import SchemaField from "../SchemaField";
 import FormCom from "./FormCom";
 
 const form = createForm({
-    validateFirst: true,
+  validateFirst: true,
 });
 
 /**
@@ -16,36 +16,36 @@ const form = createForm({
  *  - 缺点：丢失组件相关提示
  */
 const normalSchema: ISchema = {
-    type: "object",
-    properties: {
-        username: {
-            required: true,
-            title: "用户名",
-            type: "string",
-            "x-component": "Input",
-            "x-decorator": "FormItem",
-            "x-component-props": {
-                prefix: "{{icon('user')}}",
-            },
-        },
-        password: {
-            required: true,
-            title: "密码",
-            type: "string",
-            "x-component": "Password",
-            "x-decorator": "FormItem",
-            "x-component-props": {
-                autoComplete: "off",
-                prefix: "{{icon('pwd')}}",
-            },
-        },
+  type: "object",
+  properties: {
+    username: {
+      required: true,
+      title: "用户名",
+      type: "string",
+      "x-component": "Input",
+      "x-decorator": "FormItem",
+      "x-component-props": {
+        prefix: "{{icon('user')}}",
+      },
     },
+    password: {
+      required: true,
+      title: "密码",
+      type: "string",
+      "x-component": "Password",
+      "x-decorator": "FormItem",
+      "x-component-props": {
+        autoComplete: "off",
+        prefix: "{{icon('pwd')}}",
+      },
+    },
+  },
 };
 
 const NormalJson: FC = () => (
-    <FormCom form={form}>
-        <SchemaField schema={normalSchema} />
-    </FormCom>
+  <FormCom form={form}>
+    <SchemaField schema={normalSchema} />
+  </FormCom>
 );
 
 export default NormalJson;

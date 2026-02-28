@@ -4,11 +4,11 @@ import JsonSchema from "../components/destructor/JsonSchema";
 import MarkupSchema from "../components/destructor/MarkupSchema";
 
 const Destructor: FC = () => (
-    <>
-        <MarkupSchema />
-        <JsonSchema />
-        <FieldJsx />
-    </>
+  <>
+    <MarkupSchema />
+    <JsonSchema />
+    <FieldJsx />
+  </>
 );
 
 export default Destructor;

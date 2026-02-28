@@ -9,22 +9,23 @@ import Cascader from "../cascader";
 const form = createForm();
 
 const CascaderSync: FC = () => (
-    <Panel
-        form={form}
-        header={
-            <h2>
-                <code>Field Jsx</code> 同步数据源案例
-            </h2>
-        }>
-        <Field
-            name="cascader"
-            title="选择框"
-            component={[Cascader]}
-            dataSource={options}
-            decorator={[FormItem]}
-            required
-        />
-    </Panel>
+  <Panel
+    form={form}
+    header={
+      <h2>
+        <code>Field Jsx</code> 同步数据源案例
+      </h2>
+    }
+  >
+    <Field
+      name="cascader"
+      title="选择框"
+      component={[Cascader]}
+      dataSource={options}
+      decorator={[FormItem]}
+      required
+    />
+  </Panel>
 );
 
 export default CascaderSync;

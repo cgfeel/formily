@@ -4,16 +4,16 @@ import FormItem from "../formItem/form-item";
 import styled from "@emotion/styled";
 
 const TextArea = styled(Input.TextArea)`
-    width: 400px;
+  width: 400px;
 `;
 
 const SchemaField = createSchemaField({
-    components: {
-        FormItem,
-        Input,
-        Space,
-        TextArea,
-    },
+  components: {
+    FormItem,
+    Input,
+    Space,
+    TextArea,
+  },
 });
 
 export default SchemaField;

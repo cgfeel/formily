@@ -30,66 +30,66 @@ import MarkupTreeSelectSync from "../components/treeSelect/markupSchema/TreeSele
 import Select from "../components/select";
 
 const items: TabsProps["items"] = [
-    {
-        key: "select",
-        label: "Select",
-        children: (
-            <>
-                <MarkupSelectSync />
-                <MarkupSelectAsync />
-                <MarkupSelectLink />
-                <JsonSelectSync />
-                <JsonSelectAsync />
-                <JsonSelectLink />
-                <FieldSelectSync />
-                <FieldSelectAsync />
-                <FieldSelectLinker />
-            </>
-        ),
-    },
-    {
-        key: "tree-select",
-        label: "TreeSelect",
-        children: (
-            <>
-                <MarkupTreeSelectSync />
-                <MarkupTreeSelectAsync />
-                <MarkupTreeSelectLinker />
-                <JsonTreeSelectSync />
-                <JsonTreeSelectAsync />
-                <JsonTreeSelectLinker />
-                <FieldTreeSelectSync />
-                <FieldTreeSelectAsync />
-                <FieldTreeSelectLinker />
-            </>
-        ),
-    },
-    {
-        key: "cascader",
-        label: "Cascader",
-        children: (
-            <>
-                <MarkupCascaderSync />
-                <MarkupCascaderAsync />
-                <MarkupCascaderLinker />
-                <JsonCascaderSync />
-                <JsonCascaderAsync />
-                <JsonCascaderLinker />
-                <FieldCascaderSync />
-                <FieldCascaderAsync />
-                <FieldCascaderLinker />
-            </>
-        ),
-    },
-    {
-        key: "contrast",
-        label: "Contrast",
-        children: (
-            <>
-                <Select />
-            </>
-        ),
-    },
+  {
+    key: "select",
+    label: "Select",
+    children: (
+      <>
+        <MarkupSelectSync />
+        <MarkupSelectAsync />
+        <MarkupSelectLink />
+        <JsonSelectSync />
+        <JsonSelectAsync />
+        <JsonSelectLink />
+        <FieldSelectSync />
+        <FieldSelectAsync />
+        <FieldSelectLinker />
+      </>
+    ),
+  },
+  {
+    key: "tree-select",
+    label: "TreeSelect",
+    children: (
+      <>
+        <MarkupTreeSelectSync />
+        <MarkupTreeSelectAsync />
+        <MarkupTreeSelectLinker />
+        <JsonTreeSelectSync />
+        <JsonTreeSelectAsync />
+        <JsonTreeSelectLinker />
+        <FieldTreeSelectSync />
+        <FieldTreeSelectAsync />
+        <FieldTreeSelectLinker />
+      </>
+    ),
+  },
+  {
+    key: "cascader",
+    label: "Cascader",
+    children: (
+      <>
+        <MarkupCascaderSync />
+        <MarkupCascaderAsync />
+        <MarkupCascaderLinker />
+        <JsonCascaderSync />
+        <JsonCascaderAsync />
+        <JsonCascaderLinker />
+        <FieldCascaderSync />
+        <FieldCascaderAsync />
+        <FieldCascaderLinker />
+      </>
+    ),
+  },
+  {
+    key: "contrast",
+    label: "Contrast",
+    children: (
+      <>
+        <Select />
+      </>
+    ),
+  },
 ];
 
 const AsyncCom: FC = () => <Tabs items={items} />;

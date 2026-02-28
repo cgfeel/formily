@@ -8,21 +8,22 @@ import Wraper from "./Wraper";
 const form = createForm({ validateFirst: true });
 
 const FieldJsx: FC = () => (
-    <Wraper
-        form={form}
-        header={
-            <h2>
-                <code>useField</code> - FieldJsx
-            </h2>
-        }>
-        <Field
-            name="name"
-            title="title"
-            component={[Input, { placeholder: "Please Input" }]}
-            decorator={[FormItem]}
-            required
-        />
-    </Wraper>
+  <Wraper
+    form={form}
+    header={
+      <h2>
+        <code>useField</code> - FieldJsx
+      </h2>
+    }
+  >
+    <Field
+      name="name"
+      title="title"
+      component={[Input, { placeholder: "Please Input" }]}
+      decorator={[FormItem]}
+      required
+    />
+  </Wraper>
 );
 
 export default FieldJsx;

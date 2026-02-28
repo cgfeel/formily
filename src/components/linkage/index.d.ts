@@ -1,3 +1,3 @@
 type VisibleType = {
-    visible: "hidden" | "none" | "visible";
+  visible: "hidden" | "none" | "visible";
 };

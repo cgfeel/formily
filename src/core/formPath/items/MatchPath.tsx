@@ -9,16 +9,16 @@ import ReverseMatch from "../components/ReverseMatch";
 import TransferredMatch from "../components/TransferredMatch";
 
 const MatchPath: FC = () => (
-    <>
-        <FullMatch />
-        <PartialMatch />
-        <GroupMatch />
-        <ReverseMatch />
-        <ExtendMatch />
-        <RangeMatch />
-        <TransferredMatch />
-        <DeconstructMatch />
-    </>
+  <>
+    <FullMatch />
+    <PartialMatch />
+    <GroupMatch />
+    <ReverseMatch />
+    <ExtendMatch />
+    <RangeMatch />
+    <TransferredMatch />
+    <DeconstructMatch />
+  </>
 );
 
 export default MatchPath;

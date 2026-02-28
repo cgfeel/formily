@@ -3,10 +3,10 @@ import JsonSchema from "../components/calculator/JsonSchema";
 import MarkupSchema from "../components/calculator/MarkupSchema";
 
 const Calculator: FC = () => (
-    <>
-        <MarkupSchema />
-        <JsonSchema />
-    </>
+  <>
+    <MarkupSchema />
+    <JsonSchema />
+  </>
 );
 
 export default Calculator;

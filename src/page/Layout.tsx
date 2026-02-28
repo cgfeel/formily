@@ -16,50 +16,52 @@ import SpaceMarkupSchema from "../components/space/MarkupSchema";
 import Grid from "./Grid";
 
 const items: TabsProps["items"] = [
-    {
-        key: "formLayout",
-        label: "FormLayout",
-        children: (
-            <>
-                <LayoutMarkupSchema />
-                <LayoutJsonSchema />
-                <LayoutFieldJsx />
-            </>
-        ),
-    },
-    {
-        key: "formItem",
-        label: "FormItem",
-        children: (
-            <>
-                <ItemMarkupSchema />
-                <ItemJsonSchema />
-                <ItemFieldJsx />
-                <PropsMarkupSchema />
-                <MaskMarkupSchema />
-                <FeedbackMarkupSchema />
-                <OtherIteMarkupSchema />
-            </>
-        ),
-    },
-    {
-        key: "formGrid",
-        label: "FormGird",
-        children: <Grid />,
-    },
-    {
-        key: "space",
-        label: "Space",
-        children: (
-            <>
-                <SpaceMarkupSchema />
-                <SpaceJsonSchema />
-                <SpaceFieldJsx />
-            </>
-        ),
-    },
+  {
+    key: "formLayout",
+    label: "FormLayout",
+    children: (
+      <>
+        <LayoutMarkupSchema />
+        <LayoutJsonSchema />
+        <LayoutFieldJsx />
+      </>
+    ),
+  },
+  {
+    key: "formItem",
+    label: "FormItem",
+    children: (
+      <>
+        <ItemMarkupSchema />
+        <ItemJsonSchema />
+        <ItemFieldJsx />
+        <PropsMarkupSchema />
+        <MaskMarkupSchema />
+        <FeedbackMarkupSchema />
+        <OtherIteMarkupSchema />
+      </>
+    ),
+  },
+  {
+    key: "formGrid",
+    label: "FormGird",
+    children: <Grid />,
+  },
+  {
+    key: "space",
+    label: "Space",
+    children: (
+      <>
+        <SpaceMarkupSchema />
+        <SpaceJsonSchema />
+        <SpaceFieldJsx />
+      </>
+    ),
+  },
 ];
 
-const Layout: FC = () => <Tabs defaultActiveKey="formLayout" items={items} destroyInactiveTabPane />;
+const Layout: FC = () => (
+  <Tabs defaultActiveKey="formLayout" items={items} destroyInactiveTabPane />
+);
 
 export default Layout;

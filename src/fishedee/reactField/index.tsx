@@ -6,13 +6,13 @@ import ObjectRenderProps from "../../react/components/objectField/RenderProps";
 import BaseField from "./BaseField";
 
 const ReactField: FC = () => (
-    <>
-        <BaseField />
-        <ArrayFieldCom />
-        <ArrayRenderProps />
-        <ObjectFieldCom />
-        <ObjectRenderProps />
-    </>
+  <>
+    <BaseField />
+    <ArrayFieldCom />
+    <ArrayRenderProps />
+    <ObjectFieldCom />
+    <ObjectRenderProps />
+  </>
 );
 
 export default ReactField;

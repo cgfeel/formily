@@ -9,16 +9,16 @@ import SetIn from "../components/SetIn";
 import TransForm from "../components/TransForm";
 
 const StaticMethod: FC = () => (
-    <>
-        <Match />
-        <TransForm />
-        <Parse />
-        <GetIn />
-        <SetIn />
-        <DeleteIn />
-        <ExistIn />
-        <EnsureIn />
-    </>
+  <>
+    <Match />
+    <TransForm />
+    <Parse />
+    <GetIn />
+    <SetIn />
+    <DeleteIn />
+    <ExistIn />
+    <EnsureIn />
+  </>
 );
 
 export default StaticMethod;

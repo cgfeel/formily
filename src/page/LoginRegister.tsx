@@ -10,17 +10,17 @@ import RegJsonSchema from "../components/register/JsonSchema";
 import RegMarkupSchema from "../components/register/MarkupSchema";
 
 const LoginRegister: FC = () => (
-    <>
-        <LoginMarkupSchema />
-        <LoginJsonSchema />
-        <LoginFieldJsx />
-        <RegMarkupSchema />
-        <RegJsonSchema />
-        <RegFieldJsx />
-        <ForgetMarkupSchema />
-        <ForgetJsonSchema />
-        <ForgetFieldJsx />
-    </>
+  <>
+    <LoginMarkupSchema />
+    <LoginJsonSchema />
+    <LoginFieldJsx />
+    <RegMarkupSchema />
+    <RegJsonSchema />
+    <RegFieldJsx />
+    <ForgetMarkupSchema />
+    <ForgetJsonSchema />
+    <ForgetFieldJsx />
+  </>
 );
 
 export default LoginRegister;

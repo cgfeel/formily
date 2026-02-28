@@ -4,21 +4,21 @@ import { FC, PropsWithChildren } from "react";
 import Panel, { PanelProps } from "../Panel";
 
 const useStyles = createStyles(
-    ({ prefixCls, css }) => css`
-        width: 600px;
-        & .${prefixCls}-space {
-            margin-bottom: 20px;
-        }
-    `,
+  ({ prefixCls, css }) => css`
+    width: 600px;
+    & .${prefixCls}-space {
+      margin-bottom: 20px;
+    }
+  `,
 );
 
 const Wraper: FC<PropsWithChildren<WraperProps>> = ({ children, ...props }) => {
-    const { styles } = useStyles();
-    return (
-        <Panel {...props}>
-            <Card className={styles}>{children}</Card>
-        </Panel>
-    );
+  const { styles } = useStyles();
+  return (
+    <Panel {...props}>
+      <Card className={styles}>{children}</Card>
+    </Panel>
+  );
 };
 
 export interface WraperProps extends PanelProps {}

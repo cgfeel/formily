@@ -4,11 +4,11 @@ import FormItem from "../../../components/formItem/form-item";
 import Container from "./Container";
 
 const SchemaField = createSchemaField({
-    components: {
-        Container,
-        FormItem,
-        Input,
-    },
+  components: {
+    Container,
+    FormItem,
+    Input,
+  },
 });
 
 export default SchemaField;

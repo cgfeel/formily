@@ -4,11 +4,11 @@ import MarkupSchema from "../components/arrayTable/MarkupSchema";
 import QueryList from "../components/queryList";
 
 const Table: FC = () => (
-    <>
-        <MarkupSchema />
-        <JsonSchema />
-        <QueryList />
-    </>
+  <>
+    <MarkupSchema />
+    <JsonSchema />
+    <QueryList />
+  </>
 );
 
 export default Table;

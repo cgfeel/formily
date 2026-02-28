@@ -5,12 +5,12 @@ import VoidComponentRaw from "../../reactField/VoidComponent";
 const VoidComponent = observer(VoidComponentRaw);
 
 const SchemaField = createSchemaField({
-    components: {
-        ArrayCards,
-        FormItem,
-        Input,
-        VoidComponent,
-    },
+  components: {
+    ArrayCards,
+    FormItem,
+    Input,
+    VoidComponent,
+  },
 });
 
 export default SchemaField;

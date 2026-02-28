@@ -5,48 +5,51 @@ import { FilterFn, actionDisabled, checkMatchPath, matchEffect } from "../action
 import SubscriptSchema from "../schema/SubscriptSchema";
 
 const values = {
-    group: [{ path: "target.[aa,bb]", text: "target.[aa,bb]", read: true }],
+  group: [{ path: "target.[aa,bb]", text: "target.[aa,bb]", read: true }],
 };
 
 const itemFilter: FilterFn = ([path, text]) => {
-    return "" !== validator(path) || !text ? [] : [path, FormPath.parse(path).match(text) ? "true" : "false"];
+  return "" !== validator(path) || !text
+    ? []
+    : [path, FormPath.parse(path).match(text) ? "true" : "false"];
 };
 
 const validator = (value: string) => {
-    return /\[.*\]/.test(value) ? "" : "不是解构匹配路径";
+  return /\[.*\]/.test(value) ? "" : "不是解构匹配路径";
 };
 
 const DeconstructMatch: FC = () => {
-    const form = useMemo(
-        () =>
-            createForm({
-                values,
-                effects: () => {
-                    matchEffect(itemFilter);
-                    onFieldInit("group.*.text", checkMatchPath);
-                },
-            }),
-        [],
-    );
-    return (
-        <Panel
-            footer={
-                <div>
-                    <p>对于携带解构表达式的路径，我们匹配的话，直接匹配即可，无需转义</p>
-                </div>
-            }
-            form={form}
-            header={<h2>解构匹配</h2>}>
-            <SubscriptSchema
-                reactions={{
-                    copy: "{{actionDisabled($self, 'CopyDisabledBtn')}}",
-                    remove: "{{actionDisabled($self, 'RemoveDisabledBtn')}}",
-                }}
-                scope={{ actionDisabled }}
-                pathValidator={validator}
-            />
-        </Panel>
-    );
+  const form = useMemo(
+    () =>
+      createForm({
+        values,
+        effects: () => {
+          matchEffect(itemFilter);
+          onFieldInit("group.*.text", checkMatchPath);
+        },
+      }),
+    [],
+  );
+  return (
+    <Panel
+      footer={
+        <div>
+          <p>对于携带解构表达式的路径，我们匹配的话，直接匹配即可，无需转义</p>
+        </div>
+      }
+      form={form}
+      header={<h2>解构匹配</h2>}
+    >
+      <SubscriptSchema
+        reactions={{
+          copy: "{{actionDisabled($self, 'CopyDisabledBtn')}}",
+          remove: "{{actionDisabled($self, 'RemoveDisabledBtn')}}",
+        }}
+        scope={{ actionDisabled }}
+        pathValidator={validator}
+      />
+    </Panel>
+  );
 };
 
 export default DeconstructMatch;

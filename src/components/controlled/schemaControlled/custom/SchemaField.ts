@@ -4,12 +4,12 @@ import FormItem from "../../../formItem/form-item";
 import CustomCom from "./CustomCom";
 
 const SchemaField = createSchemaField({
-    components: {
-        CustomCom,
-        FormItem,
-        Input,
-        Select
-    }
+  components: {
+    CustomCom,
+    FormItem,
+    Input,
+    Select,
+  },
 });
 
 export default SchemaField;

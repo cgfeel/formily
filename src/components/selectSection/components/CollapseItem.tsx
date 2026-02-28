@@ -87,7 +87,8 @@ const RemoveUser: FC<ButtonProps> = ({ size = "small", type = "link", ...props }
         onClick={event => {
           event.stopPropagation();
           deleteSection && deleteSection($records || (group ? Array.from(group) : []));
-        }}>
+        }}
+      >
         <CloseOutlined />
       </Button>
     </Tooltip>

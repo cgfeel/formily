@@ -9,7 +9,8 @@ const PanelDecorator: FC<PropsWithChildren> = ({ children }) => {
   return wrapSSR(
     <div
       className={classNames(`${prefixCls}-group`, hashId)}
-      onClick={event => event.stopPropagation()}>
+      onClick={event => event.stopPropagation()}
+    >
       {children}
     </div>,
   );

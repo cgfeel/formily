@@ -7,14 +7,14 @@ import DrawerMarkupSchema from "../components/drawer/MarkupSchema";
 import DrawerFiexdJsx from "../components/drawer/FiexdJsx";
 
 const DialogDrawer: FC = () => (
-    <>
-        <DialogMarkupSchema />
-        <DialogJsonSchema />
-        <DialogFieldJsx />
-        <DrawerMarkupSchema />
-        <DrawerJsonSchema />
-        <DrawerFiexdJsx />
-    </>
+  <>
+    <DialogMarkupSchema />
+    <DialogJsonSchema />
+    <DialogFieldJsx />
+    <DrawerMarkupSchema />
+    <DrawerJsonSchema />
+    <DrawerFiexdJsx />
+  </>
 );
 
 export default DialogDrawer;

@@ -6,13 +6,13 @@ import ArrayItem from "./ArrayItem";
 import createSchemaField from "./Schema";
 
 const SchemaField = createSchemaField({
-    components: {
-        ArrayItem,
-        FormItem,
-        Input,
-        InputDigit,
-        VoidComponent,
-    },
+  components: {
+    ArrayItem,
+    FormItem,
+    Input,
+    InputDigit,
+    VoidComponent,
+  },
 });
 
 export default SchemaField;

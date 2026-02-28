@@ -7,26 +7,27 @@ import { inputLength, inputNumberRule, inputRequired, numberMax, numberMin } fro
 
 const form = createForm();
 const schema: ISchema = {
-    type: "object",
-    properties: {
-        ...inputRequired,
-        ...numberMax,
-        ...numberMin,
-        ...inputLength,
-        ...inputNumberRule,
-    },
+  type: "object",
+  properties: {
+    ...inputRequired,
+    ...numberMax,
+    ...numberMin,
+    ...inputLength,
+    ...inputNumberRule,
+  },
 };
 
 const JsonSchema: FC = () => (
-    <Panel
-        form={form}
-        header={
-            <h2>
-                内置规则校验 - <code>Json Schema</code>
-            </h2>
-        }>
-        <SchemaField schema={schema} />
-    </Panel>
+  <Panel
+    form={form}
+    header={
+      <h2>
+        内置规则校验 - <code>Json Schema</code>
+      </h2>
+    }
+  >
+    <SchemaField schema={schema} />
+  </Panel>
 );
 
 export default JsonSchema;

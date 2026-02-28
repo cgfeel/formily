@@ -3,19 +3,19 @@ import { createSchemaField } from "@formily/react";
 import FormItem from "../../components/formItem/form-item";
 
 const SchemaField = createSchemaField({
-    components: { 
-        FormItem,
-        Input
-    }
+  components: {
+    FormItem,
+    Input,
+  },
 });
 
 const ToolSchema = createSchemaField({
-    components: {
-        FormGrid,
-        FormItem,
-        Select,
-        Switch,
-    }
+  components: {
+    FormGrid,
+    FormItem,
+    Select,
+    Switch,
+  },
 });
 
 export { SchemaField, ToolSchema };

@@ -14,50 +14,50 @@ import OnFieldValueChange from "./components/OnFieldValueChange";
 import OnFieldValidateSuccess from "./components/OnFieldValidateSuccess";
 
 const items = {
-    init: (
-        <>
-            <OnFieldInit />
-            <OnFieldMount />
-            <OnFieldUnmount />
-        </>
-    ),
-    change: (
-        <>
-            <OnFieldReact />
-            <OnFieldChange />
-            <OnFieldValueChange />
-            <OnFieldInitialValueChange />
-            <OnFieldInputValueChange />
-        </>
-    ),
-    validate: (
-        <>
-            <OnFieldValidateStart />
-            <OnFieldValidateEnd />
-            <OnFieldValidateFailed />
-            <OnFieldValidateSuccess />
-        </>
-    ),
+  init: (
+    <>
+      <OnFieldInit />
+      <OnFieldMount />
+      <OnFieldUnmount />
+    </>
+  ),
+  change: (
+    <>
+      <OnFieldReact />
+      <OnFieldChange />
+      <OnFieldValueChange />
+      <OnFieldInitialValueChange />
+      <OnFieldInputValueChange />
+    </>
+  ),
+  validate: (
+    <>
+      <OnFieldValidateStart />
+      <OnFieldValidateEnd />
+      <OnFieldValidateFailed />
+      <OnFieldValidateSuccess />
+    </>
+  ),
 };
 
 const FieldEffectHooks: FC = () => {
-    const [key, setKey] = useState<ItemKey>("init");
-    const Component = items[key];
-    return (
-        <Flex gap={12} vertical>
-            <Segmented<ItemKey>
-                defaultValue="init"
-                size="large"
-                options={[
-                    { value: "init", label: "初始化" },
-                    { value: "change", label: "修改字段" },
-                    { value: "validate", label: "字段验证" },
-                ]}
-                onChange={value => setKey(value)}
-            />
-            {Component}
-        </Flex>
-    );
+  const [key, setKey] = useState<ItemKey>("init");
+  const Component = items[key];
+  return (
+    <Flex gap={12} vertical>
+      <Segmented<ItemKey>
+        defaultValue="init"
+        size="large"
+        options={[
+          { value: "init", label: "初始化" },
+          { value: "change", label: "修改字段" },
+          { value: "validate", label: "字段验证" },
+        ]}
+        onChange={value => setKey(value)}
+      />
+      {Component}
+    </Flex>
+  );
 };
 
 type ItemKey = keyof typeof items;
