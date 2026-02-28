@@ -215,7 +215,8 @@ describe("recursion field", () => {
           x-component-props={{
             name: "only-properties",
             onlyRenderProperties: true,
-          }}>
+          }}
+        >
           <SchemaField.String x-component="Input" />
         </SchemaField.Object>
         <SchemaField.Void
@@ -223,7 +224,8 @@ describe("recursion field", () => {
           x-component-props={{
             name: "only-properties",
             onlyRenderProperties: true,
-          }}>
+          }}
+        >
           <SchemaField.String x-component="Input" />
         </SchemaField.Void>
       </Markup>,
@@ -247,7 +249,8 @@ describe("recursion field", () => {
               schema.default = "123";
               return schema;
             },
-          }}>
+          }}
+        >
           <SchemaField.String name="input" x-component="Input" />
           <SchemaField.String name="input1" x-component="Input" />
         </SchemaField.Object>
@@ -259,7 +262,8 @@ describe("recursion field", () => {
               schema.default = "";
               return schema;
             },
-          }}>
+          }}
+        >
           <SchemaField.String default="321" name="input" x-component="Input" />
         </SchemaField.Object>
       </Markup>,
@@ -280,14 +284,16 @@ describe("recursion field", () => {
           x-component="CustomObject"
           x-component-props={{
             filterProperties: schema => schema["x-component"] !== "Input",
-          }}>
+          }}
+        >
           <SchemaField.String x-component="Input" />
         </SchemaField.Object>
         <SchemaField.Object
           x-component="CustomObject"
           x-component-props={{
             filterProperties: schema => schema["x-component"] === "Input",
-          }}>
+          }}
+        >
           <SchemaField.String x-component="Input" />
         </SchemaField.Object>
       </Markup>,
@@ -306,7 +312,8 @@ describe("recursion field", () => {
           x-component="CustomObject"
           x-component-props={{
             onlyRenderSelf: true,
-          }}>
+          }}
+        >
           <SchemaField.String x-component="Input" />
         </SchemaField.Object>
       </Markup>,
@@ -413,7 +420,8 @@ describe("recursion field", () => {
             cc() {
               info.cc = true;
             },
-          }}>
+          }}
+        >
           <SchemaField.String
             name="aa"
             x-component="Input"
@@ -459,7 +467,8 @@ describe("recursion field", () => {
         form={form}
         scope={{
           child: <div data-testid="child"></div>,
-        }}>
+        }}
+      >
         <SchemaField.Void name="aaa" x-component="TextComponent" x-content="{{child}}" />
       </Markup>,
     );
@@ -899,7 +908,8 @@ describe("recursion field", () => {
           x-component-props={{
             propsRecursion: true,
             filterProperties: schema => schema["x-component"] !== "Input",
-          }}>
+          }}
+        >
           <SchemaField.String x-component="Input" />
           <SchemaField.Object x-component="TextComponent" x-component-props={{ name: "text" }}>
             <SchemaField.String x-component="Input" />
@@ -924,7 +934,8 @@ describe("recursion field", () => {
           x-component="CustomObject"
           x-component-props={{
             filterProperties: schema => schema["x-component"] !== "Input",
-          }}>
+          }}
+        >
           <SchemaField.String x-component="Input" />
           <SchemaField.Object x-component="TextComponent" x-component-props={{ name: "text" }}>
             <SchemaField.String x-component="Input" />

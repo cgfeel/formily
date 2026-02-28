@@ -43,13 +43,15 @@ const SelectSectionExample: FC = () => {
               },
               token: { boxShadowTertiary: "none" },
             },
-          }}>
+          }}
+        >
           <SchemaField.Void x-component="Row" x-component-props={{ className: "row-border" }}>
             <SchemaField.Void
               x-component="Card"
               x-component-props={{ bordered: false }}
               x-decorator="Col"
-              x-decorator-props={{ span: 16 }}>
+              x-decorator-props={{ span: 16 }}
+            >
               <SchemaField.String
                 name="search-list"
                 x-component="Input"
@@ -153,7 +155,8 @@ const SelectSectionExample: FC = () => {
               <SchemaField.Void
                 title="部门和同事"
                 x-component="ScrollWapper"
-                x-decorator="TipTitle">
+                x-decorator="TipTitle"
+              >
                 <SchemaField.Array
                   name="section"
                   x-component="SectionCollapse"
@@ -212,15 +215,18 @@ const SelectSectionExample: FC = () => {
                         },
                       },
                     },
-                  ]}>
+                  ]}
+                >
                   <SchemaField.Void
                     x-component="SectionCollapse.CollapseItem"
-                    x-component-props={{ target: "user-map.expand" }}>
+                    x-component-props={{ target: "user-map.expand" }}
+                  >
                     <SchemaField.Void
                       name="section-name"
                       x-component="SectionCollapse.UserCheckBox"
                       x-component-props={{ eventName: "select-user" }}
-                      x-decorator="SectionCollapse.PanelDecorator">
+                      x-decorator="SectionCollapse.PanelDecorator"
+                    >
                       <SchemaField.Void
                         x-component="SectionCollapse.UserPanel"
                         x-hidden="{{!$section}}"
@@ -267,7 +273,8 @@ const SelectSectionExample: FC = () => {
                     },
                   },
                 },
-              }}>
+              }}
+            >
               <SchemaField.String
                 name="search-section-list"
                 x-component="Input"
@@ -292,7 +299,8 @@ const SelectSectionExample: FC = () => {
                   minHeight: 539,
                 }}
                 x-decorator="TipTitle"
-                x-pattern="readPretty">
+                x-pattern="readPretty"
+              >
                 <SchemaField.Array
                   name="section"
                   x-component="SectionCollapse"
@@ -341,15 +349,18 @@ const SelectSectionExample: FC = () => {
                         },
                       },
                     },
-                  ]}>
+                  ]}
+                >
                   <SchemaField.Void
                     x-component="SectionCollapse.CollapseItem"
-                    x-component-props={{ target: "user-map.expand" }}>
+                    x-component-props={{ target: "user-map.expand" }}
+                  >
                     <SchemaField.Void
                       name="section-name"
                       x-component="SectionCollapse.UserCheckBox"
                       x-component-props={{ eventName: "select-user" }}
-                      x-decorator="SectionCollapse.PanelDecorator">
+                      x-decorator="SectionCollapse.PanelDecorator"
+                    >
                       <SchemaField.Void
                         x-component="SectionCollapse.UserPanel"
                         x-hidden="{{!$section}}"
