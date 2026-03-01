@@ -1,8 +1,6 @@
 import { FC } from "react";
 import createRouter from "@/routers/factory";
-
-// @ts-ignore
-import { RouterProvider } from "react-router/dom";
+import { RouterProvider } from "react-router";
 
 const Mount: FC = () => {
   const router = createRouter({ strategy: "browser" });
