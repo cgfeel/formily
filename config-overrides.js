@@ -26,21 +26,27 @@ module.exports = function override(config) {
 // plugin: https://stackoverflow.com/a/76157892/4815301
 // eslint: https://github.com/arackaf/customize-cra/issues/175#issuecomment-547849059
 
-const { addWebpackPlugin, override, fixBabelImports } = require('customize-cra');
+const { addWebpackAlias, addWebpackPlugin, override, fixBabelImports } = require("customize-cra");
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
+const path = require("path");
 
 module.exports = override(
-    addWebpackPlugin(new NodePolyfillPlugin({
-        excludeAliases: ['console'],
-    })),
-    fixBabelImports('antd', {
-        libraryName: 'antd',
-        libraryDirectory: 'es',
-        style: true
+  addWebpackAlias({
+    "@": path.resolve(__dirname, "src"),
+  }),
+  addWebpackPlugin(
+    new NodePolyfillPlugin({
+      excludeAliases: ["console"],
     }),
-    fixBabelImports('@formily/antd', {
-        libraryName: '@formily/antd',
-        libraryDirectory: 'esm',
-        style: true
-    }),
-)
+  ),
+  fixBabelImports("antd", {
+    libraryName: "antd",
+    libraryDirectory: "es",
+    style: true,
+  }),
+  fixBabelImports("@formily/antd", {
+    libraryName: "@formily/antd",
+    libraryDirectory: "esm",
+    style: true,
+  }),
+);
