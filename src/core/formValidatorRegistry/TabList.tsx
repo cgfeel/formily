@@ -1,7 +1,7 @@
 import { FC, PropsWithChildren } from "react";
 import { Button, Flex, Space } from "antd";
 import pathList from "@/routers/pathList";
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 
 const TabListTips: FC = () => (
   <p>
@@ -12,6 +12,7 @@ const TabListTips: FC = () => (
 
 const TabList: FC<PropsWithChildren> = ({ children }) => {
   const naigate = useNavigate();
+  const location = useLocation();
   return (
     <Flex gap={12} vertical>
       <TabListTips />
@@ -21,7 +22,7 @@ const TabList: FC<PropsWithChildren> = ({ children }) => {
           .map(({ name, url }) => (
             <Button
               key={url}
-              disabled={url === window.location.pathname}
+              disabled={url === location.pathname}
               onClick={() => {
                 naigate(url);
               }}
