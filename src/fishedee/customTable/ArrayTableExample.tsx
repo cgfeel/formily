@@ -1,8 +1,8 @@
 import { Field, createForm } from "@formily/core";
+import { FormConsumer } from "@formily/react";
 import { FC } from "react";
 import Wrapper from "../fieldAction/Wrapper";
 import SchemaField from "./SchemaField";
-import { FormConsumer } from "@formily/react";
 
 const form = createForm({
   initialValues: {

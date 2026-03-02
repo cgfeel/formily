@@ -1,7 +1,7 @@
 import { createForm } from "@formily/core";
+import { ArrayField } from "@formily/react";
 import { FC } from "react";
 import Panel from "../../Panel";
-import { ArrayField } from "@formily/react";
 import ArrayFieldTypeCom from "./ArrayFieldTypeCom";
 
 const form = createForm();

@@ -1,5 +1,5 @@
-import { FC } from "react";
 import pathList from "@/routers/pathList";
+import { FC } from "react";
 import { Link } from "react-router";
 
 const List: FC = () => {

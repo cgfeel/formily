@@ -1,9 +1,9 @@
 import { autorun, observable } from "@formily/reactive";
+import { Button } from "antd";
 import { FC } from "react";
 import ButtonRun from "./components/ButtonRun";
 import Line from "./components/Line";
 import Panel from "./components/Panel";
-import { Button } from "antd";
 
 const obs1 = observable({ aa: 0 });
 const obs2 = observable({ aa: 0 });

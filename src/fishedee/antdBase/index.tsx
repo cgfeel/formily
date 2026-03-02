@@ -3,8 +3,8 @@ import { FC } from "react";
 import CheckBox from "./CheckBox";
 import InputField from "./InputField";
 import Panel from "./Panel";
-import Select from "./Select";
 import SchemaField from "./SchemaField";
+import Select from "./Select";
 import TimePicker from "./TimePicker";
 
 const form = createForm();

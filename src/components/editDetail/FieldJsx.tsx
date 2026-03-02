@@ -1,7 +1,7 @@
 import { createForm } from "@formily/core";
 import { FC } from "react";
-import Wrapper from "./Wrapper";
 import FieldCom from "../register/components/FieldCom";
+import Wrapper from "./Wrapper";
 
 const form = createForm({
   validateFirst: true,

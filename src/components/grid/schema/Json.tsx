@@ -1,9 +1,9 @@
 import { createForm } from "@formily/core";
 import { ISchema } from "@formily/react";
+import { Button, Divider, Space } from "antd";
 import { FC, useState } from "react";
 import Pannel, { field } from "./Pannel";
 import SchemaField from "./SchemaField";
-import { Button, Divider, Space } from "antd";
 
 const form = createForm();
 const breakpoints = [640, 960, 1200];

@@ -1,8 +1,8 @@
 import { createForm } from "@formily/core";
 import { ISchema } from "@formily/react";
 import { FC } from "react";
-import { FormConsumer, FormProvider } from "../customField/Context";
 import Panel from "../Panel";
+import { FormConsumer, FormProvider } from "../customField/Context";
 import SchemaField from "./SchemaField";
 
 const form = createForm({

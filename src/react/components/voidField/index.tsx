@@ -1,9 +1,9 @@
+import { Input } from "@formily/antd-v5";
 import { createForm } from "@formily/core";
+import { Field, FormConsumer, VoidField } from "@formily/react";
+import { Button, Space } from "antd";
 import { FC } from "react";
 import Panel from "../../Panel";
-import { Button, Space } from "antd";
-import { Field, FormConsumer, VoidField } from "@formily/react";
-import { Input } from "@formily/antd-v5";
 
 const form = createForm();
 

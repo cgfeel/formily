@@ -1,6 +1,6 @@
+import { createForm } from "@formily/core";
 import { FC } from "react";
 import Panel from "./Panel";
-import { createForm } from "@formily/core";
 
 const form = createForm();
 

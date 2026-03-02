@@ -7,14 +7,14 @@ import {
   onFieldReact,
 } from "@formily/core";
 import { FC } from "react";
-import { Field, FormProvider } from "./Context";
 import Panel from "../Panel";
 import Input from "../coreReactive/Input";
-import FormItem from "./FormItem";
-import Label from "../coreReactive/Label";
-import Button from "./Button";
 import InputDigit from "../coreReactive/InputDigit";
+import Label from "../coreReactive/Label";
 import Password from "../coreReactive/Password";
+import Button from "./Button";
+import { Field, FormProvider } from "./Context";
+import FormItem from "./FormItem";
 
 const data = { upname: "name", upage: "age", uppwd: "password" } as const;
 const ispath = (data: object, key: string): key is keyof typeof data => key in data;

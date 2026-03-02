@@ -1,9 +1,9 @@
+import { FormItem, Input } from "@formily/antd-v5";
 import { createForm, isField, onFieldReact } from "@formily/core";
+import { Field } from "@formily/react";
 import { observable } from "@formily/reactive";
 import { FC } from "react";
 import Wrapper from "../fieldAction/Wrapper";
-import { Field } from "@formily/react";
-import { FormItem, Input } from "@formily/antd-v5";
 
 const obs = observable<Partial<Record<string, string>>>({
   name: "kk",

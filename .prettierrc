@@ -2,6 +2,18 @@
   "arrowParens": "avoid",
   "bracketSpacing": true,
   "endOfLine": "auto",
+  "plugins": ["@trivago/prettier-plugin-sort-imports"],
+  "importOrder": [
+    "^node:(.*)$",
+    "^@?\\w",
+    "^@/components/(.*)$",
+    "^@/utils/(.*)$",
+    "^[./]",
+    "^.+\\.(css|scss|less|styl)$"
+  ],
+  "importOrderSeparation": false,
+  "importOrderSortSpecifiers": true,
+  "importOrderCaseInsensitive": false,
   "htmlWhitespaceSensitivity": "ignore",
   "jsxSingleQuote": false,
   "printWidth": 100,

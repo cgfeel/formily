@@ -1,8 +1,8 @@
 import { Form, createEffectHook, createForm, onFieldChange } from "@formily/core";
+import { FormConsumer } from "@formily/react";
 import { FC, useMemo } from "react";
 import Wrapper from "../fieldAction/Wrapper";
 import SchemaField from "./SchemaField";
-import { FormConsumer } from "@formily/react";
 
 const pushTips = createEffectHook("push-tips", (payload: string, form: Form) => {
   const { tips = "" } = form.values;

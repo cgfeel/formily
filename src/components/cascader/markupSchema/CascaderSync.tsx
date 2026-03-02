@@ -1,8 +1,8 @@
 import { createForm } from "@formily/core";
 import { FC } from "react";
+import { options } from "../../formItem/other/dataSource";
 import Panel from "../Panel";
 import SchemaField from "../SchemaField";
-import { options } from "../../formItem/other/dataSource";
 
 const form = createForm();
 

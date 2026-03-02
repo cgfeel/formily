@@ -1,4 +1,4 @@
-import { observer, RecordsScope } from "@formily/react";
+import { RecordsScope, observer } from "@formily/react";
 import { Col, Row } from "antd";
 import { FC, PropsWithChildren, useMemo } from "react";
 import { useGroupScope } from "../hooks/useSelectCollapse";

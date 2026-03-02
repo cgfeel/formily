@@ -1,9 +1,9 @@
 import { FormButtonGroup, Submit } from "@formily/antd-v5";
 import { FormProvider, IProviderProps } from "@formily/react";
 import { Button, Card } from "antd";
+import { createStyles, css } from "antd-style";
 import { FC, PropsWithChildren, ReactNode } from "react";
 import useStylish from "../commonStylish";
-import { createStyles, css } from "antd-style";
 
 const defaultValue = "default value";
 const setDefaultValue = <T extends string | Record<string, string>>(value: T, num?: number) =>

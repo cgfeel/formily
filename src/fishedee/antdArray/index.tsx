@@ -1,7 +1,7 @@
-import { FC } from "react";
 import { Alert, Tabs, TabsProps } from "antd";
-import MarkupSchema from "../../components/arrayTabs/MarkupSchema";
+import { FC } from "react";
 import JsonSchema from "../../components/arrayTabs/JsonSchema";
+import MarkupSchema from "../../components/arrayTabs/MarkupSchema";
 import Table from "../../page/Table";
 import ArrayReaction from "../schemaReaction/arrayReaction";
 

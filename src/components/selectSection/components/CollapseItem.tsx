@@ -1,10 +1,10 @@
 import { CloseOutlined, MenuOutlined } from "@ant-design/icons";
 import { SortableHandle } from "@formily/antd-v5/lib/__builtins__";
+import { isField } from "@formily/core";
 import { observer, useExpressionScope, useForm } from "@formily/react";
 import { Button, ButtonProps, Collapse, CollapseProps, Tooltip } from "antd";
 import { FC, useCallback, useMemo } from "react";
 import { useGroupScope } from "../hooks/useSelectCollapse";
-import { isField } from "@formily/core";
 
 const CollapseItem: FC<CollapseItemProps> = ({
   target,

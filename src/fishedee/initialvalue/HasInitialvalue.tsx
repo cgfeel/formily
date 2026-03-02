@@ -1,7 +1,7 @@
 import { createForm, onFormInit } from "@formily/core";
+import { observer } from "@formily/react";
 import { FC, useState } from "react";
 import FormLine from "./FormLine";
-import { observer } from "@formily/react";
 
 const form = createForm({
   initialValues: { time: 123 },

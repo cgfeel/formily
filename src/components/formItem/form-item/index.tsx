@@ -6,7 +6,7 @@ import {
 import { pickDataProps, usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
 import { useOverflow } from "@formily/antd-v5/lib/form-item/hooks";
 import { isVoidField } from "@formily/core";
-import { connect, mapProps, ReactFC } from "@formily/react";
+import { ReactFC, connect, mapProps } from "@formily/react";
 import { ConfigProvider, Popover, Tooltip } from "antd";
 import cls from "classnames";
 import { CSSProperties, FC, PropsWithChildren, useContext, useState } from "react";

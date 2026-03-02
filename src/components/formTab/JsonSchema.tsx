@@ -3,8 +3,8 @@ import { createForm } from "@formily/core";
 import { ISchema } from "@formily/react";
 import { FC } from "react";
 import Pannel, { tabList } from "./Pannel";
-import FormTab from "./form-tab";
 import SchemaField from "./SchemaField";
+import FormTab from "./form-tab";
 
 const form = createForm();
 const formTab = FormTab.createFormTab();

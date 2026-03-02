@@ -4,9 +4,9 @@ import useStyle from "@formily/antd-v5/lib/array-collapse/style";
 import { ArrayField } from "@formily/core";
 import {
   ISchema,
-  observer,
   ReactFC,
   RecursionField,
+  observer,
   useField,
   useFieldSchema,
 } from "@formily/react";

@@ -1,9 +1,9 @@
 import { UploadOutlined } from "@ant-design/icons";
-import { Upload, IUploadProps, Input } from "@formily/antd-v5";
 import styled from "@emotion/styled";
+import { IUploadProps, Input, Upload } from "@formily/antd-v5";
+import { useField } from "@formily/react";
 import { Button } from "antd";
 import { FC } from "react";
-import { useField } from "@formily/react";
 
 // 放这里是因为单独一个文件太鸡肋，而这个又是每个模式都需要用的，就放在一起
 const PopInput = styled(Input)`

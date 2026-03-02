@@ -1,6 +1,6 @@
 import {
-  createForm,
   Field as FieldType,
+  createForm,
   isArrayField,
   isField,
   onFieldChange,

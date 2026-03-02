@@ -1,3 +1,4 @@
+import { createStyles, css } from "antd-style";
 import { FC } from "react";
 import Panel from "../Panel";
 import HasInitialvalue from "./HasInitialvalue";
@@ -6,7 +7,6 @@ import NoInitialvalue from "./NoInitialvalue";
 import NoValue from "./NoValue";
 import OnInput from "./OnInput";
 import OnInputValue from "./OnInputValue";
-import { createStyles, css } from "antd-style";
 
 const useStyles = createStyles(css`
   button {

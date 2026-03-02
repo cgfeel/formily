@@ -1,6 +1,6 @@
+import { createStyles, css } from "antd-style";
 import { FC } from "react";
 import { InputProps } from "./Context";
-import { createStyles, css } from "antd-style";
 
 const useStyle = createStyles(css`
   height: 28px;

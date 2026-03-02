@@ -1,8 +1,8 @@
 import { FormConsumer } from "@formily/react";
 import { Button, Form } from "antd";
 import { FC, PropsWithChildren } from "react";
-import Panel, { PanelProps } from "../../Panel";
 import CodePreview from "../../CodePreview";
+import Panel, { PanelProps } from "../../Panel";
 
 const Wraper: FC<PropsWithChildren<WraperProps>> = ({ children, form, ...props }) => (
   <Panel {...props} form={form}>

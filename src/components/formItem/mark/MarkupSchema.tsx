@@ -1,6 +1,6 @@
 import { FC } from "react";
-import Layout from "./Layout";
 import SchemaField from "../SchemaField";
+import Layout from "./Layout";
 
 const MarkupSchema: FC = () => (
   <Layout>

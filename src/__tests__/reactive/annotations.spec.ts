@@ -4,8 +4,8 @@ import {
   define,
   isObservable,
   model,
-  observe,
   observable,
+  observe,
   reaction,
   untracked,
 } from "@formily/reactive";

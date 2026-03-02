@@ -1,6 +1,6 @@
 import { createForm } from "@formily/core";
-import { observable } from "@formily/reactive";
 import { observer } from "@formily/react";
+import { observable } from "@formily/reactive";
 import { FC, useRef } from "react";
 import Panel, { PanelProps } from "../Panel";
 import Wraper from "../valueControlled/Wraper";

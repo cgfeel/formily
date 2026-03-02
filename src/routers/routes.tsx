@@ -1,8 +1,8 @@
 import { FC, PropsWithChildren } from "react";
-import pathList, { createRouteComponent } from "./pathList";
 import { Outlet, useLocation } from "react-router";
 import Breads from "@/components/Breads";
 import RedirectHandler from "@/components/RedirectHandler";
+import pathList, { createRouteComponent } from "./pathList";
 
 const NavigationManager: FC<PropsWithChildren> = ({ children }) => {
   const location = useLocation();

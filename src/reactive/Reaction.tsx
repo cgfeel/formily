@@ -1,7 +1,7 @@
 import { batch, observable, reaction } from "@formily/reactive";
 import { FC } from "react";
-import Panel from "./components/Panel";
 import ButtonRun from "./components/ButtonRun";
+import Panel from "./components/Panel";
 
 const obs = observable({ aa: 1, bb: 2 });
 const dispose = reaction(() => {

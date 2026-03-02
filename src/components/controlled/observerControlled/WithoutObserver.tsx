@@ -1,10 +1,10 @@
 import { createForm } from "@formily/core";
 import { observable } from "@formily/reactive";
 import { FC, useMemo, useState } from "react";
+import { ObserverInner } from ".";
 import Panel from "../Panel";
 import Wraper from "../valueControlled/Wraper";
 import FormCom from "./FormCom";
-import { ObserverInner } from ".";
 
 const values = observable({ input: "" });
 const form = createForm({ values });

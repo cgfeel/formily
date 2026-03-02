@@ -3,8 +3,8 @@ import { FormItem, Input } from "@formily/antd-v5";
 import { createForm } from "@formily/core";
 import { Field } from "@formily/react";
 import { FC } from "react";
-import FormCom from "./FormCom";
 import VerifyCode from "../VerifyCode";
+import FormCom from "./FormCom";
 
 const form = createForm({
   validateFirst: true,

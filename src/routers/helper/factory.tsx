@@ -1,4 +1,4 @@
-import { ComponentType, lazy, ReactNode, Suspense } from "react";
+import { ComponentType, ReactNode, Suspense, lazy } from "react";
 
 export function createRouteComponentBindLoading(loading?: ReactNode): CreateRouteComponentFunc {
   return (loader, loadingOther) => {

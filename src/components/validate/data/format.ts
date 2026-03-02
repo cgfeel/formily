@@ -1,5 +1,5 @@
-import { FORMATS } from "../SchemaField";
 import { Properties } from ".";
+import { FORMATS } from "../SchemaField";
 
 export const schemaFormat = FORMATS.reduce<Properties>(
   (current, format) => ({

@@ -1,6 +1,6 @@
 import { Select } from "@formily/antd-v5";
-import { Field } from "@formily/react";
 import { createForm } from "@formily/core";
+import { Field } from "@formily/react";
 import { FC } from "react";
 import FormItem from "../../formItem/form-item";
 import Panel from "../Panel";

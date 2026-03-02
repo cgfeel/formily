@@ -1,7 +1,7 @@
 import { FC } from "react";
-import TabsPannel, { TabsPannelProps } from "./component/TabsPannel";
 import NormalJson from "./component/NormalJson";
 import PhoneJson from "./component/PhoneJson";
+import TabsPannel, { TabsPannelProps } from "./component/TabsPannel";
 
 const items: TabsPannelProps["items"] = [
   {

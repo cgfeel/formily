@@ -1,9 +1,9 @@
 import { usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
 import { observer, useField } from "@formily/react";
 import { Typography } from "antd";
+import classNames from "classnames";
 import { FC, PropsWithChildren } from "react";
 import useStyle from "../styles/tipTitle";
-import classNames from "classnames";
 
 const { Text } = Typography;
 

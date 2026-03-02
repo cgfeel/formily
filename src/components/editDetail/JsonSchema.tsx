@@ -1,9 +1,9 @@
 import { createForm } from "@formily/core";
 import { ISchema } from "@formily/react";
 import { FC } from "react";
-import Wrapper from "./Wrapper";
 import SchemaField from "../register/SchemaField";
 import { schema } from "../register/components/service";
+import Wrapper from "./Wrapper";
 
 const form = createForm({
   validateFirst: true,

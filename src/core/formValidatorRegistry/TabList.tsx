@@ -1,6 +1,6 @@
-import { FC, PropsWithChildren } from "react";
-import { Button, Flex, Space } from "antd";
 import pathList from "@/routers/pathList";
+import { Button, Flex, Space } from "antd";
+import { FC, PropsWithChildren } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 
 const TabListTips: FC = () => (

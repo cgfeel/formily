@@ -1,8 +1,8 @@
 import { createForm } from "@formily/core";
 import { FC } from "react";
-import asyncLinker from "../action/asyncLinker";
 import Panel from "../Panel";
 import SchemaField from "../SchemaField";
+import asyncLinker from "../action/asyncLinker";
 
 const form = createForm({ effects: asyncLinker });
 

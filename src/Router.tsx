@@ -1,6 +1,6 @@
 import { FC, Suspense, useEffect } from "react";
-import { RouterKey, router } from "./list";
 import BreadCrumb from "./components/BreadCrunb";
+import { RouterKey, router } from "./list";
 
 const RouterApp: FC<RouterAppProps> = ({ name }) => {
   const item = router[name];

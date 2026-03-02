@@ -1,8 +1,8 @@
 import { GeneralField, isArrayField } from "@formily/core";
 import { Schema, useExpressionScope } from "@formily/react";
 import { ReactNode, useCallback, useMemo } from "react";
-import { SectionItem } from "./useFakeService";
 import { SectionDataType, SectionType } from "../event";
+import { SectionItem } from "./useFakeService";
 
 export const defaultItem = { expand: new Set<string>(), items: [] };
 

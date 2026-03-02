@@ -2,8 +2,8 @@ import { createForm } from "@formily/core";
 import { ConfigProvider, Radio } from "antd";
 import zhCN from "antd/es/locale/zh_CN";
 import { FC, PropsWithChildren, useState } from "react";
-import Panel from "../Panel";
 import FormLayout from "../../formLayout/form-layout";
+import Panel from "../Panel";
 
 const form = createForm();
 
