@@ -10,7 +10,7 @@ const App: FC = () => {
   return (
     <>
       <Mount />
-      <GithubCorner />
+      <GithubCorner href="https://github.com/cgfeel/formily" />
     </>
   );
 };
