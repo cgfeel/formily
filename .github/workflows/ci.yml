@@ -43,25 +43,26 @@ jobs:
         run: npm run test:ci
       # 8. 执行构建
       - name: Build project
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: npm run build
       # 9. 上传构建产物
       - name: Upload build artifacts
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && success()
         uses: actions/upload-artifact@v4
-        if: success()
         with:
           name: core-build-output
           path: build/
           retention-days: 7
       # 10. 上传静态文件为Pages工件
       - name: Upload Pages artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && success()
         uses: actions/upload-pages-artifact@v3
-        if: success()
         with:
           path: "build/"
       # 11. 部署到 GitHub Pages（官方套件，无需额外指定目录）
       - id: deploy
         name: Deploy to GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && success()
         uses: actions/deploy-pages@v4
-        if: success()
         with:
           token: ${{ github.token }}
