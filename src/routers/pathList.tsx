@@ -191,6 +191,8 @@ const pathList: PathItem[] = [
   },
 ];
 
+export { createRouteComponent };
+
 export default pathList;
 
 type PathItem = {
