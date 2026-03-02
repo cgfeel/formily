@@ -1,5 +1,7 @@
+import { Button } from "antd";
 import { createStyles } from "antd-style";
 import type { FC } from "react";
+import { useNavigate } from "react-router";
 
 const useStyles = createStyles(({ token, css }) => ({
   container: css`
@@ -35,12 +37,16 @@ const useStyles = createStyles(({ token, css }) => ({
 
 const NotFound: FC = () => {
   const { styles } = useStyles();
+  const navigate = useNavigate();
   return (
     <div className={styles.container}>
       <h1 className={styles.heading404}>404</h1>
       <h2 className={styles.subHeading}>哎呀，页面走丢了</h2>
       <p className={styles.descText}>
         你访问的页面不存在、已被删除或网址输入错误，请返回首页重新探索。
+      </p>
+      <p>
+        <Button onClick={() => navigate("/", { replace: true })}>返回首页</Button>
       </p>
     </div>
   );

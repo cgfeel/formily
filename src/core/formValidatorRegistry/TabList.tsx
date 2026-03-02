@@ -11,7 +11,7 @@ const TabListTips: FC = () => (
 );
 
 const TabList: FC<PropsWithChildren> = ({ children }) => {
-  const naigate = useNavigate();
+  const navigate = useNavigate();
   const location = useLocation();
   return (
     <Flex gap={12} vertical>
@@ -24,7 +24,7 @@ const TabList: FC<PropsWithChildren> = ({ children }) => {
               key={url}
               disabled={url === location.pathname}
               onClick={() => {
-                naigate(url);
+                navigate(url);
               }}
             >
               {name}
