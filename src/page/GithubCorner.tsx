@@ -1,7 +1,9 @@
-export default function GithubCorner() {
+import { FC } from "react";
+
+const GithubCorner: FC<GithubCornerProps> = ({ href }) => {
   return (
     <a
-      href="https://github.com/cgfeel/ant-design-style"
+      href={href}
       target="_blank"
       rel="noopener noreferrer"
       className="github-corner"
@@ -38,4 +40,10 @@ export default function GithubCorner() {
       </svg>
     </a>
   );
+};
+
+export default GithubCorner;
+
+interface GithubCornerProps {
+  href: string;
 }
