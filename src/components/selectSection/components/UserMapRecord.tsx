@@ -1,12 +1,12 @@
+import { usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
 import { FieldDataSource, isField } from "@formily/core";
-import { observer, RecordScope, useField } from "@formily/react";
+import { RecordScope, observer, useField } from "@formily/react";
+import { ConfigProvider, ConfigProviderProps } from "antd";
+import classNames from "classnames";
 import { FC, PropsWithChildren } from "react";
 import { SectionItem } from "../hooks/useFakeService";
-import { isKey, objectKeys } from "../utils/fields";
-import { ConfigProvider, ConfigProviderProps } from "antd";
-import { usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
 import useStyle from "../styles/section";
-import classNames from "classnames";
+import { isKey, objectKeys } from "../utils/fields";
 
 const transformItem = (item: FieldDataSource[number]): SectionItem => {
   const record = { mail: "", name: "", section: "" };

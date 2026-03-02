@@ -1,8 +1,8 @@
+import { FormItem, Input } from "@formily/antd-v5";
 import { createForm } from "@formily/core";
+import { Field } from "@formily/react";
 import { FC } from "react";
 import Wrapper from "../fieldAction/Wrapper";
-import { Field } from "@formily/react";
-import { FormItem, Input } from "@formily/antd-v5";
 
 const initialValues = {
   editable: "editable",

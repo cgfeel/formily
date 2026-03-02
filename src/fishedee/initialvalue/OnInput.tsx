@@ -9,9 +9,9 @@ import {
   onFieldValueChange,
   onFormInit,
 } from "@formily/core";
+import { useFormEffects } from "@formily/react";
 import { FC, useState } from "react";
 import FormLine from "./FormLine";
-import { useFormEffects } from "@formily/react";
 
 const fileInput = (field: GeneralField) => isField(field) && field.onInput(123);
 

@@ -1,7 +1,7 @@
 import { createForm, isField, onFieldChange, onFieldReact } from "@formily/core";
 import { FC } from "react";
-import SchemaField from "./SchemaField";
 import Pannel from "./Pannel";
+import SchemaField from "./SchemaField";
 
 const form = createForm({
   effects: () => {

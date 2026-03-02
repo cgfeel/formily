@@ -8,9 +8,9 @@ import {
   TreeSelect,
 } from "@formily/antd-v5";
 import { createSchemaField } from "@formily/react";
+import Cascader from "../../cascader/cascader";
 import FormItem from "../../formItem/form-item";
 import FormLayout from "../../formLayout/form-layout";
-import Cascader from "../../cascader/cascader";
 
 const SchemaField = createSchemaField({
   components: {

@@ -1,6 +1,6 @@
+import { Button, List, Tag } from "antd";
 import { FC, useState } from "react";
 import Panel, { PanelProps, Tool } from "./Panel";
-import { Button, List, Tag } from "antd";
 
 const objectKeys = <T extends object, K = keyof T>(obj: T) => Object.keys(obj) as Array<K>;
 const checkIt = (group: WraperProps["group"], fn: WraperProps["list"][number]) =>

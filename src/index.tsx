@@ -1,8 +1,8 @@
 import React, { FC } from "react";
 import ReactDOM from "react-dom/client";
+import Mount from "./Mount";
 import GithubCorner from "./page/GithubCorner";
 import reportWebVitals from "./reportWebVitals";
-import Mount from "./Mount";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 

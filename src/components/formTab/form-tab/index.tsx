@@ -1,8 +1,8 @@
 import { usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
 import { Schema, SchemaKey } from "@formily/json-schema";
 import { ReactFC, RecursionField, observer, useField, useFieldSchema } from "@formily/react";
-import { model, markRaw } from "@formily/reactive";
-import { Tabs, Badge, TabPaneProps, TabsProps } from "antd";
+import { markRaw, model } from "@formily/reactive";
+import { Badge, TabPaneProps, Tabs, TabsProps } from "antd";
 import { cx as cls } from "antd-style";
 import { FC, Fragment, PropsWithChildren, ReactNode, useMemo } from "react";
 

@@ -1,0 +1,14 @@
+# Lock files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# dir
+node_modules/
+dist/
+
+# config
+*.config.js
+*.config.ts
+.husky/
+.vscode/

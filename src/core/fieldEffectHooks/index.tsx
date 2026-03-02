@@ -10,8 +10,8 @@ import OnFieldUnmount from "./components/OnFieldUnmount";
 import OnFieldValidateEnd from "./components/OnFieldValidateEnd";
 import OnFieldValidateFailed from "./components/OnFieldValidateFailed";
 import OnFieldValidateStart from "./components/OnFieldValidateStart";
-import OnFieldValueChange from "./components/OnFieldValueChange";
 import OnFieldValidateSuccess from "./components/OnFieldValidateSuccess";
+import OnFieldValueChange from "./components/OnFieldValueChange";
 
 const items = {
   init: (

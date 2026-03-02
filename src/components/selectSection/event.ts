@@ -1,8 +1,8 @@
-import { createEffectHook, Form, isArrayField } from "@formily/core";
+import { Form, createEffectHook, isArrayField } from "@formily/core";
 import {
+  SectionItem,
   asyncDataSource,
   isSectionItem,
-  SectionItem,
   useFakeService,
 } from "./hooks/useFakeService";
 import { isDefined, isKey } from "./utils/fields";

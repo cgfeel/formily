@@ -1,7 +1,7 @@
 import { PreviewText, Submit } from "@formily/antd-v5";
 import { FormConsumer } from "@formily/react";
-import { FC, PropsWithChildren, useEffect, useState } from "react";
 import { Button, Space, Spin } from "antd";
+import { FC, PropsWithChildren, useEffect, useState } from "react";
 import Pannel, { PannelProps } from "../register/components/Pannel";
 
 const prevText = (editable?: boolean) => (editable ? "预 览" : "编 辑");

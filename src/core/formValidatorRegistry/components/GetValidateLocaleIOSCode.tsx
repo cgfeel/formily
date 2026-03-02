@@ -1,8 +1,8 @@
 import { createForm, getValidateLocaleIOSCode } from "@formily/core";
+import { List } from "antd";
 import { FC } from "react";
 import Panel from "../Panel";
 import TabList from "../TabList";
-import { List } from "antd";
 
 const list = ["cn", "en", "ja", "tw", "us", "zh", "this-code-is-not-defined-ios-code"];
 

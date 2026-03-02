@@ -1,10 +1,10 @@
+import { usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
 import { FormProvider, IProviderProps } from "@formily/react";
 import { Card } from "antd";
+import classNames from "classnames";
 import { FC, PropsWithChildren, ReactNode } from "react";
 import useStylish from "../commonStylish";
-import { usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
 import useStyle from "./styles/panel";
-import classNames from "classnames";
 
 const Panel: FC<PropsWithChildren<PanelProps>> = ({ children, footer, form, header }) => {
   const stylish = useStylish();

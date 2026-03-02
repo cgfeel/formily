@@ -1,9 +1,9 @@
 import { FormConsumer, IProviderProps } from "@formily/react";
+import { Card } from "antd";
 import { createStyles, css } from "antd-style";
 import { FC, PropsWithChildren, ReactNode } from "react";
-import Form from "../form/form";
 import useStylish from "../commonStylish";
-import { Card } from "antd";
+import Form from "../form/form";
 
 const useStyles = createStyles(css`
   width: 600px;

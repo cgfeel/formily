@@ -1,5 +1,5 @@
-import { createForm } from "@formily/core";
 import { Select } from "@formily/antd-v5";
+import { createForm } from "@formily/core";
 import { FC } from "react";
 import Panel from "../../Panel";
 import SchemaField from "./SchemaField";

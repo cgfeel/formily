@@ -1,7 +1,7 @@
 import { createForm, registerValidateFormats } from "@formily/core";
 import { FC } from "react";
-import CustomFormat from "../../../components/validate/component/markup/CustomFormat";
 import SchemaField from "../../../components/validate/SchemaField";
+import CustomFormat from "../../../components/validate/component/markup/CustomFormat";
 import Panel from "../Panel";
 import TabList from "../TabList";
 

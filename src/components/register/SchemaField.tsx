@@ -11,8 +11,8 @@ import {
 } from "@formily/antd-v5";
 import { createSchemaField } from "@formily/react";
 import Cascader from "../cascader/cascader";
-import IDUpload, { PopInput } from "./components/IDUpload";
 import { fetchAddress } from "./action";
+import IDUpload, { PopInput } from "./components/IDUpload";
 
 const SchemaField = createSchemaField({
   components: {

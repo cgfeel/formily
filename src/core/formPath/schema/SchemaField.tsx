@@ -1,7 +1,7 @@
+import { CopyOutlined, DeleteOutlined } from "@ant-design/icons";
 import styled from "@emotion/styled";
 import { ArrayItems, Input, Select, Space, Switch } from "@formily/antd-v5";
 import { createSchemaField, observer } from "@formily/react";
-import { CopyOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import { FC } from "react";
 import FormItem from "../../../components/formItem/form-item";

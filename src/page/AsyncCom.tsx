@@ -9,6 +9,7 @@ import JsonCascaderSync from "../components/cascader/jsonSchema/CascaderSync";
 import MarkupCascaderAsync from "../components/cascader/markupSchema/CascaderAsync";
 import MarkupCascaderLinker from "../components/cascader/markupSchema/CascaderLinker";
 import MarkupCascaderSync from "../components/cascader/markupSchema/CascaderSync";
+import Select from "../components/select";
 import FieldSelectAsync from "../components/select/fieldJsx/SelectAsync";
 import FieldSelectLinker from "../components/select/fieldJsx/SelectLinker";
 import FieldSelectSync from "../components/select/fieldJsx/SelectSync";
@@ -27,7 +28,6 @@ import JsonTreeSelectSync from "../components/treeSelect/jsonSchema/TreeSelectSy
 import MarkupTreeSelectAsync from "../components/treeSelect/markupSchema/TreeSelectAsync";
 import MarkupTreeSelectLinker from "../components/treeSelect/markupSchema/TreeSelectLinker";
 import MarkupTreeSelectSync from "../components/treeSelect/markupSchema/TreeSelectSync";
-import Select from "../components/select";
 
 const items: TabsProps["items"] = [
   {

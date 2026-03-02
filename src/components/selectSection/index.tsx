@@ -5,12 +5,12 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import { createForm, onFieldValueChange } from "@formily/core";
+import { FormConsumer } from "@formily/react";
 import { FC, useMemo } from "react";
 import Panel from "./Panel";
 import SchemaField from "./SchemaField";
-import { FormConsumer } from "@formily/react";
-import { useFakeService } from "./hooks/useFakeService";
 import { createModalFormEffect } from "./event";
+import { useFakeService } from "./hooks/useFakeService";
 import { defaultItem } from "./hooks/useSelectCollapse";
 
 const SelectSectionExample: FC = () => {

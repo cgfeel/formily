@@ -1,5 +1,5 @@
-import { autorun, observable } from "@formily/reactive";
 import { observer } from "@formily/react";
+import { autorun, observable } from "@formily/reactive";
 import { FC } from "react";
 import Panel from "../Panel";
 import ObserverMode, { useStyle } from "./ObserverMode";

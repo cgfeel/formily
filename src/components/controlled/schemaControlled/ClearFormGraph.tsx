@@ -3,8 +3,8 @@ import { ISchema, observer } from "@formily/react";
 import { FC, useRef } from "react";
 import Form from "../../form/form";
 import SchemaField from "../SchemaField";
-import { schemaA, schemaB } from "./server";
 import Wraper from "./Wraper";
+import { schemaA, schemaB } from "./server";
 
 const form = createForm<FormControllType>();
 

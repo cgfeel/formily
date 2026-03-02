@@ -1,7 +1,7 @@
 import { usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
 import { GeneralField } from "@formily/core";
 import { Schema, SchemaKey } from "@formily/json-schema";
-import { observer, ReactFC, RecursionField, useField, useFieldSchema } from "@formily/react";
+import { ReactFC, RecursionField, observer, useField, useFieldSchema } from "@formily/react";
 import { markRaw, model } from "@formily/reactive";
 import { toArr } from "@formily/shared";
 import { Badge, Collapse, CollapsePanelProps, CollapseProps } from "antd";

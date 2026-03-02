@@ -1,0 +1,20 @@
+{
+  "extends": "stylelint-config-standard",
+  "ignoreFiles": ["**/node_modules/**", "dist/**"],
+  "rules": {
+    "no-empty-source": null,
+    "selector-class-pattern": [
+      "^[a-z][a-z0-9-]*$",
+      {
+        "message": "类名必须为 kebab-case 格式（允许双连字符 --，如 .demo-button--primary）"
+      }
+    ],
+    "import-notation": null,
+    "at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": ["custom-variant", "layer", "theme", "utility"]
+      }
+    ]
+  }
+}

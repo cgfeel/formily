@@ -3,28 +3,27 @@ import {
   SortableElement,
   usePrefixCls,
 } from "@formily/antd-v5/lib/__builtins__";
+import { ArrayField, FieldPatternTypes, isArrayField } from "@formily/core";
 import {
-  observer,
   RecordScope,
   RecursionField,
   Schema,
+  observer,
   useField,
   useFieldSchema,
 } from "@formily/react";
 import classNames from "classnames";
 import {
   FC,
-  forwardRef,
   HTMLAttributes,
   PropsWithChildren,
   ReactNode,
+  forwardRef,
   useEffect,
   useMemo,
   useState,
 } from "react";
-import PanelDecorator from "./PanelDecorator";
-import SelectEmpty from "./SelectEmpty";
-import SelectSkeleton from "./SelectSkeleton";
+import { SectionType } from "../event";
 import {
   CollapseItem as CollapseItemType,
   CollapseLookupType,
@@ -32,12 +31,13 @@ import {
   useListValue,
   useSectionRecord,
 } from "../hooks/useSelectCollapse";
+import { objectKeys } from "../utils/fields";
 import CollapseItem, { RemoveUser, SortHandle } from "./CollapseItem";
+import PanelDecorator from "./PanelDecorator";
+import SelectEmpty from "./SelectEmpty";
+import SelectSkeleton from "./SelectSkeleton";
 import UserCheckBox, { UserFace, UserPanel } from "./UserCheckBox";
 import UserGroup from "./UserGroup";
-import { ArrayField, FieldPatternTypes, isArrayField } from "@formily/core";
-import { SectionType } from "../event";
-import { objectKeys } from "../utils/fields";
 
 const fieldRange = Object.freeze({
   checkbox: "SectionCollapse.UserCheckBox",

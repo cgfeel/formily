@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# 开启严格模式：任意命令失败则立即退出脚本
+set -e
+
+echo "🔍 执行测试用例（test:ci）..."
+npm run test:ci
+
+echo "🔍 检查暂存区文件（lint-staged）..."
+npm exec lint-staged
+
+echo "✅ 所有校验通过，可提交代码"

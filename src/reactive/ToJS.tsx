@@ -1,4 +1,4 @@
-import { autorun, toJS, observable } from "@formily/reactive";
+import { autorun, observable, toJS } from "@formily/reactive";
 import { FC } from "react";
 import ButtonRun from "./components/ButtonRun";
 import Panel from "./components/Panel";

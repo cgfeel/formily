@@ -2,8 +2,8 @@ import { createForm } from "@formily/core";
 import { ISchema } from "@formily/react";
 import { FC } from "react";
 import Pannel, { tabList } from "./Pannel";
-import FormCollapse from "./form-collapse";
 import SchemaField from "./SchemaField";
+import FormCollapse from "./form-collapse";
 
 const form = createForm();
 const formCollapse = FormCollapse.createFormCollapse();

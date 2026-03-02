@@ -1,6 +1,7 @@
 import { createForm } from "@formily/core";
 import { FC, useMemo } from "react";
 import { extraCode, fieldData } from "../action/methodAction";
+import SelectList, { searchEffects } from "../components/SearchList";
 import SchemaField from "../schema/SchemaPropertyField";
 import InputSchema from "../schema/method/InputSchema";
 import MatchAliasGroupSchema from "../schema/method/MatchAliasGroupSchema";
@@ -8,7 +9,6 @@ import NodeAppendSchema from "../schema/method/NodeAppendSchema";
 import SingleSchema from "../schema/method/SingleSchema";
 import SliceSchema from "../schema/method/SliceSchema";
 import SpliceSchema from "../schema/method/SpliceSchema";
-import SelectList, { searchEffects } from "../components/SearchList";
 
 const defaultSelect = [
   { tips: "点路径", value: "aa.bb.cc" },

@@ -1,8 +1,8 @@
+import { FormPath } from "@formily/core";
 import { ISchema, ISchemaFieldProps } from "@formily/react";
+import { InputProps } from "antd";
 import { FC, PropsWithChildren, ReactNode } from "react";
 import SchemaField from "./SchemaField";
-import { InputProps } from "antd";
-import { FormPath } from "@formily/core";
 
 const SubscriptSchema: FC<PropsWithChildren<SubscriptSchemaProps>> = ({
   children,

@@ -1,10 +1,10 @@
 import { createForm } from "@formily/core";
 import { FC } from "react";
+import Pannel from "./Pannel";
+import SchemaField from "./SchemaField";
 import ArrayObject, { effects } from "./component/ArrayObject";
 import ArrayUnshift from "./component/ArrayUnshift";
 import StringArray from "./component/StringArray";
-import Pannel from "./Pannel";
-import SchemaField from "./SchemaField";
 
 const form = createForm({
   validateFirst: true,

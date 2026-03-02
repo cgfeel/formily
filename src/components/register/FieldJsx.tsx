@@ -1,7 +1,7 @@
 import { createForm } from "@formily/core";
 import { FC } from "react";
-import Pannel from "./components/Pannel";
 import FieldCom from "./components/FieldCom";
+import Pannel from "./components/Pannel";
 
 const form = createForm({
   validateFirst: true,

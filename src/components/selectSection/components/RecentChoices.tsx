@@ -1,11 +1,11 @@
+import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import { usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
 import { observer, useExpressionScope, useField } from "@formily/react";
 import { Avatar, Flex, Space, Tooltip, Typography } from "antd";
+import classNames from "classnames";
 import { FC, useMemo, useRef } from "react";
 import { SectionItem } from "../hooks/useFakeService";
-import { usePrefixCls } from "@formily/antd-v5/lib/__builtins__";
 import useStyle from "../styles/sectionFace";
-import classNames from "classnames";
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 
 const { Text } = Typography;
 

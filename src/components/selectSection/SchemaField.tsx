@@ -1,16 +1,16 @@
+import { LoadingOutlined } from "@ant-design/icons";
 import { FormItem } from "@formily/antd-v5";
+import { isField } from "@formily/core";
 import { connect, createSchemaField, mapProps } from "@formily/react";
 import { Card, Checkbox, Col, Input, Row, Select } from "antd";
 import { FC, PropsWithChildren } from "react";
-import ToolBar from "./components/ToolBar";
-import ScrollWapper from "./components/ScrollWrapper";
 import RecentRhoices from "./components/RecentChoices";
-import UserMapRecord from "./components/UserMapRecord";
-import TipTitle from "./components/TipTitle";
+import ScrollWapper from "./components/ScrollWrapper";
 import SectionCollapse from "./components/SectionCollapse";
+import TipTitle from "./components/TipTitle";
+import ToolBar from "./components/ToolBar";
+import UserMapRecord from "./components/UserMapRecord";
 import { SectionType } from "./event";
-import { LoadingOutlined } from "@ant-design/icons";
-import { isField } from "@formily/core";
 
 const CardHeader: FC = ({ children }: PropsWithChildren) => (
   <div className="ant-card-topbar">

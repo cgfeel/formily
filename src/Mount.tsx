@@ -1,5 +1,5 @@
-import { FC } from "react";
 import createRouter from "@/routers/factory";
+import { FC } from "react";
 import { RouterProvider } from "react-router";
 
 const Mount: FC = () => {

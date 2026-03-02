@@ -1,7 +1,7 @@
 import { TreeSelect } from "@formily/antd-v5";
 import { createForm } from "@formily/core";
-import { createStyles, css } from "antd-style";
 import { Field } from "@formily/react";
+import { createStyles, css } from "antd-style";
 import { FC } from "react";
 import FormItem from "../../formItem/form-item";
 import Panel from "../Panel";
