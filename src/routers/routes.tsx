@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren, useEffect } from "react";
-import pathList from "./pathList";
+import pathList, { createRouteComponent } from "./pathList";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import Breads from "@/components/Breads";
 
@@ -50,6 +50,10 @@ const routes = [
       title: "索引页",
     },
     path: "/",
+  },
+  {
+    path: "*",
+    element: createRouteComponent(() => import("@/page/NotFound")),
   },
 ];
 
