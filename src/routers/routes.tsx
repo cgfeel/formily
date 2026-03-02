@@ -1,26 +1,8 @@
-import { FC, PropsWithChildren, useEffect } from "react";
+import { FC, PropsWithChildren } from "react";
 import pathList, { createRouteComponent } from "./pathList";
-import { Outlet, useLocation, useNavigate } from "react-router";
+import { Outlet, useLocation } from "react-router";
 import Breads from "@/components/Breads";
-
-const RedirectHandler: FC = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    // 解析URL中的redirect参数
-    const urlParams = new URLSearchParams(window.location.search);
-    const redirectPath = urlParams.get("redirect");
-
-    if (redirectPath) {
-      // 移除redirect参数，跳转到原路由（保留其他查询参数）
-      urlParams.delete("redirect");
-      const newSearch = urlParams.toString() ? `?${urlParams.toString()}` : "";
-      navigate(`${redirectPath}${newSearch}`, { replace: true });
-    }
-  }, [navigate]);
-
-  return null; // 无UI渲染，仅处理逻辑
-};
+import RedirectHandler from "@/components/RedirectHandler";
 
 const NavigationManager: FC<PropsWithChildren> = ({ children }) => {
   const location = useLocation();

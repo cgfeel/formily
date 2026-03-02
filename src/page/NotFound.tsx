@@ -2,6 +2,7 @@ import { Button } from "antd";
 import { createStyles } from "antd-style";
 import type { FC } from "react";
 import { useNavigate } from "react-router";
+import RedirectHandler from "@/components/RedirectHandler";
 
 const useStyles = createStyles(({ token, css }) => ({
   container: css`
@@ -40,6 +41,7 @@ const NotFound: FC = () => {
   const navigate = useNavigate();
   return (
     <div className={styles.container}>
+      <RedirectHandler />
       <h1 className={styles.heading404}>404</h1>
       <h2 className={styles.subHeading}>哎呀，页面走丢了</h2>
       <p className={styles.descText}>
