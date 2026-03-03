@@ -20,6 +20,9 @@ const genToolbarStyle: GenerateStyle = token => {
       [`${antCls}-checkbox-wrapper`]: {
         alignItems: "center",
       },
+      [`${antCls}-select${antCls}-select-in-form-item`]: {
+        width: "auto",
+      },
       [`${antCls}-select-outlined:not(${antCls}-select-customize-input) ${antCls}-select-selector`]:
         {
           border: "none",
