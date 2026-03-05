@@ -20,6 +20,7 @@ const ModalSection = forwardRef<ModalSectionInstance, ModalSectionProps>(({ name
 
   return (
     <Modal
+      maskClosable={false}
       open={open}
       style={{ maxWidth: 700 }}
       title={title}
@@ -28,7 +29,8 @@ const ModalSection = forwardRef<ModalSectionInstance, ModalSectionProps>(({ name
         setOpen(false);
       }}
       onOk={() => {
-        console.log("a---ok", form.getFieldValue("section"));
+        form.submit();
+        setOpen(false);
       }}
     >
       <Form form={form} name={name}>

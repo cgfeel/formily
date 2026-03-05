@@ -18,6 +18,11 @@ const SelectSectionExample: FC = () => {
             选择部门员工
           </Button>
         }
+        onFormFinish={(name, { values, forms }) => {
+          if (name === "sectionFrom") {
+            console.log("a---modal", values, forms);
+          }
+        }}
       >
         <ModalSection name="sectionFrom" ref={modalRef} title="选择部门员工" />
       </BaseForm>

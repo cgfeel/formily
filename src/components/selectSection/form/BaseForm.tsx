@@ -1,10 +1,12 @@
 import { Form, Input } from "antd";
 import { ComponentProps, FC, PropsWithChildren, ReactNode } from "react";
+import SectionFace from "./SectionFace";
 
 const BaseForm: FC<PropsWithChildren<BaseFormProps>> = ({ append, children, onFormFinish }) => {
   return (
     <Form.Provider onFormFinish={onFormFinish}>
       <Form name="baseForm" labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
+        <SectionFace />
         <Form.Item label="参与成员" name="section">
           <Input />
         </Form.Item>

@@ -8,7 +8,7 @@ import { FC } from "react";
 import SchemaField from "../SchemaField";
 import { defaultItem } from "../hooks/useSelectCollapse";
 
-const Schema: FC = () => (
+const SectionSchema: FC = () => (
   <SchemaField>
     <SchemaField.Object
       name="user-map"
@@ -360,4 +360,4 @@ const Schema: FC = () => (
   </SchemaField>
 );
 
-export default Schema;
+export default SectionSchema;
