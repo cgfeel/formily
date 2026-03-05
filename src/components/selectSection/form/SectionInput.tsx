@@ -32,10 +32,8 @@ const SectionInput: FC<SectionInputProps> = ({ value, onChange }) => {
           });
 
           onFieldValueChange("user-map.section", field => {
-            console.log("a---update-init");
             if (onChangeRef.current) {
               const value = filterValue(field.value);
-              console.log("a---update-before", value);
               onChangeRef.current(value?.length ? value : undefined);
             }
           });
@@ -53,7 +51,6 @@ const SectionInput: FC<SectionInputProps> = ({ value, onChange }) => {
         const fieldValue = filterValue(field.value) ?? [];
         const pushData = filterValue(value) ?? [];
 
-        console.log("a--diff-1", fieldValue.length, pushData.length);
         if (fieldValue.length !== pushData.length) {
           field.value = pushData;
           return;
@@ -67,7 +64,6 @@ const SectionInput: FC<SectionInputProps> = ({ value, onChange }) => {
           ({ name, section }) => !isKey(`${name}:${section}`, mapValue),
         );
 
-        console.log("a--diff-2", pushValue.length, fieldValue.length);
         if (pushValue.length > 0 || (pushData.length === 0 && fieldValue.length > 0))
           field.value = pushData;
       });
