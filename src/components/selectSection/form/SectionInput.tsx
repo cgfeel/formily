@@ -4,7 +4,7 @@ import { FormProvider } from "@formily/react";
 import { FC, useEffect, useMemo, useState } from "react";
 import { createModalFormEffect } from "../event";
 import { SectionItem, isSectionItem, useFakeService } from "../hooks/useFakeService";
-import { getRandomInt, isDefined, useMemoFn } from "../utils/fields";
+import { getRandomInt, isDefined, isKey, useMemoFn } from "../utils/fields";
 import Schema from "./Schema";
 
 const filterValue = (value: unknown) =>
@@ -46,7 +46,26 @@ const SectionInput: FC<SectionInputProps> = ({ value, onChange }) => {
   useEffect(() => {
     if (mount) {
       form.query("user-map.section").take(field => {
-        if (isArrayField(field)) field.value = filterValue(value) ?? [];
+        if (!isArrayField(field)) return;
+
+        const fieldValue = filterValue(field.value) ?? [];
+        const pushData = filterValue(value) ?? [];
+
+        if (fieldValue.length !== pushData.length) {
+          field.value = pushData;
+          return;
+        }
+
+        const mapValue = fieldValue.reduce<Record<string, SectionItem>>(
+          (current, item) => ({ ...current, [`${item.name}:${item.section}`]: item }),
+          {},
+        );
+        const pushValue = pushData.filter(
+          ({ name, section }) => !isKey(`${name}:${section}`, mapValue),
+        );
+
+        if (pushValue.length > 0 || (pushData.length === 0 && fieldValue.length > 0))
+          field.value = pushData;
       });
     }
   }, [form, mount, value]);

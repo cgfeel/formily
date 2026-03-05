@@ -27,6 +27,9 @@ const ModalSection = forwardRef<ModalSectionInstance, ModalSectionProps>(({ name
       onCancel={() => {
         setOpen(false);
       }}
+      onOk={() => {
+        console.log("a---ok", form.getFieldValue("section"));
+      }}
     >
       <Form form={form} name={name}>
         <Form.Item name="section">

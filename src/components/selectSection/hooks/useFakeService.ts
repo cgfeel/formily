@@ -1,6 +1,6 @@
 import { FormPathPattern, isField, onFieldInit } from "@formily/core";
 import { action } from "@formily/reactive";
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import z from "zod";
 
 const getSectionScmema = (name: string) =>
@@ -49,6 +49,7 @@ export const isSectionItem = (value: unknown): value is SectionItem =>
   sectionItem.safeParse(value).success;
 
 export const useFakeService = (delay: number) => {
+  const delayRef = useRef(delay);
   const request = useCallback(
     (callback: FakeCallBackType) => {
       setTimeout(
@@ -59,10 +60,10 @@ export const useFakeService = (delay: number) => {
               mail: `${item.name.toLowerCase()}@mail.com`,
             })),
           ),
-        delay,
+        delayRef.current,
       );
     },
-    [delay],
+    [delayRef],
   );
 
   return [request] as const;
