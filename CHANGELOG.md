@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.2](https://github.com/cgfeel/formily/compare/formily-v0.1.1...formily-v0.1.2) (2026-03-06)
+
+
+### Bug Fixes
+
+* add section doc ([11dd4e4](https://github.com/cgfeel/formily/commit/11dd4e4fde8b107956bfe6c6bba89418934b1949))
+* add section doc ([de1f322](https://github.com/cgfeel/formily/commit/de1f3223faa5f0f01de1eb8e9ccd863bc25a74ee))
+
 ## [0.1.1](https://github.com/cgfeel/formily/compare/formily-v0.1.0...formily-v0.1.1) (2026-03-06)
 
 
