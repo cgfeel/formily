@@ -33,7 +33,12 @@ const UserItem: FC<UserItemProps> = ({ checked, mail, name, section, onCancel })
   );
 };
 
-const RecentChoices: FC<RecentChoicesType> = ({ className, eventName, limit = 20 }) => {
+const RecentChoices: FC<RecentChoicesType> = ({
+  className,
+  eventName,
+  hidden = false,
+  limit = 20,
+}) => {
   const recordRef = useRef<UserState[]>([]);
   const field = useField();
 
@@ -71,8 +76,8 @@ const RecentChoices: FC<RecentChoicesType> = ({ className, eventName, limit = 20
     });
 
     recordRef.current = newItems.concat(Object.values(items)).splice(0, limit);
-    return recordRef.current;
-  }, [data, limit]);
+    return recordRef.current.filter(({ checked }) => !hidden || checked);
+  }, [data, hidden, limit]);
 
   return wrapSSR(
     <div className={classNames([hashId, prefixCls, className])}>
@@ -111,6 +116,7 @@ export default observer(RecentChoices);
 interface RecentChoicesType {
   className?: string;
   eventName?: string;
+  hidden?: boolean;
   limit?: number;
 }
 
