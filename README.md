@@ -1556,7 +1556,7 @@
 
 ### 字节面试题：部门员工选择
 
-<img width="861" height="792" alt="image" src="https://github.com/user-attachments/assets/9a80ce78-58b8-4f93-8c89-78c981a4753f" />
+<img height="500" alt="image" src="https://github.com/user-attachments/assets/9a80ce78-58b8-4f93-8c89-78c981a4753f" />
 
 要求做一个部门成员选择的浮窗，支持展开员工所属部门。在此要求上实现了：
 
