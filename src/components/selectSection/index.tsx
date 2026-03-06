@@ -1,26 +1,34 @@
-import { Button } from "antd";
+import { Button, Form } from "antd";
 import { FC, useRef } from "react";
 import Wraper from "./Wraper";
 import BaseForm from "./form/BaseForm";
 import ModalSection, { ModalSectionInstance } from "./form/ModalSection";
+import { isKey } from "./utils/fields";
 
 const SelectSectionExample: FC = () => {
   const modalRef = useRef<ModalSectionInstance>(null);
+  const [form] = Form.useForm();
+
   return (
     <Wraper>
       <BaseForm
         append={
           <Button
             onClick={() => {
-              modalRef.current?.open();
+              modalRef.current?.open(form.getFieldValue("section") ?? []);
             }}
           >
             选择部门员工
           </Button>
         }
+        form={form}
         onFormFinish={(name, { values, forms }) => {
+          const baseForm = isKey("baseForm", forms) ? forms.baseForm : undefined;
           if (name === "sectionFrom") {
-            console.log("a---modal", values, forms);
+            baseForm?.setFieldValue(
+              "section",
+              isKey("section", values) ? values.section : undefined,
+            );
           }
         }}
       >

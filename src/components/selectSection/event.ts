@@ -7,7 +7,7 @@ import {
 } from "./hooks/useFakeService";
 import { isDefined, isKey } from "./utils/fields";
 
-const onSelectUserEvent = createEffectHook<
+export const onSelectUserEvent = createEffectHook<
   (payload: PayloadType, form: Form) => ListenerType<PayloadType>
 >("select-user", (payload, form) => listener => listener(payload, form));
 

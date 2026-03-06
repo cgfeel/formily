@@ -78,7 +78,7 @@ jobs:
       - uses: googleapis/release-please-action@v4
         id: release
         with:
-          token: ${{ github.token }}
+          token: ${{ secrets.GH_PACKAGES_TOKEN }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
       - name: Print release outputs for debugging
