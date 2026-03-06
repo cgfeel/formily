@@ -185,7 +185,7 @@ const pathList: PathItem[] = [
     url: "/object-base",
   },
   {
-    name: "字节面试题：部门员工选择",
+    name: "字节面试题：部门员工选择（formily 与 react 交互）",
     path: createRouteComponent(() => import("@/page/SelectSection")),
     url: "/select-section",
   },

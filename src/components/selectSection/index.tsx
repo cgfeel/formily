@@ -1,5 +1,6 @@
 import { Button, Form } from "antd";
 import { FC, useRef } from "react";
+import Footer from "./Footer";
 import Wraper from "./Wraper";
 import BaseForm from "./form/BaseForm";
 import ModalSection, { ModalSectionInstance } from "./form/ModalSection";
@@ -10,7 +11,7 @@ const SelectSectionExample: FC = () => {
   const [form] = Form.useForm();
 
   return (
-    <Wraper>
+    <Wraper footer={<Footer />} header={<h2>部门员工选择</h2>}>
       <BaseForm
         append={
           <Button
