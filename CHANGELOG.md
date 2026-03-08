@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.3](https://github.com/cgfeel/formily/compare/formily-v0.1.2...formily-v0.1.3) (2026-03-08)
+
+
+### Bug Fixes
+
+* update section reduce console.log ([c9b1f3c](https://github.com/cgfeel/formily/commit/c9b1f3c756cc05f47caba185c7613a0adf35db48))
+* update section reduce console.log ([16c7e2c](https://github.com/cgfeel/formily/commit/16c7e2ce12ad4ab77b5997d4f89317aacd9d2ece))
+
 ## [0.1.2](https://github.com/cgfeel/formily/compare/formily-v0.1.1...formily-v0.1.2) (2026-03-06)
 
 
