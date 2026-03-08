@@ -42,7 +42,7 @@ const SectionFace: FC<SectionInputProps> = ({ value, onChange }) => {
       style={{
         border: "1px dashed #ddd",
         padding: 10,
-        paddingBottom: !value?.length ? undefined : 0,
+        paddingBottom: !value?.length ? 10 : 0,
       }}
     >
       <SectionBase fieldName={section} form={form} mount={mount} value={value}>

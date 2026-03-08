@@ -107,8 +107,6 @@ const InternalSection: FC<PropsWithChildren<InternalSectionProps>> = ({
   const [values] = useListValue(field.value);
 
   const [index, sortIndex] = useSortCollapse(dataIndex);
-  // const index = Object.keys(dataIndex);
-
   return index.length === 0 ? (
     <>{empty}</>
   ) : (
@@ -130,8 +128,6 @@ const InternalSection: FC<PropsWithChildren<InternalSectionProps>> = ({
               group: dataIndex[section],
               values: values[section] ?? new Set(),
               section,
-              // activeIndex,
-              // updateActive,
             })}
           >
             {children}
@@ -162,8 +158,6 @@ const SectionCollapseGroup: FC = () => {
 
   const { data, record, deleteSection, updateActive } = useSectionRecord(field);
   const items = getItem(schema);
-
-  // console.log("a---data", data, record);
 
   const empty = useMemo(
     () => <RenderProperty match="SectionCollapse.SelectEmpty" schema={schema} />,
@@ -196,16 +190,6 @@ const SectionCollapseGroup: FC = () => {
     <RenderProperty match="SectionCollapse.SelectSkeleton" schema={schema} />
   );
 };
-
-/*const SectionCollapseGroup: FC = () => {
-    const field = useField();
-    const schema = useFieldSchema();
-    const data = field.data;
-
-    console.log("a----start", data);
-    return <></>;
-    // return !isField(field) ? <></> : <input value={field.value} onChange={e => field.setValue(e.target.value)} />;
-};*/
 
 const Sortable = forwardRef<HTMLDivElement, PropsWithChildren<SortableProps> & { list?: boolean }>(
   ({ children, className, list, ...props }, ref) => {
