@@ -8,7 +8,7 @@
         const path = window.location.pathname + window.location.search + window.location.hash;
         const basePath = "/formily";
         window.location.replace(
-          `${basePath}/index.html?redirect=${encodeURIComponent(path.startsWith(basePath) === 0 ? path.slice(basePath.length) : path)}`,
+          `${basePath}/index.html?redirect=${encodeURIComponent(path.startsWith(basePath) ? path.slice(basePath.length) : path)}`,
         );
       })();
     </script>
