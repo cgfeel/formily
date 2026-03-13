@@ -5,6 +5,7 @@ const genToolbarStyle: GenerateStyle = token => {
     antCls,
     colorBorderSecondary,
     colorFillQuaternary,
+    colorText,
     componentCls,
     lineType,
     lineWidth,
@@ -29,7 +30,7 @@ const genToolbarStyle: GenerateStyle = token => {
         },
       [`${antCls}-select:where(:not(${antCls}-select-single${antCls}-select-open, ${antCls}-select-outlined${antCls}-select-disabled)) ${antCls}-select-arrow`]:
         {
-          color: "rgba(0, 0, 0, .88)",
+          color: colorText,
         },
       [`${antCls}-select-focused${antCls}-select-outlined:not(${antCls}-select-disabled):not(${antCls}-select-customize-input):not(${antCls}-pagination-size-changer) ${antCls}-select-selector`]:
         {
