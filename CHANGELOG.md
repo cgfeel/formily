@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.4](https://github.com/cgfeel/formily/compare/formily-v0.1.3...formily-v0.1.4) (2026-03-13)
+
+
+### Bug Fixes
+
+* update router 404 ([7bc228e](https://github.com/cgfeel/formily/commit/7bc228e912d8edf5d80094826e27f393f875ac96))
+* update router 404 ([525e415](https://github.com/cgfeel/formily/commit/525e41573e606616bf72c057fff922c9251e82be))
+
 ## [0.1.3](https://github.com/cgfeel/formily/compare/formily-v0.1.2...formily-v0.1.3) (2026-03-08)
 
 
