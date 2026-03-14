@@ -46,6 +46,20 @@ const Footer: FC = () => (
         <code>Antd</code> 字段的 <code>value</code> 更新 <code>formily</code> 对应的字段
       </li>
     </ul>
+    <p>进阶：</p>
+    <ul>
+      <li>
+        我在另一个仓库 <code>event-chat/event-chat</code> 中，实现了 <code>Formily</code> 和{" "}
+        <code>Antd</code> 之间的交互，详细见演示 [
+        <a
+          href="https://event-chat.github.io/event-chat/?path=/story/example-formily--default"
+          target="event-chat"
+        >
+          查看
+        </a>
+        ]
+      </li>
+    </ul>
   </div>
 );
 
