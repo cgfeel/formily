@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.5](https://github.com/cgfeel/formily/compare/formily-v0.1.4...formily-v0.1.5) (2026-03-14)
+
+
+### Bug Fixes
+
+* add section link event ([ae6bec5](https://github.com/cgfeel/formily/commit/ae6bec5868db7bfb39380c4e8adc2eba5229e886))
+* add section link event ([3b5e1be](https://github.com/cgfeel/formily/commit/3b5e1be92c56b5c39676ec817c5f24269a8b1fc4))
+
 ## [0.1.4](https://github.com/cgfeel/formily/compare/formily-v0.1.3...formily-v0.1.4) (2026-03-13)
 
 
