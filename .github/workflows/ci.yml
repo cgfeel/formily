@@ -39,6 +39,7 @@ jobs:
       # 6. ESLint 代码质量检查
       - name: Run ESLint Check
         run: npm run lint
+      # 7. 运行单测
       - name: Run test
         run: npm run test:ci
       # 8. 执行构建
