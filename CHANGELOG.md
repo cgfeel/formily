@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.6](https://github.com/cgfeel/formily/compare/formily-v0.1.5...formily-v0.1.6) (2026-04-06)
+
+
+### Bug Fixes
+
+* add ci annotation ([f343c84](https://github.com/cgfeel/formily/commit/f343c842b428ebac7d77612cf2e4859618e0e0a4))
+* add ci annotation ([d88f75b](https://github.com/cgfeel/formily/commit/d88f75b18741853018e253cf4a2246bc61bba74f))
+
 ## [0.1.5](https://github.com/cgfeel/formily/compare/formily-v0.1.4...formily-v0.1.5) (2026-03-14)
 
 
