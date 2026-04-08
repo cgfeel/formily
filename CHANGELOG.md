@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.7](https://github.com/cgfeel/formily/compare/formily-v0.1.6...formily-v0.1.7) (2026-04-08)
+
+
+### Bug Fixes
+
+* update field at promise ([ce103e3](https://github.com/cgfeel/formily/commit/ce103e3440a184335d14f1f0347c6b4c541e1edf))
+* update field at promise ([bc28b90](https://github.com/cgfeel/formily/commit/bc28b900b1d2a022997b44671aa35b41dbc1dd75))
+
 ## [0.1.6](https://github.com/cgfeel/formily/compare/formily-v0.1.5...formily-v0.1.6) (2026-04-06)
 
 
