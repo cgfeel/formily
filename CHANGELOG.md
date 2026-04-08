@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.8](https://github.com/cgfeel/formily/compare/formily-v0.1.7...formily-v0.1.8) (2026-04-08)
+
+
+### Bug Fixes
+
+* update tsconfig add 6.0 ([0c328f7](https://github.com/cgfeel/formily/commit/0c328f799e04dbc0942ffc2fb835193470de3223))
+* update tsconfig add 6.0 ([6c31316](https://github.com/cgfeel/formily/commit/6c3131645c981da99337c41cf701a9f5da1ca33e))
+
 ## [0.1.7](https://github.com/cgfeel/formily/compare/formily-v0.1.6...formily-v0.1.7) (2026-04-08)
 
 
