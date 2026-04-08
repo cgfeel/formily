@@ -12,7 +12,9 @@ const ModalSection = forwardRef<ModalSectionInstance, ModalSectionProps>(({ name
     () => ({
       open: value => {
         setOpen(true);
-        form.setFieldValue("section", value);
+        Promise.resolve()
+          .then(() => form.setFieldValue("section", value))
+          .catch(() => {});
       },
     }),
     [form],
